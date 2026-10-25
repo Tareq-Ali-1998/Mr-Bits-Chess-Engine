@@ -1,0 +1,37 @@
+{
+  "schema": "chesslab.experiment-comparison.v1",
+  "comparable_groups": [
+    [
+      {
+        "run": "runs\\local-small",
+        "model": {
+          "name": "small",
+          "kind": "mlp",
+          "input_dim": 782,
+          "hidden": [
+            256,
+            64
+          ],
+          "activation": "relu"
+        },
+        "parameters": 216961,
+        "data_fingerprint": "744decab4d485b8415e617ad1fa09adf49cc4209cbe1d53bf163eadc8205e511",
+        "target_contract": {
+          "clip_pawns": 15.0,
+          "huber_delta": 1.0,
+          "perspective": "white",
+          "units": "pawns"
+        },
+        "batch_size": 512,
+        "seed": 42,
+        "epochs_completed": 5,
+        "steps": 880,
+        "best_epoch": 5,
+        "best_val_huber": 0.7226835518457474,
+        "mae_cp_at_best_epoch": 103.77081914988597,
+        "training_seconds": 11.5283876999747
+      }
+    ]
+  ],
+  "notes": "Grouped by identical prepared release and target/loss contract; ordered by validation Huber within a group. MAE is from that checkpoint's epoch. Different seeds, update counts and training budgets remain explicit. This does not select an engine-strength winner. Use validation for decisions; test inclusion is explicit."
+}

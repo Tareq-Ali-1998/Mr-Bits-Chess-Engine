@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HANDOFF.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="continue-from-here">Continue from here</h1>
+<p><strong>Updated: 23 October 2026. Status: upload-ready lab completed and locally verified; first Nebius GPU session is next.</strong></p>
+<p>This file preserves the working state if the session ends. A future “continue” means resume the authorized lab work below, not restart the project or change the original engine.</p>
+<h2 id="scope-and-boundaries">Scope and boundaries</h2>
+<ul>
+<li>Build a runnable, upload-ready Linux/Nebius training lab in this folder.</li>
+<li>Keep the original C++ engine and earlier documents unchanged. Never read <code>Claude Docs</code>.</li>
+<li>Train one general evaluator per run; compare the small model and the larger experiment.</li>
+<li>Measure move ranking with complete legal-child teacher labels; 95% recall@5/@7 is a research target, not a promise.</li>
+<li>No cloud instance has been provisioned. Do not spend money or launch paid jobs without the user's actual machine/access being ready.</li>
+</ul>
+<h2 id="current-artifacts">Current artifacts</h2>
+<ul>
+<li>Runnable Python package, two model configurations, Bash workflow scripts, and detailed README/data/Nebius/ranking guides are present.</li>
+<li><code>data/local-100k/</code>: 100,000 real prepared positions, selected from the first 160,000 archive records; splits 89,995 / 4,979 / 5,026. Source is a bounded prefix, not a representative full-archive sample.</li>
+<li>Dataset fingerprint: <code>744decab4d485b8415e617ad1fa09adf49cc4209cbe1d53bf163eadc8205e511</code>.</li>
+<li><code>runs/local-small/</code>: real five-epoch CPU training, batch512, workers0, CPUthreads4. Completed 880 updates; best validation MAE103.7708cp, Huber0.72268. This validates learning, not playing strength or final ranking recall.</li>
+<li>Model sizes: small216,961 parameters; large17,858,049 parameters. The larger executable design supersedes the earlier notebook's3.6M proposal.</li>
+<li>Local Python 3.14.2 and PyTorch 2.10.0+cpu. The project-local <code>.venv</code> now includes the pinned NumPy/chess/Rich/Zstandard/matplotlib/TensorBoard dependencies. Plotting works in PNG and SVG. Actual CUDA training remains untested here.</li>
+</ul>
+<p>Configurable MLP/residual families and ReLU/GELU/SiLU/tanh variants are implemented, with <code>chesslab.experiments</code> list/new/compare and generic <code>08_experiment.sh</code>. The complete suite has <strong>43 passing tests</strong>, including final export reuse/integrity checks. Full CPU setup succeeded, real event readback and a localhost TensorBoard HTTP endpoint passed, and PNG plotting passed. Project-local matplotlib cache avoids protected-home writes.</p>
+<p>The demo benchmark has 20 parents / 588 legal children, Stockfish 16, and 2,000 requested nodes per nonterminal child. Strict recall@5/@7 is 6/20 = 30%; near-best within 25 cp @5 is 14/20 = 70%. This is workflow validation, not a strength/final 95% result. Artifacts are <code>benchmarks/local-teacher-test.jsonl</code> and <code>runs/local-small/ranking.json</code>.</p>
+<p><code>05_evaluate.sh</code> writes checkpoint-specific <code>exports/model-&lt;hash&gt;.ts</code>; export <code>--reuse-existing</code> checks both checkpoint and artifact checksums and never overwrites. The wrapper passed both initial execution and repeat execution. The full 17,858,049-parameter large network also passed a finite synthetic CPU forward/backward/AdamW step; it has not completed a real-data training run here.</p>
+<p>The bundle is <strong><code>../Mr_Bits_Neural_Lab_Upload.zip</code></strong> with its sibling <code>.zip.sha256</code>. It contains source, configurations, docs, tests, the 100k pilot and the small demo run. It excludes the raw archive, engine, account files, <code>.venv</code>, caches and unrelated runs. The packager uses an explicit allowlist and LF-normalizes text for Linux. Bundle extraction, all file checksums, data checksums, the extracted-copy test suite, tamper detection, Markdown rendering, and local links passed. Eleven Bash files pass syntax; ten public help routes pass.</p>
+<h2 id="users-next-action">User's next action</h2>
+<p>Follow <code>START_HERE.md</code>: upload the ZIP/checksum, extract into a fresh Linux directory, verify, run <code>00_setup.sh</code>, then <code>01_check.sh --require-cuda --strict-deps</code>. Prefer ordinary Python 3.12 on the GPU host. Keep the working directory on persistent storage. No raw-archive transfer is necessary for the pilot.</p>
+<h2 id="next-actions-when-continuing">Next actions when continuing</h2>
+<ol>
+<li>Read this file and the latest user steering; inspect any newly supplied GPU output or changed files.</li>
+<li>If the user supplies their device-check results, resolve them before running benchmarks/training. Do not claim a server has been tested without actual evidence.</li>
+<li>Run measured batch benchmarks for each chosen architecture, then the two fresh CUDA pilots. Use explicit <code>--device cuda</code> to avoid an accidental CPU run.</li>
+<li>Review validation curves, GPU throughput/memory, and runtime/cost. Current GPU pilots use batch 2,048 / seed 20261023; the local five-epoch demonstration used batch 512 / seed 42.</li>
+<li>Keep variants independent and reuse the prepared data. Select settings with validation; reserve a stronger, larger final benchmark for frozen claims.</li>
+<li>Scale data coverage, training, and teacher-label budgets based on evidence. The 95% move-retention target has not been reached; do not enable hard top-k pruning.</li>
+<li>Later verify C++ numerical agreement, inference cost and equal-time engine results before integration.</li>
+</ol>
+<p>For code changes, run only the relevant checks and then rebuild with <code>python package_upload.py --force</code>. The current source/data are already locally verified; do not redo the research or rescan the raw archive without a reason. Detailed results are in <code>docs/LOCAL_VERIFICATION.md</code>.</p>
+<h2 id="source-preservation-reference">Source preservation reference</h2>
+<p>SHA-256 values before lab work:</p>
+<table>
+<thead>
+<tr>
+<th>Original file under <code>lichess-bot-master/engines/</code></th>
+<th>SHA-256</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Engine UCI.cpp</code></td>
+<td><code>05ED557F763AAB92BBE06E4B9AAD3DCDDDAC70BFCDE24ADA91D3CFB05F768EF8</code></td>
+</tr>
+<tr>
+<td><code>Kernel.cpp</code></td>
+<td><code>A7B5A4AC412BAF5FD97FA59750368E1A277685B57B46C5A237D08953CB3263A9</code></td>
+</tr>
+<tr>
+<td><code>Stockfish Handler.hpp</code></td>
+<td><code>BF0844FCF4D22BCA8636E908C1F98513D8AB3C0DE7D726B3E76368DE7BDE7A57</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="how-to-assess-readiness">How to assess readiness</h2>
+<p>Local CPU tests, Bash checks, and export parity can be completed here. Actual NVIDIA kernels, GPU throughput/memory, final teacher quality, strong recall, and equal-time engine strength require later measured runs. Never report those as completed based on CPU wiring checks.</p>
+
+</body>
+</html>

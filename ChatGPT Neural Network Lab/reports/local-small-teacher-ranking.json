@@ -1,0 +1,816 @@
+{
+  "schema": "chesslab.ranking-report.v1",
+  "feature_version": "board782_v1",
+  "benchmark_purpose": "test",
+  "data_fingerprint": "744decab4d485b8415e617ad1fa09adf49cc4209cbe1d53bf163eadc8205e511",
+  "teacher": {
+    "executable": "stockfish-windows-x86-64-avx2.exe",
+    "hash_policy": "Clear Hash before every nonterminal child",
+    "id": {
+      "author": "the Stockfish developers (see AUTHORS file)",
+      "name": "Stockfish 16"
+    },
+    "nodes_per_child": 2000,
+    "options": {
+      "Hash": 64,
+      "MultiPV": 1,
+      "Threads": 1
+    },
+    "score_policy": "last score update without upper/lower bound inside fixed node cap",
+    "sha256": "2f6d7e8f3ff3260c68d6f59f7c7c0014ea06dfb55da8de1f577919b4c31b8b44"
+  },
+  "ranking_timing": {
+    "device": "cpu",
+    "torch_cpu_threads": 1,
+    "warmup_parents": 1,
+    "warmup_wall_seconds": 0.009660700103268027,
+    "timed_parents": 20,
+    "total_wall_seconds": 0.15957500005606562,
+    "mean_parent_ms": 7.978750002803282,
+    "median_parent_ms": 7.8550499165430665,
+    "p95_parent_ms": 13.818345050094651,
+    "scope": "legal generation, terminal checks, feature encoding, batch inference with CPU result synchronization, sorting; excludes checkpoint/benchmark loading and teacher work"
+  },
+  "method": {
+    "unit": "one complete legal-child parent",
+    "ties": "any exactly tied teacher-best move counts; neural ties sorted by UCI",
+    "near_best": "finite teacher scores only; distinct from strict best",
+    "cp_regret": "finite best and chosen teacher scores only; mate categories kept separate",
+    "interval": "Wilson 95%; descriptive position-level intervals, not an Elo estimate or independence proof"
+  },
+  "overall": {
+    "parents": 20,
+    "legal_move_coverage": {
+      "min": 4,
+      "median": 31.0,
+      "max": 49,
+      "parents_with_at_most_5_moves": 1
+    },
+    "strict_best_recall": {
+      "@1": {
+        "successes": 1,
+        "total": 20,
+        "rate": 0.05,
+        "wilson95": [
+          0.008881448800795402,
+          0.23613119344674205
+        ]
+      },
+      "@5": {
+        "successes": 6,
+        "total": 20,
+        "rate": 0.3,
+        "wilson95": [
+          0.1454772448676043,
+          0.5189728183535235
+        ]
+      },
+      "@7": {
+        "successes": 6,
+        "total": 20,
+        "rate": 0.3,
+        "wilson95": [
+          0.1454772448676043,
+          0.5189728183535235
+        ]
+      }
+    },
+    "near_best_recall": {
+      "tolerance_cp": 25,
+      "eligible_finite_score_parents": 20,
+      "@1": {
+        "successes": 3,
+        "total": 20,
+        "rate": 0.15,
+        "wilson95": [
+          0.052368745896216595,
+          0.36041886474075696
+        ]
+      },
+      "@5": {
+        "successes": 14,
+        "total": 20,
+        "rate": 0.7,
+        "wilson95": [
+          0.4810271816464765,
+          0.8545227551323956
+        ]
+      },
+      "@7": {
+        "successes": 14,
+        "total": 20,
+        "rate": 0.7,
+        "wilson95": [
+          0.4810271816464765,
+          0.8545227551323956
+        ]
+      }
+    },
+    "cp_regret": {
+      "comparable_parents": 20,
+      "mean": 308.45,
+      "median": 275.5,
+      "p95": 819.2500000000002,
+      "max": 1147.0
+    },
+    "mate_category_disagreements": 0
+  },
+  "by_turn": {
+    "white": {
+      "parents": 11,
+      "legal_move_coverage": {
+        "min": 4,
+        "median": 33.0,
+        "max": 46,
+        "parents_with_at_most_5_moves": 1
+      },
+      "strict_best_recall": {
+        "@1": {
+          "successes": 0,
+          "total": 11,
+          "rate": 0.0,
+          "wilson95": [
+            0.0,
+            0.2588329669680317
+          ]
+        },
+        "@5": {
+          "successes": 4,
+          "total": 11,
+          "rate": 0.36363636363636365,
+          "wilson95": [
+            0.15166471095367573,
+            0.6461988254921511
+          ]
+        },
+        "@7": {
+          "successes": 4,
+          "total": 11,
+          "rate": 0.36363636363636365,
+          "wilson95": [
+            0.15166471095367573,
+            0.6461988254921511
+          ]
+        }
+      },
+      "near_best_recall": {
+        "tolerance_cp": 25,
+        "eligible_finite_score_parents": 11,
+        "@1": {
+          "successes": 0,
+          "total": 11,
+          "rate": 0.0,
+          "wilson95": [
+            0.0,
+            0.2588329669680317
+          ]
+        },
+        "@5": {
+          "successes": 5,
+          "total": 11,
+          "rate": 0.45454545454545453,
+          "wilson95": [
+            0.21271271622459764,
+            0.719908462590678
+          ]
+        },
+        "@7": {
+          "successes": 5,
+          "total": 11,
+          "rate": 0.45454545454545453,
+          "wilson95": [
+            0.21271271622459764,
+            0.719908462590678
+          ]
+        }
+      },
+      "cp_regret": {
+        "comparable_parents": 11,
+        "mean": 380.8181818181818,
+        "median": 310.0,
+        "p95": 974.5,
+        "max": 1147.0
+      },
+      "mate_category_disagreements": 0
+    },
+    "black": {
+      "parents": 9,
+      "legal_move_coverage": {
+        "min": 14,
+        "median": 25.0,
+        "max": 49,
+        "parents_with_at_most_5_moves": 0
+      },
+      "strict_best_recall": {
+        "@1": {
+          "successes": 1,
+          "total": 9,
+          "rate": 0.1111111111111111,
+          "wilson95": [
+            0.019890887638544907,
+            0.434999705576656
+          ]
+        },
+        "@5": {
+          "successes": 2,
+          "total": 9,
+          "rate": 0.2222222222222222,
+          "wilson95": [
+            0.06322510711784671,
+            0.5474110308930111
+          ]
+        },
+        "@7": {
+          "successes": 2,
+          "total": 9,
+          "rate": 0.2222222222222222,
+          "wilson95": [
+            0.06322510711784671,
+            0.5474110308930111
+          ]
+        }
+      },
+      "near_best_recall": {
+        "tolerance_cp": 25,
+        "eligible_finite_score_parents": 9,
+        "@1": {
+          "successes": 3,
+          "total": 9,
+          "rate": 0.3333333333333333,
+          "wilson95": [
+            0.1205838183869109,
+            0.6457978644196036
+          ]
+        },
+        "@5": {
+          "successes": 9,
+          "total": 9,
+          "rate": 1.0,
+          "wilson95": [
+            0.7008549515804559,
+            1.0
+          ]
+        },
+        "@7": {
+          "successes": 9,
+          "total": 9,
+          "rate": 1.0,
+          "wilson95": [
+            0.7008549515804559,
+            1.0
+          ]
+        }
+      },
+      "cp_regret": {
+        "comparable_parents": 9,
+        "mean": 220.0,
+        "median": 56.0,
+        "p95": 608.0,
+        "max": 656.0
+      },
+      "mate_category_disagreements": 0
+    }
+  },
+  "positions": [
+    {
+      "parent_key": "4c7465ebaf4748ca6a871c36b0132fb3",
+      "turn": "white",
+      "legal_moves": 39,
+      "best_teacher_moves": [
+        "d5g2"
+      ],
+      "neural_top1": "d1b3",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "top1_cp_regret": 242.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.008890500059351325,
+        "neural_batch_seconds": 0.0005989999044686556,
+        "predicted_children": 39,
+        "legal_children": 39
+      }
+    },
+    {
+      "parent_key": "442cc096052b4084907efc5a5ef3ce60",
+      "turn": "white",
+      "legal_moves": 26,
+      "best_teacher_moves": [
+        "d2c3"
+      ],
+      "neural_top1": "a1d1",
+      "strict_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 802.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.0072249999502673745,
+        "neural_batch_seconds": 0.0006157999159768224,
+        "predicted_children": 26,
+        "legal_children": 26
+      }
+    },
+    {
+      "parent_key": "c8b15177a46fd17dfd47f94347adf39a",
+      "turn": "white",
+      "legal_moves": 33,
+      "best_teacher_moves": [
+        "e4e5"
+      ],
+      "neural_top1": "d3d4",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "top1_cp_regret": 31.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.008662399952299893,
+        "neural_batch_seconds": 0.0005370000144466758,
+        "predicted_children": 33,
+        "legal_children": 33
+      }
+    },
+    {
+      "parent_key": "543a845520e7632196bccc31f166e1a7",
+      "turn": "white",
+      "legal_moves": 28,
+      "best_teacher_moves": [
+        "d2d4"
+      ],
+      "neural_top1": "c2c4",
+      "strict_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 66.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.006925099994987249,
+        "neural_batch_seconds": 0.0005223000189289451,
+        "predicted_children": 28,
+        "legal_children": 28
+      }
+    },
+    {
+      "parent_key": "58b07449b61997f4c71ad7a68f532283",
+      "turn": "white",
+      "legal_moves": 36,
+      "best_teacher_moves": [
+        "h2c7"
+      ],
+      "neural_top1": "h2e5",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "top1_cp_regret": 420.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.007727099931798875,
+        "neural_batch_seconds": 0.0005813000025227666,
+        "predicted_children": 36,
+        "legal_children": 36
+      }
+    },
+    {
+      "parent_key": "255ea3085b36416929cff62a0ec59fa3",
+      "turn": "black",
+      "legal_moves": 41,
+      "best_teacher_moves": [
+        "f5d6"
+      ],
+      "neural_top1": "a8c8",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 36.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.009961899952031672,
+        "neural_batch_seconds": 0.0006349000614136457,
+        "predicted_children": 41,
+        "legal_children": 41
+      }
+    },
+    {
+      "parent_key": "bbc7f1623a43b1c557dccc452f3d42ed",
+      "turn": "white",
+      "legal_moves": 33,
+      "best_teacher_moves": [
+        "a1b1"
+      ],
+      "neural_top1": "g3f5",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "top1_cp_regret": 356.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.006820000009611249,
+        "neural_batch_seconds": 0.0005259000463411212,
+        "predicted_children": 33,
+        "legal_children": 33
+      }
+    },
+    {
+      "parent_key": "0d998c05adcc10715f52a62a1beb85f2",
+      "turn": "black",
+      "legal_moves": 37,
+      "best_teacher_moves": [
+        "c6c5"
+      ],
+      "neural_top1": "e7e4",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 656.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.007982999901287258,
+        "neural_batch_seconds": 0.0005579000571742654,
+        "predicted_children": 37,
+        "legal_children": 37
+      }
+    },
+    {
+      "parent_key": "6810c03dac3454c09eb31ee4491d3289",
+      "turn": "black",
+      "legal_moves": 31,
+      "best_teacher_moves": [
+        "c7c5"
+      ],
+      "neural_top1": "b8c6",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 56.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.008102299994789064,
+        "neural_batch_seconds": 0.0006584000075235963,
+        "predicted_children": 31,
+        "legal_children": 31
+      }
+    },
+    {
+      "parent_key": "5b68eed77bd3bf706a25055f3c6cb0c2",
+      "turn": "black",
+      "legal_moves": 49,
+      "best_teacher_moves": [
+        "g4e2"
+      ],
+      "neural_top1": "g7g5",
+      "strict_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 248.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.011358099989593029,
+        "neural_batch_seconds": 0.0006990000838413835,
+        "predicted_children": 49,
+        "legal_children": 49
+      }
+    },
+    {
+      "parent_key": "5112d5f5e19a0c28804d02e4bf8c70e1",
+      "turn": "black",
+      "legal_moves": 25,
+      "best_teacher_moves": [
+        "h6g4"
+      ],
+      "neural_top1": "h6g4",
+      "strict_best": {
+        "1": true,
+        "5": true,
+        "7": true
+      },
+      "near_best": {
+        "1": true,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 0.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.005913100088946521,
+        "neural_batch_seconds": 0.0004469000268727541,
+        "predicted_children": 25,
+        "legal_children": 25
+      }
+    },
+    {
+      "parent_key": "d47dbe5aaa0b51ad8ff933288f35a0b7",
+      "turn": "black",
+      "legal_moves": 17,
+      "best_teacher_moves": [
+        "c6c5"
+      ],
+      "neural_top1": "b2f2",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 422.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.0027899000560864806,
+        "neural_batch_seconds": 0.00031269993633031845,
+        "predicted_children": 17,
+        "legal_children": 17
+      }
+    },
+    {
+      "parent_key": "c7fbf58c101415da3f10f4ee9593a127",
+      "turn": "black",
+      "legal_moves": 14,
+      "best_teacher_moves": [
+        "c3a3"
+      ],
+      "neural_top1": "c7c8",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": true,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 23.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.0023491999600082636,
+        "neural_batch_seconds": 0.00032679992727935314,
+        "predicted_children": 14,
+        "legal_children": 14
+      }
+    },
+    {
+      "parent_key": "7fe832be52aafa830103fa7144e7e511",
+      "turn": "white",
+      "legal_moves": 23,
+      "best_teacher_moves": [
+        "d2d4"
+      ],
+      "neural_top1": "f3e5",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "top1_cp_regret": 303.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.006585000082850456,
+        "neural_batch_seconds": 0.0006246000993996859,
+        "predicted_children": 23,
+        "legal_children": 23
+      }
+    },
+    {
+      "parent_key": "253c4d6599d04f1f209e9ca71beca744",
+      "turn": "white",
+      "legal_moves": 38,
+      "best_teacher_moves": [
+        "h4g5"
+      ],
+      "neural_top1": "h6d6",
+      "strict_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 1147.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.011658399947918952,
+        "neural_batch_seconds": 0.0006673999596387148,
+        "predicted_children": 38,
+        "legal_children": 38
+      }
+    },
+    {
+      "parent_key": "c77e993d2be7d6fc0fe15422338c5b6a",
+      "turn": "white",
+      "legal_moves": 4,
+      "best_teacher_moves": [
+        "f2g3"
+      ],
+      "neural_top1": "f2e1",
+      "strict_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 349.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.001381400041282177,
+        "neural_batch_seconds": 0.0003776999656111002,
+        "predicted_children": 4,
+        "legal_children": 4
+      }
+    },
+    {
+      "parent_key": "30601426f5737e0d61a33b56357fe119",
+      "turn": "white",
+      "legal_moves": 46,
+      "best_teacher_moves": [
+        "g2g4"
+      ],
+      "neural_top1": "c2c4",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "top1_cp_regret": 163.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.017421600059606135,
+        "neural_batch_seconds": 0.0012089000083506107,
+        "predicted_children": 46,
+        "legal_children": 46
+      }
+    },
+    {
+      "parent_key": "4cdc05dc4061b6fe49c9c2822e1e391e",
+      "turn": "black",
+      "legal_moves": 14,
+      "best_teacher_moves": [
+        "g5a5"
+      ],
+      "neural_top1": "f8g8",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": true,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 3.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.005077400011941791,
+        "neural_batch_seconds": 0.0007316999835893512,
+        "predicted_children": 14,
+        "legal_children": 14
+      }
+    },
+    {
+      "parent_key": "1b514c29956dddbc7d35a0b857f01695",
+      "turn": "black",
+      "legal_moves": 23,
+      "best_teacher_moves": [
+        "h8f8"
+      ],
+      "neural_top1": "g7g6",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 536.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.00911490002181381,
+        "neural_batch_seconds": 0.0008315999293699861,
+        "predicted_children": 23,
+        "legal_children": 23
+      }
+    },
+    {
+      "parent_key": "38699ff9eee8317f8ac259b39d0906e1",
+      "turn": "white",
+      "legal_moves": 31,
+      "best_teacher_moves": [
+        "h2h3"
+      ],
+      "neural_top1": "f3e5",
+      "strict_best": {
+        "1": false,
+        "5": false,
+        "7": false
+      },
+      "near_best": {
+        "1": false,
+        "5": true,
+        "7": true
+      },
+      "top1_cp_regret": 310.0,
+      "mate_category_disagreement": false,
+      "timing": {
+        "wall_seconds": 0.013628700049594045,
+        "neural_batch_seconds": 0.0012236000038683414,
+        "predicted_children": 31,
+        "legal_children": 31
+      }
+    }
+  ]
+}

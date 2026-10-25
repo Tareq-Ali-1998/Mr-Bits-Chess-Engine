@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>LOCAL_VERIFICATION.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="-what-has-actually-been-tested">✅ What has actually been tested</h1>
+<p><strong>23 October 2026 · local Windows CPU verification</strong></p>
+<blockquote>
+<p>Bro, these are measured results, including the weak ones. The lab is ready for its first GPU session; a strong chess evaluator is still the research objective.</p>
+</blockquote>
+<h2 id="working-software-and-recovery">Working software and recovery</h2>
+<p>The complete suite currently passes <strong>43 tests</strong>. It covers encoding, the original Kernel's piece mapping, EP/castling, selected-label policy, full saved-PV legality, deduplication/splits, manifest integrity, architectures/activations, raw-score metrics, independent ranking, export parity, and experiment comparisons.</p>
+<p>Recovery checks include a real optimizer step followed by interruption, replay of the unfinished epoch, deterministic uninterrupted-versus-resumed CPU weights, refusal of changed data/configuration/precision, and recovery between checkpoint and log commits. Early stopping cannot silently be bypassed by restarting the same checkpoint.</p>
+<p>All <strong>11 Bash files</strong> pass syntax checks under Git Bash, and all <strong>10 public help routes</strong> work. The full CPU setup script was executed successfully in a project-local <code>.venv</code>, including the editable package install. Dependencies were installed inside that environment, without replacing the inherited working CPU Torch.</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Verified local version</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python</td>
+<td>3.14.2, standard CPython</td>
+</tr>
+<tr>
+<td>PyTorch</td>
+<td>2.10.0+cpu</td>
+</tr>
+<tr>
+<td>NumPy</td>
+<td>2.4.1</td>
+</tr>
+<tr>
+<td>chess</td>
+<td>1.10.0</td>
+</tr>
+<tr>
+<td>Zstandard</td>
+<td>0.25.0</td>
+</tr>
+<tr>
+<td>Rich</td>
+<td>13.7.1</td>
+</tr>
+<tr>
+<td>matplotlib</td>
+<td>3.10.8</td>
+</tr>
+<tr>
+<td>TensorBoard</td>
+<td>2.20.0</td>
+</tr>
+</tbody>
+</table>
+<p>The strict doctor passed real CPU matrix/backward/AdamW work, the actual lab feature/evaluator step, NumPy/Torch integration, compression, legal moves, Rich output, headless PNG plotting, and TensorBoard event writing.</p>
+<p>A separate one-epoch run wrote real training/validation TensorBoard events. Their scalar values were read back, and a temporary localhost-only TensorBoard server successfully served the scalar-tags HTTP endpoint. The test server was stopped afterward. The GPU starter configurations enable TensorBoard.</p>
+<h2 id="the-prepared-pilot-is-real">The prepared pilot is real</h2>
+<p>The read-only archive scan processed 160,000 records and found 112,771 unique candidates passing the policy. Hash selection retained 100,000: <strong>89,995 training / 4,979 validation / 5,026 test</strong>. This is a subset of a bounded prefix; its distribution cannot stand in for the complete archive.</p>
+<p>The final data files occupy 10,800,576 bytes. Their checksums and the recomputed metadata fingerprint pass verification:</p>
+<pre class="hljs"><code><div>744decab4d485b8415e617ad1fa09adf49cc4209cbe1d53bf163eadc8205e511
+</div></code></pre>
+<p>See the <a href="../data/local-100k/manifest.json">manifest</a> and <a href="DATA_PIPELINE.md">data guide</a> for policy and coverage.</p>
+<h2 id="first-real-training-result">First real training result</h2>
+<p><code>runs/local-small/</code> is a completed <strong>five-epoch CPU demonstration</strong> using batch 512, four CPU threads, no loader workers, and seed 42. Its saved configuration is the authority. The new GPU pilot configurations use seed 20261023 and batch 2,048, so they are different experiments and should not reproduce these numbers exactly.</p>
+<p>There were <strong>880 optimizer updates</strong> and 449,975 training-position presentations. The recorded training-loop total is 11.53 seconds; the final cumulative epoch/validation/checkpoint timing is 12.60 seconds. Neither figure includes every process-startup cost or predicts GPU speed.</p>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th style="text-align:right">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Validation Huber, epoch1→5</td>
+<td style="text-align:right">0.96187 → 0.72268</td>
+</tr>
+<tr>
+<td>Validation MAE, epoch1→5</td>
+<td style="text-align:right">128.85 → 103.77 cp</td>
+</tr>
+<tr>
+<td>Held-out test MAE</td>
+<td style="text-align:right"><strong>103.89 cp</strong></td>
+</tr>
+<tr>
+<td>Held-out test RMSE</td>
+<td style="text-align:right">197.89 cp</td>
+</tr>
+<tr>
+<td>Test errors within 25 cp</td>
+<td style="text-align:right">35.54%</td>
+</tr>
+<tr>
+<td>Test errors within 50 cp</td>
+<td style="text-align:right">56.01%</td>
+</tr>
+<tr>
+<td>Test errors within 100 cp</td>
+<td style="text-align:right">74.49%</td>
+</tr>
+<tr>
+<td>Constant-zero test MAE</td>
+<td style="text-align:right">137.13 cp</td>
+</tr>
+<tr>
+<td>Basic material test MAE</td>
+<td style="text-align:right">155.86 cp</td>
+</tr>
+<tr>
+<td>Test examples</td>
+<td style="text-align:right">5,026</td>
+</tr>
+</tbody>
+</table>
+<p>The model learns and improves over these references on this distribution. The average hides substantial weakness: the test MAE is about 70.57 cp in the high-material diagnostic bucket and 186.15 cp in the low-material bucket. This is one general model; the buckets are analysis, not phase-specific networks.</p>
+<p><img src="../runs/local-small/curves.png" alt="Measured CPU training curves"></p>
+<p>The <a href="../runs/local-small/test.json">full test report</a> and <a href="../runs/local-small/metrics.csv">epoch CSV</a> contain the underlying measurements. The first epoch's unusually high observed throughput is not a reliable sustained-speed estimate; use the dedicated benchmark on the target machine.</p>
+<h2 id="the-move-retention-result-is-not-95">The move-retention result is not 95%</h2>
+<p>An explicit bundled <strong>Stockfish 16</strong> binary generated a small workflow benchmark: <strong>20 independent parents, 588 complete legal children, 2,000 requested nodes per nonterminal child</strong>, one teacher thread and 64 MiB hash. Parent/child overlap exclusion against both training and validation ran before labeling.</p>
+<table>
+<thead>
+<tr>
+<th>Measurement</th>
+<th style="text-align:right">Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Strict teacher-best recall@1</td>
+<td style="text-align:right">1/20 = 5%</td>
+</tr>
+<tr>
+<td>Strict teacher-best recall@5</td>
+<td style="text-align:right"><strong>6/20 = 30%</strong></td>
+</tr>
+<tr>
+<td>Strict teacher-best recall@7</td>
+<td style="text-align:right"><strong>6/20 = 30%</strong></td>
+</tr>
+<tr>
+<td>Near-best within 25 cp recall@5</td>
+<td style="text-align:right">14/20 = 70%</td>
+</tr>
+<tr>
+<td>Strict@5 Wilson 95% interval</td>
+<td style="text-align:right">14.5%–51.9%</td>
+</tr>
+<tr>
+<td>Near-best@5 Wilson 95% interval</td>
+<td style="text-align:right">48.1%–85.5%</td>
+</tr>
+<tr>
+<td>Mean finite top-one teacher regret</td>
+<td style="text-align:right">308.45 cp</td>
+</tr>
+</tbody>
+</table>
+<p>There are only 20 observations, the node budget is deliberately low, and the pilot is drawn from a bounded source prefix. This is an end-to-end workflow check. It does <strong>not</strong> establish deployment strength, trustworthy hard pruning, or progress to 95% on a representative final benchmark. Near-best retention is a different claim from retaining an exactly tied teacher-best move.</p>
+<p>The <a href="../runs/local-small/ranking.json">ranking report</a> includes legal-move coverage, separate White/Black results, timings, and each parent outcome. Timings vary by host/run; its CPU parent latency includes Python legal generation, encoding, inference, and sorting. It is not a C++ search-node evaluator benchmark.</p>
+<h2 id="large-model-exports-and-repeated-evaluation">Large model, exports and repeated evaluation</h2>
+<p>The actual 17,858,049-parameter large model passed a synthetic CPU batch-of-eight forward/backward/AdamW step with finite loss/weights and output shape <code>[8,1]</code>. It has <strong>not</strong> completed a large real-data training run here. Its size alone says nothing about its eventual chess quality.</p>
+<p>TorchScript export parity passed for ReLU and the custom GELU/SiLU/tanh designs. The small trained checkpoint's serialized export matched eager outputs within the specified tolerance, with zero measured maximum difference in the local check. This is Python/TorchScript parity, not C++ integration.</p>
+<p>The full Bash evaluation wrapper ran successfully and was rerun successfully. Checkpoint-specific export names and checksum-verified reuse avoid stale silent overwrites. Python 3.14 emits a TorchScript compatibility/deprecation warning; Python 3.12 is the recommended first server interpreter for this artifact format.</p>
+<h2 id="what-remains-for-the-actual-gpu-session">What remains for the actual GPU session</h2>
+<ul>
+<li>Verify the actual NVIDIA device, CUDA kernels, deterministic feature expansion, BF16 and full lab optimizer step using the doctor.</li>
+<li>Measure real batch throughput and peak allocated/reserved/free VRAM for both models.</li>
+<li>Train both GPU pilots and inspect validation curves rather than copying CPU expectations.</li>
+<li>Scale data coverage and training only after checking the pilot.</li>
+<li>Build a stronger, larger, stable teacher benchmark before making recall claims.</li>
+<li>Measure C++ inference and equal-time engine behavior before search integration.</li>
+</ul>
+<p>No cloud machine was created, no paid training was launched, and the original C++ source hashes remain the preservation reference. The upload bundle includes only the lab, its explicit pilot/demo artifacts, and guides.</p>
+
+</body>
+</html>

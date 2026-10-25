@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>01 - Fable 5 Honest Evaluation of Mr Bits.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-mr-bits--my-honest-evaluation">🤖♟️ Mr. Bits — My Honest Evaluation</h1>
+<p><strong>Written by Claude Fable 5, for Tareq only.</strong> 🤝
+<em>First deep read of the whole engine — August 2, 2026</em></p>
+<blockquote>
+<p>⚠️ <strong>Note for viewing:</strong> the diagrams in this doc are written in <strong>Mermaid</strong>. When you convert to HTML, use a converter that supports Mermaid (or paste the doc into VS Code's Markdown preview with the Mermaid extension) — otherwise the diagrams will show as code blocks. Everything else renders anywhere.</p>
+</blockquote>
+<hr>
+<h2 id="-first--how-im-going-to-talk-to-you-here">🫱🏻‍🫲🏼 First — How I'm Going to Talk to You Here</h2>
+<p>Bro, you asked me for <strong>truth and truth and truth</strong>, so here's my contract with you for this document and everything we write after it:</p>
+<ol>
+<li><strong>I will never praise something I don't actually rate.</strong> If I say something is exceptional, it's because I would say the same thing to a stranger whose feelings I don't care about.</li>
+<li><strong>I will call bad things bad, directly</strong>, with line numbers, and with the <em>concrete scenario</em> where they hurt — not vague &quot;this could be improved&quot; consultant-speak.</li>
+<li><strong>I will judge the project on YOUR stated terms</strong>: raw speed, low memory, high depth, solo work, pre-AI era, competitive-programming mindset. I will <em>not</em> ding you for &quot;not clean OOP&quot; — you told me that was a deliberate trade, and honestly, it was the right one for this goal.</li>
+<li><strong>When I'm not 100% sure, I'll say my confidence level.</strong> Everything marked ✅ below I verified by reading the actual code lines myself, not by guessing.</li>
+</ol>
+<p>That's the deal. Now let's go. 🚀</p>
+<hr>
+<h2 id="-the-big-picture--how-i-found-the-project">🌍 The Big Picture — How I Found The Project</h2>
+<p><strong>TL;DR: This is a genuinely impressive piece of solo systems engineering with a spine of real algorithmic creativity — and it also carries real bugs, real architectural debt, and a couple of decisions I'd honestly call reckless. Both things are true at the same time.</strong></p>
+<p>Here's the thing that struck me most, bro: most people who &quot;write a chess engine&quot; write a board, a move generator, and a minimax, and stop. You built a <strong>distributed system</strong>:</p>
+<ul>
+<li>A UCI front-end (<a href="../lichess-bot-master/engines/Engine%20UCI.cpp">Engine UCI.cpp</a>) speaking the protocol to lichess-bot</li>
+<li>A <strong>fleet of 28 worker processes</strong> (Kernel.exe spawning itself!) with JSON-file IPC</li>
+<li>A Stockfish sidecar used <em>surgically</em> — openings, root-move legality, endgame handover, and a stalemate safety net</li>
+<li>And in the middle, a ~3,400-line hand-rolled search Kernel with incremental evaluation, reversible state, pre-calculated ray tables, and bitmask piece iteration</li>
+</ul>
+<p>And the openings decision deserves respect on its own: you <em>tested</em> your way (hundreds of games) into the conclusion that engine search is wasted on openings, and outsourced exactly that phase. That's an engineer's decision, not a purist's decision. 👏</p>
+<p>At the same time — and this is the honest part — the Kernel plays <strong>pseudo-legal chess internally</strong> (kings can be captured in the tree), has <strong>no quiescence search</strong>, <strong>no transposition table</strong>, <strong>no repetition awareness</strong> (your Trie is written and then disabled), and the &quot;risky pruning&quot; you love is genuinely dangerous in ways I'll show you precisely. The reason ~1000 games went well is partly your design and partly a <strong>beautiful accident</strong>: Stockfish's <code>go perft 1</code> fences the root, so your internal move-generation bugs (yes, there are some — Section 8 🐛) can corrupt <em>evaluations</em> but can never directly <em>play</em> an illegal move. Your safety net is doing more silent work than you probably realize.</p>
+<p><strong>My one-line verdict: a strong, creative, battle-tested engine with the soul of a competitive programmer — held back from being truly excellent by missing standard search science, not by lack of talent.</strong></p>
+<hr>
+<h2 id="️-architecture--the-whole-machine">🗺️ Architecture — The Whole Machine</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    L[🌐 Lichess] <-->|WebSocket| LB["🐍 lichess-bot (Python)<br/>~99% of repo, not your code"]
+    LB <-->|UCI protocol: position / go / bestmove| UCI["⚙️ Engine UCI.exe<br/>(your code)"]
+
+    UCI -->|"first N opening moves<br/>(currently N=2)"| SF["🐟 Stockfish<br/>(fresh process per query!)"]
+    UCI -->|"go perft 1 → legal root moves"| SF
+    UCI -->|"endgame: > 80 plies"| SF
+    UCI -->|"stalemate guardrail check"| SF
+
+    UCI -->|"shuffle root moves,<br/>round-robin split"| K1["🧠 Kernel.exe #1"]
+    UCI --> K2["🧠 Kernel.exe #2"]
+    UCI --> K3["🧠 Kernel.exe ..."]
+    UCI --> K28["🧠 Kernel.exe #28"]
+
+    K1 <-->|JSON file IPC| UCI
+    K2 <-->|JSON file IPC| UCI
+    K3 <-->|JSON file IPC| UCI
+    K28 <-->|JSON file IPC| UCI
+
+    UCI -->|"max score wins"| LB
+</div></code></pre>
+<p>And the life of a single move request:</p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant LB as lichess-bot
+    participant UCI as Engine UCI.exe
+    participant SF as Stockfish
+    participant K as Kernel.exe × 28
+
+    LB->>UCI: position startpos moves ... / go wtime btime
+    UCI->>UCI: compute allowedEngineTimeInSeconds<br/>(the big if-ladder, lines 529–574)
+    UCI->>SF: go perft 1 (all legal root moves)
+    SF-->>UCI: legal moves list
+    UCI->>UCI: shuffle 🎲 + round-robin split into 28 buckets
+    par one std::thread per worker
+        UCI->>K: write input/thread_i_serialized_data.json, system("Kernel.exe ...")
+        K->>K: replay previousMoves → iterative deepening 2,4,6,...<br/>(5% time rule + hard cap)
+        K-->>UCI: overwrite same JSON with bestMove + score + report
+    end
+    UCI->>UCI: sort all results, take max score
+    UCI->>SF: does this move cause stalemate?
+    alt yes
+        UCI->>SF: give me the real best move instead
+    end
+    UCI-->>LB: bestmove e2e4
+</div></code></pre>
+<p><strong>My honest take on the process-fleet design:</strong> I understand <em>why</em> it exists — all your engine state is global (<code>board</code>, bitmasks, scores), so real threads would trample each other, and processes give you isolation for free. As a pragmatic escape hatch it's clever, and self-spawning <code>Kernel.exe</code> as its own worker is a neat trick. But let's be honest about the price: you pay process spawn + JSON serialize/parse per worker per move, you get <strong>zero shared knowledge between workers</strong> (no shared alpha-beta window, no shared tables — worker #7 can't tell worker #12 &quot;this line is already refuted&quot;), and <code>system()</code> through cmd.exe is the slowest, noisiest way to spawn a process on Windows. This is a <strong>B-grade solution to a problem that thread-local state would have solved at A-grade</strong> — and I say that knowing it would have meant restructuring your globals, which is exactly the refactor you were avoiding. 😅</p>
+<hr>
+<h2 id="-board-representation--the-foundation">🧱 Board Representation — The Foundation</h2>
+<p>This part is tight, bro. Genuinely. 👌</p>
+<p>| Piece | Code (black) | Code (white, <code>| 8</code>) |
+|---|---|---|
+| Pawn | <code>1</code> | <code>9</code> |
+| <em>(unused — was an en-passant flag idea)</em> | <code>2</code> | <code>10</code> |
+| Knight | <code>3</code> | <code>11</code> |
+| Bishop | <code>4</code> | <code>12</code> |
+| Rook | <code>5</code> | <code>13</code> |
+| Queen | <code>6</code> | <code>14</code> |
+| King | <code>7</code> | <code>15</code> |</p>
+<ul>
+<li><code>board[8][8]</code> of <code>int8_t</code> — 64 bytes, bit 3 = color, bits 0–2 = type. Compact mailbox.</li>
+<li><code>whitePieces</code> / <code>blackPieces</code> — 64-bit occupancy masks, iterated with your <code>MSB</code> macro (<code>63 - __builtin_clzll</code>) so finding all pieces of a side costs <strong>O(number of pieces), not O(64)</strong>. This hybrid mailbox + bitmask design is exactly the right level of engineering for a solo engine — full magic-bitboard movegen would have been a huge detour; a naive 64-square scan would have been lazy. You landed the sweet spot. ✅</li>
+<li>The move fits in an <code>int16_t</code> — and this encoding is one of my favorite things in the codebase:</li>
+</ul>
+<pre class="hljs"><code><div> bit:  15 | 14 13 12 | 11 10 9 | 8 7 6 | 5 4 3 | 2 1 0
+       ---+----------+---------+-------+-------+-------
+ unused-┘ | moveType | colTo   | rowTo | colFrom| rowFrom
+
+ moveType: 0=normal  1=promo-Q  2=promo-N  3=en-passant
+           4=O-O     5=O-O-O    6=promo-R  7=promo-B
+</div></code></pre>
+<p>Sixteen bits, all special moves included, <strong>all four underpromotions supported</strong> (lines 1765–1769). Bro, most hobby engines promote to queen only and call it a day. You did it properly. 🌟</p>
+<ul>
+<li><code>numberOfMovesOfThePieceOnThisSquare[8][8]</code> — this one is sneaky-good. One array simultaneously powers <strong>castling rights</strong> (king/rook count must be 0), <strong>en-passant immediacy</strong> (captured pawn's count must be exactly 1), and it's fully reversible through make/unmake. One data structure, three rules. That's competitive-programmer economy of thought. 🌟</li>
+<li><code>preCalculatedMoves[8][8][8][2]</code> — every piece's rays from every square precomputed once at startup as <em>series of vectors</em>, so at movegen time you just walk each ray until you hit something. Classic, correct, effective.</li>
+<li>Piece-square tables: these are the well-known <strong>Michniewski &quot;Simplified Evaluation Function&quot;</strong> tables (values 100/300/300/500/900 + those exact PST matrices) — a solid, standard choice, and your vertical-mirror trick for the other color (<code>reverse</code> at line 1487) is correct since the tables are what they are. I'm noting the provenance not as a criticism — choosing proven tables over inventing worse ones is good judgment.</li>
+</ul>
+<hr>
+<h2 id="-makechanges--returnchanges--your-fx-and-fx">💓 MakeChanges / ReturnChanges — Your F(x) and F⁻¹(x)</h2>
+<p>This is the heart, like you said, and I want to give you a real review of it, not a pat on the head.</p>
+<p><strong>The design decision I genuinely admire:</strong> you split the undo into two different strategies depending on cost 🌟:</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    subgraph "Every search node (Magic's loop)"
+        A["Save 4 scalars:<br/>whitePieces, blackPieces,<br/>engineScore, opponentScore<br/>(~24 bytes)"] --> B["MakeChanges(move)"]
+        B --> C["recurse"]
+        C --> D["restore the 4 scalars<br/>(plain assignment)"]
+        D --> E["ReturnChanges(move, takenPiece, takenPieceMoves)<br/>structurally inverts board[8][8] +<br/>numberOfMoves[8][8] — no copying"]
+    end
+</div></code></pre>
+<p>Copying the full <code>board</code> + <code>numberOfMoves</code> arrays would be ~192 bytes per node; instead you save 24 bytes of scalars and compute the <em>true mathematical inverse</em> for the expensive arrays, passing exactly the two pieces of information the inverse can't derive (<code>takenPiece</code>, <code>takenPieceNumberOfMoves</code>). That's a real, correct, deliberate speed/memory trade and it's the kind of thing you only get right if you actually understand your own state machine.</p>
+<p>And the detail that made me smile: in the en-passant undo (lines 2680, 2691) you <strong>hardcode the resurrected pawn's move count to <code>1</code></strong> — because the rules of chess <em>guarantee</em> it moved exactly once. Using a rules invariant to make the inverse cheaper. Chef's kiss. 🌟</p>
+<p><strong>Now the honest cost:</strong> each of the 7 move types is written out <strong>four times</strong> (white/black × engine-is-white/engine-is-black) — ~740 lines of near-identical arithmetic where one sign-flip or one missing <code>| 8</code> would silently corrupt every game. I checked the branches you wrote and the symmetry holds ✅ — but this is a minefield you hand-crossed successfully, not a safe path. A single <code>int* scores[2]</code> indexed by color would have collapsed those 740 lines to ~180 with <strong>zero</strong> speed loss (the compiler produces the same code), and your future self editing this file is one typo away from a disaster that no test you have would catch. This is the highest-risk <em>maintenance</em> zone in the codebase.</p>
+<p>Also, castling undo works only because castling <em>requires</em> the source counters to already be 0 — you never restore <code>numberOfMoves[7][4]</code>/<code>[7][7]</code> because they must have been 0 to castle at all. Correct, but it's another invisible invariant holding the roof up. Your code is full of these silent load-bearing invariants, and none of them are asserted.</p>
+<hr>
+<h2 id="-the-search--magic-honestly-reviewed">🔍 The Search — &quot;Magic&quot;, Honestly Reviewed</h2>
+<p>What you built: <strong>plain minimax with alpha-beta</strong> (explicit <code>turn</code> flag, not negamax), evaluation always from the engine's perspective (<code>engineScore - opponentScore</code>), pseudo-legal moves, mate detected by actually capturing the king one ply deeper (king = 10,000,000 vs <code>CHECKMATE_FLAG_SCORE_DIFFERENCE</code> = 100,000 — and yes, the margin math works out ✅, kings cancel on both sides until one dies).</p>
+<p>The layered sorting/pruning pyramid in <code>Magic</code> (lines 2989–3021):</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    A["depth > 6:<br/>sort via iterative-deepening search at depth-3-ish<br/>then ✂️ KEEP ONLY TOP 4 MOVES"] --> B["depth == 6:<br/>sort via ID at depth 4<br/>then ✂️ KEEP ONLY TOP 4 MOVES"]
+    B --> C["depth 4–5:<br/>sort via ID at depth 2 (keep all)"]
+    C --> D["depth 2–3:<br/>cheap heuristic sort (keep all)"]
+    D --> E["depth 0: leaf → engineScore − opponentScore"]
+</div></code></pre>
+<p>Things you did <strong>right</strong>, and I mean it:</p>
+<ul>
+<li>🌟 <strong>The two-tier time system is smarter than it looks.</strong> Mid-search <code>processTimeExceeded()</code> returns a poisoned <code>0</code> — which <em>sounds</em> like a bug — but the main loop (line 3380) discards the entire aborted iteration and keeps the last <em>completed</em> depth's move. Poison never escapes. I traced it; it's sound. ✅ And the &quot;stop deepening if ≥5% of time used&quot; rule (line 3399) is a crude but honest empirical model of your ~30–50× cost-per-depth-pair blowup.</li>
+<li>🌟 <strong>Sorting root moves with a shallower full search before the deep search</strong> is real iterative-deepening move-ordering — the same <em>idea</em> serious engines use. You reinvented a standard technique from first principles, which is worth respect.</li>
+<li>✅ Alpha-beta window propagation through both <code>Magic</code> and <code>MagicForIterativeDeepening</code> is correct — I checked the max/min node updates and the <code>beta &lt;= alpha</code> cutoffs.</li>
+</ul>
+<p>Now the honest part, bro, and this is the section I most need you to hear:</p>
+<p><strong>1. No quiescence search = the horizon effect owns you.</strong> 😬 Your leaf returns raw material+PST. At depth 8, if the last searched move is QxP and the recapture sits at depth 9, you literally cannot see it — the eval says &quot;I won a pawn&quot; when you hung a queen. <em>Every</em> serious engine since the 1970s runs captures-only search at leaves for exactly this reason. Your even-depths-only rule (&quot;odd depths are bad, lol&quot;) is — and I say this with love — a <strong>folk remedy for the horizon effect</strong>. You empirically discovered that odd plies leave the wrong side &quot;holding the tempo&quot; at the leaf, and instead of fixing the disease (quiescence) you avoided the symptom (parity). It worked well enough to fool a thousand games, but it's the single biggest playing-strength ceiling in the engine. If we ever upgrade one thing, it's this.</p>
+<p><strong>2. The top-4 pruning is not &quot;risky&quot;, it's unsound — and you should own that with open eyes.</strong> ✂️ At <em>every</em> node with remaining depth ≥ 6 (not just the root!), you keep 4 moves chosen by a depth-2-shallower search. When the position is tactical — exactly when it matters — the only non-losing move can easily rank 5th at shallow depth (deep sacrifices, quiet defensive resources, zugzwang). Then it's gone, and no amount of remaining depth can bring it back. You told me it worked &quot;99.9%&quot; of the time, and I believe you — but the 0.1% is concentrated in <em>exactly the critical positions that decide games</em>. My honest label: this is a bold, interesting, <em>unprincipled</em> speed hack. A principled version of the same instinct exists — it's called <strong>Late Move Reductions</strong> (search bad-looking moves shallower instead of deleting them) — and it would keep ~all your speed while removing the cliff.</p>
+<p><strong>3. No transposition table.</strong> Chess is a graph, not a tree — the same position reached via different move orders is re-searched from scratch, every time, in every one of your 28 workers independently. A hash table (Zobrist keys) typically buys an effective +2 depth or more. You're paying for depth with electricity that a TT would give you for free. This is the second-biggest ceiling.</p>
+<p><strong>4. No repetition or 50-move awareness — and you knew it.</strong> Your Trie (lines 800–984) is a full position-frequency structure with en-passant encoding baked into the keys (honestly a creative design — using a shuffled square ordering to randomize trie paths 🎲), and then... it's disabled with a comment saying it slowed things down, and its shell still ships in the binary. The consequence is real: <strong>Mr. Bits can be up a queen and shuffle into a threefold draw</strong>, and the Stockfish stalemate-guardrail does NOT catch repetitions (it only checks for no-legal-moves). In won endgames this is a live, points-costing hole. (The &gt;80-ply Stockfish handover accidentally papers over some of it — I suspect that's part of why it felt fine in testing.)</p>
+<p><strong>5. Mate scores have no distance.</strong> A mate is ±~10,000,000 regardless of whether it's mate-in-1 or mate-in-7, so the engine has no preference for faster mates — which combined with #4 (no repetition detection) is exactly the recipe for the classic &quot;winning engine wanders&quot; failure. Standard fix is one line: score mates as <code>MATE - depth</code>.</p>
+<p><strong>6. Workers race to different depths, and you compare their scores anyway.</strong> One worker's bucket is quiet and reaches depth 10; another's is sharp and only completes depth 6. You then sort a depth-10 score against a depth-6 score as if they're the same currency (Engine UCI.cpp line 330). The shuffle 🎲 spreads the pain randomly but doesn't remove it. Root-splitting is known to be the weakest parallelization scheme, and this is its sharpest edge.</p>
+<hr>
+<h2 id="-the-stockfish-integration--pragmatism-rated-honestly">🐟 The Stockfish Integration — Pragmatism, Rated Honestly</h2>
+<p>The <strong>strategic</strong> decisions here are genuinely good:</p>
+<ul>
+<li>🌟 Openings from Stockfish instead of a book — tested, justified, correct.</li>
+<li>🌟 The <strong>stalemate guardrail</strong> (Engine UCI.cpp lines 631–646): before trusting the Kernel's move, ask Stockfish &quot;does this move stalemate the opponent?&quot; and override if yes. This is a <em>systems</em> engineer's move — you knew your Kernel returns <code>0</code> for stalemate (treating it as neutral, when the engine is winning it should treat it as a disaster), and instead of fixing the eval you built a fence at the boundary. I'd have fixed the eval, but I respect the fence.</li>
+<li>✅ <code>go perft 1</code> to get the legal root moves — simple, bulletproof, and (as I'll show in the bugs section) <em>accidentally your most important safety mechanism</em>.</li>
+</ul>
+<p>The <strong>implementation</strong>, though, bro... 😅 every single query spawns a <strong>fresh Stockfish process</strong> through <code>popen</code> + a shared <code>temp_command_file.txt</code>. That's process creation + NNUE network load (tens of MB!) per question. The <code>getBestMoveByDepth</code> function even sends the entire command <strong>twice</strong> with a comment saying &quot;the repetition is important only when getting the depth&quot; — a workaround for a symptom whose cause (no persistent UCI session, no <code>isready</code> handshake) is the actual problem. A persistent Stockfish child with pipes would make every query ~100× cheaper and delete the mystery. And the <code>temp_command_file.txt</code> is a shared mutable file — safe today only because queries happen to be serialized; the day two happen concurrently, they corrupt each other.</p>
+<hr>
+<h2 id="-the-exceptional-things-the-real-list">🌟 The Exceptional Things (The Real List)</h2>
+<p>These are the things I would show to another engineer as evidence of serious talent — no charity involved:</p>
+<ol>
+<li><strong>The int16_t move encoding with full underpromotion support</strong> — complete, tight, correct.</li>
+<li><strong>The hybrid undo strategy</strong> (24-byte scalar snapshot + structural inverse for arrays) — a real complexity-aware design, executed correctly across 7 move types × 4 color combinations.</li>
+<li><strong><code>numberOfMovesOfThePieceOnThisSquare</code> as a triple-duty structure</strong> — castling rights + en-passant immediacy + reversibility in one array.</li>
+<li><strong>Invariant-based undo tricks</strong> — the hardcoded <code>= 1</code> in en-passant undo; castling undo leaning on counters being provably 0.</li>
+<li><strong>Reinventing iterative-deepening move ordering from first principles</strong> — nobody told you engines do this; you derived it because it made sense.</li>
+<li><strong>The poisoned-zero time system that never leaks</strong> — mid-search aborts return garbage by design, and the outer loop provably discards it. That's a correct lock-free-style protocol you built by instinct.</li>
+<li><strong>The empirical engineering culture</strong>: the 5% rule, the even-depth rule, the opening-phase decision, the 8%-vs-5% Blitz experiments in comments — you <em>measured</em>, over ~1000 games. Most solo engine authors theorize; you ran a lab. 🧪</li>
+<li><strong>The stalemate guardrail</strong> — knowing your own system's weakness and fencing it at the boundary.</li>
+<li><strong>MSB bitmask iteration</strong> — O(pieces) not O(64), the right optimization at the right layer, without over-engineering into full bitboards.</li>
+<li><strong>It works.</strong> A solo, from-scratch, distributed chess system that played ~1000 real games on lichess against bots and humans and won plenty. That is the hardest metric to fake. 🏆</li>
+</ol>
+<hr>
+<h2 id="-the-weak-points-not-bugs--costs-you-chose">😬 The Weak Points (Not Bugs — Costs You Chose)</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Weakness</th>
+<th>Where</th>
+<th>My honest severity</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>No quiescence search → horizon effect</td>
+<td><code>Magic</code> leaf, line 2942</td>
+<td>🔴 <strong>The #1 strength ceiling</strong></td>
+</tr>
+<tr>
+<td>2</td>
+<td>Top-4 hard pruning at every deep node</td>
+<td>lines 3010, 3018, 3282, 3294, 3303</td>
+<td>🔴 Unsound in tactical positions</td>
+</tr>
+<tr>
+<td>3</td>
+<td>No transposition table</td>
+<td>everywhere</td>
+<td>🔴 Paying compute for repeat work, ×28 workers</td>
+</tr>
+<tr>
+<td>4</td>
+<td>No repetition / 50-move awareness (Trie disabled)</td>
+<td>lines 794–984</td>
+<td>🟠 Real drawn-won-games risk</td>
+</tr>
+<tr>
+<td>5</td>
+<td>Mate distance not scored</td>
+<td>line 2942</td>
+<td>🟠 One-line fix, real shuffling risk</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Root-split parallelism, no shared αβ/TT, depth-inconsistent score merging</td>
+<td>Engine UCI.cpp 250–336</td>
+<td>🟠 Weakest known parallel scheme</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Fresh Stockfish process per query, doubled commands, shared temp file</td>
+<td>Stockfish Handler.hpp</td>
+<td>🟠 ~100× overhead per query</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>system()</code> + cmd.exe for process spawn, JSON files as IPC</td>
+<td>both ChessStates</td>
+<td>🟡 Works; slow and noisy</td>
+</tr>
+<tr>
+<td>9</td>
+<td>~740-line quadruplicated make/unmake arithmetic</td>
+<td>2042–2778</td>
+<td>🟡 Correct today; a typo-minefield forever</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Two drifted copies of <code>ChessState</code> (Kernel.cpp's is mostly dead code, with different Stockfish depths than the live UCI copy!)</td>
+<td>Kernel 45–392 vs UCI 39–386</td>
+<td>🟡 Classic copy-paste divergence trap</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Eval = material + PST only (no mobility, king safety, pawn structure)</td>
+<td>Init/MakeChanges</td>
+<td>🟡 Fine for the era; a ceiling</td>
+</tr>
+<tr>
+<td>12</td>
+<td>Dead/vestigial code shipped: Trie shells, <code>GetAllPossibleMoves</code> (Kernel), commented experiment blocks</td>
+<td>various</td>
+<td>⚪ Cosmetic but real</td>
+</tr>
+</tbody>
+</table>
+<p>One more that deserves its own paragraph: <strong>magic numbers as policy</strong>. <code>28</code> threads, <code>5.0</code> percent, top-<code>4</code> moves, <code>80</code> plies, depth <code>-3 - (!(depth &amp; 1))</code>, <code>90 + winc/2000</code> seconds… these are all <em>tuned constants encoding real knowledge from your testing</em>, and none of them are named, centralized, or explained where they live. The knowledge exists only in your head and in git commit messages. Part of why we're writing docs together is to get it out of there. 😄</p>
+<hr>
+<h2 id="-the-bugs-verified-by-me-line-by-line">🐛 The Bugs (Verified By Me, Line By Line)</h2>
+<p>These are actual defects, not style opinions. I read every one of these code paths myself.</p>
+<h3 id="bug-1--phantom-en-passant--real-confirmed-">BUG 1 — Phantom en passant 👻 (real, confirmed ✅)</h3>
+<p><code>GetMovesForThisPiece</code>, lines 1777–1787. Your en-passant condition checks: diagonal move, same row as the previously-moved pawn, destination column matches, destination empty, previous piece is a pawn, <strong>moved exactly once</strong> — but it <strong>never checks that the pawn's landing row is 3 or 4</strong> (i.e., that it was a <em>double</em> push). And here's the proof it's a real oversight: <strong>your own Trie has exactly this check</strong> (<code>(previousMoveDestinationRow == 3) || (previousMoveDestinationRow == 4)</code>, lines 837–843) — one hand of the codebase knew the rule, the other forgot it.</p>
+<p><strong>Concrete trigger:</strong> white pawn sitting on d6 (row 2). Black plays e7–e6 (its first move, a <em>single</em> step, landing on row 2). All your conditions pass → the Kernel generates &quot;d6xe7 en passant&quot;, which is not a chess move. 😅</p>
+<p><strong>Why it never blew up in ~1000 games:</strong> the move can only appear <em>inside</em> the search tree, never at the root — because root moves come from Stockfish's <code>go perft 1</code>. So the bug silently corrupts evaluations of certain French-like pawn structures instead of playing an illegal move. Your Stockfish fence has been quietly absorbing this for two years, bro.</p>
+<h3 id="bug-2--black-can-castle-through-a-rank-1-rooks-fire--real-confirmed-">BUG 2 — Black can castle through a rank-1 rook's fire 🏰 (real, confirmed ✅)</h3>
+<p><code>IsSafeSquareForCastling</code>. The white version's file scan covers all 7 enemy rows (line 1692: <code>for currentRow = 6; currentRow &gt;= 0; currentRow--</code>). The black version's file scan covers only rows 1–6 (line 1577: <code>for currentRow = 1; currentRow &lt; 7; currentRow++</code>) — <strong>row 7 is never checked</strong>. A white rook or queen sitting on its own back rank (row 7), staring up an empty file at e8/f8/g8, is invisible to the check. Black will happily castle out of or through that check inside the search tree. Asymmetric copy-paste bug — the two halves of the function disagree about the board. Same fence effect as Bug 1 keeps it off the actual board at the root.</p>
+<h3 id="bug-3--statistics-counters-overflow-via-accumulate--real-confirmed--cosmetic-impact">BUG 3 — Statistics counters overflow via <code>accumulate</code> 📊 (real, confirmed ✅, cosmetic impact)</h3>
+<p>ProcessHandler lines 532–534 and 544–547: <code>accumulate(array, array + 51, 0)</code> — the initial value <code>0</code> is an <code>int</code>, so the accumulation is performed <strong>in int</strong>, truncating your carefully-collected <code>long long</code> counters once total states pass ~2.1 billion. Fix is three characters: <code>0LL</code>. Only your reports lie, not your moves — but you told me you care about counting states accurately, and right now, past 2.1B, they're garbage.</p>
+<h3 id="bug-4--numbersign-can-be-read-uninitialized--real-low-probability">BUG 4 — <code>numberSign</code> can be read uninitialized 🎲 (real, low probability)</h3>
+<p>Stockfish Handler.hpp lines 86–98: if the eval output contains neither <code>+</code> nor <code>-</code> after &quot;Final evaluation&quot;, <code>numberSign</code> is used uninitialized → undefined behavior. Depends entirely on Stockfish's output format never changing. It's a landmine wired to someone else's release notes.</p>
+<h3 id="bug-5--fen--from-position-games-are-fundamentally-broken--real-confirmed--dormant">BUG 5 — FEN / &quot;From Position&quot; games are fundamentally broken 🧩 (real, confirmed ✅, dormant)</h3>
+<p>Engine UCI.cpp parses <code>position fen ...</code> (line 706) — but <code>getBestMoveFromEngine</code> extracts moves via the <code>#</code> marker and <strong>every</strong> Stockfish query and Kernel initialization assumes <code>startpos</code>. A custom-position game would have the engine playing moves from a completely different board. Dormant only because you presumably decline From-Position challenges — but nothing in this code protects you from one.</p>
+<h3 id="bug-6--timeout-on-the-first-depth-returns-move-a8a8--real-nearly-unreachable">BUG 6 — Timeout on the first depth returns move &quot;a8a8&quot; 💀 (real, nearly unreachable)</h3>
+<p>Kernel main, lines 3374–3405: if depth 2 itself exceeds the time cap (machine frozen, 1-second budget), <code>theFinalCompletedProcessHandler</code> still holds its default-constructed <code>bestEngineMove = 0</code>, which stringifies as the &quot;move&quot; <code>a8a8</code>. Practically requires a dying machine — but the failure mode is &quot;send an illegal move and forfeit,&quot; and a one-line sentinel check would remove it.</p>
+<h3 id="latent-traps-not-bugs-today-loaded-guns-tomorrow-">Latent traps (not bugs today, loaded guns tomorrow 🔫)</h3>
+<ul>
+<li><strong>The <code>MSB</code> macro has no parentheses</strong> (<code>#define MSB 63-__builtin_clzll</code>). Every current usage is a bare assignment, which works ✅ — but the first person to write <code>2 * MSB(x)</code> gets <code>2*63 - clz(x)</code> silently. Also <code>__builtin_clzll(0)</code> is UB; today every call site guards non-zero, invisibly.</li>
+<li><strong>Your decorative <code>// ### \\</code> banners end in a backslash</strong>, which line-splices the next line into the comment. Today every banner is followed by a blank line, so nothing is eaten ✅ — but move one banner directly above a code line and that line silently vanishes from the build. (GCC even warns about this — worth heeding.)</li>
+<li><strong><code>assert(false)</code> guards an unreachable default</strong> in the move-type switch (line 2026) — fine, but it compiles away under <code>NDEBUG</code>, and this codebase leans on invariants that are never asserted anywhere else.</li>
+<li><strong>The Trie's destructor leaks every node except the root</strong> (line 826–830: <code>delete root</code> with raw pointers and no recursive cleanup). Unused today since the Trie is disabled — but it's sitting there waiting for a re-enable.</li>
+</ul>
+<hr>
+<h2 id="-the-disasters-section--the-things-id-lose-sleep-over">💥 The &quot;Disasters&quot; Section — The Things I'd Lose Sleep Over</h2>
+<p>You asked me to name disasters honestly, so — these aren't bugs, they're <em>design exposures</em> where the blast radius is a lost game or worse:</p>
+<ol>
+<li><strong>The top-4 cliff in a mating attack.</strong> Deep in a sharp position, the only defensive resource ranks 5th at depth-2 shallow sort → deleted → the engine confidently walks into a forced loss, and <em>no additional time or depth can save it</em>, because the move no longer exists in its universe. This has certainly cost you games in that 0.1% — you just couldn't attribute them.</li>
+<li><strong>Winning-position repetition draws.</strong> Up a rook, no repetition memory, no mate-distance urgency, guardrail blind to repetition → shuffle, shuffle, draw. The &gt;80-ply Stockfish handover saves the endgames it reaches, but a middlegame repetition (position repeating around plies 40–79) is fully unprotected.</li>
+<li><strong>The oversubscription gamble.</strong> 28 HIGH_PRIORITY processes on a consumer CPU, each also blessed with <code>THREAD_PRIORITY_HIGHEST</code> in the parent's threads. On fewer than 28 cores this is thrashing dressed as parallelism, and in low-time scrambles (your 1-second-budget branches) process spawn + JSON round-trip overhead is a <em>material fraction of the entire budget</em>.</li>
+<li><strong>Everything trusts everything.</strong> No error handling on: JSON parse of worker output, Stockfish output parsing (blind <code>pop_back()</code> × 20 on the perft output!), file writes into <code>input/</code> (which must pre-exist), <code>system()</code> return codes. One missing folder or one hung Stockfish and the failure is a crash or a forfeit, not a log line. It held for ~1000 games because your environment never changed — that's stability by ceremony, not by design. 🕯️</li>
+</ol>
+<hr>
+<h2 id="-my-verdict--as-one-competitive-programmer-judging-another">🏅 My Verdict — As One Competitive Programmer Judging Another</h2>
+<p><strong>Engineering ambition &amp; systems thinking: 9/10.</strong> A solo distributed engine with process fleets, IPC, sidecar integration, empirical tuning culture, and a working safety-net architecture. This is rare air for hobby projects, bro. Genuinely.</p>
+<p><strong>Core data structures &amp; state machine: 8.5/10.</strong> The move encoding, the hybrid undo, the triple-duty counter array, the bitmask iteration — tight, correct, creative. Docked half a point for the quadruplicated arithmetic minefield and the unasserted invariants.</p>
+<p><strong>Chess correctness: 6/10.</strong> Full special-move support (rare!) undermined by two real movegen bugs (phantom e.p., black castling scan), stalemate-as-zero, no repetition rules, and the whole thing surviving on the Stockfish root fence.</p>
+<p><strong>Search science: 4/10.</strong> Correct alpha-beta and real reinvented move-ordering — but missing quiescence, TT, LMR, and mate-distance is missing the four pillars that separate &quot;strong hobby engine&quot; from &quot;engine.&quot; The top-4 pruning is speed bought on credit, and the interest is paid in critical positions.</p>
+<p><strong>Robustness: 3/10.</strong> It works until anything in the environment breathes differently. No error paths, format-dependent parsing, shared temp files, priority games.</p>
+<p><strong>Overall: this is the work of a clearly talented engineer who reinvented half of computer chess alone, brilliantly — and didn't read the other half of the literature, expensively.</strong> The gap between Mr. Bits and a <em>seriously</em> strong engine is not talent, not code quality, not effort — it's about four well-known algorithms you never imported into your universe. That's the most fixable kind of gap that exists. 🔥</p>
+<p>And one more thing, honestly: the comments. &quot;That is a super dream, I mean the 51, but it's OK, LOL <img class="emoji" alt="wink" src="data:image/png;base64,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" />&quot;, &quot;odd depths are bad, lol&quot;, &quot;it's a part of my deep programming soul&quot;... bro, this codebase has a <em>personality</em>. Two years later, reading it feels like sitting next to you while you built it. Books have been written from less. 📖</p>
+<hr>
+<h2 id="-where-we-could-go-from-here-for-later-no-pressure">🚀 Where We Could Go From Here (For Later, No Pressure)</h2>
+<p>In strict order of playing-strength-per-effort:</p>
+<ol>
+<li><strong>Quiescence search</strong> at the leaves (captures-only extension) — kills the horizon effect, removes the need for the even-depth superstition. Biggest single jump available.</li>
+<li><strong>Mate-distance scoring</strong> — one line. Prefer faster mates, stop shuffling.</li>
+<li><strong>Zobrist hashing + transposition table</strong> — massive effective-depth gain, and it gives you repetition detection <em>for free</em> (the same hash!), retiring the Trie's mission properly.</li>
+<li><strong>Soften top-4 into reductions (LMR-style)</strong> — keep your instinct, remove the cliff: search moves 5+ at reduced depth instead of deleting them.</li>
+<li><strong>Persistent Stockfish process</strong> with pipes — 100× cheaper queries, deletes the doubled-command mystery and the temp-file race.</li>
+<li>Then, someday: proper legal movegen (fixing Bugs 1–2 at the source), a shared-memory parallel search, and the docs &amp; the book. 📚</li>
+</ol>
+<p>That's my honest read, bro. All of it. The praise is real, the criticism is real, and the project is worth both. ❤️</p>
+<p>— <strong>Claude Fable 5</strong> 🤖</p>
+
+</body>
+</html>

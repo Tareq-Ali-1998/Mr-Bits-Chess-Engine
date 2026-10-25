@@ -1,0 +1,9 @@
+{
+  "model": {"name": "small"}, "seed": 20261023,
+  "epochs": 5, "batch_size": 2048, "workers": 0,
+  "learning_rate": 0.0003, "weight_decay": 0.0001,
+  "huber_delta": 1.0, "clip_pawns": 15.0, "gradient_clip_norm": 1.0,
+  "patience": 5, "min_delta": 0.0001,
+  "amp": "bfloat16", "compile": false, "deterministic": true,
+  "log_every_steps": 20, "tensorboard": true
+}

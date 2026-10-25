@@ -1,0 +1,2385 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>02 - Opus 5.5 Neural Network Research for Mr Bits.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-mr-bits-gets-a-brain--neural-networks-for-a-deeper-search">🧠♟️ Mr. Bits Gets a Brain — Neural Networks for a Deeper Search</h1>
+<p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝
+<em>Research doc #2 · October 22, 2026 · the companion to &quot;01 - Fable 5 Honest Evaluation of Mr Bits&quot;</em></p>
+<div style="background:linear-gradient(90deg,#1e3a8a,#6d28d9);color:#ffffff;border-radius:14px;padding:16px 22px;margin:16px 0;">
+<p><strong>In one sentence:</strong> your idea (score every child with a net, trust the best few, search deeper) is sound, the labels are free or cheap, and Mr. Bits is an unusually good host for it, because on an instrumented copy of your Kernel <strong>92.6% of all nodes at depth 10 go into the sorting searches</strong> that a net can replace. 🚀</p>
+</div>
+<blockquote>
+<p>⚠️ <strong>Viewing note:</strong> the diagrams are <strong>Mermaid</strong> and the colored boxes are small HTML blocks. Your <em>Markdown PDF</em> extension renders both: it loads Mermaid from unpkg and runs markdown-it with HTML enabled. Before handing this over I rendered <strong>every diagram in this file</strong> with that same Mermaid build in a headless browser ✅</p>
+</blockquote>
+<blockquote>
+<p>🔬 <strong>How this doc was made:</strong> six research agents (datasets &amp; labels; architectures &amp; hardware; search integration &amp; testing; your codebase; two independent idea generators) plus my own modeling. Two kinds of measurements ran on your laptop: an <strong>instrumented copy</strong> of Kernel.cpp, and <strong>NNUE speed benchmarks</strong>. Both lived in my scratch folder, so your repo was never modified. As you asked, <strong>nothing came from the ChatGPT Docs folder</strong>: not one file in it was opened. 🙈</p>
+</blockquote>
+<hr>
+<h2 id="-0-the-deal--same-contract-as-last-time">🫱🏻‍🫲🏼 0. The Deal — Same Contract As Last Time</h2>
+<p>You asked for all the ideas, so you're getting all of them, including the ones where I have to say &quot;bro, no, that one is a trap.&quot; 😄 The rules:</p>
+<ol>
+<li><strong>Your ideas get judged on the merits.</strong> Several are genuinely great; one of them is <em>exactly</em> what strong engines do. Some need a twist. One of them (the 3–4 separate phase nets) I'll argue against, with numbers, and then give you the experiment that settles it.</li>
+<li><strong>Every claim carries a confidence marker:</strong> ✅ = verified (in your code, in a measurement, or in a source listed in §19) · 🟡 = my estimate or model, with the arithmetic shown · 🔮 = an idea or prediction, not yet proven.</li>
+<li><strong>This is a research doc, not a sales pitch.</strong> A neural net will not magically fix the engine. When something has to come <em>before</em> the net (spoiler: quiescence search, and a free compiler flag), I'll say it loudly.</li>
+</ol>
+<p><strong>Reading map:</strong> 10 minutes → §1 + §2 · the label question → §5 · about to write code → §12 · about to spend money → §11 + §14 · all the ideas → §15.</p>
+<hr>
+<h2 id="-1-the-one-screen-answer">⚡ 1. The One-Screen Answer</h2>
+<div style="background:#eff6ff;border-left:6px solid #2563eb;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🧩 &quot;Is my idea good?&quot;</strong> Yes. Its textbook names are <em>learned move ordering</em> and <em>selective search</em>. Mr. Bits is a perfect host: your sorting searches eat <strong>92.6% of the nodes and 87% of the time</strong> at depth 10 (measured ✅, §2), and a net ranks the same moves about 5× cheaper at depth 4–5 and tens of thousands of times cheaper at depth 9–10 (measured ✅, §12.3).</p>
+<p><strong>🏷️ &quot;Where do I get the y values?&quot;</strong> You don't need to buy anything, and it doesn't take years:</p>
+<ul>
+<li>🆓 <strong>Lichess evaluation database:</strong> 394,669,566 positions with deep, multi-line Stockfish evals, public domain (CC0) ✅</li>
+<li>🆓 <strong>DeepMind's ChessBench:</strong> <strong>15.3 billion</strong> Stockfish evaluations of <em>every legal move</em> in 530M positions. That's literally &quot;evaluate every child&quot;, already done for you ✅</li>
+<li>⚙️ <strong>Make your own:</strong> 100M positions at 5,000 Stockfish nodes each take ≈ 6–12 hours of pure search on your Nebius box, about <strong>$10–21</strong> 🟡 (add 10–50% for UCI and Python overhead)</li>
+<li>💸 The paid databases (ChessBase Mega 2026: €229.90, 11.7M games) contain <strong>zero engine evaluations</strong> ✅. Buy compute, not data.</li>
+</ul>
+<p><strong>🎯 &quot;What should the net output?&quot;</strong> Train on <strong>win probability</strong>, output centipawns, display pawns. Your pawn display survives, but the numbers follow the labels: trained on Stockfish scores, +1.00 means what it means to Stockfish (≈ 50% chance to win), not exactly one pawn of material (§5.1).</p>
+<p><strong>🔀 &quot;Another structure I didn't think of?&quot;</strong> An <strong>action-value head</strong>: one forward pass on the <em>parent</em> scores all ~35 moves at once, with no &quot;best move&quot; labels needed. Plus a <strong>statistically calibrated trust factor</strong> (ProbCut / conformal sets) instead of a fixed 5 (§4, §8).</p>
+<p><strong>🎭 &quot;3–4 phase nets?&quot;</strong> Make it <strong>one net with piece-count buckets</strong>. Stockfish 19 (Sep 2026) went back to a single net ✅, and your Kernel only plays plies 4–80 anyway ✅. You'll still get the experiment that decides it for real (§9).</p>
+<p><strong>🩺 &quot;NNUE alone was bad&quot;</strong> Your old test ranked children with Stockfish's <em>static</em> <code>eval</code>, with no quiescence search ✅. NNUE nets are trained on quiet-filtered positions (none in check, none whose best move is a capture), so that test was very likely to look bad 🟡 (§10).</p>
+<p><strong>🎁 Before any net:</strong> your production <code>Kernel.exe</code> is an unoptimized <code>-O0</code> build. Rebuilding the same code with <code>-O2 -march=native</code> gave <strong>×3.48</strong> with identical results (measured ✅, §2.3).</p>
+<p><strong>💸 Budget:</strong> v1 ≈ <strong>$33–62</strong> for the lean core (≈ $65–120 with the deep slice, all ablations and test matches) on the Nebius box; everything fits <strong>well under $300</strong> 🟡 (§14).</p>
+</div>
+<hr>
+<h2 id="️-2-where-a-brain-fits-in-mr-bits--and-why-its-worth-it">🗺️ 2. Where a Brain Fits in Mr. Bits — And Why It's Worth It</h2>
+<h3 id="21-what-magic-does-today">2.1 What <code>Magic()</code> does today</h3>
+<p>Here's the most important thing in this document, so it goes first. Look at what <code>Magic()</code> does at every node (Kernel.cpp lines 2989–3021) ✅:</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    subgraph NOW["😰 Today — Magic() sorts by SEARCHING"]
+        direction TB
+        N1["depth 2–3<br/>simple heuristic sort"]:::cheap
+        N2["depth 4–5<br/>search EVERY child 2 plies to sort"]:::pricey
+        N3["depth 6<br/>search EVERY child 4 plies,<br/>then keep top 4 ✂️"]:::costly
+        N4["depth ≥ 7<br/>search EVERY child 4, 6, 8… plies,<br/>then keep top 4 ✂️"]:::costly
+        N1 --- N2 --- N3 --- N4
+    end
+    subgraph SOON["🧠 Tomorrow — Magic() sorts by ASKING"]
+        direction TB
+        M1["depth 2–3<br/>simple heuristic sort"]:::cheap
+        M2["depth ≥ 4<br/>ONE tiny net evaluation per child"]:::brain
+        M3["trust layer<br/>search the trusted K at full depth,<br/>reduce the rest instead of deleting them"]:::brain
+        M1 --- M2 --- M3
+    end
+    NOW ~~~ SOON
+    classDef cheap fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef pricey fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef costly fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef brain fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+</div></code></pre>
+<p><code>SortTheMovesAccordingToIterativeDeepening</code> (lines 2878–2933) runs a <strong>full-window</strong> search under <em>every</em> child: <code>alpha = INT_MIN</code> and <code>beta = INT_MAX</code> are never tightened between siblings. <code>Magic</code> calls it <strong>before</strong> its move loop, so it runs at every node, including the cut-nodes that refute on the very first move and never look at the other 34 ✅. The sort depth grows with the node's remaining depth (so deeper iterations reach deeper sorts): 4 plies at depth 6–8, 6 at depth 9–10, 8 at depth 11–12 ✅.</p>
+<h3 id="22-measured-where-a-depth-10-iteration-really-goes">2.2 Measured: where a depth-10 iteration really goes</h3>
+<p>In two of your old commit messages (before you reinitialized the repo) you wrote that you should count the states of <code>MagicForIterativeDeepening</code>, <em>&quot;because I guess in this version there are too many calculations that are happening there, even more than in the function 'Magic'&quot;</em>. Bro, <strong>your instinct is right, and it's not close.</strong> The codebase agent built an instrumented copy of Kernel.cpp, with the same node counts, moves and scores as production. It ran a realistic worker (2 root moves in an Italian Game position) through a full depth-10 iteration (18 s) ✅:</p>
+<pre><code class="language-mermaid"><div class="mermaid">pie showData
+    title One depth-10 iteration, 18 seconds (measured)
+    "Sorts at depth-9 nodes (6-ply)" : 59.0
+    "Sorts at depth 6-8 nodes (4-ply)" : 24.4
+    "Sorts at depth 4-5 nodes (2-ply)" : 2.6
+    "Root sort" : 1.4
+    "The real alpha-beta search" : 12.6
+</div></code></pre>
+<ul>
+<li><strong>92.6% of all nodes</strong> and <strong>87% of the time</strong> were sorting sub-searches. The main tree was 7.4% of the nodes.</li>
+<li>The two 6-ply sorts at the depth-9 nodes alone took <strong>59% of the time</strong>: 16.6 million nodes <em>each</em>.</li>
+<li>In a single process with all 36 root moves, the root sort alone was <strong>71%</strong> of a depth-8 iteration.</li>
+</ul>
+<p>Before the measurement existed, I built a best-case model of your search (the box below). At depth 10 it predicts 93.6% for a single process sorting all 35 root moves, and 88.7% for the 2-move worker layout that was measured, against 92.6% measured. So the model's shape can be trusted 🟡:</p>
+<table>
+<thead>
+<tr>
+<th>Root depth</th>
+<th>Share of nodes spent <strong>sorting</strong> (model)</th>
+<th>Nodes today (model)</th>
+<th>Nodes if the net sorts (model)</th>
+<th>Fewer nodes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>6</td>
+<td>🟠 67%</td>
+<td>143,289</td>
+<td>49,279</td>
+<td><strong>×2.9</strong></td>
+</tr>
+<tr>
+<td>8</td>
+<td>🔴 92% (measured with 36 root moves: 91% ✅)</td>
+<td>2,432,429</td>
+<td>197,609</td>
+<td><strong>×12.3</strong></td>
+</tr>
+<tr>
+<td>10</td>
+<td>🔴 94% (measured in a 2-move worker: 92.6% ✅)</td>
+<td>11.9 M</td>
+<td>0.79 M</td>
+<td><strong>×15</strong></td>
+</tr>
+<tr>
+<td>12</td>
+<td>🔴 99%</td>
+<td>327 M</td>
+<td>3.2 M</td>
+<td><strong>×103</strong></td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid"><div class="mermaid">xychart-beta
+    title "Share of nodes spent inside sorting searches (model)"
+    x-axis "Root depth" ["4", "6", "8", "10", "12"]
+    y-axis "% of all nodes" 0 --> 100
+    bar [33.3, 66.7, 92.1, 93.6, 99.1]
+</div></code></pre>
+<div style="background:#f8fafc;border-left:6px solid #475569;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🧮 How the model works (so you can attack it):</strong> branching factor b = 35. Inside every search I assume <em>perfect</em> move ordering, which is the best case for today's code <em>and</em> for the net. A full-window search of depth d then visits the Knuth–Moore minimum of b^⌈d/2⌉ + b^⌊d/2⌋ − 1 leaves, and node types follow the classic PV / CUT / ALL recursion. The sort cost at each node is copied from your code: 0 at depth 2–3; b × (1-ply search) at 4–5; b × (3-ply search) at 6; b × ((depth − 4 − (!(depth &amp; 1)))-ply search) above 6. The root sorts all 35 moves, as a single process does, using your root table (at root depth 8 that's a 6-ply sort, deeper than the inner rule). Your top-4 cut stays in both versions, and the net costs 1 node-equivalent per child (at 3 node-equivalents, the ×15 becomes ×14). The real numbers differ from the model, but the <em>shape</em> doesn't: the sorting bill grows exponentially with depth, and it's paid at every node, including the cut-nodes that only ever search one move (86% of the nodes that pay for a sort, in this same model).</p>
+</div>
+<h3 id="23--the-free-348-you-can-take-today">2.3 🎁 The free ×3.48 you can take today</h3>
+<div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>✅ Your production <code>Kernel.exe</code> is an unoptimized <code>-O0</code> build.</strong> Compiling the unmodified Kernel.cpp with your g++ 14.2 and <em>no flags</em> reproduces the exact file size and code size of the shipped binary. Its disassembly has zero AVX instructions, and <code>std::max</code> is called out of line. ✅</p>
+<p>An <code>-O2 -march=native</code> build of the <strong>same source</strong> ran the same depth-10 worker search in <strong>5,042 ms instead of 17,569 ms: ×3.48</strong>, with identical node counts (50,322,351), the same move and the same score ✅. (A reviewer's second run on a busier machine measured ×4.05, so ×3.48 is the conservative number.) That's roughly 10M nodes/s per process instead of 1.8–2.9M.</p>
+<pre class="hljs"><code><div>g++ -O2 -march=native -std=c++17 Kernel.cpp -o Kernel.exe
+</div></code></pre>
+<p>(If the bot ever runs on a different PC, replace <code>-march=native</code> with <code>-mavx2 -mbmi2 -mlzcnt -mpopcnt</code>; your i9-14900HX has AVX2 but no AVX-512 ✅.) Two follow-ups:</p>
+<ol>
+<li><strong>Retune the 5% rule.</strong> In the <code>-O2</code> run the search finished depth 10 at 5 s, then burned the remaining 115 s on a depth-12 iteration that couldn't finish ✅. A faster engine needs a smarter &quot;should I start the next depth?&quot; rule (§17).</li>
+<li><strong>Any neural-net code needs this anyway.</strong> SIMD inference compiled at <code>-O0</code> would crawl.</li>
+</ol>
+</div>
+<h3 id="24-the-honest-twist-the-net-isnt-the-only-way-to-delete-this-bill">2.4 The honest twist: the net isn't the only way to delete this bill</h3>
+<div style="background:#fffbeb;border-left:6px solid #d97706;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>⚠️ Honesty check.</strong> The classic ordering tools (the <strong>TT move</strong> from the previous iteration, <strong>MVV-LVA/SEE</strong> for captures, <strong>killer moves</strong> and <strong>history tables</strong>) also replace sorting searches, at almost zero cost. That's how Stockfish orders moves: TT move → good captures → killers/countermove → quiet moves by history → bad captures ✅ (the Stockfish 16 source sitting in your <code>engines/stockfish/src/movepick.cpp</code>).</p>
+<p>Doc 01's item 3 (Zobrist hashing + a TT, part of Stage 0 here) will therefore shrink the bill <strong>even before any net</strong>: the TT move from the previous iteration is free move ordering. That's good news, not bad: it means the net has to beat <em>TT + killers + history</em>, not just your 4-ply sort. Where the net adds what history can't: <strong>ranking the quiet moves at nodes with no TT information</strong>, and <strong>deciding how hard to reduce each move</strong> (the trust factor). So measure again after Stage 0, and add killers + history before you compare. The net's job is to win <em>that</em> comparison.</p>
+</div>
+<div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>✅ Make the measurement permanent (an hour of work):</strong> both <code>Magic</code> and <code>MagicForIterativeDeepening</code> call <code>increaseTheNumberOfStatesForACertainDepth(depth)</code> (lines 2941 and 2788), so your per-depth counters mix the two. On top of that, the counters are reset <em>after</em> the root sort (line 3170), so your reports never include root-sort nodes ✅. Add one counter that only <code>MagicForIterativeDeepening</code> increments, and print the ratio after every game.</p>
+</div>
+<p>So the pitch isn't &quot;a neural net evaluates better than material + PST.&quot; It's this:</p>
+<blockquote>
+<p><strong>The net's first job is to replace your most expensive computation, the sorting searches, with something about 5× cheaper at depth 4–5 (more once the accumulator is incremental), hundreds of times cheaper at depth 6–8 and tens of thousands of times cheaper at depth 9+ (measured, §12.3). Every node it saves turns into depth.</strong> 🧠➡️⏱️➡️📈</p>
+</blockquote>
+<p>Its second job (later, with care) is to become a better <em>leaf</em> evaluator than material + PST. Both jobs are on the roadmap (§16), in that order.</p>
+<hr>
+<h2 id="-3-neural-networks-in-10-minutes--competitive-programmer-edition">🎓 3. Neural Networks in 10 Minutes — Competitive-Programmer Edition</h2>
+<p>You said you're not a deep-learning person. Good news: you already know 90% of it. You just know it under different names. 😄</p>
+<h3 id="31-a-neural-net-is-a-function-with-tunable-numbers">3.1 A neural net is a function with tunable numbers</h3>
+<pre class="hljs"><code><div>f(x) = W3 · relu( W2 · relu( W1 · x + b1 ) + b2 ) + b3
+</div></code></pre>
+<ul>
+<li><strong>x</strong>: the input vector, here the board written as 768 zeros and ones (§6).</li>
+<li><strong>W, b</strong>: the <em>weights</em> and <em>biases</em>, together called the <strong>parameters</strong>. They're like the numbers in your piece-square tables, except there are hundreds of thousands of them, arranged in layers.</li>
+<li><strong>relu(z) = max(0, z)</strong>: the only &quot;nonlinear&quot; ingredient. Without it, stacking layers collapses into one big matrix, which is a purely linear evaluation. Which brings me to the best part:</li>
+</ul>
+<div style="background:#f5f3ff;border-left:6px solid #7c3aed;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🤯 Your current eval is already a neural network.</strong> Material + PST is <code>eval = Σ w[piece][square]</code> over the pieces on the board. That's a <strong>linear model with 768 inputs and zero hidden layers</strong>, whose weights Michniewski picked by hand. So:</p>
+<ul>
+<li><strong>Step 1:</strong> <em>learn</em> those 768 weights from data instead of hand-picking them. That's &quot;Texel tuning&quot; (it gained the Texel engine about <strong>+100 Elo</strong> ✅). Congratulations, you trained your first network. 🎉</li>
+<li><strong>Step 2:</strong> add one hidden layer, so the model can learn <em>interactions</em> that a PST can't express: bishop pair, king safety, a passed pawn with a rook behind it, &quot;this knight is great <em>because</em> that pawn is gone&quot;.</li>
+</ul>
+<p>That's the whole conceptual jump, bro. Everything else is engineering.</p>
+</div>
+<h3 id="32-training--minimizing-an-error-with-gradient-descent">3.2 Training = minimizing an error with gradient descent</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    D["📦 batch of positions<br/>(x, y) pairs"]:::data --> F["➡️ forward pass<br/>compute f(x)"]:::step
+    F --> L["📏 loss<br/>e.g. (f(x) − y)² averaged"]:::step
+    L --> B["⬅️ backward pass<br/>gradients by the chain rule<br/>(the library does this for you)"]:::step
+    B --> U["🔧 update<br/>W ← W − lr · ∂loss/∂W"]:::step
+    U -->|"repeat for billions of samples"| D
+    classDef data fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef step fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+</div></code></pre>
+<p>Think of it as <strong>ternary search's big brother</strong>: you're minimizing a function you can only probe locally, except in 200,000 dimensions instead of one, and the derivative tells you which way is downhill in every dimension at once.</p>
+<h3 id="33-the-words-youll-see-everywhere">3.3 The words you'll see everywhere</h3>
+<table>
+<thead>
+<tr>
+<th>Word</th>
+<th>Competitive-programmer translation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Sample</strong></td>
+<td>One <code>(position, label)</code> pair, like one test case</td>
+</tr>
+<tr>
+<td><strong>Batch</strong></td>
+<td>Process 16k samples at once and average their gradients (GPUs love big batches)</td>
+</tr>
+<tr>
+<td><strong>Epoch</strong> / <strong>superbatch</strong></td>
+<td>One pass over the dataset, or a fixed chunk of it (in bullet, a superbatch is 6,104 batches × 16,384 ≈ 100M positions ✅)</td>
+</tr>
+<tr>
+<td><strong>Learning rate (lr)</strong></td>
+<td>The step size of gradient descent. Too big diverges, too small crawls</td>
+</tr>
+<tr>
+<td><strong>Overfitting</strong></td>
+<td>Memorizing the test cases instead of learning the problem. You detect it with…</td>
+</tr>
+<tr>
+<td><strong>Validation set</strong></td>
+<td>…positions the net <em>never</em> trains on, from games it never saw</td>
+</tr>
+<tr>
+<td><strong>Inference</strong></td>
+<td>Using the trained net: one forward pass, no learning</td>
+</tr>
+<tr>
+<td><strong>Quantization</strong></td>
+<td>Converting float weights to int16/int8 so inference is fast integer math</td>
+</tr>
+</tbody>
+</table>
+<h3 id="34-what-one-evaluation-costs-measured-on-your-laptop-">3.4 What one evaluation costs (measured on your laptop ✅)</h3>
+<p>For the first net I'll recommend (§7): 768 inputs → 256 hidden (× 2 perspectives) → 1 output.</p>
+<ul>
+<li>The input is <strong>sparse</strong>: only ~32 of the 768 bits are 1 (one per piece). So the first layer isn't a 768×256 matrix multiply. It's <strong>adding 32 rows of 256 numbers</strong>.</li>
+<li>The famous <strong>NNUE trick</strong> is pure competitive programming: when a move changes 2–4 input bits, you <strong>don't recompute the sum. You update it</strong>. Subtract the row of the square the piece left, add the row of the square it reached. It's the same idea as a point update on a maintained array sum: O(changed features × H) instead of O(pieces × H). 😎</li>
+</ul>
+<p>The research agent benchmarked exactly this net on your i9-14900HX (<code>g++ -O3 -mavx2</code>) ✅:</p>
+<table>
+<thead>
+<tr>
+<th>Operation (H = 256)</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Incremental update + output (the NNUE way)</td>
+<td><strong>26–40 ns</strong></td>
+</tr>
+<tr>
+<td>Full rebuild from scratch + output (no NNUE trick)</td>
+<td><strong>0.26–0.38 µs</strong></td>
+</tr>
+</tbody>
+</table>
+<p>So even the &quot;lazy&quot; version without incremental updates costs about a third of a microsecond. Your sorting search at a depth-6 node costs <em>about 160,000 nodes</em> (the measured average of the 4-ply sorts in the depth-10 run; ≈ 44,000 even with perfect ordering).</p>
+<hr>
+<h2 id="-4-your-idea-formalized--evaluate-every-child-trust-the-best-k">🧩 4. Your Idea, Formalized — &quot;Evaluate Every Child, Trust the Best K&quot;</h2>
+<p>Your plan in one picture:</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TD
+    A["Node with remaining depth d ≥ 4"]:::node --> G["Generate all moves<br/>(about 35)"]:::node
+    G --> E["For each move: make it → 🧠 net evaluates the child → unmake"]:::brain
+    E --> S["Sort moves by the net's score"]:::brain
+    S --> T{"🎚️ Trust layer<br/>how many can I keep?"}:::trust
+    T -->|"top K trusted"| F["search at full depth d−1"]:::good
+    T -->|"the rest"| R["search at reduced depth<br/>(re-search if they surprise us)"]:::warn
+    T -->|"hopeless by a calibrated margin"| P["prune ✂️ (near the leaves only)"]:::bad
+    classDef node fill:#f1f5f9,stroke:#64748b,color:#0f172a
+    classDef brain fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef trust fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef good fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef warn fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef bad fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+</div></code></pre>
+<p><strong>This idea is sound, and it has names</strong>: <em>learned move ordering</em> plus <em>selective search</em>. The general shape (a cheap judge ranks, an expensive search verifies the best few) is how every strong engine works today; only the judges differ. Stockfish ranks moves with learned history statistics (and judges positions with NNUE). Leela ranks moves with a policy network ✅. There's even direct prior art for your exact flavor:</p>
+<ul>
+<li><strong>Giraffe</strong> (Matthew Lai, 2015): a learned move evaluator drove a probability-limited search and reached about IM level. Its move net had the true best move in its top 3 about 70% of the time ✅.</li>
+<li><strong>Winter</strong>: a hobby engine that orders moves with a learned model predicting &quot;will this move cause a beta cutoff?&quot; ✅</li>
+<li><strong>Realization Probability Search</strong> (shogi, 2002): depth is spent according to the −log of each move's probability. The shogi program Gekisashi won the 2002 world championship with it ✅.</li>
+</ul>
+<p>The two places where I'll push you are the <strong>trust layer</strong> (§4.2–4.3) and <strong>how many forward passes you pay</strong> (§8).</p>
+<h3 id="41-what-it-buys-effective-branching-factor--depth">4.1 What it buys: effective branching factor → depth</h3>
+<p>The quantity that decides your depth is the <strong>effective branching factor (EBF)</strong>: how many times more nodes each extra ply costs. With a fixed node budget N, the depth you reach is about log(N) / log(EBF) 🟡:</p>
+<pre><code class="language-mermaid"><div class="mermaid">xychart-beta
+    title "How deep can 100 million nodes go?"
+    x-axis "Effective branching factor" ["8", "6", "5", "4", "3", "2.5", "2", "1.8"]
+    y-axis "Depth reached (plies)" 0 --> 32
+    bar [8.9, 10.3, 11.4, 13.3, 16.8, 20.1, 26.6, 31.3]
+</div></code></pre>
+<p>Every point of EBF you shave off is worth <em>plies</em>, not percent. Your measured growth from depth 8 to 10 today is ×20–24 in nodes (EBF ≈ 4.5–4.9 ✅) and ×15 in time, because the deeper iteration runs at 2.9M instead of 1.8M nodes/s. LMR-style selectivity is known to push the EBF below 2 ✅. Better ordering is the single biggest lever, because alpha-beta's best case (about b^(d/2) nodes instead of b^d) only happens when the best move is searched <strong>first</strong> ✅.</p>
+<h3 id="42-the-trust-factor--five-ways-to-define-it">4.2 The &quot;trust factor&quot; — five ways to define it</h3>
+<table>
+<thead>
+<tr>
+<th>Trust rule</th>
+<th>What it does</th>
+<th>👍</th>
+<th>👎</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Fixed K</strong> (your &quot;best 5&quot;)</td>
+<td>Keep the top K moves</td>
+<td>Dead simple</td>
+<td>Same K in a quiet position and in a mating attack</td>
+</tr>
+<tr>
+<td><strong>Margin Δ</strong> (your own <code>scoreDifferenceFactor</code> comment, lines 2928–2931!)</td>
+<td>Keep every move within Δ of the best score</td>
+<td>Adapts: 1 move when one is obviously best, 10 when many are close</td>
+<td>Δ must be <em>calibrated</em>, not guessed (see the box)</td>
+</tr>
+<tr>
+<td><strong>Probability mass</strong> (&quot;top-p&quot;)</td>
+<td>Keep moves until their probabilities sum to 95%</td>
+<td>The natural choice with a policy head (§8)</td>
+<td>Needs a net that outputs probabilities</td>
+</tr>
+<tr>
+<td><strong>Conformal set</strong> 🔮</td>
+<td>A move set that contains a good move with probability ≥ 1 − α <strong>on average</strong> over positions like the calibration set (a real statistical guarantee, but a marginal one: nothing is promised for any single position)</td>
+<td>You choose the average miss rate per depth: say 1% at depth ≥ 8 and 5% at depth 3–5</td>
+<td>Needs a calibration set from your own search trees, and the guarantee weakens once the new pruning changes which positions get searched; I know of no chess engine doing it yet</td>
+</tr>
+<tr>
+<td><strong>Learned trust</strong> 🔮</td>
+<td>A tiny second net predicts &quot;is it safe to cut here?&quot;</td>
+<td>Learns <em>when</em> the main net is unreliable</td>
+<td>Needs labels generated by search</td>
+</tr>
+</tbody>
+</table>
+<div style="background:#eff6ff;border-left:6px solid #2563eb;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>💡 Your <code>scoreDifferenceFactor</code> idea already has a famous name: ProbCut</strong> (Michael Buro, 1995). It's your idea plus statistics ✅:</p>
+<ol>
+<li>On real search data, fit the deep result from the cheap one: <code>v_deep ≈ a · v_net + b</code>, and measure the spread σ of the errors (linear regression).</li>
+<li>At a max node, skip a child when <code>a · v_net + b + t·σ ≤ alpha</code>: even an optimistic guess can't raise alpha.</li>
+<li>t sets the risk. With roughly normal errors, a wrong cut happens about Φ(−t) of the time: t = 1.5 → 6.7%, t = 2 → 2.3%, t = 2.5 → 0.6%, t = 3 → 0.13% 🟡. Fit (a, b, σ) separately per depth band and game phase, and fit tactical moves separately from quiet ones (their errors are much wider).</li>
+</ol>
+<p>ProbCut's multi-depth version powered Logistello, which beat the human Othello world champion 6–0 in 1997 ✅, and Stockfish 16 (the version in your folder) uses a form of ProbCut ✅. So the &quot;good fixed number&quot; from your comment doesn't need to be guessed. <strong>You measure it.</strong> 🎯</p>
+</div>
+<h3 id="43-the-big-flip-prune-near-the-leaves-not-near-the-root">4.3 The big flip: prune near the leaves, not near the root</h3>
+<div style="background:#fffbeb;border-left:6px solid #d97706;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🔄 The big flip.</strong> In Mr. Bits, <code>depth</code> means <em>remaining</em> depth. So your top-4 cut fires at nodes with <strong>≥ 6 plies left</strong>: the nodes <em>closest to the root</em>, where one wrong cut changes the move you actually play. You put it there because that's where sorting is expensive.</p>
+<p>Strong engines do the opposite ✅ (all numbers from the Stockfish 16 source in your own folder):</p>
+<ul>
+<li><strong>Reductions everywhere:</strong> late moves are searched shallower by about 0.41 · ln(depth) · ln(moveNumber) + 1.34 plies, then re-searched if they beat alpha. Stockfish's code comment credits LMR with about <strong>117 Elo</strong>.</li>
+<li><strong>Hard pruning only near the leaves:</strong> once (3 + d²)/2 moves of any kind have been tried (3 + d² when the position is improving), the remaining quiet moves are skipped. At depth 6 that still keeps the first <strong>19 moves</strong>, not 4. The code has no depth cap, but the limit grows with d² (26 moves at depth 7, 33 at depth 8, 42 at depth 9), so it only bites in the last few plies.</li>
+</ul>
+<p>Once the net makes sorting cheap everywhere, you're free to make the same flip:</p>
+<ul>
+<li>remaining depth ≥ 6: <strong>no deletions.</strong> Trusted moves get full depth; the rest get reduced depth (LMR, doc 01 item 4).</li>
+<li>remaining depth 2–5: margin-based pruning (ProbCut-style) of the quiet moves the net hates.</li>
+</ul>
+</div>
+<p><strong>Why the flip matters, in numbers 🟡.</strong> Hard cuts <em>multiply</em> their risk along a line. If each truncating node keeps the true best move with probability r, a line through n truncating nodes survives with probability rⁿ. At root depth 10, Mr. Bits truncates at <strong>4 consecutive levels</strong> (remaining depth 9, 8, 7, 6) ✅:</p>
+<table>
+<thead>
+<tr>
+<th>Per-cut reliability r</th>
+<th>1 cut</th>
+<th>2 cuts</th>
+<th>4 cuts (your depth 10)</th>
+<th>6 cuts (depth 12)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>99%</td>
+<td>99%</td>
+<td>98%</td>
+<td>96%</td>
+<td>94%</td>
+</tr>
+<tr>
+<td>95%</td>
+<td>95%</td>
+<td>90%</td>
+<td>🟠 81%</td>
+<td>🔴 74%</td>
+</tr>
+<tr>
+<td>90%</td>
+<td>90%</td>
+<td>81%</td>
+<td>🔴 66%</td>
+<td>🔴 53%</td>
+</tr>
+</tbody>
+</table>
+<p>The AlphaZero authors made the same point from the other side: <strong>alpha-beta carries the biggest evaluation errors straight up to the root</strong>, while averaging searches like MCTS let them cancel out ✅. So in alpha-beta, a net should <em>decide how much to reduce</em>, not <em>whether a move exists</em>.</p>
+<h3 id="44-safety-rails-never-trust-the-net-blindly-here">4.4 Safety rails (never trust the net blindly here)</h3>
+<ul>
+<li><strong>In check:</strong> search every evasion. There are few of them, and that's exactly where static judges fail.</li>
+<li><strong>The net's top choice always gets full depth</strong>, and so does your old heuristic's top choice when the two disagree. It's a cheap insurance policy 🔮.</li>
+<li><strong>Captures and promotions:</strong> order them by exchange value (SEE / MVV-LVA) or a tiny quiescence search, and use the net mainly for <strong>quiet</strong> moves. A child's static score right after a capture ignores the recapture ✅. Until quiescence search exists, never prune a capture on the net's word alone.</li>
+<li><strong>Re-search rule:</strong> if a reduced move comes back <em>above</em> alpha (at a max node) or <em>below</em> beta (at a min node), search it again at full depth. That one rule turns &quot;trust&quot; from a gamble into a speed bet you can lose cheaply.</li>
+<li><strong>Pseudo-legal moves can steal trusted slots</strong> ⚠️. Today an illegal move (one that leaves your king attacked) is buried by the sorting search, because the child search captures the king and scores it −10,000,000 ✅. The net doesn't know the move is illegal and may rank it 2nd. Under a hard top-K cut, it would push a real move out of the K slots. So check legality before ranking (<code>IsKingAttacked</code>, §12.3).</li>
+<li><strong>King captures</strong> are your mate detector ✅. Never let the net &quot;rank&quot; one away. Keep them, or short-circuit them.</li>
+</ul>
+<hr>
+<h2 id="️-5-the-big-question--where-does-y-come-from">🏷️ 5. The Big Question — Where Does y Come From?</h2>
+<p>This was your biggest worry, so this is the biggest section. Short version: <strong>y is the cheapest part of the whole project.</strong> 😄</p>
+<h3 id="51-what-y-should-be--three-pawn-scales-and-a-curve">5.1 What y should <em>be</em> — three &quot;pawn&quot; scales and a curve</h3>
+<p>When you say &quot;+1 = a bit better, +9 = a queen up&quot;, you're using one of <strong>three different scales</strong> that the chess world mixes up all the time:</p>
+<table>
+<thead>
+<tr>
+<th>Scale</th>
+<th>What &quot;+1.00&quot; means</th>
+<th>Where you meet it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Material pawns</strong> (Mr. Bits today)</td>
+<td>One pawn of material, plus PST bonuses</td>
+<td><code>engineScore − opponentScore</code></td>
+</tr>
+<tr>
+<td><strong>Lichess human scale</strong></td>
+<td>A <strong>59%</strong> expected score; +3 → 75%, +9 → <strong>96.5%</strong> ✅</td>
+<td>Lichess analysis, accuracy, ChessBench labels (likely)</td>
+</tr>
+<tr>
+<td><strong>Stockfish ≥ 15.1</strong></td>
+<td>A <strong>50% chance to win</strong> in engine-vs-engine self-play at long time control; +2.00 ≈ 99.6% in Stockfish 16's model ✅</td>
+<td>Every modern Stockfish output (<code>NormalizeToPawnValue = 328</code> in your Stockfish 16 source)</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid"><div class="mermaid">xychart-beta
+    title "Centipawns to win probability (Lichess human scale)"
+    x-axis "Evaluation for the side to move (centipawns)" ["-900", "-600", "-300", "-150", "0", "+150", "+300", "+600", "+900"]
+    y-axis "Win %" 0 --> 100
+    line [3.5, 9.9, 24.9, 36.5, 50.0, 63.5, 75.1, 90.1, 96.5]
+</div></code></pre>
+<div style="background:#f5f3ff;border-left:6px solid #7c3aed;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🎯 The recipe for y:</strong></p>
+<ul>
+<li><strong>Train on win probability</strong>, with Lichess's human-calibrated curve, which matches <em>your</em> intuition: <code>p = 1 / (1 + e^(−cp/271.6))</code>. The constant is 1/0.00368208 ✅.</li>
+<li><strong>Let the net output centipawns.</strong> The loss compares <code>sigmoid(output/271.6)</code> with the target, so the trained net still speaks in pawns, but in its labels' pawns (Stockfish's scale from the table above), not your material pawns. To convert back: <code>cp = 271.6 · ln(p / (1 − p))</code>. In bullet, set the eval scale to 271.6 and <code>SCALE</code> in BitsNet.hpp (§12.1) to 272. If the two differ, every score comes out scaled (400 against 271.6 is ×1.47).</li>
+<li><strong>Why squash at all?</strong> In raw centipawns, the difference between +15 and +25 (both totally winning) would dominate the loss, and the net would waste its capacity there. In win-% space it focuses on the range where decisions are made (−3…+3).</li>
+<li><strong>Mates:</strong> map to p ≈ 0 or 1 (clamp cp to ±3000), never to your 10,000,000 king value.</li>
+<li><strong>One more beautiful fact:</strong> plain alpha-beta only <em>compares</em> scores, so any order-preserving rescaling gives <em>identical</em> decisions ✅. The scale only starts to matter once margins exist (ProbCut, futility), and that's exactly why we calibrate them (§4.2).</li>
+</ul>
+</div>
+<p>Optionally, blend in the game result: <code>target = λ · p + (1 − λ) · result</code>, with λ sliding from 1.0 to about 0.8 during training. Stockfish's own nets used 1.0 → 0.75 and 1.0 → 0.7 ✅. Blending teaches things search scores miss. For example, a &quot;+1.5&quot; opposite-colored-bishop ending is drawn far more often than a &quot;+1.5&quot; rook ending. Use results only from real games between strong players (both rated 2000+, normal termination), and use λ = 1 for positions that never occurred in a game.</p>
+<h3 id="52-the-label-menu">5.2 The label menu</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    Y(("🎯 y")):::y
+    subgraph FREE["🆓 Download"]
+        A1["Lichess eval DB<br/>394.7M deep multi-PV evals"]:::free
+        A2["ChessBench<br/>15.3B per-move values"]:::free
+        A3["Stockfish and Leela training data<br/>billions of positions"]:::free
+    end
+    subgraph MAKE["⚙️ Generate"]
+        B1["Stockfish at 5k nodes<br/>100M ≈ $10–21"]:::make
+        B2["Mr. Bits' own exact sort scores<br/>(TreeStrap-style)"]:::make
+    end
+    subgraph EXACT["💎 Exact"]
+        C1["Syzygy tablebases<br/>≤ 5 pieces: 939 MiB"]:::exact
+    end
+    subgraph WEAK["🎲 Weak but free"]
+        D1["Game results W/D/L<br/>billions of Lichess games"]:::weak
+    end
+    FREE --> Y
+    MAKE --> Y
+    EXACT --> Y
+    WEAK -->|"blend with λ"| Y
+    classDef y fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef free fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef make fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef exact fill:#fef9c3,stroke:#ca8a04,color:#713f12
+    classDef weak fill:#f1f5f9,stroke:#64748b,color:#0f172a
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>Source</th>
+<th>What you get</th>
+<th>Label quality</th>
+<th>License</th>
+<th>Best use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⭐ <strong>Lichess evaluation DB</strong> (<code>lichess_db_eval.jsonl.zst</code>)</td>
+<td><strong>394,669,566</strong> positions (updated 2026-07-29), each with depth, nodes and up to several principal variations ✅</td>
+<td>🟢 Deep Stockfish (mixed versions with different cp scales; one fixed curve can't undo that, so fit this source's own sigmoid scale on positions you also label with your Stockfish, then convert to win %)</td>
+<td>CC0 ✅</td>
+<td>Deep value labels; the <strong>multi-PV entries are free top-K ground truth</strong> for testing your trust factor</td>
+</tr>
+<tr>
+<td>⭐ <strong>ChessBench</strong> (DeepMind, NeurIPS 2024)</td>
+<td>10M games → <strong>530M positions + 15.3B action-values</strong>: Stockfish 16's win % for <em>every legal move</em> (≈ 29 per position) ✅</td>
+<td>🟢 Stockfish 16, about 50 ms per move</td>
+<td>Data CC-BY 4.0, code Apache-2.0 🟡 (check the repo's LICENSE)</td>
+<td>The <strong>ranking head</strong> (§8), and child positions that include the <em>blunders</em> your pruning must recognize</td>
+</tr>
+<tr>
+<td><strong>Lichess game PGNs</strong> with <code>[%eval]</code> comments</td>
+<td>A minority of games carry server analysis; Hugging Face's <code>Lichess/fishnet-evals</code> lists <strong>34.5B</strong> rows ✅</td>
+<td>🟡 Single line, about 1.5–2.25M nodes</td>
+<td>CC0</td>
+<td>Bulk pretraining (deduplicate hard: openings repeat millions of times)</td>
+</tr>
+<tr>
+<td><strong>Stockfish NNUE training data</strong> (<code>.binpack</code>, Hugging Face user <em>linrock</em>)</td>
+<td>Billions of quiet-filtered positions, Leela-derived and rescored ✅</td>
+<td>🟢 Battle-tested</td>
+<td>Leela parts ODbL 🟡</td>
+<td>A ready-made dataset for an NNUE-style <em>leaf</em> net (after quiescence exists)</td>
+</tr>
+<tr>
+<td><strong>Leela self-play data</strong> (storage.lczero.org)</td>
+<td>2.5B+ games, with policy targets (MCTS visit distributions) and win/draw/loss ✅</td>
+<td>🟢 Strong, but 8 KB per record</td>
+<td>ODbL ✅</td>
+<td>Policy-head experiments; download one month at most</td>
+</tr>
+<tr>
+<td><strong>Syzygy tablebases</strong></td>
+<td>Exact win/draw/loss: ≤ 5 pieces = <strong>939 MiB</strong>, 6 pieces = 149 GiB ✅</td>
+<td>💎 Exact</td>
+<td>Probing library Fathom: MIT ✅</td>
+<td>Exact endgame labels, or probe them in-search <em>instead of</em> an endgame net</td>
+</tr>
+<tr>
+<td><strong>Lichess puzzles</strong></td>
+<td><strong>6,057,356</strong> tagged puzzles (updated 2026-07-29) ✅</td>
+<td>🛡️ Ground truth for tactics</td>
+<td>CC0</td>
+<td><strong>Test set</strong>, not training: &quot;does the solution survive my pruning?&quot; (§13)</td>
+</tr>
+<tr>
+<td><strong>Stockfish at fixed nodes</strong> (DIY)</td>
+<td>Any positions you choose, including the ones <em>your</em> search visits</td>
+<td>🟡 Noisy at 5k nodes, good at 50k+</td>
+<td>Your own</td>
+<td>The bulk of v1, and the fix for distribution shift (§17)</td>
+</tr>
+<tr>
+<td><strong>Mr. Bits' own sort scores</strong> 🔮</td>
+<td>Every full-window sort already computes <strong>exact</strong> minimax values for ~35 children</td>
+<td>🟠 Horizon-blind until quiescence exists</td>
+<td>Your own</td>
+<td>Self-distillation (TreeStrap); 100% original data</td>
+</tr>
+</tbody>
+</table>
+<h3 id="53-it-would-take-years--no-hours-but-your-intuition-had-a-reason">5.3 &quot;It would take years&quot;? — No: hours. (But your intuition had a reason.)</h3>
+<p>The cost of labeling depends entirely on <em>how deep</em> each label is. On the Nebius RTX PRO 6000 box (which comes with 24 vCPUs), assuming 0.5–1.0M Stockfish nodes per second per vCPU 🟡 (measure it with Stockfish's built-in <code>speedtest</code>):</p>
+<table>
+<thead>
+<tr>
+<th>Labels</th>
+<th>Per position</th>
+<th>100M positions on the 24-vCPU box</th>
+<th>Cost at $1.80/h</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stockfish <code>go nodes 5000</code> (≈ depth 9)</td>
+<td>5–10 ms</td>
+<td><strong>5.8–11.6 hours</strong></td>
+<td><strong>$10–21</strong></td>
+</tr>
+<tr>
+<td>Stockfish <code>go nodes 50000</code></td>
+<td>50–100 ms</td>
+<td>58–116 hours</td>
+<td>$104–208</td>
+</tr>
+<tr>
+<td>Lichess-server depth (~1.5M nodes)</td>
+<td>1.5–3 s</td>
+<td>~2,600 hours (months)</td>
+<td>💀</td>
+</tr>
+<tr>
+<td>Mr. Bits' own depth-8 search, all moves</td>
+<td>~6.3 s at <code>-O0</code></td>
+<td>at most 0.35–0.45M labels/day on 28–32 processes (assuming linear scaling; at the 8–9× your laptop measured for 28 NNUE workers, §12.5, it's ≈ 0.1M/day) → <strong>years</strong> for 1B</td>
+<td>your electricity</td>
+</tr>
+</tbody>
+</table>
+<p><em>(The first two rows are pure search time; add 10–50% for UCI and Python overhead.)</em></p>
+<div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>✅ So you were right twice and wrong once.</strong> &quot;Years&quot; is true for <em>deep</em> labels on a home PC (≈ 6–12 years for 1B Lichess-depth labels on 8 cores 🟡), and for labels from Mr. Bits' own depth-8 search. It's wrong for what a first net actually needs: hobby engines generate their training data at about <strong>5,000 nodes</strong> per move today ✅ (noggin, Tarnished), and Stockfish's own NNUE nets have reportedly learned from labels about that cheap 🟡. And the deep labels already exist <strong>for free</strong> (the Lichess eval DB alone would cost you $800–1,700 to recreate at 1M nodes for just 40M positions 🟡).</p>
+</div>
+<h3 id="54-should-you-buy-a-dataset-honestly-no">5.4 Should you buy a dataset? Honestly: no.</h3>
+<table>
+<thead>
+<tr>
+<th>Product</th>
+<th>Price</th>
+<th>Contents</th>
+<th>Engine evals?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ChessBase Mega Database 2026</td>
+<td>€229.90 / £195 ✅</td>
+<td>~11.7M human games, 114k with human annotations</td>
+<td>❌ none</td>
+</tr>
+<tr>
+<td>ChessBase Corr Database 2026</td>
+<td>€199.90 ✅</td>
+<td>2.5M correspondence games</td>
+<td>❌ none</td>
+</tr>
+</tbody>
+</table>
+<p>No dataset for sale that I could find beats the free ones for this goal 🟡 (I checked the main ChessBase products, not every paid offering). A few hundred dollars buys <strong>~167 hours of the Nebius box</strong> (GPU + 24 vCPUs), which is enough for labeling, training, ablations and test matches (§14). <strong>Buy compute, not data.</strong> 💪</p>
+<h3 id="55-data-hygiene--the-boring-part-that-decides-everything">5.5 Data hygiene — the boring part that decides everything</h3>
+<ol>
+<li><strong>Split by game, never by position.</strong> Positions from one game are near-copies, so a random split leaks them into validation and the scores lie. Use <code>hash(game_id) % 50 == 0</code> → validation ✅ (standard ML practice).</li>
+<li><strong>Deduplicate</strong> by normalized FEN (no move counters) with a 64-bit Zobrist hash. When the same position comes from two sources, keep the better label: tablebase &gt; deep eval DB &gt; 50k nodes &gt; 5k nodes.</li>
+<li><strong>Skip only plies &lt; 4.</strong> Stockfish plays your first 2 moves (the game's first 4 plies), but the Kernel <em>does</em> play everything from ply 4 on ✅. Stockfish's own pipeline skips everything up to ply 28 ✅; you can't afford that.</li>
+<li><strong>Keep each game position with probability ~1/6</strong>, for fewer and less correlated samples (nnue-pytorch's <code>--random-fen-skipping</code> does the same ✅).</li>
+<li><strong>Add children, including bad ones</strong> 🔮: out of every 100 positions, about 75 game positions, 20 random legal children, 4 capture children and 1 <em>illegal</em> &quot;own king left hanging&quot; child labeled as a win for the side to move (so the net learns to rank illegal moves last). Giraffe built its 175M training positions this way, by adding a random legal move to each position ✅.</li>
+<li><strong>The quiet filter: OFF in v1, ON in v2.</strong> Stockfish drops positions in check or whose best move is a capture ✅. That's right for a <em>leaf</em> net that sits behind quiescence search, and wrong for a v1 net that will be asked about noisy children because quiescence doesn't exist yet.</li>
+<li><strong>Balance the phases</strong> by piece count (25–32 / 17–24 / 9–16 / 2–8), weighted toward where Mr. Bits actually spends its search nodes. Down-weight plies &gt; 100, since Stockfish plays after ply 80 ✅.</li>
+</ol>
+<h3 id="56-the-v1-data-recipe-copy-paste-ready">5.6 The v1 data recipe (copy-paste ready)</h3>
+<div style="background:#f8fafc;border-left:6px solid #0f172a;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>📋 &quot;MB-Net v1&quot; data: ~145M positions, ≈ $33–62 for the lean core</strong> 🟡 (A's labels, the test sets, processing and training with 3 ablations: 18–34 h; the full v1 program in §14 is ≈ $65–120)</p>
+<ul>
+<li><strong>A. 100M</strong> positions from two recent months of Lichess standard rated games (≥ 20 plies, normal termination): 75M game positions, 20M random children, 4M capture children, 1M illegal children. Labeled with Stockfish 17.1+ (<code>Threads=1</code>, <code>Hash=16</code>, <code>go nodes 5000</code>), with 24 persistent processes over pipes. Don't reuse your current Stockfish handler, which starts a new process per query.</li>
+<li><strong>B. 40M</strong> positions from the Lichess eval DB: the deepest evaluation's first line, depth ≥ 24 to start, sampled evenly across piece-count groups.</li>
+<li><strong>C. 5M</strong> positions with ≤ 5 pieces, labeled exactly from Syzygy WDL (win = 1, loss = 0; draw, cursed win and blessed loss = 0.5).</li>
+<li><strong>Label:</strong> side-to-move win probability <code>p = 1 / (1 + e^(−cp/271.6))</code> (§5.1); λ blend with game results only for real-game positions from 2000+ players.</li>
+<li><strong>Frozen test sets:</strong> <strong>Gold</strong> (100k validation positions relabeled at 1M nodes), <strong>Ranking</strong> (10k positions with <em>every child</em> labeled at 50k nodes), <strong>Tactics</strong> (20k Lichess puzzles, removed from training).</li>
+</ul>
+</div>
+<hr>
+<h2 id="-6-what-goes-in--encoding-the-board">🔢 6. What Goes In — Encoding the Board</h2>
+<h3 id="61-the-standard-encoding-and-why-your-flags-are-optional">6.1 The standard encoding (and why your flags are optional)</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    subgraph IN["📥 Input: 768 bits (+ optional flags)"]
+        direction TB
+        P1["♙ my pawns: 64 bits"]:::mine
+        P2["♘♗♖♕♔ my pieces: 5 × 64 bits"]:::mine
+        P3["♟ their pawns: 64 bits"]:::theirs
+        P4["♞♝♜♛♚ their pieces: 5 × 64 bits"]:::theirs
+        P5["🏰 castling (4) · en passant file (8)<br/>optional, see below"]:::flags
+    end
+    IN --> NET["🧠 net"]:::brain --> OUT["📤 score for the SIDE TO MOVE"]:::out
+    classDef mine fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef theirs fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef flags fill:#f1f5f9,stroke:#64748b,color:#0f172a
+    classDef brain fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef out fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+</div></code></pre>
+<p><strong>12 piece types × 64 squares = 768 one-hot inputs.</strong> Only ~32 of them are 1 at any time.</p>
+<p>About your flags, honestly 🟡: <strong>NNUE-style evaluators don't take castling or en-passant flags at all</strong> ✅. Stockfish's inputs are piece-square-king features, plus (since 2026) threat and pawn-pair features. The search already handles the <em>legality</em> those flags encode, and their <em>evaluation</em> value is tiny: an en-passant right lasts one ply, and a castling right is worth some king safety. They're almost free to add, so add them later <strong>as an experiment</strong> (they matter more for a move-ranking head than for an evaluator). The one &quot;flag&quot; that really matters is <strong>who is to move</strong>, because tempo is worth a lot. The next trick handles it for free.</p>
+<h3 id="62-the-perspective-trick-always-look-from-the-side-to-move">6.2 The perspective trick: always look from the side to move</h3>
+<p>Instead of &quot;white pieces / black pieces&quot; plus a side-to-move bit, encode <strong>&quot;my pieces / their pieces&quot;</strong>, and when it's black to move, <strong>flip the board vertically</strong>. The net then learns one skill (&quot;judge the position for the player to move&quot;) instead of two mirrored ones, and it works roughly like doubling the data with color-flipped copies 🟡.</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    W["⚪ White to move<br/>encode as is"]:::w --> N["🧠 same net"]:::brain
+    B["⚫ Black to move<br/>mirror ranks (sq ^ 56)<br/>and swap colors"]:::b --> N
+    N --> S["score for the player to move<br/>(+ = good for them)"]:::out
+    classDef w fill:#ffffff,stroke:#64748b,color:#0f172a
+    classDef b fill:#334155,stroke:#0f172a,color:#f8fafc
+    classDef brain fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef out fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+</div></code></pre>
+<p>Your &quot;+1 = white is better&quot; stays the <strong>display</strong> convention. Inside the engine, you convert once (§12).</p>
+<h3 id="63-mapping-it-onto-mr-bits-board-">6.3 Mapping it onto Mr. Bits' board ✅</h3>
+<p>Your representation makes this almost free:</p>
+<table>
+<thead>
+<tr>
+<th>Mr. Bits code (black / white)</th>
+<th>Piece</th>
+<th>Net type index</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>1</code> / <code>9</code></td>
+<td>Pawn</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>3</code> / <code>11</code></td>
+<td>Knight</td>
+<td>1</td>
+</tr>
+<tr>
+<td><code>4</code> / <code>12</code></td>
+<td>Bishop</td>
+<td>2</td>
+</tr>
+<tr>
+<td><code>5</code> / <code>13</code></td>
+<td>Rook</td>
+<td>3</td>
+</tr>
+<tr>
+<td><code>6</code> / <code>14</code></td>
+<td>Queen</td>
+<td>4</td>
+</tr>
+<tr>
+<td><code>7</code> / <code>15</code></td>
+<td>King</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<ul>
+<li><strong>Squares:</strong> your bit number is <code>row * 8 + column</code> with row 0 = rank 8 (<code>BitToSquareAndViceVersaInitialization</code>, line 1087; <code>convertMoveFromStandardToInt16_t</code> uses <code>rowFrom = 8 - rank</code>). The standard a1 = 0 … h8 = 63 numbering that python-chess and every trainer use is therefore just <strong><code>bit ^ 56</code></strong>. One XOR. 😎 Bonus: FEN lists ranks 8 → 1, the same order as your rows, so training FENs map straight onto <code>board[8][8]</code>.</li>
+<li><strong>Side to move</strong> at a <code>Magic</code> node: white is to move exactly when <code>turn == ENGINE_COLOR</code> (lines 2795 and 2948 test the same condition), and <code>ENGINE_COLOR = 1</code> means white.</li>
+<li><strong>Castling rights</strong> (if you add the flags): white can still castle short when <code>board[7][4] == 15 &amp;&amp; numberOfMovesOfThePieceOnThisSquare[7][4] == 0 &amp;&amp; board[7][7] == 13 &amp;&amp; numberOfMovesOfThePieceOnThisSquare[7][7] == 0</code>. Only the original piece can have a count of 0 on its start square, so this equals FEN castling rights exactly ✅. White's long castle is the same test with <code>[7][0]</code> instead of <code>[7][7]</code> (codes 15 and 13 again); black's two rights use row 0 with codes 7 (king, <code>[0][4]</code>) and 5 (rook, <code>[0][7]</code> for short, <code>[0][0]</code> for long), each with a move count of 0.</li>
+<li><strong>En passant</strong> (if you add it): the previous move was a pawn <em>double</em> push. The piece now on its destination is a pawn with a move count of 1, on row 4 (white) or row 3 (black). Use the rule from your Trie (lines 835–843), not the one in movegen, which is doc 01's Bug 1.</li>
+<li><strong>What doesn't exist:</strong> no halfmove clock and no repetition info ✅. Leave them out of the net.</li>
+</ul>
+<hr>
+<h2 id="️-7-the-architecture-ladder--from-your-pst-to-stockfish-class">🏗️ 7. The Architecture Ladder — From Your PST to Stockfish-Class</h2>
+<h3 id="71-what-the-strongest-engine-did-its-a-ladder-not-a-jump">7.1 What the strongest engine did (it's a ladder, not a jump)</h3>
+<pre><code class="language-mermaid"><div class="mermaid">timeline
+    title Stockfish's neural-network journey
+    2018 : Yu Nasu invents NNUE for computer shogi
+    2020 : Stockfish 12 adopts NNUE - HalfKP, 256x2-32-32-1
+    2024 : Stockfish 16.1 - pure NNUE plus a small second net
+    2026 January : Stockfish 18 - L1 cut from 3072 to 1024, threat inputs, shared memory
+    2026 September : Stockfish 19 - back to ONE net, small net retired
+</div></code></pre>
+<p>All of it ✅. Notice two things: the network <em>shrank</em> its first layer (3072 → 1024) when it got smarter inputs, and the two-network design was <strong>retired</strong> this September. Remember that when we get to your 3–4 nets in §9. 😉</p>
+<h3 id="72-your-ladder">7.2 Your ladder</h3>
+<table>
+<thead>
+<tr>
+<th>Rung</th>
+<th>Net</th>
+<th>Size / speed on your CPU</th>
+<th>Data</th>
+<th>Job in Mr. Bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0</strong></td>
+<td><strong>Texel-tuned PST</strong> (linear, zero hidden layers)</td>
+<td>Same as today</td>
+<td>Millions of positions with results</td>
+<td>Rehearses the <em>whole</em> pipeline; about +100 Elo for the Texel engine ✅</td>
+</tr>
+<tr>
+<td><strong>1</strong></td>
+<td>⭐ <strong>BitsNet v1: (768 → 256) × 2 → 1</strong>, SCReLU</td>
+<td>0.38 MiB · <strong>26–40 ns</strong> incremental, <strong>0.26–0.38 µs</strong> full rebuild ✅</td>
+<td>100–150M positions</td>
+<td><strong>Ranker</strong> at depth ≥ 4 (stage 2), then <strong>leaf judge</strong> (stage 4)</td>
+</tr>
+<tr>
+<td><strong>2</strong></td>
+<td>(768 → 1024) × 2 → 1 + <strong>4–8 piece-count output buckets</strong> (Stockfish uses 8)</td>
+<td>1.5 MiB · ~130 ns incremental ✅</td>
+<td>500M–2B</td>
+<td>Your &quot;phase nets&quot;, done right (§9)</td>
+</tr>
+<tr>
+<td><strong>3</strong></td>
+<td>+ <strong>king buckets</strong> (e.g. 4, with horizontal mirroring)</td>
+<td>×4 weights; full rebuild when the king changes bucket</td>
+<td>1.5B+ (the akimbo engine used 1.5B ✅)</td>
+<td>A stronger judge</td>
+</tr>
+<tr>
+<td><strong>4</strong></td>
+<td><strong>Action-value / policy head</strong> on a small trunk</td>
+<td>Scoring only the legal moves: <strong>0.2–0.6 µs per node</strong> ✅</td>
+<td>ChessBench</td>
+<td><strong>One-pass ranking</strong> (§8)</td>
+</tr>
+<tr>
+<td><strong>5</strong></td>
+<td>Multi-layer NNUE (Stockfish-style)</td>
+<td>int8 hidden layers, SIMD</td>
+<td>2–5B+</td>
+<td>Top hobby tier; only after the search is solid</td>
+</tr>
+<tr>
+<td><strong>6</strong></td>
+<td>GPU ResNets / transformers (Leela, ChessBench)</td>
+<td>20–300 µs per GPU call 🟡</td>
+<td>10⁸–10¹⁰ labels</td>
+<td>A <em>different kind of engine</em> (MCTS), not a next step for alpha-beta</td>
+</tr>
+</tbody>
+</table>
+<h3 id="73-bitsnet-v1-drawn">7.3 BitsNet v1, drawn</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    X["768 inputs<br/>about 32 are 1"]:::inp --> AW["accumulator seen by WHITE<br/>256 × int16"]:::acc
+    X --> AB["accumulator seen by BLACK<br/>256 × int16"]:::acc
+    AW --> C["concatenate,<br/>side to move first<br/>512 values"]:::mix
+    AB --> C
+    C --> S["SCReLU<br/>clamp to 0…255, then square"]:::mix
+    S --> O["1 output<br/>(512 multiply-adds)"]:::out
+    O --> CP["÷ 255, + bias, then<br/>× SCALE / (255 × 64)<br/>= centipawns"]:::out
+    classDef inp fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef acc fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef mix fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef out fill:#dcfce7,stroke:#16a34a,color:#14532d
+</div></code></pre>
+<p>This exact shape (two perspective accumulators, SCReLU, QA = 255, QB = 64) is the standard hobby-engine net ✅. Its <code>SCALE</code> must equal the trainer's eval scale: 400 in most hobby engines, 272 with §5.1's 271.6 curve. That means tutorials, trainers and reference code all speak your language.</p>
+<pre><code class="language-mermaid"><div class="mermaid">xychart-beta
+    title "One incremental eval on your i9-14900HX (measured, nanoseconds)"
+    x-axis "Hidden size per perspective" ["128", "256", "512", "768", "1024", "1536", "2048"]
+    y-axis "Nanoseconds" 0 --> 450
+    bar [22, 33, 64, 95, 134, 257, 412]
+</div></code></pre>
+<p>(Kernel-only costs with random weights, the midpoints of the measured ranges ✅. A real search adds move generation and cache effects on top.)</p>
+<h3 id="74-trainers">7.4 Trainers</h3>
+<table>
+<thead>
+<tr>
+<th>Trainer</th>
+<th>What it is</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⭐ <strong>bullet</strong> (github.com/jw1912/bullet)</td>
+<td>A Rust library for NNUE-style nets with CUDA, ROCm and Metal backends, used by &quot;many of the strongest chess engines&quot; ✅. Start from its simple 768 → N perspective example</td>
+<td><strong>Your v1 trainer</strong></td>
+</tr>
+<tr>
+<td><strong>nnue-pytorch</strong></td>
+<td>Stockfish's official trainer, with a fast C++ binpack loader and λ blending ✅</td>
+<td>Only for Stockfish-shaped multi-layer nets</td>
+</tr>
+<tr>
+<td><strong>Plain PyTorch</strong></td>
+<td>Full freedom</td>
+<td>For custom heads (the action-value head in §8, uncertainty heads)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="-8-the-structure-you-didnt-think-of--score-all-moves-from-the-parent">🔀 8. The Structure You Didn't Think Of — Score All Moves From the Parent</h2>
+<h3 id="81-one-pass-instead-of-35">8.1 One pass instead of 35</h3>
+<p>Your plan pays <strong>one evaluation per child</strong>: make the move, evaluate, unmake, × 35. An <strong>action-value head</strong> asks the parent <em>once</em> and gets a score for every legal move:</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    P["🧩 parent position<br/>ONE forward pass"]:::inp --> T["shared trunk<br/>accumulator + hidden layer"]:::acc
+    T --> H["per-move head<br/>for each LEGAL move:<br/>piece · from · to · captured piece"]:::mix
+    H --> Q1["Nf3 → 54% ✅"]:::good
+    H --> Q2["e4 → 53% ✅"]:::good
+    H --> Q3["Qh5 → 31% ❌"]:::bad
+    H --> Q4["… all 35 moves"]:::mix
+    classDef inp fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef acc fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef mix fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef good fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef bad fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+</div></code></pre>
+<p><em>(The percentages are illustrative.)</em></p>
+<ul>
+<li><strong>It's not &quot;best move&quot; output.</strong> It's <em>your</em> idea, &quot;evaluate each child&quot;, computed in one pass. Each move gets a win %, which converts back to pawns.</li>
+<li><strong>It dodges the trap that sank your NNUE test</strong> 🟡. Evaluating a child <em>right after a capture</em> means judging a mid-exchange position, which static nets are bad at. The action-value head is queried at the <em>parent</em>, and each move's label (ChessBench) already contains Stockfish's search of the exchange.</li>
+<li><strong>The labels exist:</strong> ChessBench's 15.3B action-values are exactly this target ✅. Their 270M-parameter transformer trained on it reached <strong>2895 Lichess blitz Elo against humans without any search</strong>, though only about <strong>2299 against bots</strong> ✅. That shows how much knowledge the labels carry, and also that a net alone still isn't an engine.</li>
+</ul>
+<h3 id="82-making-it-cpu-fast-the-factorized-head-">8.2 Making it CPU-fast: the factorized head 🔮</h3>
+<p>A full output layer over every possible move (4,096 from-to pairs, or Leela's 1,858) is wasteful on a CPU: about 4,096 × 512 ≈ 2M multiply-adds per node, more than 35 child evaluations. But alpha-beta only needs the ~35 <strong>legal</strong> moves, so score each one with a cheap dot product:</p>
+<pre class="hljs"><code><div>q(move) = w · ReLU( H  +  E_from[piece][from]  +  E_to[piece][to]  +  E_cap[captured][to]  +  E_promo[type] ) + b
+</div></code></pre>
+<p><code>H</code> comes from the trunk (computed once per node). The <code>E</code> tables are learned embeddings, so each legal move costs a few hundred multiply-adds. A simpler version of this head (a from-to table dotted with the hidden layer) was measured on your laptop at <strong>0.2–0.6 µs per node</strong> ✅. Optional extra inputs from your C++: the exchange value of the move (SEE, ~1–2 days to write) and &quot;does it give check?&quot;.</p>
+<h3 id="83-train-it-to-rank-not-to-be-exact">8.3 Train it to <em>rank</em>, not to be exact</h3>
+<p>Pruning only needs the <strong>order</strong> of the top moves. So train with two losses together 🔮:</p>
+<ul>
+<li><strong>Listwise:</strong> <code>KL( softmax(Q/T) ‖ softmax(q/T) )</code> over the legal moves, where Q are the true action-values. (Softmax turns the ~35 scores into probabilities that sum to 1; T is a temperature that sets how soft they are; KL measures how far the net's distribution is from the target's.) It's soft, so it also learns the 2nd and 3rd-best moves (exactly what ordering needs, and the reason one-hot &quot;best move&quot; targets tend to make overconfident rankers 🟡).</li>
+<li><strong>Regression:</strong> keep ~30–50% Huber loss on the win % itself, so the margins of §4.2 stay calibrated.</li>
+<li><strong>Report</strong> recall@K per phase, not just MSE.</li>
+</ul>
+<h3 id="84-more-structures-from-safest-to-wildest">8.4 More structures, from safest to wildest</h3>
+<table>
+<thead>
+<tr>
+<th>Structure</th>
+<th>One-liner</th>
+<th>Why it fits Mr. Bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>🛡️ <strong>Cascade pre-filter</strong></td>
+<td>The net keeps the top ~10 moves plus a never-prune set; <strong>your existing sort</strong> ranks only those and keeps 4, as today</td>
+<td>Fail-safe by construction: the net can only drop moves it ranks below 10th. The safest first integration</td>
+</tr>
+<tr>
+<td>🔁 <strong>TreeStrap self-distillation</strong></td>
+<td>Log the <em>exact</em> child values your full-window sorts already compute, then train the net to predict a <em>deeper</em> Mr. Bits search than the one it replaces</td>
+<td>Free labels in your own scale, from exactly the positions where the net gets queried. The original TreeStrap program, Meep, went from 1068 Elo (TD-Leaf) to 2157 ✅</td>
+</tr>
+<tr>
+<td>⚖️ <strong>Pairwise referee</strong></td>
+<td>A small Siamese net answers &quot;is child i better than child j?&quot; only for the 2–4 moves sitting on the cut line</td>
+<td>DeepChess built a whole engine from pairwise comparisons ✅. Here it's used only where the decision is close</td>
+</tr>
+<tr>
+<td>🌡️ <strong>Uncertainty head</strong></td>
+<td>The net also predicts <em>how wrong it probably is</em> (σ); prune hard where σ is small, widen or extend where it's large</td>
+<td>Free alarm already in your engine: a big gap between the net and your material + PST eval means tactics are in the air</td>
+</tr>
+<tr>
+<td>🎯 <strong>NN-ranked root</strong></td>
+<td>Rank the root moves once in Engine UCI, then give the top moves dedicated workers and bundle the junk ones</td>
+<td>Today root moves are shuffled randomly 🎲 and dealt round-robin ✅</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    M["~35 moves"]:::inp --> N["🧠 net ranks them<br/>(microseconds)"]:::acc
+    N --> K["keep top 10<br/>+ never-prune set:<br/>king captures, recaptures,<br/>SEE ≥ 0 captures, promotions"]:::mix
+    K --> S["your existing sort search<br/>ranks only these"]:::warn
+    S --> F["keep 4, as today"]:::good
+    classDef inp fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef acc fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef mix fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef warn fill:#fef9c3,stroke:#ca8a04,color:#713f12
+    classDef good fill:#dcfce7,stroke:#16a34a,color:#14532d
+</div></code></pre>
+<hr>
+<h2 id="-9-your-34-phase-networks--honest-take--a-better-design">🎭 9. Your 3–4 Phase Networks — Honest Take &amp; a Better Design</h2>
+<p>Your intuition is right: openings, middlegames and endgames need different knowledge. The <em>implementation</em> (four separate nets) is the part I'd change. Three facts first ✅:</p>
+<ol>
+<li><strong>Your Kernel only plays plies 4–80.</strong> Stockfish plays your first 2 moves and every move after ply 80 (Engine UCI.cpp lines 523 and 615–625). So an &quot;opening net&quot; would mostly judge positions Stockfish already plays for you, and an &quot;endgame net&quot; only matters before ply 81.</li>
+<li><strong>Stockfish itself uses one network with 8 &quot;layer stacks&quot;</strong> chosen by piece count, <code>(pieceCount − 1) / 4</code> (your local <code>nnue_architecture.h</code> and <code>evaluate_nnue.cpp</code>). That's one shared first layer with phase-specific output layers. And Stockfish 19 just <strong>retired</strong> its separate small net.</li>
+<li><strong>Separate nets create evaluation jumps at phase boundaries, and alpha-beta exploits jumps.</strong> If the endgame net is more optimistic, the search starts trading pieces just to cross into it. One capture can flip which net is used in the middle of a line.</li>
+</ol>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart TB
+    subgraph SEP["❌ 3–4 separate nets"]
+        direction LR
+        O1["opening net<br/>¼ of the data"]:::bad
+        O2["middlegame net<br/>¼ of the data"]:::bad
+        O3["endgame net<br/>¼ of the data"]:::bad
+        O4["general net<br/>redundant"]:::bad
+    end
+    subgraph ONE["✅ one net with piece-count buckets"]
+        direction LR
+        TR["shared trunk<br/>sees ALL the data"]:::good --> B1["head: 25–32 pieces"]:::good
+        TR --> B2["head: 17–24"]:::good
+        TR --> B3["head: 9–16"]:::good
+        TR --> B4["head: 2–8"]:::good
+    end
+    SEP ~~~ ONE
+    classDef bad fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef good fill:#dcfce7,stroke:#16a34a,color:#14532d
+</div></code></pre>
+<p>With buckets, only one small head runs per evaluation (same speed), every head shares one consistent scale, and the trunk learns from 100% of the data.</p>
+<p><strong>For endgames, use the truth instead of a net:</strong> Syzygy tablebases are <em>exact</em> ✅. The ≤ 5-piece set is only 939 MiB, and the MIT-licensed Fathom library ✅ probes it from eight bitboards (white, black, kings, queens, rooks, bishops, knights, pawns) with a1 = bit 0, as in Stockfish. Your <code>whitePieces</code>/<code>blackPieces</code> give the first two after <code>__builtin_bswap64</code> (the whole-board form of <code>bit ^ 56</code>), and the six piece-type boards take one pass over <code>board[8][8]</code> 🟡. With 6 pieces (149 GiB) you could even think about retiring the &quot;Stockfish after ply 80&quot; handover one day.</p>
+<div style="background:#f5f3ff;border-left:6px solid #7c3aed;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🧪 But don't take my word for it: run the experiment.</strong> Train three nets on the <strong>same 150M positions</strong> with the same number of training samples:</p>
+<ul>
+<li><strong>G</strong>: one plain net</li>
+<li><strong>B</strong>: one net with 4 piece-count buckets</li>
+<li><strong>P</strong>: separate phase nets, blended near the boundaries like a tapered eval: <code>ŷ = w · ŷ_mid + (1 − w) · ŷ_end</code></li>
+</ul>
+<p>Measure: gold-set loss per phase, top-5 recall per phase, the average <strong>jump in ŷ across captures that cross a boundary</strong>, and 2,000 games per pair (≈ ±12 Elo at 95% confidence 🟡). <strong>Pick the simplest option within the error bar of the best.</strong> My bet is B. If P wins, I'll happily be wrong, because you'll have the numbers. 😄</p>
+</div>
+<hr>
+<h2 id="-10-why-your-nnue-test-looked-bad-it-wasnt-nnues-fault">🩺 10. Why Your NNUE Test Looked Bad (It Wasn't NNUE's Fault)</h2>
+<p>I found your old experiment ✅. <code>Stockfish Handler Testing.cpp</code> scores <strong>every legal child</strong> with Stockfish 16's <strong>static <code>eval</code> command</strong> (no search, no quiescence) and compares the result with <code>go depth 20</code>. And <code>getSortedMovesByNNUE</code> in <code>Stockfish Handler.hpp</code> (lines 189–224, wrapped by <code>getBestMoveByNNUE</code> at 178–187) is a complete &quot;rank children by a static net&quot; ranker, which is your trust-factor idea again, built two years ago. 😄 I believe your result 100%. But the conclusion needs one correction, because it decides the whole roadmap:</p>
+<ol>
+<li><strong>NNUE is trained to judge <em>quiet</em> positions.</strong> Stockfish's trainer skips positions in check or whose best move is a capture ✅. A developer on TalkChess put that at 20–40% of the data, depending on the source, and reported that training on non-quiet positions was about 100 Elo <em>worse</em> (forum reports 🟡). The deal is &quot;search resolves the tactics, the net judges what's left.&quot; So a child position right after a capture is exactly what that net is <em>not</em> built for. With the recapture pending, it looks a piece up.</li>
+<li><strong>Every static evaluator fails that test</strong>, including your material + PST. It's the same disease as the horizon effect in doc 01. Your even-depth rule (&quot;odd depths are bad, lol&quot;) is the folk remedy for it, and quiescence search is the cure.</li>
+<li><strong>Raw accuracy isn't the metric; accuracy per microsecond <em>inside a search</em> is.</strong> An eval that's off by ±80 cp but costs 30 ns, inside a search that resolves captures, beats a far more accurate judge that costs a millisecond. The first Stockfish NNUE roughly <em>halved</em> nodes per second and still gained strength ✅.</li>
+<li><strong>&quot;Searchless&quot; is possible, at a price.</strong> The ChessBench transformer needed 270M parameters and ~15B labels to reach ~2300 against bots without search ✅. That's ~10⁷ times the work of one NNUE evaluation per decision 🟡. A small net is a <em>leaf judge</em> or a <em>move ranker</em>, never a player on its own.</li>
+</ol>
+<div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>✅ The lesson:</strong> test a net the way it will be used. Test it on <strong>quiet positions only</strong>, or <strong>inside a search that has quiescence</strong>, or (for ranking) as an <strong>action-value head at the parent</strong> (§8). That's why quiescence search is Stage 0 of the roadmap (§16), <em>before</em> any network. Without it, the net gets blamed for the horizon effect.</p>
+</div>
+<hr>
+<h2 id="️-11-training-on-the-rtx-pro-6000--the-pipeline">🏋️ 11. Training on the RTX PRO 6000 — The Pipeline</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    S1["📥 Lichess PGNs · eval DB<br/>ChessBench · Syzygy"]:::data --> N1["🧹 normalize FEN<br/>dedupe with Zobrist<br/>split BY GAME"]:::cpu
+    N1 --> L1["🏷️ label<br/>Stockfish 5k nodes<br/>on the 24 vCPUs"]:::cpu
+    L1 --> P1["📦 pack<br/>~40 bytes per position"]:::cpu
+    P1 --> T1["🔥 train<br/>bullet on the GPU"]:::gpu
+    T1 --> Q1["🔢 quantize<br/>int16, QA=255, QB=64"]:::gpu
+    Q1 --> E1["📤 export weights<br/>embed in Kernel.exe"]:::eng
+    E1 --> V1["🧪 offline checks,<br/>then SPRT"]:::eng
+    V1 -->|"lessons"| S1
+    classDef data fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef cpu fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef gpu fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef eng fill:#dcfce7,stroke:#16a34a,color:#14532d
+</div></code></pre>
+<h3 id="111-the-hardware-youre-renting">11.1 The hardware you're renting</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU</td>
+<td>NVIDIA RTX PRO 6000 Blackwell: 24,064 CUDA cores, <strong>96 GB GDDR7</strong> ✅; ~120 TFLOPS FP32 and 1,597 GB/s on the Server Edition clouds usually run (check with <code>nvidia-smi -q</code>) ✅</td>
+</tr>
+<tr>
+<td>The Nebius box</td>
+<td>1 GPU + <strong>24 vCPUs + 218 GB RAM</strong>, <strong>$1.80/hour</strong> on demand ✅ (October 2026 price page; untouched by Nebius's 1 October increase on H100–B300). Preemptible capacity uses dynamic spot pricing since 1 October: from about $0.79/hour, floating up to just under the on-demand rate 🟡 (price trackers). Check your console, since prices move</td>
+</tr>
+<tr>
+<td>What it's good for</td>
+<td>The 24 vCPUs <strong>label</strong> while the GPU <strong>trains</strong>. 145M positions × ~40 bytes ≈ 6 GB, so the <em>whole dataset fits in GPU memory</em> 🟡</td>
+</tr>
+<tr>
+<td>Expected training time</td>
+<td>A 1024-wide NNUE over billions of positions: <strong>hours, not days</strong> 🟡 (reported speeds are 2–3M positions/s on smaller GPUs). The GPU is not your bottleneck; labels and the data loader are</td>
+</tr>
+</tbody>
+</table>
+<div style="background:#eff6ff;border-left:6px solid #2563eb;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>💡 Your laptop can do v1 for free.</strong> It has an <strong>RTX 5070 Laptop GPU with 8 GB</strong> (Blackwell, compute capability 12.0) and 32 GB of RAM ✅. That's plenty for a 768 → 256 net on 100–150M positions. Use it for the pipeline check and the first experiments, and rent the RTX PRO 6000 when you scale up or run ablations in parallel. (Blackwell needs a recent CUDA toolkit; check bullet's README for the supported versions 🟡.)</p>
+</div>
+<h3 id="112-step-0-of-training-prove-the-pipeline-by-learning-your-own-eval">11.2 Step 0 of training: prove the pipeline by learning <em>your own</em> eval</h3>
+<p>Before spending a cent on Stockfish labels (this opens roadmap Stage 1), label 20M positions with <strong>Mr. Bits' own material + PST</strong> (unlimited and free), train for an hour, and require all three of these 🟡:</p>
+<ol>
+<li>C++ (quantized) outputs match a Python re-implementation of the same integer math <strong>exactly</strong> (0 cp) on 100k positions (mind that C++ <code>/</code> truncates toward zero while Python <code>//</code> floors), and stay within a few cp of the Python float net on average (rounding the output weights to steps of 1/64 alone costs that much, with outliers of a few tens of cp; a layout or sign bug costs hundreds);</li>
+<li>the color-flip test passes: <code>ŷ(pos) == ŷ(color-flipped pos)</code>, bit-identical in the C++ integer net, because the net scores the side to move (mirror the ranks, swap the colors, flip the side to move; only a white-view score would change sign);</li>
+<li>the net reproduces your hand-written eval within <strong>≤ 20 cp RMSE</strong>.</li>
+</ol>
+<p>If this fails, nothing later can work. If it passes, your converter, trainer, quantizer and C++ inference are all proven at once. 🧪</p>
+<h3 id="113-starter-settings-to-tune-not-gospel-">11.3 Starter settings (to tune, not gospel 🟡)</h3>
+<ul>
+<li><strong>Optimizer:</strong> AdamW, batch 16,384, learning rate 1e-3 with cosine decay to 1e-5.</li>
+<li><strong>Length:</strong> about 30 passes over v1's ~145M positions (≈ 4.4B samples): under an hour at the 2–3M positions/s of §11.1, up to ~5 GPU-hours if the data loader is the bottleneck.</li>
+<li><strong>Ablations, one at a time:</strong> the sigmoid scale (271.6 in §5.1) ∈ {150, 272, 400}, each with its own <code>SCALE</code>; final λ ∈ {1.0, 0.8}; share of children 0% vs 25%; 5k-node labels vs ¼ as many 20k-node labels at equal compute.</li>
+<li><strong>Learning curve:</strong> train on 10M, 30M and 100M positions, and only buy more data while the gold-set loss keeps falling.</li>
+</ul>
+<hr>
+<h2 id="-12-plugging-it-into-kernelcpp">🔌 12. Plugging It Into Kernel.cpp</h2>
+<p>Everything below follows your naming and your globals. Save §12.1 as a self-contained header, <code>BitsNet.hpp</code>, next to <code>json.hpp</code>, and include it right after <code>#include &quot;json.hpp&quot;</code> (line 7). The functions in §12.2–12.3 use your globals and constants (lines 15–37), <code>MSB</code> and <code>MakeChanges</code>/<code>ReturnChanges</code>, so paste them into Kernel.cpp itself, just above <code>MagicForIterativeDeepening</code> (line 2779). Compile with <code>-O2 -march=native -std=c++17</code> (§2.3). The review agents compiled exactly this placement against a copy of your Kernel ✅.</p>
+<h3 id="121-the-network-and-its-features">12.1 The network and its features</h3>
+<pre class="hljs"><code><div><span class="hljs-comment">// BitsNet.hpp - a minimal (768 -&gt; H) x 2 -&gt; 1 perspective network for Mr. Bits.</span>
+<span class="hljs-comment">// Needs C++17 (inline variables, std::clamp): compile with -std=c++17 or newer.</span>
+<span class="hljs-meta">#<span class="hljs-keyword">pragma</span> once</span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;algorithm&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstddef&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdint&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdio&gt;</span></span>
+
+<span class="hljs-keyword">namespace</span> BitsNet {
+
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> INPUTS = <span class="hljs-number">768</span>;   <span class="hljs-comment">// 2 sides x 6 piece types x 64 squares</span>
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> H      = <span class="hljs-number">256</span>;   <span class="hljs-comment">// hidden neurons per perspective (start small!)</span>
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> QA     = <span class="hljs-number">255</span>;   <span class="hljs-comment">// quantization of the feature transformer</span>
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> QB     = <span class="hljs-number">64</span>;    <span class="hljs-comment">// quantization of the output layer</span>
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> SCALE  = <span class="hljs-number">272</span>;   <span class="hljs-comment">// must equal the trainer&#x27;s eval scale: 271.6 for §5.1&#x27;s curve (400 only if you train with 400)</span>
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Network</span> {
+    <span class="hljs-built_in">alignas</span>(<span class="hljs-number">64</span>) <span class="hljs-type">int16_t</span> ftWeights[INPUTS][H];   <span class="hljs-comment">// one row of H numbers per input feature</span>
+    <span class="hljs-built_in">alignas</span>(<span class="hljs-number">64</span>) <span class="hljs-type">int16_t</span> ftBias[H];
+    <span class="hljs-built_in">alignas</span>(<span class="hljs-number">64</span>) <span class="hljs-type">int16_t</span> outWeights[<span class="hljs-number">2</span> * H];      <span class="hljs-comment">// [side to move | other side]</span>
+    <span class="hljs-type">int16_t</span> outBias;
+};
+
+<span class="hljs-keyword">inline</span> Network net;  <span class="hljs-comment">// about 400 KB for H = 256; loaded once at startup</span>
+
+<span class="hljs-comment">// The trainer must export the weights in exactly this order: ftWeights, ftBias, outWeights, outBias</span>
+<span class="hljs-comment">// (check your trainer&#x27;s export format). Some exporters pad the file to a multiple of 64 bytes, so accept both.</span>
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">bool</span> <span class="hljs-title">Load</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">char</span>* path)</span> </span>{
+    FILE* f = <span class="hljs-built_in">fopen</span>(path, <span class="hljs-string">&quot;rb&quot;</span>);
+    <span class="hljs-keyword">if</span> (!f) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+    <span class="hljs-type">size_t</span> bytesRead = <span class="hljs-built_in">fread</span>(&amp;net, <span class="hljs-number">1</span>, <span class="hljs-built_in">sizeof</span>(Network), f);
+    <span class="hljs-type">bool</span> longer = <span class="hljs-built_in">fgetc</span>(f) != EOF;                                     <span class="hljs-comment">// file bigger than this net: wrong export</span>
+    <span class="hljs-built_in">fclose</span>(f);
+    <span class="hljs-type">size_t</span> unpadded = <span class="hljs-built_in">offsetof</span>(Network, outBias) + <span class="hljs-built_in">sizeof</span>(<span class="hljs-type">int16_t</span>);   <span class="hljs-comment">// 394,754 bytes for H = 256</span>
+    <span class="hljs-keyword">return</span> !longer &amp;&amp; (bytesRead == unpadded || bytesRead == <span class="hljs-built_in">sizeof</span>(Network));   <span class="hljs-comment">// raw or 64-byte padded</span>
+}
+
+<span class="hljs-comment">// Mr. Bits piece code (&amp; 7) -&gt; 0..5 for P, N, B, R, Q, K. Code 2 is unused.</span>
+<span class="hljs-keyword">constexpr</span> <span class="hljs-type">int</span> TYPE_INDEX[<span class="hljs-number">8</span>] = {<span class="hljs-number">-1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>};
+
+<span class="hljs-comment">// The input feature of one piece, seen from one side.</span>
+<span class="hljs-comment">// Mr. Bits bit = row * 8 + column (row 0 = rank 8), so the standard a1 = 0 square is bit ^ 56.</span>
+<span class="hljs-comment">// From black&#x27;s point of view the board is mirrored, which gives (bit ^ 56) ^ 56 = bit.</span>
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">FeatureIndex</span><span class="hljs-params">(<span class="hljs-type">int8_t</span> piece, <span class="hljs-type">int</span> bit, <span class="hljs-type">bool</span> perspectiveIsWhite)</span> </span>{
+    <span class="hljs-type">bool</span> pieceIsWhite = piece &amp; <span class="hljs-number">8</span>;
+    <span class="hljs-type">int</span> square = perspectiveIsWhite ? (bit ^ <span class="hljs-number">56</span>) : bit;
+    <span class="hljs-type">bool</span> isMine = (pieceIsWhite == perspectiveIsWhite);
+    <span class="hljs-keyword">return</span> (isMine ? <span class="hljs-number">0</span> : <span class="hljs-number">384</span>) + TYPE_INDEX[piece &amp; <span class="hljs-number">7</span>] * <span class="hljs-number">64</span> + square;
+}
+
+<span class="hljs-keyword">struct</span> <span class="hljs-title class_">Accumulator</span> {
+    <span class="hljs-built_in">alignas</span>(<span class="hljs-number">64</span>) <span class="hljs-type">int16_t</span> white[H];   <span class="hljs-comment">// the first layer, seen by white</span>
+    <span class="hljs-built_in">alignas</span>(<span class="hljs-number">64</span>) <span class="hljs-type">int16_t</span> black[H];   <span class="hljs-comment">// the first layer, seen by black</span>
+};
+
+}  <span class="hljs-comment">// namespace BitsNet</span>
+</div></code></pre>
+<h3 id="122-building-the-accumulator-and-evaluating">12.2 Building the accumulator and evaluating</h3>
+<p>Version 1 rebuilds the first layer from scratch with your MSB loop. That's ~0.3 µs measured (§3.4), plenty fast for <strong>sorting</strong> at depth ≥ 4. The incremental version is only needed when the net becomes your <em>leaf</em> judge (stage 4).</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Uses Mr. Bits&#x27; globals: board, whitePieces, blackPieces, getPieceRowFromBit, getPieceColumnFromBit, MSB.</span>
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">void</span> <span class="hljs-title">RefreshAccumulator</span><span class="hljs-params">(BitsNet::Accumulator&amp; acc)</span> </span>{
+    <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> BitsNet;
+    std::<span class="hljs-built_in">copy</span>(net.ftBias, net.ftBias + H, acc.white);
+    std::<span class="hljs-built_in">copy</span>(net.ftBias, net.ftBias + H, acc.black);
+    <span class="hljs-type">long</span> <span class="hljs-type">long</span> occupied = whitePieces | blackPieces;
+    <span class="hljs-keyword">while</span> (occupied) {
+        <span class="hljs-type">int8_t</span> bit = <span class="hljs-built_in">MSB</span>(occupied);
+        occupied ^= (<span class="hljs-number">1ll</span> &lt;&lt; bit);
+        <span class="hljs-type">int8_t</span> piece = board[getPieceRowFromBit[bit]][getPieceColumnFromBit[bit]];
+        <span class="hljs-type">const</span> <span class="hljs-type">int16_t</span>* forWhite = net.ftWeights[<span class="hljs-built_in">FeatureIndex</span>(piece, bit, <span class="hljs-literal">true</span>)];
+        <span class="hljs-type">const</span> <span class="hljs-type">int16_t</span>* forBlack = net.ftWeights[<span class="hljs-built_in">FeatureIndex</span>(piece, bit, <span class="hljs-literal">false</span>)];
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; H; i++) {
+            acc.white[i] += forWhite[i];
+            acc.black[i] += forBlack[i];
+        }
+    }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">SCReLU</span><span class="hljs-params">(<span class="hljs-type">int</span> x)</span> </span>{
+    x = std::<span class="hljs-built_in">clamp</span>(x, <span class="hljs-number">0</span>, BitsNet::QA);
+    <span class="hljs-keyword">return</span> x * x;
+}
+
+<span class="hljs-comment">// Centipawns from the point of view of the side to move.</span>
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">EvaluateSideToMove</span><span class="hljs-params">(<span class="hljs-type">const</span> BitsNet::Accumulator&amp; acc, <span class="hljs-type">bool</span> whiteToMove)</span> </span>{
+    <span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> BitsNet;
+    <span class="hljs-type">const</span> <span class="hljs-type">int16_t</span>* mine   = whiteToMove ? acc.white : acc.black;
+    <span class="hljs-type">const</span> <span class="hljs-type">int16_t</span>* theirs = whiteToMove ? acc.black : acc.white;
+    <span class="hljs-type">long</span> <span class="hljs-type">long</span> sum = <span class="hljs-number">0</span>;
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; H; i++) sum += (<span class="hljs-type">long</span> <span class="hljs-type">long</span>)<span class="hljs-built_in">SCReLU</span>(mine[i])   * net.outWeights[i];
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i = <span class="hljs-number">0</span>; i &lt; H; i++) sum += (<span class="hljs-type">long</span> <span class="hljs-type">long</span>)<span class="hljs-built_in">SCReLU</span>(theirs[i]) * net.outWeights[H + i];
+    sum /= QA;                   <span class="hljs-comment">// SCReLU squared the QA scale; remove one copy of it</span>
+    sum += net.outBias;
+    <span class="hljs-keyword">return</span> <span class="hljs-built_in">int</span>(sum * SCALE / (QA * QB));
+}
+
+<span class="hljs-comment">// Mr. Bits&#x27; search is engine-perspective minimax: positive = good for the engine.</span>
+<span class="hljs-function"><span class="hljs-keyword">inline</span> <span class="hljs-type">int</span> <span class="hljs-title">EvaluateForEngine</span><span class="hljs-params">(<span class="hljs-type">bool</span> whiteToMove)</span> </span>{
+    BitsNet::Accumulator acc;
+    <span class="hljs-built_in">RefreshAccumulator</span>(acc);
+    <span class="hljs-type">int</span> score = <span class="hljs-built_in">EvaluateSideToMove</span>(acc, whiteToMove);
+    <span class="hljs-keyword">return</span> (whiteToMove == ENGINE_COLOR) ? score : -score;
+}
+</div></code></pre>
+<div style="background:#fef2f2;border-left:6px solid #dc2626;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🔴 The #1 bug every engine author hits with nets: the sign.</strong> The net speaks &quot;side to move&quot;, your search speaks &quot;engine&quot;, your display speaks &quot;white&quot;, and the datasets speak a mix (Lichess <code>[%eval]</code> is from white's view, ChessBench and Leela from the side to move 🟡). That's a lot of places to flip a sign wrong, and a sign bug doesn't crash: it plays the <em>worst</em> move with total confidence. 😅 Before anything else, write the 10-line color-flip test: mirror the board, swap the colors, flip castling, en passant and the side to move, and the side-to-move eval must come out <em>identical</em>.</p>
+</div>
+<h3 id="123-replacing-the-sorting-search-with-the-legality-filter">12.3 Replacing the sorting search (with the legality filter)</h3>
+<p>Mr. Bits has no general &quot;is this square attacked?&quot; function yet ✅, so here is one, written for your board:</p>
+<pre class="hljs"><code><div><span class="hljs-comment">// Is the king of the given color attacked? Mailbox scan on board[8][8]; row 0 = rank 8.</span>
+<span class="hljs-function"><span class="hljs-type">bool</span> <span class="hljs-title">IsKingAttacked</span><span class="hljs-params">(<span class="hljs-type">bool</span> whiteKing)</span> </span>{
+    <span class="hljs-type">int8_t</span> myKing = whiteKing ? <span class="hljs-number">15</span> : <span class="hljs-number">7</span>;
+    <span class="hljs-type">int</span> kingRow = <span class="hljs-number">-1</span>, kingColumn = <span class="hljs-number">-1</span>;
+    <span class="hljs-type">long</span> <span class="hljs-type">long</span> mine = whiteKing ? whitePieces : blackPieces;
+    <span class="hljs-keyword">while</span> (mine) {
+        <span class="hljs-type">int8_t</span> bit = <span class="hljs-built_in">MSB</span>(mine);
+        mine ^= (<span class="hljs-number">1ll</span> &lt;&lt; bit);
+        <span class="hljs-keyword">if</span> (board[getPieceRowFromBit[bit]][getPieceColumnFromBit[bit]] == myKing) {
+            kingRow = getPieceRowFromBit[bit];
+            kingColumn = getPieceColumnFromBit[bit];
+            <span class="hljs-keyword">break</span>;
+        }
+    }
+    <span class="hljs-keyword">if</span> (kingRow &lt; <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;                         <span class="hljs-comment">// no king: it was already captured</span>
+
+    <span class="hljs-type">int8_t</span> enemyColorBit = whiteKing ? <span class="hljs-number">0</span> : <span class="hljs-number">8</span>;
+    <span class="hljs-keyword">auto</span> enemyAt = [&amp;](<span class="hljs-type">int</span> r, <span class="hljs-type">int</span> c, <span class="hljs-type">int8_t</span> type) {
+        <span class="hljs-keyword">return</span> r &gt;= <span class="hljs-number">0</span> &amp;&amp; r &lt; <span class="hljs-number">8</span> &amp;&amp; c &gt;= <span class="hljs-number">0</span> &amp;&amp; c &lt; <span class="hljs-number">8</span> &amp;&amp; board[r][c] == (type | enemyColorBit);
+    };
+
+    <span class="hljs-comment">// Black pawns move toward row 7, so they attack a white king from the row above it (and vice versa).</span>
+    <span class="hljs-type">int</span> pawnRow = whiteKing ? kingRow - <span class="hljs-number">1</span> : kingRow + <span class="hljs-number">1</span>;
+    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">enemyAt</span>(pawnRow, kingColumn - <span class="hljs-number">1</span>, <span class="hljs-number">1</span>) || <span class="hljs-built_in">enemyAt</span>(pawnRow, kingColumn + <span class="hljs-number">1</span>, <span class="hljs-number">1</span>)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+
+    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">int</span> KNIGHT[<span class="hljs-number">8</span>][<span class="hljs-number">2</span>] = {{<span class="hljs-number">-2</span>,<span class="hljs-number">-1</span>},{<span class="hljs-number">-2</span>,<span class="hljs-number">1</span>},{<span class="hljs-number">-1</span>,<span class="hljs-number">-2</span>},{<span class="hljs-number">-1</span>,<span class="hljs-number">2</span>},{<span class="hljs-number">1</span>,<span class="hljs-number">-2</span>},{<span class="hljs-number">1</span>,<span class="hljs-number">2</span>},{<span class="hljs-number">2</span>,<span class="hljs-number">-1</span>},{<span class="hljs-number">2</span>,<span class="hljs-number">1</span>}};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-keyword">auto</span>&amp; d : KNIGHT) <span class="hljs-keyword">if</span> (<span class="hljs-built_in">enemyAt</span>(kingRow + d[<span class="hljs-number">0</span>], kingColumn + d[<span class="hljs-number">1</span>], <span class="hljs-number">3</span>)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> dr = <span class="hljs-number">-1</span>; dr &lt;= <span class="hljs-number">1</span>; dr++)
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> dc = <span class="hljs-number">-1</span>; dc &lt;= <span class="hljs-number">1</span>; dc++)
+            <span class="hljs-keyword">if</span> ((dr || dc) &amp;&amp; <span class="hljs-built_in">enemyAt</span>(kingRow + dr, kingColumn + dc, <span class="hljs-number">7</span>)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+
+    <span class="hljs-type">static</span> <span class="hljs-type">const</span> <span class="hljs-type">int</span> RAYS[<span class="hljs-number">8</span>][<span class="hljs-number">2</span>] = {{<span class="hljs-number">-1</span>,<span class="hljs-number">0</span>},{<span class="hljs-number">1</span>,<span class="hljs-number">0</span>},{<span class="hljs-number">0</span>,<span class="hljs-number">-1</span>},{<span class="hljs-number">0</span>,<span class="hljs-number">1</span>},{<span class="hljs-number">-1</span>,<span class="hljs-number">-1</span>},{<span class="hljs-number">-1</span>,<span class="hljs-number">1</span>},{<span class="hljs-number">1</span>,<span class="hljs-number">-1</span>},{<span class="hljs-number">1</span>,<span class="hljs-number">1</span>}};
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> k = <span class="hljs-number">0</span>; k &lt; <span class="hljs-number">8</span>; k++) {
+        <span class="hljs-type">int8_t</span> slider = (k &lt; <span class="hljs-number">4</span>) ? <span class="hljs-number">5</span> : <span class="hljs-number">4</span>;                  <span class="hljs-comment">// rook lines first, then bishop lines</span>
+        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> r = kingRow + RAYS[k][<span class="hljs-number">0</span>], c = kingColumn + RAYS[k][<span class="hljs-number">1</span>];
+             r &gt;= <span class="hljs-number">0</span> &amp;&amp; r &lt; <span class="hljs-number">8</span> &amp;&amp; c &gt;= <span class="hljs-number">0</span> &amp;&amp; c &lt; <span class="hljs-number">8</span>; r += RAYS[k][<span class="hljs-number">0</span>], c += RAYS[k][<span class="hljs-number">1</span>]) {
+            <span class="hljs-keyword">if</span> (board[r][c] == <span class="hljs-number">0</span>) <span class="hljs-keyword">continue</span>;
+            <span class="hljs-keyword">if</span> (board[r][c] == (slider | enemyColorBit) || board[r][c] == (<span class="hljs-number">6</span> | enemyColorBit)) <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+            <span class="hljs-keyword">break</span>;                                         <span class="hljs-comment">// the ray is blocked</span>
+        }
+    }
+    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;
+}
+</div></code></pre>
+<p>And here's a drop-in sibling of <code>SortTheMovesAccordingToIterativeDeepening</code>, with the same save/restore discipline as your code:</p>
+<pre class="hljs"><code><div><span class="hljs-type">const</span> <span class="hljs-type">int</span> ILLEGAL_MOVE_SCORE = <span class="hljs-number">1000000000</span>;   <span class="hljs-comment">// worse than any real score, including king captures</span>
+
+<span class="hljs-function"><span class="hljs-type">void</span> <span class="hljs-title">SortTheMovesWithBitsNet</span><span class="hljs-params">(<span class="hljs-type">const</span> <span class="hljs-type">bool</span>&amp; turn, vector&lt;<span class="hljs-type">int16_t</span>&gt;&amp; currentMoves)</span> </span>{
+    vector&lt;pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int16_t</span>&gt;&gt; scored;
+    scored.<span class="hljs-built_in">reserve</span>(currentMoves.<span class="hljs-built_in">size</span>());
+    <span class="hljs-type">bool</span> moverIsWhite = (turn == ENGINE_COLOR);
+    <span class="hljs-type">bool</span> childWhiteToMove = !moverIsWhite;               <span class="hljs-comment">// after our move, the other side moves</span>
+
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-type">int16_t</span>&amp; currentMove : currentMoves) {
+        <span class="hljs-type">int8_t</span> takenPiece = board[(currentMove &gt;&gt; <span class="hljs-number">6</span>) &amp; <span class="hljs-number">7</span>][(currentMove &gt;&gt; <span class="hljs-number">9</span>) &amp; <span class="hljs-number">7</span>];
+        <span class="hljs-type">int16_t</span> numberOfMovesOfTheTakenPiece = numberOfMovesOfThePieceOnThisSquare[(currentMove &gt;&gt; <span class="hljs-number">6</span>) &amp; <span class="hljs-number">7</span>]
+                                                                                  [(currentMove &gt;&gt; <span class="hljs-number">9</span>) &amp; <span class="hljs-number">7</span>];
+        <span class="hljs-type">long</span> <span class="hljs-type">long</span> whitePiecesBefore = whitePieces, blackPiecesBefore = blackPieces;
+        <span class="hljs-type">int</span> engineScoreBefore = engineScore, opponentScoreBefore = opponentScore;
+        <span class="hljs-built_in">MakeChanges</span>(currentMove);
+
+        <span class="hljs-type">int</span> score;
+        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">abs</span>(engineScore - opponentScore) &gt; CHECKMATE_FLAG_SCORE_DIFFERENCE) {
+            score = engineScore - opponentScore;          <span class="hljs-comment">// a king was captured: keep the exact verdict</span>
+        } <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-built_in">IsKingAttacked</span>(moverIsWhite)) {
+            score = turn ? -ILLEGAL_MOVE_SCORE : ILLEGAL_MOVE_SCORE;   <span class="hljs-comment">// illegal: sink it to the bottom</span>
+        } <span class="hljs-keyword">else</span> {
+            score = <span class="hljs-built_in">EvaluateForEngine</span>(childWhiteToMove);
+        }
+
+        whitePieces = whitePiecesBefore;   blackPieces = blackPiecesBefore;
+        engineScore = engineScoreBefore;   opponentScore = opponentScoreBefore;
+        <span class="hljs-built_in">ReturnChanges</span>(currentMove, takenPiece, numberOfMovesOfTheTakenPiece);
+        scored.<span class="hljs-built_in">push_back</span>({score, currentMove});
+    }
+
+    <span class="hljs-keyword">if</span> (turn) <span class="hljs-built_in">sort</span>(scored.<span class="hljs-built_in">begin</span>(), scored.<span class="hljs-built_in">end</span>(), greater&lt;pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int16_t</span>&gt;&gt;());
+    <span class="hljs-keyword">else</span>      <span class="hljs-built_in">sort</span>(scored.<span class="hljs-built_in">begin</span>(), scored.<span class="hljs-built_in">end</span>(), less&lt;pair&lt;<span class="hljs-type">int</span>, <span class="hljs-type">int16_t</span>&gt;&gt;());
+    <span class="hljs-keyword">for</span> (<span class="hljs-type">size_t</span> i = <span class="hljs-number">0</span>; i &lt; scored.<span class="hljs-built_in">size</span>(); i++) currentMoves[i] = scored[i].second;
+}
+</div></code></pre>
+<p>In <code>Magic</code>, the tiers then become:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">if</span> (depth &gt; <span class="hljs-number">1</span> &amp;&amp; depth &lt; <span class="hljs-number">4</span>) {
+    <span class="hljs-built_in">SortTheMovesWithMySimpleHeuristic</span>(allPossibleMoves);          <span class="hljs-comment">// unchanged</span>
+}
+<span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (depth &gt;= <span class="hljs-number">4</span>) {
+    <span class="hljs-built_in">SortTheMovesWithBitsNet</span>(turn, allPossibleMoves);              <span class="hljs-comment">// was: a 2-, 4-, 6- or 8-ply search per child</span>
+    <span class="hljs-keyword">if</span> (depth &gt;= <span class="hljs-number">6</span>) {
+        <span class="hljs-keyword">while</span> (allPossibleMoves.<span class="hljs-built_in">size</span>() &gt; <span class="hljs-number">4</span>) {                     <span class="hljs-comment">// your top-4 cut stays until §12.4 replaces it</span>
+            allPossibleMoves.<span class="hljs-built_in">pop_back</span>();
+        }
+    }
+}
+</div></code></pre>
+<p>⚠️ <strong>Keep your top-4 cut in this stage.</strong> Switch it off only for the §13.1 exactness test, and replace it with §12.4's reductions in Stage 3. Without the cut, every depth-6+ node would search all ~35 moves at full depth: the reviewers measured depth-8 searches taking 2–12× <em>longer</em> than today that way ✅.</p>
+<p>What the ranker itself costs, measured with this exact code at <code>-O2 -march=native</code> on 2,000 game positions ✅:</p>
+<table>
+<thead>
+<tr>
+<th>Sorting step at a node</th>
+<th>Today's search sort</th>
+<th><code>SortTheMovesWithBitsNet</code> (v1, full refresh)</th>
+<th>Cheaper by</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>depth 4–5 (2-ply sort)</td>
+<td>64.9 µs</td>
+<td>12.0 µs</td>
+<td>×5.4</td>
+</tr>
+<tr>
+<td>depth 6–8 (4-ply sort)</td>
+<td>10.4 ms</td>
+<td>12.0 µs</td>
+<td>×540–860</td>
+</tr>
+<tr>
+<td>depth 9–10 (6-ply sort)</td>
+<td>850 ms</td>
+<td>12.0 µs</td>
+<td>×38,000–70,000</td>
+</tr>
+</tbody>
+</table>
+<p>That's the <em>cost</em> side only. Whether the net keeps the <em>right</em> 4 is the quality side, which §13's recall and puzzle tests measure.</p>
+<h3 id="124-turning-the-top-4-cliff-into-a-slope-lmr">12.4 Turning the top-4 cliff into a slope (LMR)</h3>
+<p>The move loop keeps the first <code>K</code> moves at full depth and <strong>searches the rest shallower</strong>, instead of <code>pop_back()</code>-ing them (delete the <code>pop_back</code> loop from §12.3 when you add this):</p>
+<pre class="hljs"><code><div><span class="hljs-type">int</span> moveIndex = <span class="hljs-number">0</span>;
+<span class="hljs-type">bool</span> inCheck = <span class="hljs-built_in">IsKingAttacked</span>(turn == ENGINE_COLOR);          <span class="hljs-comment">// in check: never reduce an evasion (§4.4)</span>
+<span class="hljs-keyword">for</span> (<span class="hljs-type">const</span> <span class="hljs-type">int16_t</span>&amp; currentMove : allPossibleMoves) {
+    <span class="hljs-comment">// ... save state + MakeChanges(currentMove), exactly as today (takenPiece is read before MakeChanges) ...</span>
+
+    <span class="hljs-type">int8_t</span> moveType = (currentMove &gt;&gt; <span class="hljs-number">12</span>) &amp; <span class="hljs-number">7</span>;
+    <span class="hljs-type">bool</span> tactical = (takenPiece != <span class="hljs-number">0</span>) || (moveType == <span class="hljs-number">3</span>) || (moveType == <span class="hljs-number">1</span>) || (moveType == <span class="hljs-number">2</span>)
+                    || (moveType == <span class="hljs-number">6</span>) || (moveType == <span class="hljs-number">7</span>);   <span class="hljs-comment">// capture, en passant, promotion</span>
+    <span class="hljs-type">bool</span> givesCheck = <span class="hljs-built_in">IsKingAttacked</span>(turn != ENGINE_COLOR);   <span class="hljs-comment">// after MakeChanges: does the move check the opponent?</span>
+    <span class="hljs-type">bool</span> reduce = (depth &gt;= <span class="hljs-number">6</span>) &amp;&amp; (moveIndex &gt;= K) &amp;&amp; !tactical &amp;&amp; !inCheck &amp;&amp; !givesCheck;
+
+    <span class="hljs-type">int</span> correspondingScore;
+    <span class="hljs-keyword">if</span> (reduce) {
+        <span class="hljs-comment">// R = 2 keeps your even-depth parity until quiescence search exists.</span>
+        correspondingScore = <span class="hljs-built_in">Magic</span>(depth - <span class="hljs-number">1</span> - <span class="hljs-number">2</span>, !turn, currentMove, alpha, beta);
+        <span class="hljs-type">bool</span> surprising = turn ? (correspondingScore &gt; alpha) : (correspondingScore &lt; beta);
+        <span class="hljs-keyword">if</span> (surprising) {
+            correspondingScore = <span class="hljs-built_in">Magic</span>(depth - <span class="hljs-number">1</span>, !turn, currentMove, alpha, beta);   <span class="hljs-comment">// re-search</span>
+        }
+    } <span class="hljs-keyword">else</span> {
+        correspondingScore = <span class="hljs-built_in">Magic</span>(depth - <span class="hljs-number">1</span>, !turn, currentMove, alpha, beta);
+    }
+
+    <span class="hljs-comment">// ... restore state + ReturnChanges, alpha/beta update, cutoff, exactly as today ...</span>
+    moveIndex++;
+}
+</div></code></pre>
+<p><code>K</code> starts at your favorite number (4 or 5), and §13 shows how to set it from data instead. Reducing by <strong>2</strong> plies instead of the usual 1 is a deliberate Mr. Bits special 😄: your even-depth rule exists because of the horizon effect, and a 1-ply reduction would make a line through a reduced move end an odd number of plies from the root. Once quiescence search lands, the parity problem disappears and the normal R = 1 (growing with depth and move number, §4.3) takes over.</p>
+<h3 id="125-later-the-net-as-your-leaf-judge-stage-4">12.5 Later: the net as your leaf judge (stage 4)</h3>
+<ul>
+<li><strong>Where:</strong> the leaf returns at lines 2791 and 2944. Keep the king-capture test on the incremental material, because it's your mate detector ✅. Only the <em>quiet</em> leaf value changes, and only behind quiescence search (its stand-pat score becomes the net's eval). Clamp the net to ±30,000, well inside the 100,000 mate threshold.</li>
+<li><strong>Incremental updates:</strong> the accumulator updates belong in <code>MakeChanges</code> next to the PST updates (a quiet move: −from, +to in both perspectives; a capture: also −victim; castling: king + rook; en passant: the captured pawn sits on another square; promotion: −pawn, +new piece, and −victim when it captures). <code>ReturnChanges</code> never undoes them, so save and restore the accumulator with the 4 scalars at every search-time <code>MakeChanges</code> call: your 4 snapshot sites (lines 2846–2856, 2901–2911, 3099–3109, 3187–3197) ✅ plus the new one in <code>SortTheMovesWithBitsNet</code> (§12.3). The game replay in <code>InitializeEveryThing</code> (lines 3328–3336) also calls <code>MakeChanges</code> and keeps its changes on purpose, so build the accumulator once with <code>RefreshAccumulator</code> after it (main calls <code>InitializeEveryThing</code> at line 3372). Your quadruplicated <code>MakeChanges</code> is the riskiest code to touch, so one more reason to start with the ranker.</li>
+<li><strong>The 28 workers:</strong> each fresh <code>Kernel.exe</code> would re-read the weights every move. Embed them in the executable (generate a <code>.h</code> with <code>xxd -i</code>, or use incbin) or memory-map one shared file. Also: on your laptop, 28 workers measured only about <strong>8–9×</strong> the single-core NNUE throughput, not 28× ✅ (hyper-threads, E-cores, laptop power limits). Try 16–24 workers too.</li>
+</ul>
+<hr>
+<h2 id="-13-proving-it-works--measure-before-you-believe">🧪 13. Proving It Works — Measure Before You Believe</h2>
+<p>You ran a lab with ~1000 games of experiments. This section upgrades the lab. 🧪</p>
+<h3 id="131-the-free-exactness-test-do-this-first">13.1 The free exactness test (do this first!)</h3>
+<div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>✅ Move order cannot change the value of an unpruned alpha-beta search. It only changes the node count</strong> ✅. So: switch off the top-4 truncation, run at a <strong>fixed depth with no time limit</strong>, and compare the old sort with the net sort. The root score <strong>must be identical</strong>, and the main-tree node count (count <code>Magic</code> nodes separately from the sort sub-searches, §2.4) tells you <em>exactly</em> how good the ordering is. That's a perfect, risk-free unit test of the ranker before a single game is played. (It needs <code>go depth N</code> / <code>go nodes N</code>, which Engine UCI.cpp doesn't support yet ✅. Add them, and pass the limit to the Kernel in the JSON with no time cap, because Kernel.cpp's iterative-deepening loop (lines 3376–3403) stops only on time.)</p>
+</div>
+<h3 id="132-offline-checks-minutes-no-games-needed">13.2 Offline checks (minutes, no games needed)</h3>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    T["📦 held-out test positions<br/>(games the net never saw)"]:::data --> A["📏 eval error<br/>vs Stockfish, in win-% space"]:::m
+    T --> B["🎯 top-K recall<br/>is the deep best move in the net's top K?"]:::m
+    P["🧩 Lichess puzzles"]:::data --> C["🛡️ puzzle survival<br/>does the solution survive every cut?"]:::m
+    E["⏱️ timing runs"]:::data --> D["⚡ speed<br/>time-to-depth, nps"]:::m
+    A --> G{"all green?"}:::gate
+    B --> G
+    C --> G
+    D --> G
+    G -->|yes| S["🏁 go to SPRT matches"]:::go
+    G -->|no| F["🔧 fix data or net first"]:::stop
+    classDef data fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef m fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef gate fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef go fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef stop fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>How</th>
+<th>What &quot;good&quot; looks like</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Eval error</strong></td>
+<td>Mean squared error in win-probability space against the Gold set</td>
+<td>Clearly below a Texel-tuned material + PST baseline</td>
+</tr>
+<tr>
+<td><strong>Top-K recall</strong> ⭐</td>
+<td>On positions with multi-PV deep evals (the Lichess eval DB gives them free), the % where the best move is in the net's top K. Also &quot;near-best recall&quot;: any move within 25–50 cp of the best</td>
+<td><strong>Your trust factor, measured.</strong> Pick K per depth and phase so recall stays ≥ 97–99% 🟡. Measure today's 4-ply-sort top-4 the same way, to see how often it already drops the best move</td>
+</tr>
+<tr>
+<td><strong>Puzzle survival</strong> 🛡️</td>
+<td>Lichess puzzles: run the solution line at fixed depth and check whether the solution move survives <em>every</em> pruning node; report by theme (sacrifice, quiet move, defensive move…) and rating. Needs a FEN loader in the Kernel first, since today it only replays moves from the start position (doc 01's Bug 5)</td>
+<td>The tactical safety test. Puzzles are exactly the &quot;only move ranks 5th&quot; positions the top-4 cliff kills. It turns your &quot;99.9% safe&quot; into a number</td>
+</tr>
+<tr>
+<td><strong>Speed</strong></td>
+<td>Time-to-depth on a fixed set of 200–1,000 positions</td>
+<td>The net sort must be much cheaper than the search sort it replaces (§2)</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ <strong>Run every ranker measurement without a time limit.</strong> On timeout, <code>Magic</code> and <code>MagicForIterativeDeepening</code> return 0, which looks like a real score (lines 2784–2786 and 2937–2939) ✅, so an interrupted sort ranks moves by fake zeros.</p>
+<h3 id="133-online-matches-with-sprt-the-only-judge-that-matters">13.3 Online: matches with SPRT (the only judge that matters)</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Recommendation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Tool</strong></td>
+<td><strong>fastchess</strong> (MIT, v1.8.0 as of April 2026 ✅) through your existing UCI front-end; cutechess-cli works too</td>
+</tr>
+<tr>
+<td><strong>SPRT</strong></td>
+<td>elo0 = 0, elo1 = 5 for small changes (elo1 = 10 for big ones), α = β = 0.05: the standard hobby setting ✅. Fishtest uses [0, 2] at short time controls ✅, but that costs far more games</td>
+</tr>
+<tr>
+<td><strong>Time control</strong></td>
+<td>Hobby engines test at 10+0.1 or 8+0.08 ✅, but today's Mr. Bits can't: even a move with a 1 s cap takes ≈ 2.2 s of wall time ✅ (a fixed overhead of ~1–2 s per move, most likely the 28 process spawns, JSON files and Stockfish launches 🟡; every Kernel move also starts Stockfish twice ✅). With a sub-second increment it loses on time early: around move 5 at 10+0.1, and still around move 10 at 60+0.6, in a clock model built from your logged think times 🟡. Until a test mode and a persistent Stockfish remove that overhead, test with an increment of 3 s or more: 10+3, or the 2+3 you already play on lichess. Expect only ~100–200 games a day 🟡</td>
+</tr>
+<tr>
+<td><strong>Openings</strong></td>
+<td>A balanced <strong>PGN</strong> book that starts from the initial position, with color-reversed pairs. Never an EPD/FEN book: Engine UCI.cpp drops the FEN and replays the moves from the start position (doc 01's Bug 5). After a book of 4+ plies the &quot;first 2 moves&quot; rule never fires, because book plies count, but the &gt;80-ply Stockfish takeover and the stalemate guardrail still do, so keep them identical in both versions, or switch them off</td>
+</tr>
+<tr>
+<td><strong>Concurrency</strong></td>
+<td>1 game at a time on your laptop (each move spawns 28 workers). Parallel games first need a 1–4-worker &quot;test mode&quot; with per-process file names (today every instance shares <code>input/thread_N_serialized_data.json</code>, <code>temp_command_file.txt</code> and <code>history/</code> in its working directory), and on the Linux Nebius VM also a port of the Windows-only calls (<code>windows.h</code>, <code>SetPriorityClass</code>, the <code>cmd.exe</code> launch of <code>.\engines\Kernel.exe</code>), or Wine</td>
+</tr>
+<tr>
+<td><strong>How many games?</strong></td>
+<td>With ~35% draws, 1,000 games pin Elo to about ±17 and 10,000 games to about ±5.5 🟡. Big changes (quiescence!) show up within a few hundred games; small tweaks need thousands</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Setting up the A/B match:</strong> give each version its own full copy of the <code>lichess-bot-master</code> folder (here <code>C:/mb_new</code> and <code>C:/mb_base</code>), and start each engine with its copy as the working directory (<code>dir=</code>). <code>Engine UCI.exe</code> always launches <code>engines/Kernel.exe</code> and uses <code>input/</code> and <code>stockfish/</code> relative to its working directory, so from one shared folder &quot;new&quot; and &quot;base&quot; would run the <em>same</em> Kernel ✅. Make sure each copy has an empty <code>input/</code> folder, because Engine UCI.cpp doesn't create it. Usually only <code>engines/Kernel.exe</code> differs between the two copies. Example command, with flags from memory, so check <code>fastchess -help</code> 🟡:</p>
+<pre class="hljs"><code><div>fastchess -engine cmd=&quot;C:/mb_new/engines/Engine UCI.exe&quot; dir=C:/mb_new name=new -engine cmd=&quot;C:/mb_base/engines/Engine UCI.exe&quot; dir=C:/mb_base name=base -each tc=10+3 -openings file=book.pgn format=pgn order=random -games 2 -rounds 5000 -repeat -concurrency 1 -sprt elo0=0 elo1=5 alpha=0.05 beta=0.05 -pgnout file=test.pgn
+</div></code></pre>
+<div style="background:#fffbeb;border-left:6px solid #d97706;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>⚠️ One change per test.</strong> Net + new trust rule + new time management in one match tells you nothing when it fails, and nothing <em>reliable</em> when it wins. Your commit history shows you already think in checkpoints, so make each checkpoint one SPRT.</p>
+</div>
+<hr>
+<h2 id="-14-budget--spend-on-compute-not-datasets">💸 14. Budget — Spend on Compute, Not Datasets</h2>
+<p>All at the Nebius box's $1.80/hour (GPU + 24 vCPUs), with throughput assumptions marked 🟡 in §5.3:</p>
+<table>
+<thead>
+<tr>
+<th>Line item</th>
+<th>Hours</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>100M labels at 5k nodes</td>
+<td>5.8–11.6</td>
+<td>$10–21</td>
+</tr>
+<tr>
+<td>10M &quot;deep slice&quot; at 50k nodes</td>
+<td>5.8–11.6</td>
+<td>$10–21</td>
+</tr>
+<tr>
+<td>Gold + ranking test sets</td>
+<td>1.3–2.6</td>
+<td>$2–5</td>
+</tr>
+<tr>
+<td>Data processing (PGN, eval DB, tablebases, dedupe)</td>
+<td>3–5</td>
+<td>$5–9</td>
+</tr>
+<tr>
+<td>v1 training + 6–8 ablations</td>
+<td>15–30</td>
+<td>$27–54</td>
+</tr>
+<tr>
+<td>Test matches on the box (optional; needs the test mode and a Linux port or Wine first, §13.3)</td>
+<td>~5</td>
+<td>~$9</td>
+</tr>
+<tr>
+<td><strong>Total v1 program</strong></td>
+<td><strong>~36–66</strong></td>
+<td><strong>≈ $65–120</strong> (lean core: $33–62)</td>
+</tr>
+</tbody>
+</table>
+<p><em>Lean core = the 5k-node labels, the test sets and processing, plus training with only 3 ablations (8–15 h).</em></p>
+<pre><code class="language-mermaid"><div class="mermaid">pie showData
+    title v1 program budget in dollars (midpoints, $1.80 per hour)
+    "Labels at 5k nodes" : 15.5
+    "Deep slice at 50k nodes" : 15.5
+    "Test sets" : 3.5
+    "Data processing" : 7
+    "Training and ablations" : 40.5
+    "Test matches" : 9
+</div></code></pre>
+<p>That leaves <strong>$180–235 of a $300 budget</strong> for v2: 300M–1B positions, the ChessBench ranking head, and data logged from Mr. Bits' own search 🟡. Three money tips: stop the instance when it's idle, label on preemptible capacity with checkpointed output shards, and use your laptop's RTX 5070 for everything small (§11.1).</p>
+<hr>
+<h2 id="-15-the-idea-bank--all-the-ideas-ranked">💡 15. The Idea Bank — All the Ideas, Ranked</h2>
+<pre><code class="language-mermaid"><div class="mermaid">mindmap
+  root((🧠 Brain ideas))
+    Ranking
+      Net replaces the sorting searches
+      Cascade pre-filter
+      One-pass action-value head
+      Pairwise referee at the cut line
+      NN-ranked root for 28 workers
+    Trust
+      ProbCut margins
+      Conformal sets
+      Uncertainty head
+      Reduce, never delete
+    Labels
+      Lichess eval DB
+      ChessBench
+      Stockfish at 5k nodes
+      Your own exact sort scores
+      Syzygy
+    Training
+      Win-probability targets
+      Lambda blending
+      Curriculum
+      Search-shaped sampling
+    Engine
+      Free 3.48x compile
+      Piece-count buckets
+      Puzzle survival harness
+      Embedded weights
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Idea</th>
+<th>Effort</th>
+<th>Payoff</th>
+<th>Confidence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>🎁 <strong>Compile with <code>-O2 -march=native</code></strong> (§2.3)</td>
+<td>Minutes</td>
+<td>×3.48 measured</td>
+<td>✅ Certain</td>
+</tr>
+<tr>
+<td>2</td>
+<td>🧠 <strong>Net replaces the sorting searches</strong> at depth ≥ 4 (§12.3)</td>
+<td>Days</td>
+<td>Up to ×15 fewer nodes at depth 10 (model); in the measured worker the sorts are 92.6% of the nodes and 87% of the time, which caps it at about ×13.5 in nodes and ×8 in time</td>
+<td>🟡 High for speed; Elo must be measured against TT + killers + history (§2.4)</td>
+</tr>
+<tr>
+<td>3</td>
+<td>🛡️ <strong>Cascade pre-filter</strong>: the net keeps 10, your sort keeps 4 (§8.4)</td>
+<td>Days</td>
+<td>Faster time-to-depth at almost no risk</td>
+<td>🟡 High</td>
+</tr>
+<tr>
+<td>4</td>
+<td>🧪 <strong>Puzzle survival harness</strong> (§13.2)</td>
+<td>2–4 days, plus a FEN loader for the Kernel</td>
+<td>Every pruning change gets a safety number in an hour</td>
+<td>✅ High as a tool</td>
+</tr>
+<tr>
+<td>5</td>
+<td>🎯 <strong>ProbCut-calibrated <code>scoreDifferenceFactor</code></strong> (§4.2)</td>
+<td>3–5 days</td>
+<td>Adaptive K: fewer wasted slots, fewer deleted saves</td>
+<td>🟡 Medium-high, a proven family of techniques</td>
+</tr>
+<tr>
+<td>6</td>
+<td>📉 <strong>Reduce, never delete</strong> (NN-guided LMR)</td>
+<td>6–10 days</td>
+<td>Removes the top-4 cliff while keeping most of the speed</td>
+<td>🟡 Medium-high, best after quiescence + TT</td>
+</tr>
+<tr>
+<td>7</td>
+<td>🏷️ <strong>Stockfish 5k-node label factory</strong> (§5.6)</td>
+<td>2–3 days</td>
+<td>100M labels for $10–21</td>
+<td>✅ High (method); 🟡 (speed)</td>
+</tr>
+<tr>
+<td>8</td>
+<td>📊 <strong>Win-% targets + λ blending</strong> (§5.1)</td>
+<td>Hours</td>
+<td>Stable training; outputs on Stockfish's pawn scale</td>
+<td>✅ Standard practice</td>
+</tr>
+<tr>
+<td>9</td>
+<td>🔢 <strong>Piece-count buckets</strong> instead of phase nets (§9)</td>
+<td>1–2 days in the trainer</td>
+<td>Phase knowledge without jumps</td>
+<td>🟡 Medium-high</td>
+</tr>
+<tr>
+<td>10</td>
+<td>🧠 <strong>Net as the quiet-leaf judge</strong> (stage 4, §12.5)</td>
+<td>~2 weeks, after quiescence search</td>
+<td>The proven NNUE Elo source: a better leaf eval than material + PST</td>
+<td>🟡 High once quiescence exists</td>
+</tr>
+<tr>
+<td>11</td>
+<td>⚖️ <strong>Action-value head from ChessBench</strong> (§8)</td>
+<td>10–15 days</td>
+<td>1 pass instead of 35, labels that include the exchanges</td>
+<td>🟡 Medium-high for ranking quality</td>
+</tr>
+<tr>
+<td>12</td>
+<td>🔁 <strong>TreeStrap self-distillation</strong> of your exact sort scores</td>
+<td>4–7 days</td>
+<td>Labels from exactly the positions that get queried</td>
+<td>🟡 High as fine-tuning; medium on its own</td>
+</tr>
+<tr>
+<td>13</td>
+<td>🎲 <strong>Conformal trust sets</strong> (§4.2)</td>
+<td>3–6 days</td>
+<td>A trust factor with a calibrated average miss rate</td>
+<td>🔮 Medium, untried in chess as far as I know</td>
+</tr>
+<tr>
+<td>14</td>
+<td>🌡️ <strong>Uncertainty head / NN-vs-PST alarm</strong></td>
+<td>3–5 days</td>
+<td>Prune hard when calm, widen when tactics are in the air</td>
+<td>🔮 Medium-low to medium</td>
+</tr>
+<tr>
+<td>15</td>
+<td>🎯 <strong>NN-ranked root for the 28 workers</strong></td>
+<td>8–15 days</td>
+<td>Workers stop spending effort on junk root moves</td>
+<td>🔮 Medium</td>
+</tr>
+<tr>
+<td>16</td>
+<td>⚖️ <strong>Pairwise referee</strong> at the cut line</td>
+<td>3–5 days</td>
+<td>Better decisions exactly at K</td>
+<td>🔮 Medium</td>
+</tr>
+<tr>
+<td>17</td>
+<td>📚 <strong>Curriculum</strong> (your eval → tablebases → 5k → deep)</td>
+<td>Days</td>
+<td>Debugging power, then quality</td>
+<td>🟡 Likely helpful</td>
+</tr>
+<tr>
+<td>18</td>
+<td>🏆 <strong>TD-Leaf from your own Lichess games</strong> (KnightCap: 1650 → 2150 in 308 games ✅)</td>
+<td>Weeks</td>
+<td>Learns from real opponents, a late polish</td>
+<td>🔮 Low-medium for a neural net</td>
+</tr>
+<tr>
+<td>19</td>
+<td>🖥️ <strong>Shared GPU inference server</strong> on the laptop's RTX 5070</td>
+<td>2+ weeks</td>
+<td>Only if a big net clearly beats the CPU net</td>
+<td>🔮 Low-medium</td>
+</tr>
+<tr>
+<td>20</td>
+<td>🎭 <strong>Four separate phase nets</strong></td>
+<td>Weeks</td>
+<td>Probably negative (jumps, ¼ of the data each)</td>
+<td>❌ Run the §9 experiment before believing it</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-mermaid"><div class="mermaid">quadrantChart
+    title Idea bank - effort vs expected payoff
+    x-axis Low effort --> High effort
+    y-axis Low payoff --> High payoff
+    quadrant-1 Big bets
+    quadrant-2 Do first
+    quadrant-3 Nice extras
+    quadrant-4 Later or never
+    O2 compile: [0.05, 0.85]
+    Net sort: [0.35, 0.8]
+    Cascade filter: [0.3, 0.6]
+    Puzzle harness: [0.25, 0.55]
+    ProbCut trust: [0.4, 0.65]
+    Label factory: [0.3, 0.7]
+    NN leaf judge: [0.65, 0.9]
+    Action value head: [0.62, 0.75]
+    Piece buckets: [0.3, 0.45]
+    TreeStrap labels: [0.5, 0.5]
+    Conformal sets: [0.55, 0.42]
+    Root ranking: [0.7, 0.35]
+    GPU server: [0.9, 0.2]
+    Four phase nets: [0.75, 0.12]
+    TD Leaf: [0.62, 0.22]
+</div></code></pre>
+<hr>
+<h2 id="️-16-the-roadmap--every-stage-ends-with-an-sprt">🛣️ 16. The Roadmap — Every Stage Ends With an SPRT</h2>
+<pre><code class="language-mermaid"><div class="mermaid">timeline
+    title Mr. Bits gets a brain - the roadmap
+    Stage 0 - Foundations : O2 build, a free 3.48x : Quiescence search and mate-distance scores : Zobrist hashing, TT, killers, history and repetition : go depth, go nodes, a test mode, fastchess and SPRT
+    Stage 1 - Data : Lichess eval DB and Stockfish 5k-node labels : Texel-tune your PST, a zero-hidden-layer net
+    Stage 2 - BitsNet v1 as ranker : 768 to 256x2 to 1, trained with bullet : Replaces the sorting searches at depth 4+
+    Stage 3 - Trust : Recall-at-K, puzzles and ProbCut calibration : The top-4 cliff becomes an LMR slope
+    Stage 4 - BitsNet as judge : Incremental accumulator : Net replaces material + PST at quiet leaves : Piece-count buckets
+    Stage 5 - One-pass ranking : Action-value head from ChessBench : NN-ranked root for the 28 workers
+    Stage 6 - Its own data : Positions from Mr. Bits' own search : Retrain and repeat
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Why it's in this position</th>
+<th>Exit criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>0 · Foundations</strong></td>
+<td>The <code>-O2</code> build is free speed. Without quiescence search, every net looks dumb (§10). Without SPRT, you can't tell progress from luck. These are doc 01's top items, finally done</td>
+<td>qsearch + TT pass SPRT against today's Mr. Bits</td>
+</tr>
+<tr>
+<td><strong>1 · Data</strong></td>
+<td>The pipeline is 80% of ML work. Texel tuning tests the <em>whole</em> pipeline with the simplest possible &quot;net&quot;</td>
+<td>The tuned PST beats Michniewski's tables in SPRT</td>
+</tr>
+<tr>
+<td><strong>2 · Ranker</strong></td>
+<td>Your idea, as an isolated change: one new function, no edits to <code>MakeChanges</code></td>
+<td>The exactness test passes (§13.1); time-to-depth drops; SPRT win at equal time</td>
+</tr>
+<tr>
+<td><strong>3 · Trust</strong></td>
+<td>Your top-K idea, made safe and calibrated</td>
+<td>Recall ≥ target, puzzle survival up, SPRT win</td>
+</tr>
+<tr>
+<td><strong>4 · Judge</strong></td>
+<td>The <em>proven</em> Elo machine of modern engines, but it touches the riskiest code (<code>MakeChanges</code>)</td>
+<td>SPRT win with incremental updates</td>
+</tr>
+<tr>
+<td><strong>5 · One pass</strong></td>
+<td>1 forward pass instead of ~35 per node (§8)</td>
+<td>Faster than stage 2 at equal recall</td>
+</tr>
+<tr>
+<td><strong>6 · Self-play</strong></td>
+<td>Data from Mr. Bits' own search fixes the distribution gap (§17) and makes the net truly <em>yours</em></td>
+<td>Each generation beats the previous one</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="️-17-honest-risks--traps">⚠️ 17. Honest Risks &amp; Traps</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Trap</th>
+<th>What happens</th>
+<th>Defense</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>🔴 <strong>Sign / perspective bug</strong></td>
+<td>The engine plays the worst move, confidently</td>
+<td>The color-flip test (§12.2)</td>
+</tr>
+<tr>
+<td>2</td>
+<td>🔴 <strong>Train/validation leakage</strong></td>
+<td>Positions from the same game land in both sets; validation lies; the net looks great but isn't</td>
+<td>Split <strong>by game</strong>; deduplicate test FENs out of training across all sources</td>
+</tr>
+<tr>
+<td>3</td>
+<td>🔴 <strong>Hard cuts multiply errors</strong></td>
+<td>rⁿ survival along a line (§4.3); alpha-beta carries the biggest error to the root</td>
+<td>Reductions instead of deletions near the root; hard pruning only near the leaves</td>
+</tr>
+<tr>
+<td>4</td>
+<td>🟠 <strong>Distribution shift</strong></td>
+<td>The net learned from <em>real games</em>, but your search visits absurd positions (pieces hanging, kings walking) it has never seen</td>
+<td>Random and blunder children in v1 (§5.5); positions logged <strong>from Mr. Bits' own search</strong> in v2</td>
+</tr>
+<tr>
+<td>5</td>
+<td>🟠 <strong>The old sort was also a tactics detector</strong></td>
+<td>A 4-ply search <em>sees</em> 2-move tactics; a static net may not</td>
+<td>Captures by SEE, never-prune sets, the cascade (§8.4), the puzzle gate</td>
+</tr>
+<tr>
+<td>6</td>
+<td>🟠 <strong>Illegal moves in trusted slots</strong></td>
+<td>Pseudo-legal moves rank high and push real moves out of the top K</td>
+<td><code>IsKingAttacked</code> before ranking (§12.3)</td>
+</tr>
+<tr>
+<td>7</td>
+<td>🟡 <strong>Speed regression</strong></td>
+<td>The net turns out slower than planned and the depth gain evaporates</td>
+<td>Measure time-to-depth from day one</td>
+</tr>
+<tr>
+<td>8</td>
+<td>🟡 <strong>Quantization mismatch</strong></td>
+<td>The float net is great, the int16 net is broken</td>
+<td>C++ matches a Python integer re-implementation exactly on 100k positions (§11.2)</td>
+</tr>
+<tr>
+<td>9</td>
+<td>🟡 <strong>Dataset bias</strong></td>
+<td>The Lichess eval DB is crowded with openings people analyze; cp scales differ across Stockfish versions</td>
+<td>Re-weight by phase; deduplicate; train in win-% space with a sigmoid scale fitted per source on shared positions</td>
+</tr>
+<tr>
+<td>10</td>
+<td>🟡 <strong>Process spawn cost</strong></td>
+<td>28 fresh workers each read the weights every move</td>
+<td>Embed the weights in <code>Kernel.exe</code> (§12.5)</td>
+</tr>
+<tr>
+<td>11</td>
+<td>🟡 <strong>Time management</strong></td>
+<td>A faster search breaks the 5% rule's calibration (at <code>-O2</code>, 115 s were wasted on an unfinishable depth 12 ✅)</td>
+<td>Predict the next iteration's cost from the measured growth factors (in time: ×9–18 from depth 6 to 8, ×15 from 8 to 10, and more than ×22 from 10 to 12 at <code>-O2</code> ✅; doc 01's ~30–50× was an estimate)</td>
+</tr>
+<tr>
+<td>12</td>
+<td>🟡 <strong>Originality rules</strong></td>
+<td>A net trained only on Stockfish/Leela labels is &quot;their judgment&quot;; TCEC requires 2 of 3 NN parts (trainer, weights, engine) to be unique ✅</td>
+<td>Keep data provenance; stage 6 makes the data your own</td>
+</tr>
+<tr>
+<td>13</td>
+<td>⚪ <strong>Five changes at once</strong></td>
+<td>You can't tell what helped</td>
+<td>One change per SPRT</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="-18-glossary">📖 18. Glossary</h2>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Ablation</strong></td>
+<td>A training run that changes exactly one setting, to see whether it matters</td>
+</tr>
+<tr>
+<td><strong>Accumulator</strong></td>
+<td>The first layer's output, kept up to date incrementally as moves are made and unmade</td>
+</tr>
+<tr>
+<td><strong>Action-value (Q)</strong></td>
+<td>The value of <em>playing a specific move</em> in a position. A Q head scores all moves in one pass</td>
+</tr>
+<tr>
+<td><strong>Conformal prediction</strong></td>
+<td>A statistics method that outputs a <em>set</em> (here: of moves) guaranteed to contain the right answer with a chosen probability, on average over positions drawn like the calibration data</td>
+</tr>
+<tr>
+<td><strong>Distillation</strong></td>
+<td>Training a small, fast &quot;student&quot; to imitate a big, slow &quot;teacher&quot; (here: Stockfish, or your own deep search)</td>
+</tr>
+<tr>
+<td><strong>EBF</strong></td>
+<td>Effective branching factor: the node-count multiplier per extra ply</td>
+</tr>
+<tr>
+<td><strong>Huber loss</strong></td>
+<td>Squared error for small misses, absolute error for big ones, so outliers don't dominate</td>
+</tr>
+<tr>
+<td><strong>λ (lambda) blending</strong></td>
+<td>Mixing the engine score with the game result in the training target</td>
+</tr>
+<tr>
+<td><strong>LMR / LMP</strong></td>
+<td>Late Move Reductions / Pruning: search late-ordered moves shallower, or skip them near the leaves</td>
+</tr>
+<tr>
+<td><strong>Multi-PV</strong></td>
+<td>An engine analysis that reports the best <em>several</em> lines, not just one</td>
+</tr>
+<tr>
+<td><strong>NNUE</strong></td>
+<td>&quot;Efficiently updatable neural network&quot;: a sparse-input net whose first layer is updated incrementally. Fast on CPUs</td>
+</tr>
+<tr>
+<td><strong>Perspective net</strong></td>
+<td>A net that sees the board from the side to move's point of view (§6.2)</td>
+</tr>
+<tr>
+<td><strong>Policy</strong></td>
+<td>A probability for each legal move (&quot;how promising is this move?&quot;), used for ordering, not as an evaluation</td>
+</tr>
+<tr>
+<td><strong>ProbCut</strong></td>
+<td>Pruning with a statistically calibrated margin from a cheap estimate (§4.2)</td>
+</tr>
+<tr>
+<td><strong>Quantization</strong></td>
+<td>Turning float weights into small integers for fast inference</td>
+</tr>
+<tr>
+<td><strong>Quiescence search</strong></td>
+<td>Searching only captures (and maybe checks) at the leaves until the position is quiet</td>
+</tr>
+<tr>
+<td><strong>Recall@K</strong></td>
+<td>How often the right move is in the net's top K (§13.2)</td>
+</tr>
+<tr>
+<td><strong>SCReLU</strong></td>
+<td>Squared clipped ReLU: clamp to [0, 1] (0…255 after int16 quantization, §7.3), then square. A common NNUE activation</td>
+</tr>
+<tr>
+<td><strong>SEE</strong></td>
+<td>Static exchange evaluation: who wins the material fight on one square if both sides keep capturing</td>
+</tr>
+<tr>
+<td><strong>Softmax</strong></td>
+<td>Turns a list of scores into probabilities that sum to 1</td>
+</tr>
+<tr>
+<td><strong>SPRT</strong></td>
+<td>Sequential probability ratio test: keeps playing games until it's statistically sure whether a change gains Elo</td>
+</tr>
+<tr>
+<td><strong>Superbatch</strong></td>
+<td>bullet's training unit: 6,104 batches × 16,384 positions ≈ 100M positions</td>
+</tr>
+<tr>
+<td><strong>Syzygy</strong></td>
+<td>Endgame tablebases: exact win/draw/loss for every position with few pieces</td>
+</tr>
+<tr>
+<td><strong>TD-Leaf</strong></td>
+<td>A reinforcement-learning method that trains the eval toward the results of its own later searches</td>
+</tr>
+<tr>
+<td><strong>Texel tuning</strong></td>
+<td>Fitting eval weights so that a logistic function of the eval predicts game results</td>
+</tr>
+<tr>
+<td><strong>TreeStrap</strong></td>
+<td>Training the eval toward deep-search values at <em>every</em> node of the search tree, not just the root</td>
+</tr>
+<tr>
+<td><strong>Value / WDL</strong></td>
+<td>A position's evaluation: one number, or three probabilities (win / draw / loss)</td>
+</tr>
+</tbody>
+</table>
+<hr>
+<h2 id="-19-references">📚 19. References</h2>
+<p><strong>Data</strong></p>
+<ul>
+<li>Lichess open database, evaluation DB and puzzles: https://database.lichess.org/</li>
+<li>Lichess win-% formula: https://lichess.org/page/accuracy</li>
+<li>Lichess on Hugging Face (eval mirror, fishnet evals): https://huggingface.co/datasets/Lichess/chess-position-evaluations · https://huggingface.co/datasets/Lichess/fishnet-evals</li>
+<li>ChessBench, Ruoss et al., NeurIPS 2024: https://arxiv.org/abs/2402.04494 · code and data: https://github.com/google-deepmind/searchless_chess</li>
+<li>Stockfish training data: https://huggingface.co/linrock · https://robotmoon.com/nnue-training-data/</li>
+<li>Leela data and its license: https://storage.lczero.org/files/training_data/ · https://lczero.org/blog/2021/06/the-importance-of-open-data/</li>
+<li>Syzygy tablebases: https://www.chessprogramming.org/Syzygy_Bases · Fathom: https://github.com/jdart1/Fathom</li>
+<li>ChessBase Mega Database 2026: https://www.newinchess.com/chessbase-mega-database-2026</li>
+</ul>
+<p><strong>Networks and training</strong></p>
+<ul>
+<li>NNUE on the Chess Programming Wiki: https://www.chessprogramming.org/NNUE</li>
+<li>Stockfish network history: https://official-stockfish.github.io/docs/nnue-pytorch-wiki/docs/nnue_architecture_history.html</li>
+<li>Stockfish 18 / 19 release posts: https://stockfishchess.org/blog/2026/stockfish-18/ · https://stockfishchess.org/blog/2026/stockfish-19/</li>
+<li>Stockfish WDL model (centipawn normalization): https://github.com/official-stockfish/WDL_model</li>
+<li>bullet trainer: https://github.com/jw1912/bullet · nnue-pytorch: https://github.com/official-stockfish/nnue-pytorch</li>
+<li>Nebius prices: https://nebius.com/prices</li>
+</ul>
+<p><strong>Search and testing</strong></p>
+<ul>
+<li>Late Move Reductions: https://www.chessprogramming.org/Late_Move_Reductions · ProbCut: https://www.chessprogramming.org/ProbCut</li>
+<li>SPRT: https://www.chessprogramming.org/Sequential_Probability_Ratio_Test · fastchess: https://github.com/Disservin/fastchess · OpenBench: https://github.com/AndyGrant/OpenBench</li>
+<li>Texel's tuning method: https://www.chessprogramming.org/Texel%27s_Tuning_Method</li>
+<li>Stockfish 16's search, move picker and NNUE, read from your own <code>engines/stockfish/src</code> folder (<code>search.cpp</code>, <code>movepick.cpp</code>, <code>nnue/nnue_architecture.h</code>, <code>uci.h</code>)</li>
+</ul>
+<p><strong>Papers and prior art</strong></p>
+<ul>
+<li>AlphaZero: https://arxiv.org/abs/1712.01815 · Giraffe: https://arxiv.org/abs/1509.01549 · DeepChess: https://arxiv.org/abs/1711.09667</li>
+<li>KnightCap TD-Leaf: https://arxiv.org/abs/cs/9901002 · TreeStrap: https://papers.nips.cc/paper/3722-bootstrapping-from-game-tree-search · Meep: https://www.chessprogramming.org/Meep</li>
+<li>Winter's learned move ordering: https://www.chessprogramming.org/Winter · Realization Probability Search: https://www.chessprogramming.org/Realization_Probability_Search</li>
+<li>Conformal sets (RAPS): https://arxiv.org/abs/2009.14193 · Maia: https://arxiv.org/abs/2006.01855</li>
+<li>Seer (retrograde learning from tablebases): https://github.com/connormcmonigle/seer-nnue</li>
+</ul>
+<hr>
+<h2 id="-appendix-a--two-new-bugs-found-while-grounding-this-doc">🐛 Appendix A — Two New Bugs Found While Grounding This Doc</h2>
+<p>Not neural-network topics, but you'd want to know, and they feed the net bad positions ✅ (both inside the search tree only, because root moves come from Stockfish):</p>
+<ol>
+<li><strong>White's castling safety scan looks for the wrong rook code.</strong> <code>IsSafeSquareForCastling</code>, white side, the rank-1 scan (lines 1715 and 1727) tests for black codes <strong>6 or 7</strong> (queen or king) where it should test <strong>6 or 5</strong> (queen or rook). The black side correctly tests 14/13. So a black rook giving check along rank 1 is missed.</li>
+<li><strong>Long castling demands too much.</strong> b1/b8 must be <em>unattacked</em> in your code (lines 1868 and 1898), but the rules only require it to be <em>empty</em>, so some legal O-O-O moves never get generated.</li>
+</ol>
+<p>(Doc 01's Bugs 1 and 2, phantom en passant and black's castling file scan that stops at row 6 and never sees a white rook or queen on rank 1 (line 1577), are still there too.)</p>
+<h2 id="-appendix-b--the-measurements-behind-this-doc">🔬 Appendix B — The Measurements Behind This Doc</h2>
+<p>All of these ran on your laptop (Lenovo, Intel i9-14900HX with 24 cores / 32 threads, 32 GB RAM, RTX 5070 Laptop GPU with 8 GB) in my temporary scratch folder, never in your repo ✅:</p>
+<ul>
+<li><strong>Instrumented Kernel:</strong> a copy of Kernel.cpp with counters per sort tier, verified to produce the same nodes, moves and scores as production. Depth-10 worker: 50.7M nodes (the engine's own report says 50.3M because it leaves out the 0.41M root-sort nodes), 92.6% in sorts (§2.2).</li>
+<li><strong>Build forensics:</strong> production is <code>-O0</code>; the <code>-O2 -march=native</code> rebuild gives ×3.48 with identical results (§2.3).</li>
+<li><strong>NNUE kernel benchmarks:</strong> g++ 14.2 <code>-O3 -mavx2</code> (plus one clang 19 run), random int16 weights, N = 128 … 2048; the multi-process run used 28 workers (§3.4, §7.3, §12.5).</li>
+<li><strong>Real-game logs</strong> (726 moves, 2026-01-22): median think time 2.48 s, with a fixed overhead of roughly 1–2 s per move.</li>
+<li><strong>Review pass:</strong> five independent reviewers (external facts, C++ correctness, ML/math, codebase claims, editorial) plus adversarial verifiers checked this doc before you got it. They compiled the §12 code against a copy of your Kernel and tested it: <code>IsKingAttacked</code> agreed with python-chess on 50,166 positions and with your own move generator on 15M, <code>FeatureIndex</code> matched bullet's standard 768 encoding, and the sign and sort conventions held for 1.46M ranked children ✅.</li>
+</ul>
+<p>If you want the instrumented build or the benchmark code for your own experiments, just ask, bro. I'll copy them into the repo for you.</p>
+<hr>
+<p>That's the whole research, bro. My honest summary: <strong>your idea is good, your engine is the perfect host for it, the data is free, the compute is cheap, and the only real enemies are the horizon effect and the sign bug.</strong> 😄 Fix the foundations from doc 01, take the free ×3.48, then let's teach Mr. Bits to think before it searches. 🧠♟️❤️</p>
+<p>— <strong>Claude Opus 5.5</strong> 🤖</p>
+
+</body>
+</html>

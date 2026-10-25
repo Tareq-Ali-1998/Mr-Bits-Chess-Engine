@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools==80.10.2"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mr-bits-chesslab"
+version = "0.1.0"
+description = "An isolated, reproducible neural evaluation training lab for Mr. Bits"
+requires-python = ">=3.11,<3.15"
+dependencies = [
+  "torch>=2.7",
+  "numpy==2.4.1",
+  "chess==1.10.0",
+  "zstandard==0.25.0",
+  "rich==13.7.1",
+  "matplotlib==3.10.8",
+  "tensorboard==2.20.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["chesslab*"]

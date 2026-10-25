@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>MOVE_RANKING.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="legal-move-ranking-independent-teacher-labels-and-export">Legal-move ranking, independent teacher labels, and export</h1>
+<p>The network predicts one White-perspective pawn score. It evaluates all legal
+successors in one batch. White ranks larger scores first; Black ranks smaller
+scores first. Exact immediate terminal results override the network. Every legal
+move remains in the output: this utility does not implement top-five pruning.</p>
+<p>Run commands from the new lab directory. Replace example paths with your actual
+prepared data and checkpoints; no pretrained strength is implied.</p>
+<pre class="hljs"><code><div>python <span class="hljs-literal">-m</span> chesslab.rank <span class="hljs-literal">--checkpoint</span> runs/small/best.pt <span class="hljs-literal">--fen</span> <span class="hljs-string">&quot;rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1&quot;</span> <span class="hljs-literal">--top</span> <span class="hljs-number">7</span>
+python <span class="hljs-literal">-m</span> chesslab.rank <span class="hljs-literal">--checkpoint</span> runs/small/best.pt <span class="hljs-literal">--fen</span> <span class="hljs-string">&quot;YOUR FEN&quot;</span> <span class="hljs-literal">--json</span>
+</div></code></pre>
+<p>The text output prints all candidates and marks the first requested <code>--top</code>
+moves. JSON includes both <code>ranked</code> and <code>top</code>. Equal neural scores have a stable
+UCI-move ordering. A root position already terminal returns its exact result and
+an empty ranking.</p>
+<p><code>board782_v1</code> omits clocks and repetition history. Incoming positions are
+normalized to the supported state: counters 0/1, recorded en-passant file and
+retained castling rights preserved. This is a visible-state experiment. A real
+engine must handle history-dependent draw rules using its complete state.</p>
+<h2 id="build-a-small-independent-benchmark">Build a small independent benchmark</h2>
+<p>The source evaluated-position cache does not give a complete, uniformly searched
+score for every legal child. A strict move-retention metric requires that missing
+information. This command searches <strong>each nonterminal child independently</strong>:</p>
+<pre class="hljs"><code><div>python <span class="hljs-literal">-m</span> chesslab.teacher <span class="hljs-literal">--engine</span> <span class="hljs-string">&quot;..\lichess-bot-master\stockfish-windows-x86-64-avx2.exe&quot;</span> <span class="hljs-literal">--data</span> <span class="hljs-keyword">data</span>/prepared <span class="hljs-literal">--split</span> test <span class="hljs-literal">--positions</span> <span class="hljs-number">100</span> <span class="hljs-literal">--nodes</span> <span class="hljs-number">50000</span> <span class="hljs-literal">--threads</span> <span class="hljs-number">4</span> <span class="hljs-literal">--hash-mb</span> <span class="hljs-number">256</span> <span class="hljs-literal">--output</span> benchmarks/test.jsonl
+</div></code></pre>
+<p>This can be expensive: 100 parents with 30 children each request approximately
+150 million search nodes, before node-budget overshoot and other overhead.
+The CLI prints the actual selected child count and requested workload before
+labeling. This is a work estimate; wall time must be measured. Start with
+<code>--positions 2 --nodes 1000</code> for a wiring check, not a chess-quality claim.</p>
+<p>External FEN JSONL is also supported. Each line is a JSON string or an object
+containing <code>fen</code>. Supply <code>--fen-jsonl positions.jsonl</code> instead of selecting
+prepared parents. <code>--data</code> remains required for leakage checking.</p>
+<p>Selection is repeatable for a fixed source, prepared manifest, seed, and candidate
+limit. <code>--max-candidates</code> bounds the pool (default: at least 100 or 20 times the
+requested parent count). Prepared rows use seeded random selection; external
+JSONL uses a bounded prefix. The CLI may accept fewer parents than requested
+because of duplicates, terminals, or overlap and reports the actual count.</p>
+<p>Before searching, it computes every candidate parent's and every legal child's
+compact position key. A bounded-memory scan of prepared <code>train.npy</code> and
+<code>validation.npy</code> excludes a final-test candidate if <strong>any</strong> of those keys is present.
+Test parents are normally selected from the test split. A separately declared
+<code>--split validation</code> benchmark excludes training overlap, allows validation
+positions, and records <code>purpose: validation</code> in its header and report. It is for
+choosing settings, not final test evidence. External FENs inherit this explicit
+<code>--split</code> purpose. The final-test exclusion policy is deliberately strict and can
+remove many common openings. Increase the candidate pool rather than relaxing
+the audit silently.</p>
+<p>The benchmark header records feature version, prepared-data fingerprint,
+selection, engine-reported ID, executable SHA-256, options, per-child requested
+node budget, and the exclusion policy. Each child stores actual total reported
+search nodes, elapsed seconds, and the depth/nodes of the last completed score
+update without an upper/lower bound. A node cap can interrupt a later aspiration
+search; such a bound never replaces the preceding scalar target. Every child
+has the same requested cap, while completed score depth/work can differ. Scores
+remain typed and White-perspective:</p>
+<ul>
+<li><code>cp</code>: a finite centipawn score.</li>
+<li><code>mate</code>: explicit winning color and nonnegative mate distance.</li>
+<li><code>terminal</code>: exact immediate win/draw result and termination reason.</li>
+</ul>
+<p>Stockfish's hash is cleared before every nonterminal child so earlier siblings'
+transposition entries cannot silently reuse their budget. MultiPV is managed by
+python-chess and each search requests one PV. Scores remain budget-dependent
+teacher estimates, not chess proofs. Threads can affect reproducibility; a fixed
+node limit and cleared hash do not promise bit-for-bit identical multithreaded
+searches.</p>
+<p>The JSONL writer flushes and synchronizes after each complete parent. Resume with
+the same command plus <code>--resume</code>; changed data, selection, engine, or options are
+rejected. A malformed/truncated final line is rejected for explicit repair rather
+than silently discarded. Ranking rejects an unfinished benchmark, duplicate
+parents or children, incorrect keys, false terminals, and partial legal-child
+sets. These structural checks do not authenticate manually edited labels.</p>
+<h2 id="measure-strict-retention-and-near-best-retention-separately">Measure strict retention and near-best retention separately</h2>
+<pre class="hljs"><code><div>python <span class="hljs-literal">-m</span> chesslab.rank <span class="hljs-literal">--checkpoint</span> runs/small/best.pt <span class="hljs-literal">--benchmark</span> benchmarks/test.jsonl <span class="hljs-literal">--output</span> reports/small<span class="hljs-literal">-ranking</span>.json
+</div></code></pre>
+<p>The checkpoint's prepared-data fingerprint must match the benchmark's leakage
+audit. One parent is one observation. Reports include overall and separate White/
+Black results, sample counts, and Wilson 95% intervals:</p>
+<ul>
+<li><strong>Strict best recall @1, @5, @7:</strong> does that prefix contain any exactly tied
+teacher-best move? All tied best moves count; no arbitrary first-PV tie breaker.</li>
+<li><strong>Near-best recall:</strong> independently asks whether a prefix retains a finite
+teacher score within 25 cp of the best (override with <code>--near-cp</code>). Its denominator
+excludes parents whose best target is mate rather than a finite score.</li>
+<li><strong>Top-one cp regret:</strong> loss relative to the teacher-best score, only when both
+teacher-best and chosen-move teacher scores are finite. Mean, median, p95,
+maximum, and the actual comparable-parent count are explicit.</li>
+<li><strong>Mate-category disagreements:</strong> counted separately; forced mates are not
+converted to invented centipawn penalties. Mate distances are ordered with faster
+wins and slower losses preferred. Immediate draw results compare as zero cp.</li>
+</ul>
+<p>A parent with fewer than five legal moves still contributes one parent to @5;
+all its moves are retained. High @5 on such positions is easy and must be read
+with material/legal-move coverage. Wilson intervals summarize these position
+counts; correlated positions or small samples limit interpretation. They are not
+Elo confidence intervals. A low average cp error, high retention rate, or this
+small teacher test alone does not establish that pruning improves engine play.</p>
+<p>Keep the final benchmark frozen while choosing settings on a separate validation
+benchmark. Inspect tactical failures and then run equal-time engine games before
+making strength claims.</p>
+<p>The report also records legal-move count coverage and measured end-to-end ranking
+latency per parent after one explicit warm-up pass. This includes legal move
+generation, terminal checks, feature encoding, synchronized batch inference, and
+sorting; checkpoint/benchmark loading and teacher search are excluded. It is
+different from a dense-network-only microbenchmark. <code>--cpu-threads</code> controls the
+PyTorch CPU thread count (default one) and is recorded alongside the timings.</p>
+<h2 id="export-a-dense-evaluator-artifact">Export a dense evaluator artifact</h2>
+<pre class="hljs"><code><div>python <span class="hljs-literal">-m</span> chesslab.export <span class="hljs-literal">--checkpoint</span> runs/small/best.pt <span class="hljs-literal">--output</span> exports/small.torchscript.pt
+</div></code></pre>
+<p>The TorchScript input is <strong>float32 <code>[batch,782]</code></strong>, in the frozen feature order;
+the output is <strong>float32 <code>[batch,1]</code></strong>, signed White-perspective pawn scores.
+The compact <code>[batch,78]</code> preprocessing is not embedded. A consumer must reproduce
+the feature contract and handle exact terminal/history rules itself. This is a
+model artifact, not an API server or an integration into the existing C++ engine.</p>
+<p>Export compares eager and traced outputs for seeded binary features, zero/all-one
+features, batch one, and a larger batch, then reloads and checks the serialized
+artifact before committing it. Those shape/numerical checks are not legal-chess
+coverage or evidence of strength. The <code>.pt.json</code> sidecar records the exact input/
+output contract, model and target metadata, parity tolerance, and artifact hash.
+Existing artifacts are not overwritten. <code>--reuse-existing</code> accepts only an intact
+artifact whose checksum and source-checkpoint checksum match. The evaluation
+wrapper uses checkpoint-specific names under the run's <code>exports/</code> directory, so
+it can be rerun safely after more training. The original checkpoint remains separate.</p>
+<p>Local Python 3.14/PyTorch checks passed, but that PyTorch runtime warns that
+TorchScript APIs are deprecated/unsupported on Python 3.14 and may break in a
+future version. Pin a tested compatible Python/PyTorch environment for this
+artifact format. This export is not a promise of support across runtime versions.</p>
+
+</body>
+</html>

@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>START_HERE.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="-tareq-start-here">🚀 Tareq, start here</h1>
+<p><strong>One path from this folder to your first GPU results. Updated 23 October 2026.</strong></p>
+<blockquote>
+<p>The platform we have discussed is <strong>Nebius</strong>. No instance is running on your behalf. Keep the original 22 GB archive on your computer for now: this upload includes a prepared 100k pilot and a small CPU-trained demonstration checkpoint.</p>
+</blockquote>
+<h2 id="1-upload-the-prepared-zip">1. Upload the prepared ZIP</h2>
+<p>The generated file is <strong><code>Mr_Bits_Neural_Lab_Upload.zip</code></strong>, beside this project folder. Its <code>.zip.sha256</code> file contains the upload checksum. The ZIP includes the source, configurations, guides, tests, pilot data, and demonstration results. It excludes your original engine, account files, raw archive, virtual environments, and unrelated runs.</p>
+<p>To rebuild it after changes, from Windows PowerShell in this folder:</p>
+<pre class="hljs"><code><div>python package_upload.py <span class="hljs-literal">--force</span>
+</div></code></pre>
+<p>Choose a Linux GPU image with a functioning NVIDIA driver and ordinary Python <strong>3.12</strong>, preferably on the <strong>RTX PRO 6000 Blackwell 96 GB</strong>. Python 3.11–3.14 is supported by the package, but 3.12 avoids the local 3.14 TorchScript compatibility warning. Keep the working directory on persistent storage.</p>
+<p>In Nebius, copy the machine's real public address and SSH username. In the following PowerShell command, replace <code>SSH_USER</code> and <code>SERVER_IP</code> with those actual values:</p>
+<pre class="hljs"><code><div>scp <span class="hljs-string">&quot;..\Mr_Bits_Neural_Lab_Upload.zip&quot;</span> <span class="hljs-string">&quot;..\Mr_Bits_Neural_Lab_Upload.zip.sha256&quot;</span> <span class="hljs-string">&quot;SSH_USER@SERVER_IP:~/&quot;</span>
+ssh SSH_USER@SERVER_IP
+</div></code></pre>
+<p>Inside the Linux SSH terminal:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> ~
+<span class="hljs-built_in">sha256sum</span> -c Mr_Bits_Neural_Lab_Upload.zip.sha256
+unzip Mr_Bits_Neural_Lab_Upload.zip
+<span class="hljs-built_in">cd</span> <span class="hljs-string">&#x27;ChatGPT Neural Network Lab&#x27;</span>
+python3 verify_upload.py
+</div></code></pre>
+<p>Expected: the ZIP checksum matches, followed by <code>PASS: ... extracted upload files match their checksums.</code> If <code>unzip</code> is unavailable, Python can extract it:</p>
+<pre class="hljs"><code><div>python3 -m zipfile -e Mr_Bits_Neural_Lab_Upload.zip .
+</div></code></pre>
+<p>Run that fallback from <code>~</code> before entering the extracted folder. Choose a new extraction location for a later bundle so it cannot mix old and new code silently.</p>
+<h2 id="2-verify-the-machine-before-training">2. Verify the machine before training</h2>
+<pre class="hljs"><code><div>bash scripts/00_setup.sh
+bash scripts/01_check.sh --require-cuda
+</div></code></pre>
+<p>Read the output. We need successful <strong>CUDA forward/backward/optimizer</strong> and <strong>BF16</strong> checks on the expected device. Setup records diagnostics and installed packages. If a check fails, stop there and share <code>diagnostics/environment.json</code>; do not let the machine spend hours training on the CPU by accident.</p>
+<p>Verify the prepared data:</p>
+<pre class="hljs"><code><div>.venv/bin/python -c <span class="hljs-string">&quot;from chesslab.data import verify_dataset; print(verify_dataset(&#x27;data/local-100k&#x27;)[&#x27;counts&#x27;])&quot;</span>
+</div></code></pre>
+<p>Expected counts: <code>train=89995</code>, <code>validation=4979</code>, <code>test=5026</code>.</p>
+<h2 id="3-measure-speed-then-run-the-two-starting-experiments">3. Measure speed, then run the two starting experiments</h2>
+<p>The benchmark trains disposable copies for a few steps. It does not update a saved model:</p>
+<pre class="hljs"><code><div>bash scripts/07_benchmark.sh small data/local-100k benchmarks/small-batches.json \
+  --device cuda --batches 1024 4096 16384 --steps 30
+
+bash scripts/07_benchmark.sh large data/local-100k benchmarks/large-batches.json \
+  --device cuda --batches 1024 4096 16384 --steps 30
+</div></code></pre>
+<p>For the first comparison, keep the configured batch 2,048 so a throughput test does not silently change the learning recipe. We can compare other batch sizes later. A memory-safe, faster batch is not automatically the most accurate batch.</p>
+<p>If <code>tmux</code> is installed, start a session so losing SSH does not kill training:</p>
+<pre class="hljs"><code><div>tmux new -s chesslab
+</div></code></pre>
+<p>Inside the session, return to this lab folder if necessary, then:</p>
+<pre class="hljs"><code><div>bash scripts/03_train.sh small data/local-100k runs/pilot-small --device cuda
+bash scripts/03_train.sh large data/local-100k runs/pilot-large --device cuda
+</div></code></pre>
+<p>These run sequentially on one GPU. Watch the colored terminal progress and validation results. Detach from tmux with <strong>Ctrl+B, then D</strong>; reconnect later using <code>tmux attach -t chesslab</code>. If tmux is unavailable, keep the SSH session open for the short pilot or use the logging alternative in the <a href="docs/NEBIUS_RUNBOOK.md">runbook</a>.</p>
+<p>Each run writes <code>best.pt</code>, <code>last.pt</code>, configurations, metrics, and its final status. Do not reuse a completed run directory for a different experiment.</p>
+<h2 id="4-watch-charts-and-gpu-usage">4. Watch charts and GPU usage</h2>
+<p>In another SSH terminal, in the lab folder:</p>
+<pre class="hljs"><code><div>bash scripts/06_monitor.sh runs/pilot-small
+</div></code></pre>
+<p>Leave it running. In a <strong>separate local PowerShell window</strong>:</p>
+<pre class="hljs"><code><div>ssh <span class="hljs-literal">-N</span> <span class="hljs-literal">-L</span> <span class="hljs-number">6006</span>:<span class="hljs-number">127.0</span>.<span class="hljs-number">0.1</span>:<span class="hljs-number">6006</span> SSH_USER@SERVER_IP
+</div></code></pre>
+<p>Open <strong>http://127.0.0.1:6006</strong> on your own computer. TensorBoard stays bound to the server's localhost; no public dashboard port is required. To watch both runs instead, use <code>bash scripts/06_monitor.sh runs</code>.</p>
+<p>For actual GPU utilization, use another Linux terminal:</p>
+<pre class="hljs"><code><div>nvidia-smi -l 2
+</div></code></pre>
+<p>The progress bar's allocated memory is not the same measurement as <code>nvidia-smi</code>'s total device memory use. Small models can train efficiently without filling 96 GB.</p>
+<h2 id="5-save-and-compare-results">5. Save and compare results</h2>
+<p>After both pilots finish:</p>
+<pre class="hljs"><code><div>bash scripts/05_evaluate.sh runs/pilot-small data/local-100k
+bash scripts/05_evaluate.sh runs/pilot-large data/local-100k
+
+.venv/bin/python -m chesslab.experiments compare \
+  --runs runs/pilot-small runs/pilot-large \
+  --output reports/pilot-comparison.json
+</div></code></pre>
+<p>Open the saved curves and inspect <code>test.json</code>. The comparison command uses validation results by default; do not repeatedly choose new settings using the test scores. Save a separate fixed final benchmark for serious claims.</p>
+<p>To try the model on a position:</p>
+<pre class="hljs"><code><div>.venv/bin/python -m chesslab.rank \
+  --checkpoint runs/pilot-small/best.pt --top 7 \
+  --fen <span class="hljs-string">&#x27;7r/1p3k2/p1bPR3/5p2/2B2P1p/8/PP4P1/3K4 b - - 0 1&#x27;</span>
+</div></code></pre>
+<p>For a <strong>workflow demonstration</strong> with the bundled low-budget teacher benchmark:</p>
+<pre class="hljs"><code><div>.venv/bin/python -m chesslab.rank \
+  --checkpoint runs/pilot-small/best.pt \
+  --benchmark benchmarks/local-teacher-test.jsonl \
+  --output runs/pilot-small/demo-ranking.json
+</div></code></pre>
+<p>Those 20 positions are a development/workflow check. They are not enough to establish 95% recall or dependable pruning. Building a stronger independent benchmark requires an explicit Linux Stockfish binary and substantially more teacher work; see <a href="docs/MOVE_RANKING.md">move ranking</a>.</p>
+<p>Download results before stopping/deleting the machine. First, in the Linux lab folder:</p>
+<pre class="hljs"><code><div>tar -czf <span class="hljs-string">&quot;<span class="hljs-variable">$HOME</span>/mr-bits-results.tar.gz&quot;</span> runs reports benchmarks diagnostics
+</div></code></pre>
+<p>Then, in local PowerShell:</p>
+<pre class="hljs"><code><div>scp <span class="hljs-string">&quot;SSH_USER@SERVER_IP:~/mr-bits-results.tar.gz&quot;</span> <span class="hljs-string">&quot;.\mr-bits-results.tar.gz&quot;</span>
+</div></code></pre>
+<p>You can also use SFTP to download <code>runs/</code>, <code>reports/</code>, <code>benchmarks/</code>, and <code>diagnostics/</code>. Confirm the downloaded archive opens locally. Stopping compute and deleting persistent disks are separate actions; keep artifacts backed up before any deletion.</p>
+<h2 id="6-continue-with-new-ideas">6. Continue with new ideas</h2>
+<p>Read <a href="docs/EXPERIMENTS.md">experiments and variants</a> to create another architecture or activation without rebuilding the dataset. Start with a fresh run, not a modified old checkpoint.</p>
+<p>For interruptions, resume <strong>the last completed epoch</strong>, using the same configuration/data/device precision:</p>
+<pre class="hljs"><code><div>.venv/bin/python -m chesslab.train \
+  --data data/local-100k --config configs/pilot_small.json \
+  --run runs/pilot-small --device cuda \
+  --resume runs/pilot-small/last.pt --epochs 15
+</div></code></pre>
+<p>That requests 15totalepochs. Partial interrupted work is replayed. The CPU demonstration run is for inspection/inference; start new CUDA runs in <code>runs/pilot-*</code>.</p>
+<p><strong>When you return here, tell me the step you reached and show its output.</strong> The persistent <a href="HANDOFF.md">handoff</a> also records what has already been completed and what still needs evidence.</p>
+
+</body>
+</html>

@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+
+<h1 id="️-chatgpt-neural-network-lab">♟️🧠 ChatGPT Neural Network Lab</h1>
+<p><strong>Mr. Bits · First runnable training lab · 23 October 2026</strong></p>
+<blockquote>
+<p>Bro, this folder is the actual experiment now: prepare trustworthy examples, train two networks, watch the learning, save the results, and measure whether the best move survives in our top five or seven. 💙</p>
+<p>Your original C++ engine is unchanged. This is a separate lab, with one general evaluator per experiment and no phase-specific networks.</p>
+</blockquote>
+<h2 id="-start-here-the-short-version">🚀 Start here: the short version</h2>
+<p><strong>For one complete Windows-upload-to-results sequence, follow <a href="START_HERE.md">START_HERE.md</a>.</strong> The <a href="docs/EXPERIMENTS.md">experiment guide</a> explains how to add more architectures/activations, and <a href="HANDOFF.md">HANDOFF.md</a> preserves the work state for future sessions.</p>
+<p>The folder includes a <strong>real, prepared 100,000-position pilot</strong> at <code>data/local-100k/</code>. Upload this whole folder to your Linux machine. You do <strong>not</strong> need to upload the 22 GB raw archive for the first run.</p>
+<p>On the server, open a terminal in this folder:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">cd</span> <span class="hljs-string">&#x27;/path/to/ChatGPT Neural Network Lab&#x27;</span>
+
+<span class="hljs-comment"># 1. Create a local environment and verify the actual GPU.</span>
+bash scripts/00_setup.sh
+bash scripts/01_check.sh --require-cuda
+
+<span class="hljs-comment"># 2. Measure useful batch sizes on this particular machine.</span>
+bash scripts/07_benchmark.sh small data/local-100k benchmarks/small-batches.json \
+  --device cuda --batches 1024 4096 16384 --steps 30
+
+<span class="hljs-comment"># 3. Train the small model. This starts a NEW run.</span>
+bash scripts/03_train.sh small data/local-100k runs/pilot-small --device cuda
+
+<span class="hljs-comment"># 4. Plot, evaluate, and export it.</span>
+bash scripts/05_evaluate.sh runs/pilot-small data/local-100k
+
+<span class="hljs-comment"># 5. Train the larger experiment separately.</span>
+bash scripts/03_train.sh large data/local-100k runs/pilot-large --device cuda
+bash scripts/05_evaluate.sh runs/pilot-large data/local-100k
+
+<span class="hljs-comment"># 6. Compare the existing checkpoints. This command never starts training.</span>
+bash scripts/04_compare.sh data/local-100k runs
+</div></code></pre>
+<p>The scripts create artifacts under <code>runs/</code>, <code>benchmarks/</code>, and <code>diagnostics/</code>. Use <code>bash script.sh</code>; executable file permissions are not required. Paths containing spaces are supported.</p>
+<p>The RTX PRO 6000 Blackwell <strong>96 GB</strong> is our starting machine. There is no evidence yet that buying more VRAM would improve these models. Nebius lists the H200 with <strong>141 GB</strong>; choose between machines later using measured positions/second and cost, rather than assuming capacity determines accuracy. <a href="https://docs.nebius.com/compute/virtual-machines/types">Official machine specifications</a></p>
+<p>The setup script reuses a working CUDA PyTorch when possible; otherwise it installs the reference <strong>PyTorch 2.10.0 / CUDA 12.8</strong> wheel. It performs real GPU computation and does not install host drivers. Use a GPU image with an NVIDIA driver already present. <a href="https://pytorch.org/get-started/previous-versions/#v2100">Official PyTorch installation commands</a></p>
+<p>For cloud setup, SSH, persistent disks, downloads, and troubleshooting, read the <a href="docs/NEBIUS_RUNBOOK.md">Nebius runbook</a>.</p>
+<h2 id="️-what-we-built">🗺️ What we built</h2>
+<pre class="hljs"><code><div>Your raw Lichess archive                     Already prepared pilot
+          │                                          │
+          ▼                                          │
+ stream → filter → validate full PV → deduplicate     │
+          │                                          │
+          ▼                                          ▼
+     compact, hashed train / validation / test records
+                            │
+              ┌─────────────┴─────────────┐
+              ▼                           ▼
+       SMALL evaluator             LARGE experiment
+       216,961 parameters         17,858,049 parameters
+              │                           │
+              └─────────────┬─────────────┘
+                            ▼
+               loss curves + held-out metrics
+                            │
+                            ▼
+             score ALL legal children of a position
+                            │
+                            ▼
+                compare top 5 / 7 with a teacher
+                            │
+                            ▼
+                  test inside Mr. Bits later
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>Tool</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>chesslab.prepare</code></td>
+<td>Streams raw records, applies the quality policy, deduplicates on disk, and writes stable splits</td>
+</tr>
+<tr>
+<td><code>chesslab.benchmark</code></td>
+<td>Measures disposable real training steps across batch sizes; changes no trained checkpoint</td>
+</tr>
+<tr>
+<td><code>chesslab.train</code></td>
+<td>Trains, validates, shows progress, logs, checkpoints, and resumes</td>
+</tr>
+<tr>
+<td><code>chesslab.metrics</code></td>
+<td>Reports regression errors and simple baselines on a frozen split</td>
+</tr>
+<tr>
+<td><code>chesslab.plot</code></td>
+<td>Writes learning curves; SVG fallback works without matplotlib</td>
+</tr>
+<tr>
+<td><code>chesslab.teacher</code></td>
+<td>Builds a separate complete-legal-move benchmark using an explicitly supplied Stockfish executable</td>
+</tr>
+<tr>
+<td><code>chesslab.rank</code></td>
+<td>Scores legal children and measures top-k recall against that benchmark</td>
+</tr>
+<tr>
+<td><code>chesslab.export</code></td>
+<td>Exports TorchScript and a feature/score contract after numerical checks</td>
+</tr>
+<tr>
+<td><code>chesslab.kernel_adapter</code></td>
+<td>Maps your existing Kernel board values to the lab's compact input; tested offline</td>
+</tr>
+<tr>
+<td><code>chesslab.experiments</code></td>
+<td>Creates, catalogs, and compares independent variant configurations using reusable data</td>
+</tr>
+</tbody>
+</table>
+<h2 id="-our-first-real-dataset">📦 Our first real dataset</h2>
+<p>The prepared pilot was built locally from your existing archive. It is a hash-selected subset of the accepted positions in the <strong>first 160,000 records</strong>. It is not a random sample of the entire archive.</p>
+<table>
+<thead>
+<tr>
+<th>Observed result</th>
+<th style="text-align:right">Count</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Raw records processed</td>
+<td style="text-align:right">160,000</td>
+</tr>
+<tr>
+<td>Accepted unique candidates before the 100k cap</td>
+<td style="text-align:right">112,771</td>
+</tr>
+<tr>
+<td>Selected pilot positions</td>
+<td style="text-align:right">100,000</td>
+</tr>
+<tr>
+<td>Training</td>
+<td style="text-align:right">89,995</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td style="text-align:right">4,979</td>
+</tr>
+<tr>
+<td>Test</td>
+<td style="text-align:right">5,026</td>
+</tr>
+<tr>
+<td>Outside the depth policy</td>
+<td style="text-align:right">32,559</td>
+</tr>
+<tr>
+<td>Insufficient search nodes</td>
+<td style="text-align:right">4,077</td>
+</tr>
+<tr>
+<td>Structurally invalid orthodox positions</td>
+<td style="text-align:right">796</td>
+</tr>
+<tr>
+<td>Selected mate labels</td>
+<td style="text-align:right">8,430</td>
+</tr>
+<tr>
+<td>Selected extreme centipawn labels</td>
+<td style="text-align:right">1,367</td>
+</tr>
+</tbody>
+</table>
+<p>Rejection categories are the <strong>first failed check</strong>, not overlapping diagnoses. For example, a mate position with an anomalous selected depth is counted under depth. The counts sum to the processed records.</p>
+<p>The three <code>.npy</code> files occupy <strong>10,800,576 bytes</strong>. Local preparation took <strong>11.621 seconds with six workers</strong>; that is an observation for this bounded prefix on this computer, not a full-archive or server speed promise. Exact settings, file checksums, coverage, and the dataset fingerprint live in <a href="data/local-100k/manifest.json">the manifest</a>.</p>
+<p>For a larger run, scan a broader pool before claiming representative strength. The full archive contains analyses from varied Stockfish versions and budgets; thresholds cannot make every label correct. The publisher explains the source format and recommends selecting the highest-depth analysis's first PV. <a href="https://database.lichess.org/#evals">Lichess evaluation format</a></p>
+<h3 id="our-conservative-default-quality-policy">Our conservative default quality policy</h3>
+<table>
+<thead>
+<tr>
+<th>Check</th>
+<th>Default behavior</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Input format</td>
+<td>Require the archive's four-field standard-chess FEN</td>
+</tr>
+<tr>
+<td>Board validity</td>
+<td>Reject unsupported/invalid orthodox states and terminal parents</td>
+</tr>
+<tr>
+<td>Analysis selection</td>
+<td>Highest depth; break ties by greater <code>knodes</code>; use its first PV only</td>
+</tr>
+<tr>
+<td>Depth</td>
+<td>Keep <strong>20 through 80</strong>; reject suspiciously high values as well as shallow labels</td>
+</tr>
+<tr>
+<td>Search budget</td>
+<td>Require <strong>1,000 knodes</strong>, meaning one million searched nodes</td>
+</tr>
+<tr>
+<td>Label type</td>
+<td>Keep finite integer cp; reject mate from this regression dataset</td>
+</tr>
+<tr>
+<td>Score range</td>
+<td>Keep <strong>−1,500 to +1,500 cp</strong></td>
+</tr>
+<tr>
+<td>Principal variation</td>
+<td>Replay the <strong>entire selected saved line legally</strong>, including castling notation</td>
+</tr>
+<tr>
+<td>Duplicates</td>
+<td>Same visible input has one record; prefer greater depth/node evidence within the scanned pool</td>
+</tr>
+<tr>
+<td>Splits</td>
+<td>Independent deterministic position-hash buckets, approximately 90/5/5</td>
+</tr>
+</tbody>
+</table>
+<p><strong>“Passes the policy” means stronger evidence, not guaranteed truth.</strong> A valid PV can still be strategically mistaken. The archive does not supply complete version/search-history metadata for every label. We do not fall back to an older finite score when the selected analysis says mate or has disallowed metadata.</p>
+<p>Read <a href="docs/DATA_PIPELINE.md">how data preparation works</a> before changing thresholds or scaling up.</p>
+<h2 id="-exact-inputs-and-outputs">🔢 Exact inputs and outputs</h2>
+<p>The input contract remains <strong><code>board782_v1</code></strong>, as in the earlier notebook:</p>
+<pre class="hljs"><code><div>                     ONE POSITION → 782 floats
+
+ 12 piece planes × 64 squares      side      castle       en passant
+ ┌───────────────────────────┐     ┌─┐     ┌────────┐    ┌───────────┐
+ │ 768 binary piece features │  +  │1│  +  │4 flags │ +  │9 options  │
+ └───────────────────────────┘     └─┘     └────────┘    └───────────┘
+
+ Training batch: [batch,782]         Prediction: [batch,1]
+ Example target: cp=69 → +0.69       Units: White-perspective pawns
+</div></code></pre>
+<p>The twelve planes are <code>P,N,B,R,Q,K,p,n,b,r,q,k</code>, in that order. Squares run <strong>a8 through h8, then a7 through h7, down to a1 through h1</strong>. White to move is 1; Black is 0. Castling flags are retained rights in <code>K,Q,k,q</code> order. EP has nine one-hot options: none, then files a through h. Preserve the recorded target file even if an EP capture is not currently legal.</p>
+<p>The compact on-disk input is <strong>78 bytes</strong>: 64 piece codes and the same 14 flags. The GPU expands a batch directly into 782 float features; we do not store billions of mostly zero floats.</p>
+<p>The output is one signed number: positive favors White, negative favors Black. <code>+9</code> is a teacher-style score, not proof that a queen is physically missing. This is a numerical prediction, with no final sigmoid, ReLU, or move classification.</p>
+<p>The source has no reliable halfmove clock or repetition history. The network cannot determine all history-dependent draws. Legality, exact terminal results, and draw rules belong to the engine. The ranking tool explicitly normalizes unsupported counters/history and handles supported terminal children outside the network.</p>
+<h3 id="compatibility-with-your-engine">Compatibility with your engine</h3>
+<p>Your <code>Kernel.cpp</code> uses type codes <code>1 pawn, 3 knight, 4 bishop, 5 rook, 6 queen, 7 king</code>, with bit 3 indicating White. The lab uses contiguous codes <code>1..6</code> for White and <code>7..12</code> for Black. <strong>The numbers must be mapped; they are not interchangeable.</strong> Both board layouts use row 0 as rank 8.</p>
+<p><code>kernel_adapter.py</code> performs that mapping and validates the resulting position. It requires actual side-to-move, retained castling rights, and EP file explicitly. It does not guess missing state or infer rights from whether pieces happen to sit on their original squares. Later we will port this small contract into C++ and test numerical agreement before integration.</p>
+<h2 id="-two-runnable-networks">🧠 Two runnable networks</h2>
+<h3 id="-small-our-practical-starting-evaluator">🟢 Small: our practical starting evaluator</h3>
+<pre class="hljs"><code><div>782 → Linear256 → ReLU → Linear64 → ReLU → Linear1
+
+2 hidden transformations · 3 Linear layers · 216,961 parameters
+</div></code></pre>
+<p>This is the simpler model to understand, debug, and benchmark for CPU inference. Its accuracy still has to be learned and measured; its shape does not make it a strong chess player by itself.</p>
+<h3 id="-large-deliberately-more-capacity">🔵 Large: deliberately more capacity</h3>
+<pre class="hljs"><code><div>782 → Linear1024 → ReLU
+           │
+           ▼
+      8 residual blocks TOTAL
+      h → Linear1024 → ReLU → Linear1024 ──┐
+      └────────────────────────────────────+ → ReLU
+           │
+           ▼
+      Linear256 → ReLU → Linear1
+
+18 hidden transformations · 19 Linear layers · 17,858,049 parameters
+</div></code></pre>
+<p>The second layer in each residual branch starts at zero, so the branch initially adds an identity correction. This is a deliberate initialization choice for our normalization-free experiment, not evidence of chess strength.</p>
+<p>This implementation <strong>enlarges the experimental model beyond the earlier 3.6-million-parameter design</strong>. Checkpoint metadata and the configurations in this folder define the models we actually run.</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th style="text-align:right">Small</th>
+<th style="text-align:right">Large</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters</td>
+<td style="text-align:right">216,961</td>
+<td style="text-align:right">17,858,049</td>
+</tr>
+<tr>
+<td>Dense MACs per position</td>
+<td style="text-align:right">216,640</td>
+<td style="text-align:right">17,840,384</td>
+</tr>
+<tr>
+<td>FP32 weights alone</td>
+<td style="text-align:right">0.83 MiB</td>
+<td style="text-align:right">68.12 MiB</td>
+</tr>
+<tr>
+<td>Weights + gradients + two FP32 AdamW moments</td>
+<td style="text-align:right">3.31 MiB</td>
+<td style="text-align:right">272.49 MiB</td>
+</tr>
+<tr>
+<td>Hidden activation</td>
+<td style="text-align:right">ReLU</td>
+<td style="text-align:right">ReLU with residual additions</td>
+</tr>
+<tr>
+<td>Output</td>
+<td style="text-align:right">One signed linear score</td>
+<td style="text-align:right">One signed linear score</td>
+</tr>
+</tbody>
+</table>
+<p>MACs omit activations, biases, and residual additions. Memory rows omit activations, workspaces, allocator reservations, and the CUDA context. They are calculated components, not peak GPU requirements.</p>
+<p>The large model performs about <strong>82×</strong> the dense arithmetic. It is a research candidate; we may eventually use a successful large model offline or near the top of search rather than at every CPU search node.</p>
+<h2 id="-what-training-actually-does">🔁 What training actually does</h2>
+<pre class="hljs"><code><div>sample: one position + one teacher score
+batch: a group used for one weight update
+epoch: one pass over the training positions
+
+For each batch:
+  compact positions → GPU feature expansion → prediction
+                                      │
+       teacher cp / 100 ───────────────┤
+                                      ▼
+                                Huber error
+                                      │
+                                      ▼
+                            gradients → AdamW update
+
+After each epoch: validate → log → checkpoint → continue/early stop
+</div></code></pre>
+<p>Training uses <strong>Huber loss with delta 1 pawn</strong>, AdamW with learning rate <code>0.0003</code>, weight decay <code>0.0001</code>, and gradient-norm clipping at 1. Targets are clipped to ±15 pawns in the loss contract, although the default prepared dataset already excludes labels beyond that range. Raw cp errors are also reported so changing the preparation policy cannot hide clipped tails.</p>
+<p>The pilot configurations use <strong>batch 2,048 and up to five epochs</strong>. On the bundled data, that is <strong>44 updates per epoch</strong>, or at most <strong>220 updates</strong>. Full configurations use batch 4,096 and up to 20 epochs. These are starting budgets, not promises of convergence.</p>
+<p>The two presets are our first experiments. MLP/residual widths and depths, ReLU/GELU/SiLU/tanh activations, seeds, batches, and epoch caps are configurable. Every variant gets a new configuration/run directory and can reuse the same prepared data; see <a href="docs/EXPERIMENTS.md">experiments</a>.</p>
+<p>The best checkpoint tracks the lowest observed validation Huber loss. Early-stopping patience is separate: improvement must exceed <code>0.0001</code> to reset its five-epoch counter. Weights never update from validation/test data. More detail is in the actual JSON configuration saved beside every checkpoint.</p>
+<p>CUDA training uses <strong>BF16 autocast</strong>, with FP32 parameters/optimizer state and an FP32 loss. CPU training uses FP32. A GPU capability check must succeed before this recipe is used. Autocast changes suitable operation precision; it does not halve every allocation. <a href="https://docs.pytorch.org/docs/stable/amp.html">PyTorch automatic mixed precision</a></p>
+<h3 id="why-a-bigger-batch-is-not-automatically-better">Why a bigger batch is not automatically better</h3>
+<p>Increasing a batch from 2,048 to 16,384 makes each update use eight times more positions, but gives eight times fewer updates per epoch. Larger batches can improve throughput and reduce gradient noise; they change optimization too. Do not compare “five epochs” alone and assume the learning effort is equivalent.</p>
+<p><code>07_benchmark.sh</code> measures actual loader + transfer + feature expansion + forward/backward + optimizer steps. Its batch recommendation means <strong>highest measured throughput with memory headroom</strong>, not best accuracy. Start with the pilot batch, then compare a faster batch using validation loss and a reasonable update budget. Filling all 96 GB is not an objective.</p>
+<h3 id="what-you-will-see">What you will see</h3>
+<p>In an interactive terminal, Rich shows a colored progress bar, batch loss, validation MAE, ETA, and active GPU memory. At epoch boundaries it prints a durable summary. Redirected logs remain readable.</p>
+<pre class="hljs"><code><div>Epoch 3/5 train       ━━━━━━━━━━━━━━━  76%  loss 0.8421  GPU ... MiB
+Epoch 3: train ... | val ... | MAE ... cp | ... pos/s | BEST
+
+The numbers above illustrate the display, not a promised training result.
+</div></code></pre>
+<p>Every run saves:</p>
+<table>
+<thead>
+<tr>
+<th>Artifact</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>config.json</code>, <code>environment.json</code>, <code>data_manifest.json</code></td>
+<td>Exactly what was run</td>
+</tr>
+<tr>
+<td><code>metrics.csv</code>, <code>metrics.jsonl</code></td>
+<td>Epoch curves and detailed validation measurements</td>
+</tr>
+<tr>
+<td><code>tensorboard/</code></td>
+<td>Live scalar events when TensorBoard is installed</td>
+</tr>
+<tr>
+<td><code>best.pt</code></td>
+<td>Lowest observed validation-loss checkpoint</td>
+</tr>
+<tr>
+<td><code>last.pt</code></td>
+<td>Last complete epoch boundary, including optimizer and random states</td>
+</tr>
+<tr>
+<td><code>result.json</code></td>
+<td>Final status, best epoch, and checkpoint locations</td>
+</tr>
+<tr>
+<td><code>curves.png</code> or <code>curves.svg</code></td>
+<td>Saved diagrams of learning</td>
+</tr>
+<tr>
+<td><code>test.json</code>, <code>ranking.json</code></td>
+<td>Explicit evaluation results when requested</td>
+</tr>
+<tr>
+<td><code>exports/model-&lt;checkpoint-hash&gt;.ts</code></td>
+<td>Checked export for a particular checkpoint; repeated evaluation reuses only intact matching files</td>
+</tr>
+</tbody>
+</table>
+<p>For live browser charts, in another terminal:</p>
+<pre class="hljs"><code><div>bash scripts/06_monitor.sh runs/pilot-small
+</div></code></pre>
+<p>Connect via the SSH tunnel in the runbook. TensorBoard binds to localhost. You can also run <code>python -m chesslab.plot --run runs/pilot-small</code> after an epoch; it draws from the saved CSV.</p>
+<h3 id="resume-after-a-disconnect-or-interruption">Resume after a disconnect or interruption</h3>
+<p>Use <code>tmux</code> if available so an SSH disconnect does not stop training. If a process stops, resume the same run:</p>
+<pre class="hljs"><code><div>.venv/bin/python -m chesslab.train \
+  --data data/local-100k --config configs/pilot_small.json \
+  --run runs/pilot-small --device cuda \
+  --resume runs/pilot-small/last.pt --epochs 15
+</div></code></pre>
+<p><code>--epochs 15</code> means <strong>15 total completed epochs</strong>, not 15 additional epochs. Incomplete epoch work is discarded; resume begins at the last atomically saved complete boundary. A CPU FP32 run cannot be resumed as CUDA BF16, and changing data fingerprints or training settings is rejected. Use a new run for a new experiment. Same-device deterministic resume is tested; cross-hardware bitwise identity is not promised.</p>
+<h2 id="-our-top-five--top-seven-goal">🎯 Our top-five / top-seven goal</h2>
+<p>There are two separate questions:</p>
+<ol>
+<li>Does the network predict stored scalar evaluations well?</li>
+<li>When we score all legal children, does a teacher-best move appear in the first five or seven?</li>
+</ol>
+<p>The first does not prove the second. A parent FEN and one saved PV do not label all legal alternatives.</p>
+<p>The lab therefore includes an independent benchmark builder. It requires a <strong>Linux Stockfish binary you explicitly choose</strong>; the Windows executable in your repository cannot run directly on Linux. It gives every nonterminal legal child a controlled node budget, keeps mate and terminal results typed, and checks overlap against the prepared training data. Test benchmarks exclude both training and validation positions and their candidate children.</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># Start tiny: full-child search multiplies work by the number of legal moves.</span>
+.venv/bin/python -m chesslab.teacher \
+  --data data/local-100k --<span class="hljs-built_in">split</span> <span class="hljs-built_in">test</span> --positions 20 \
+  --engine /absolute/path/to/stockfish \
+  --nodes 50000 --threads 4 --hash-mb 256 \
+  --output benchmarks/teacher-test.jsonl
+
+.venv/bin/python -m chesslab.rank \
+  --checkpoint runs/pilot-small/best.pt \
+  --benchmark benchmarks/teacher-test.jsonl \
+  --output runs/pilot-small/ranking.json
+</div></code></pre>
+<p>This first modest node cap is a <strong>workflow check</strong>, not a definitive best-move oracle. Increase the budget, audit label stability, and use hundreds/thousands of representative positions before making a portfolio claim. Search budgets influence which move the teacher calls best.</p>
+<p>The report separates strict teacher-best recall@1/@5/@7 from near-best recall within 25 cp, includes sample counts and Wilson 95% confidence intervals, and treats mate disagreements separately from finite cp regret. “95% recall” is an empirical target on a defined benchmark; it is not a guarantee for every chess position.</p>
+<p>For a live position:</p>
+<pre class="hljs"><code><div>.venv/bin/python -m chesslab.rank \
+  --checkpoint runs/pilot-small/best.pt --top 7 \
+  --fen <span class="hljs-string">&#x27;7r/1p3k2/p1bPR3/5p2/2B2P1p/8/PP4P1/3K4 b - - 0 1&#x27;</span>
+</div></code></pre>
+<p>The model scores resulting boards, not move IDs. White prefers larger scores; Black prefers smaller scores. All legal moves are retained in the result. For search integration, use this ordering before experimenting with selective reductions. Discarding everything below rank seven can lose the only saving move even if average recall is high.</p>
+<p>Read the <a href="docs/MOVE_RANKING.md">move-ranking and teacher-benchmark guide</a> for the exact metric definitions and limitations.</p>
+<h2 id="-what-counts-as-an-encouraging-result">📈 What counts as an encouraging result?</h2>
+<p>Report raw cp MAE/RMSE, score bias, fractions within 25/50/100 cp, score-range breakdowns, and material-coverage breakdowns. The latter are diagnostics; we are still training one general model.</p>
+<p>Compare against constant-zero and basic material baselines. Learning a low training loss while losing to material on the test split is not a finished evaluator. Move-ranking recall, CPU evaluation latency, tactical tests, and equal-time engine games will determine whether the network earns a place in the engine.</p>
+<p>The first local CPU run and checks are recorded in <a href="docs/LOCAL_VERIFICATION.md">local verification</a>. GPU throughput, final strength, and the 95% goal still need server experiments.</p>
+<h2 id="-scaling-up-after-the-pilot">🧰 Scaling up after the pilot</h2>
+<p>Use local CPU preparation or a CPU server when practical. Preparation does not use the GPU. The bundled pilot already avoids GPU idle time for the first session. For larger datasets, choose where the archive and CPU/storage bandwidth are available; a GPU VM is not inherently faster at parsing JSON.</p>
+<p>For example, after placing the archive on the server:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># 1M selected positions from a broader bounded pool; writes a NEW directory.</span>
+bash scripts/02_prepare.sh /data/lichess_db_eval.jsonl.zst data/million \
+  --max-positions 1000000 --max-records 5000000 --workers 16
+
+<span class="hljs-comment"># Full configuration, fresh weights, new experiment.</span>
+.venv/bin/python -m chesslab.train \
+  --data data/million --config configs/small.json \
+  --run runs/million-small --device cuda
+</div></code></pre>
+<p><code>--max-records 0</code> scans the entire archive and can require substantial CPU time and disk space for the SQLite deduplication index. That is deliberately not the first default. Never compare a new dataset's metrics with an old dataset's test numbers as if the evaluation set were identical. Freeze a common independent benchmark for cross-scale comparisons.</p>
+<p>The data files use <strong>108 bytes per record plus small <code>.npy</code> headers</strong>. One million is about 108 MB; ten million about 1.08 GB. The temporary SQLite index is larger and depends on the number of accepted positions in the scanned pool, before sampling. The earlier notebook's 64-byte record was a possible future packing target; this implementation keeps explicit quality metadata and keys for easier auditing.</p>
+<h2 id="-tests-and-boundaries">🧪 Tests and boundaries</h2>
+<pre class="hljs"><code><div>.venv/bin/python -m unittest discover -s tests -v
+</div></code></pre>
+<p>Tests cover encoding, original-Kernel piece mapping, EP/castling handling, label selection, mate/anomalous-depth rejection, full-PV legality, deduplication/splits, model shapes, metrics, epoch-boundary resume, fingerprint guards, legal-child ranking, complete benchmark validation, and TorchScript parity.</p>
+<p>The lab is single-device. It does not launch cloud machines, send data to external services, or modify your engine. The export is an inference artifact plus a contract; production C++ integration and engine strength testing are separate next steps. Large generated artifacts are ignored by the lab's Git rules.</p>
+
+</body>
+</html>

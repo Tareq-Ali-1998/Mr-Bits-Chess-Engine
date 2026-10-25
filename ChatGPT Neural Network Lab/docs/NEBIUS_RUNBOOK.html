@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>NEBIUS_RUNBOOK.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-mr-bits-from-this-folder-to-a-measured-gpu-experiment">♟️ Mr. Bits: from this folder to a measured GPU experiment</h1>
+<p><strong>Research and operating notes checked on 23 October 2026.</strong> This runbook prepares a Linux machine you choose. The bundle does not create a Nebius instance, spend credits, install a host driver, or start training until you run the relevant commands.</p>
+<p>For the shortest Windows-upload-to-results sequence, begin with <a href="../START_HERE.md">START_HERE</a>. This runbook explains the operating details and recovery steps. Local CPU checks and Git Bash checks have been performed; <strong>a real Nebius Linux/CUDA host has not been tested in this workspace</strong>. GPU throughput, memory, and playing strength remain measurements for that host.</p>
+<blockquote>
+<p>🟢 First prove a small run works. 🔵 Measure the complete pipeline. 🟡 Scale only after the validation report is useful.</p>
+</blockquote>
+<pre class="hljs"><code><div>This lab&#x27;s source                 Clean, versioned position shards
+        │                                      │
+        └──────────────────┬───────────────────┘
+                           ▼
+                Linux GPU machine + local venv
+                           │
+              doctor → benchmark → pilot
+                           │
+           checkpoints + curves + environment record
+                           │
+                    evaluate and export
+</div></code></pre>
+<h2 id="1-choose-the-machine-and-the-working-directory">1. Choose the machine and the working directory</h2>
+<p>The documented Nebius RTX PRO 6000 Blackwell Server Edition has <strong>96 GB GDDR7</strong>. Its single-GPU preset includes <strong>24 vCPUs and 218 GiB system RAM</strong>. Published platforms include <code>gpu-rtx6000</code> in <code>us-central1</code> and <code>gpu-rtx6000-a</code> in <code>uk-south2</code> / <code>eu-south1</code>; the quota and actual capacity in your account must be checked when you choose a machine. <a href="https://docs.nebius.com/compute/virtual-machines/types">Nebius platform catalog</a></p>
+<p>Choose an NVIDIA GPU image with a working driver and standard CPython <strong>3.11–3.14</strong>. Python 3.12 is a practical starting choice. <strong>Do not install another driver over the cloud image using <code>sudo apt</code> as part of this lab.</strong> If <code>nvidia-smi</code> fails, fix the image/device configuration before training.</p>
+<p>An H200 has a different memory/compute configuration; more VRAM does not by itself mean a shorter or cheaper run. Compare measured positions per second and total session cost for these actual models. A 96 GB GPU is already generous for them.</p>
+<p>Upload the generated <strong><code>Mr_Bits_Neural_Lab_Upload.zip</code></strong>, rather than the entire engine repository or account-information files. The ZIP contains this lab and its prepared pilot, without a Windows virtual environment or the raw archive. Extract to a <strong>fresh directory</strong> so an old <code>.venv</code> cannot be accidentally reused. If your image has <code>unzip</code>, the Linux commands are:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">mkdir</span> -p <span class="hljs-string">&quot;<span class="hljs-variable">$HOME</span>/mr-bits-upload-v1&quot;</span>
+unzip <span class="hljs-string">&quot;<span class="hljs-variable">$HOME</span>/Mr_Bits_Neural_Lab_Upload.zip&quot;</span> -d <span class="hljs-string">&quot;<span class="hljs-variable">$HOME</span>/mr-bits-upload-v1&quot;</span>
+<span class="hljs-built_in">cd</span> <span class="hljs-string">&quot;<span class="hljs-variable">$HOME</span>/mr-bits-upload-v1/ChatGPT Neural Network Lab&quot;</span>
+python3 verify_upload.py
+</div></code></pre>
+<p>If <code>unzip</code> is absent, replace its command with <code>python3 -m zipfile -e &quot;$HOME/Mr_Bits_Neural_Lab_Upload.zip&quot; &quot;$HOME/mr-bits-upload-v1&quot;</code>; a separate archive tool is not required. Use a new extraction name if that directory already contains a previous experiment. The current directory should contain <code>pyproject.toml</code>, <code>chesslab/</code>, <code>configs/</code>, and <code>scripts/</code>. The scripts also work if the lab's absolute path contains spaces; quote paths in your own commands.</p>
+<h2 id="2-bootstrap-and-record-the-actual-environment">2. Bootstrap and record the actual environment</h2>
+<p>Run these commands <strong>inside the lab directory</strong>:</p>
+<pre class="hljs"><code><div>bash scripts/00_setup.sh --python python3
+bash scripts/01_check.sh --require-cuda --strict-deps
+</div></code></pre>
+<p>The setup creates a local <code>.venv</code> with <code>--system-site-packages</code> by default, so a tested image's existing PyTorch can be reused. It keeps Torch &gt;=2.7 when a real CUDA matrix multiplication and backward pass work. Otherwise, after checking for an NVIDIA host device, it installs the reference <strong>Torch 2.10.0 / CUDA 12.8</strong> wheel from PyTorch's official index. The normal requirements install does not request upgrading a working Torch. An existing <code>.venv</code> is reused.</p>
+<p>The non-Torch direct dependencies are pinned in <code>requirements.txt</code>; the build backend is pinned in <code>pyproject.toml</code>. Torch is deliberately validated and recorded rather than forcing a downgrade of a working image build. Transitive packages still depend on the selected Python/platform, so retain <code>environment-pip-freeze.txt</code> with each session. This is a reference installation recipe, not a claim that every Python/image combination has already been tested.</p>
+<p>The official previous-version instructions provide that wheel combination. Blackwell support was introduced with CUDA 12.8 wheels in PyTorch 2.7; the device still needs an appropriate driver and a successful real computation. RTX PRO 6000 Blackwell Server Edition is <strong>compute capability 12.0</strong>. The actual smoke test is more useful than trusting a package name alone. <a href="https://pytorch.org/get-started/previous-versions/">Official installation matrix</a>, <a href="https://pytorch.org/blog/pytorch-2-7/">Blackwell support announcement</a>, <a href="https://developer.nvidia.com/cuda/gpus">NVIDIA capability list</a></p>
+<p>Setup changes packages only inside this lab's environment. If you prefer a fresh environment without inherited image packages, choose <code>--isolated</code> <strong>when creating a new <code>.venv</code></strong>. It will need its own Torch installation. To work on CPU deliberately:</p>
+<pre class="hljs"><code><div>bash scripts/00_setup.sh --cpu --python python3
+bash scripts/01_check.sh --device cpu --strict-deps
+</div></code></pre>
+<p>CPU success checks the software path; it does not validate a GPU you have not run on. A GPU-equipped Torch build can also execute this CPU check.</p>
+<p>The doctor runs FP32 forward/backward/AdamW computation and, when the actual device supports it, a BF16 autocast matrix multiplication with backward/optimizer steps. Setup also uses <code>--strict-deps</code>, which verifies pinned direct-dependency versions, the NumPy/Torch bridge, legal-move library, compression round trip, headless PNG plotting, and a TensorBoard event write. A plain doctor command remains useful for CPU development when optional monitoring packages have not been installed; it warns that those integrations were not validated. It writes:</p>
+<ul>
+<li><code>diagnostics/environment.json</code>: versions, actual device/capability, memory, and check results.</li>
+<li><code>diagnostics/environment-pip-freeze.txt</code>: installed Python package versions.</li>
+</ul>
+<p>It runs <code>nvidia-smi</code> if present and handles its absence gracefully. It does not dump environment variables or read account credentials. The doctor has a tiny workload; its elapsed time is <strong>not a model-training benchmark</strong>.</p>
+<p>For direct Python commands later, activate the environment:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">source</span> .venv/bin/activate
+</div></code></pre>
+<p>The numbered Bash wrappers already select <code>.venv/bin/python</code>; they do not depend on activation. <code>CHESSLAB_PYTHON</code> can explicitly choose another interpreter for the wrappers. The setup interpreter is selected separately with <code>--python</code> or <code>CHESSLAB_BOOTSTRAP_PYTHON</code>.</p>
+<h2 id="3-prepare-reusable-data-before-leaving-a-gpu-idle">3. Prepare reusable data before leaving a GPU idle</h2>
+<p>Preparation is mainly parsing, legal-position checks, selection, deduplication, and disk I/O. It does not need a GPU. Process on your local machine or a CPU machine when that saves paid GPU time, then copy the resulting dataset directory with its manifest intact. If preparing on the GPU machine is convenient, include that running time in the bill.</p>
+<p><strong>For the first session, prefer the already prepared <code>data/local-100k</code> artifact supplied with this work.</strong> Transfer that directory with its manifest rather than uploading the multi-gigabyte raw archive. It contains 100,000 accepted positions: 89,995 train, 4,979 validation, and 5,026 test. It is a bounded-prefix pilot; use it to check the complete training path before treating it as a representative chess benchmark. Prepared data is intentionally ignored by source Git and must be copied separately when sharing this lab.</p>
+<p>With the existing official archive already available:</p>
+<pre class="hljs"><code><div>bash scripts/02_prepare.sh <span class="hljs-string">&quot;/path/to/lichess_db_eval.jsonl.zst&quot;</span> data/pilot
+</div></code></pre>
+<p>This wrapper proposes a bounded pilot: at most <strong>100,000 accepted positions</strong>, scanning at most <strong>2,000,000 source records</strong>, selecting depth <strong>20–80</strong> and at least <strong>1,000 kilo-nodes</strong>. A kilo-node is 1,000 nodes; this threshold therefore means 1,000,000 searched nodes. These are experiment settings, not a guarantee that 100,000 records will survive.</p>
+<p>Pass explicit preparation options to change the limits or sampling method:</p>
+<pre class="hljs"><code><div>bash scripts/02_prepare.sh <span class="hljs-string">&quot;/path/to/archive.jsonl.zst&quot;</span> data/pilot --sampling reservoir
+</div></code></pre>
+<p>Reservoir sampling within a bounded prefix is still sampling <strong>that scanned prefix</strong>, not the whole archive. For a representative release, deliberately scan/sample across the intended corpus, record the policy, and inspect coverage. Reading a compressed stream is normally faster and needs less temporary disk than expanding the entire archive first. Preparing the raw data once also avoids reparsing FEN on every training epoch.</p>
+<p>If you need a fresh archive, the optional downloader requires an explicit flag:</p>
+<pre class="hljs"><code><div>bash scripts/download_data.sh --download <span class="hljs-string">&quot;/data/lichess_db_eval.jsonl.zst&quot;</span>
+</div></code></pre>
+<p>It uses resumable <code>curl</code>, writes to <code>.partial</code>, moves the completed file into place, and records its URL, byte count, local SHA-256, and timestamp. Completed destination files are preserved. The public archive can change between releases; its HTTP version validators are recorded before downloading, and a later resume is refused if the source changed or cannot be verified. Weak ETags alone are insufficient for byte-range recovery; the script needs a strong ETag or a matching Last-Modified validator. Preserve the old partial file and choose a new destination when validation fails. A locally computed checksum identifies your file; compare with the publisher's checksum when available for independent verification. No archive is downloaded by setup. <a href="https://database.lichess.org/#evals">Official Lichess data and format</a></p>
+<p>Only one process may download to a destination at a time. A <code>.download.lock</code> directory records its PID and is removed on normal exit/interruption. After a hard VM/process kill, inspect that PID and confirm no matching downloader remains before removing its <code>pid</code> file and the empty lock directory. Keep the <code>.partial</code> and <code>.partial.source.json</code> files together for a verified resume.</p>
+<p>Use a <strong>new output directory for a new dataset release</strong>. Keep raw archive provenance and prepared-data fingerprints alongside the experiment. Separate dataset names such as <code>pilot-v1</code> and <code>scale-v1</code> make it easier to understand what a checkpoint learned from.</p>
+<h2 id="4-benchmark-first-then-train-the-two-models-explicitly">4. Benchmark first, then train the two models explicitly</h2>
+<p>After transferring <code>data/local-100k</code> and passing the GPU doctor:</p>
+<pre class="hljs"><code><div>bash scripts/07_benchmark.sh small data/local-100k benchmarks/small-throughput.json --device cuda --batches 1024 4096 16384 --steps 30
+bash scripts/07_benchmark.sh large data/local-100k benchmarks/large-throughput.json --device cuda --batches 1024 4096 16384 --steps 30
+</div></code></pre>
+<p>Inspect the benchmark output before planning a large run. Use the actual loader, forward pass, backward pass, and optimizer update. Model A and Model B need separate measurements. Warm-up/compilation, data preparation, validation, checkpointing, and startup are additional parts of the total session.</p>
+<p>Launch the two pilot runs separately:</p>
+<pre class="hljs"><code><div>bash scripts/03_train.sh small data/local-100k runs/pilot-small --device cuda
+bash scripts/03_train.sh large data/local-100k runs/pilot-large --device cuda
+</div></code></pre>
+<p>These wrappers select <code>configs/pilot_small.json</code> and <code>configs/pilot_large.json</code>. They do not silently select a large-data experiment. To use a full experiment configuration, invoke the trainer explicitly:</p>
+<pre class="hljs"><code><div>python -m chesslab.train --data data/local-100k --config configs/small.json --run runs/small-v1 --device cuda
+</div></code></pre>
+<p>The two starter models are conveniences. For an arbitrary supported configuration, use <code>bash scripts/08_experiment.sh CONFIG DATA RUN --device cuda</code>. See <a href="EXPERIMENTS.md">the experiment guide</a> for configurable depth, widths, residual models, and ReLU/GELU/SiLU/tanh comparisons. Use a separate configuration and run directory for each variant; <code>python -m chesslab.experiments list</code> inspects configurations without starting training.</p>
+<p>For a continuation, point to the existing run and its last checkpoint:</p>
+<pre class="hljs"><code><div>bash scripts/03_train.sh small data/local-100k runs/pilot-small --device cuda --resume runs/pilot-small/last.pt --epochs 10
+</div></code></pre>
+<p><code>--epochs 10</code> means a cap of <strong>ten completed epochs in total</strong>, not ten additional epochs. Resume restores a completed-epoch boundary; a partially completed interrupted epoch is replayed. If the saved run already met early stopping, extending only the epoch cap does not reset its patience. Resume the same architecture, precision, and dataset contract; use a new experiment for intentional changes. Back up checkpoints and their manifests before making experiments depend on an interruptible machine.</p>
+<h2 id="5-keep-a-long-run-alive-and-watch-its-progress">5. Keep a long run alive and watch its progress</h2>
+<p>If <code>tmux</code> is already available, create a session:</p>
+<pre class="hljs"><code><div>tmux new -s chesslab
+</div></code></pre>
+<p>Inside it, enter the lab directory and run a training command. Detach with <strong>Ctrl+B, then D</strong>. Later reconnect with:</p>
+<pre class="hljs"><code><div>tmux attach -t chesslab
+</div></code></pre>
+<p>Alternatively, keep a log with <code>nohup</code>:</p>
+<pre class="hljs"><code><div><span class="hljs-built_in">mkdir</span> -p logs
+<span class="hljs-built_in">nohup</span> bash scripts/03_train.sh small data/local-100k runs/pilot-small --device cuda &gt; logs/pilot-small.log 2&gt;&amp;1 &amp;
+<span class="hljs-built_in">printf</span> <span class="hljs-string">&#x27;%s\n&#x27;</span> <span class="hljs-string">&quot;$!&quot;</span> &gt; logs/pilot-small.pid
+<span class="hljs-built_in">tail</span> -f logs/pilot-small.log
+</div></code></pre>
+<p><code>tmux</code> and <code>nohup</code> survive an SSH disconnect; neither survives the underlying VM being reclaimed or stopped. Resume from the last saved checkpoint after an interruption. Avoid starting the same run directory twice.</p>
+<p>In another terminal, inspect utilization and power if exposed by the host:</p>
+<pre class="hljs"><code><div>watch -n 2 nvidia-smi
+</div></code></pre>
+<p>To view TensorBoard on the GPU host:</p>
+<pre class="hljs"><code><div>bash scripts/06_monitor.sh runs
+</div></code></pre>
+<p>It listens only at <strong>127.0.0.1:6006</strong>. On your own computer, open a separate SSH tunnel:</p>
+<pre class="hljs"><code><div>ssh -N -L 6006:127.0.0.1:6006 USER@GPU_HOST
+</div></code></pre>
+<p>Then browse <code>http://127.0.0.1:6006</code> locally. The script does not publish TensorBoard to the internet or change firewall rules.</p>
+<h2 id="6-read-memory-and-time-numbers-correctly">6. Read memory and time numbers correctly</h2>
+<p>The starter pilot configs currently use a microbatch of <strong>2,048</strong>; benchmark other sizes before overriding it. The parameter/gradient/two-moment FP32 AdamW subtotal is about <strong>3.31 MiB</strong> for the 216,961-parameter small starter and <strong>272.49 MiB</strong> for the 17,858,049-parameter large starter. A custom architecture changes those counts: inspect its actual configuration rather than applying these figures to every variant. Those figures exclude active batches, saved activations, temporary workspaces, CUDA context, and allocator behavior. AMP does not halve every component.</p>
+<p>If adopting planning ceilings of <strong>10 GiB for small</strong> and <strong>30 GiB for large</strong>, treat them as generous monitoring allocations, not measured requirements or an instruction to reserve that memory. Do not enlarge the network or batch merely to fill the GPU. Measure peak <strong>allocated</strong> and <strong>reserved</strong> memory through a real optimizer step; also check whole-device/process memory separately. The caching allocator makes these numbers differ. <a href="https://docs.pytorch.org/docs/stable/notes/cuda.html#memory-management">PyTorch memory management</a></p>
+<pre class="hljs"><code><div>train presentations = training rows × completed epochs
+train seconds       ≈ train presentations / measured positions per second
+session seconds     = setup + preparation + training + validation + other running time
+compute dollars     ≈ billed session hours × actual selected hourly rate
+</div></code></pre>
+<p>For example, if a prepared dataset contains <strong>90,000 training rows</strong>, five full epochs process <strong>450,000 presentations</strong>, not 450,000 unique positions. At a hypothetical measured 10,000 positions/second, the training loop would be 45 seconds; this is arithmetic, not a forecast for either model. Count actual final-batch samples when measuring throughput.</p>
+<p>As checked on <strong>23 October 2026</strong>, the published RTX PRO 6000 rate is <strong>$1.80 per GPU-hour on demand</strong>, with dynamic spot pricing <strong>from $0.79</strong>. A floor is not a guaranteed rate, and preemptible capacity can be interrupted. Use the actual quote for your selected instance and region; add applicable tax, storage, and other charges. Stopping a VM ends compute charges but retained storage can still be billed. <a href="https://docs.nebius.com/compute/resources/pricing">Nebius pricing</a></p>
+<h2 id="7-evaluate-compare-export-and-finish-the-session">7. Evaluate, compare, export, and finish the session</h2>
+<p>For one trained run:</p>
+<pre class="hljs"><code><div>bash scripts/05_evaluate.sh runs/pilot-small data/local-100k
+</div></code></pre>
+<p>It computes test metrics, renders training plots, and exports <code>model.ts</code>. Keep test results for decisions frozen before final reporting; do not use the test split as another tuning set. To compare <strong>existing</strong> small and large checkpoints:</p>
+<pre class="hljs"><code><div>bash scripts/04_compare.sh data/local-100k runs
+</div></code></pre>
+<p>The compare script <strong>never starts training</strong>. It expects <code>runs/pilot-small/best.pt</code> and <code>runs/pilot-large/best.pt</code>. Compare quality, throughput, actual total time, and runtime inference cost together.</p>
+<p>Create a controlled sibling-move benchmark when a Stockfish binary is available:</p>
+<pre class="hljs"><code><div>python -m chesslab.teacher --data data/local-100k --<span class="hljs-built_in">split</span> <span class="hljs-built_in">test</span> --positions 100 --engine <span class="hljs-string">&quot;/path/to/stockfish&quot;</span> --nodes 50000 --threads 4 --hash-mb 256 --output benchmarks/teacher.jsonl
+bash scripts/05_evaluate.sh runs/pilot-small data/local-100k benchmarks/teacher.jsonl
+</div></code></pre>
+<p>The teacher command spends <strong>CPU search time</strong>, potentially for every legal candidate. Start small and inspect its record counts and provenance. It is not part of setup and is never launched automatically. Your Stockfish binary and its network files need to be valid on the host.</p>
+<p>Before ending a paid session:</p>
+<ul>
+<li>Copy the run configurations, data manifest, checkpoints, plots, metrics, and environment report to persistent artifact storage you control.</li>
+<li>Confirm that the files you copied can be read; a checkpoint left only on ephemeral disk is not a backup.</li>
+<li>Stop the compute through your normal Nebius account interface when work is finished, and review retained disks separately.</li>
+</ul>
+<p>The first useful result is a reproducible checkpoint with honest validation and runtime measurements. More training time is worthwhile when those measurements explain what it improves. 💙</p>
+
+</body>
+</html>

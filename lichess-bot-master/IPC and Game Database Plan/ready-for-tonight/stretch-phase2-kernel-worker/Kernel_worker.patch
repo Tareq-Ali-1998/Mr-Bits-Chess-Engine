@@ -1,0 +1,554 @@
+--- orig/Kernel.cpp	2026-10-24 13:09:46.464125100 +0400
++++ src/Kernel.cpp	2026-10-25 07:11:29.801483200 +0400
+@@ -1,5 +1,7 @@
+ 
+ #include <windows.h>
++#include <io.h>      // [worker] _setmode / _fileno
++#include <fcntl.h>   // [worker] _O_BINARY
+ 
+ // ############################################################ \\
+ 
+@@ -487,6 +489,11 @@
+         this->allowedTimeInMilliSeconds = allowedTimeInSeconds * 1000;
+     }
+ 
++    // [worker] The worker protocol gives the budget in milliseconds ("timeMs").
++    void setAllowedTimeInMilliSeconds(const int& allowedTimeInMilliSeconds) {
++        this->allowedTimeInMilliSeconds = allowedTimeInMilliSeconds;
++    }
++
+ 
+ 
+     // And here are the getters of my class
+@@ -537,6 +544,26 @@
+         return this->theNumberOfAllTheFinalStates;
+     }
+ 
++    // [worker] Raw counters for "perDepth". The index is the REMAINING depth of the node (0 = leaf), and
++    // the in-tree move-ordering searches (MagicForIterativeDeepening) count into the same slots.
++    long long getTheNumberOfStatesForACertainDepth(const int& depth) const {
++        return this->theNumberOfAllStatesForEachDepth[depth];
++    }
++
++    long long getTheNumberOfPrunedBranchesForACertainDepth(const int& depth) const {
++        return this->theNumberOfPrunedBranchesForEachDepth[depth];
++    }
++
++    // [worker] 64-bit totals: the two old getters use accumulate(..., 0), which sums in int.
++    long long getTheNumberOfAllTheInnerAndFinalStatesAs64Bit() const {
++        return accumulate(this->theNumberOfAllStatesForEachDepth, this->theNumberOfAllStatesForEachDepth + 51, 0LL);
++    }
++
++    long long getTheNumberOfAllTheBrunedBranchesAs64Bit() const {
++        return accumulate(this->theNumberOfPrunedBranchesForEachDepth,
++                          this->theNumberOfPrunedBranchesForEachDepth + 51, 0LL);
++    }
++
+     long long getTheNumberOfAllTheInnerStates() const {
+         return this->getTheNumberOfAllTheInnerAndFinalStates() - this->getTheNumberOfAllTheFinalStates();
+     }
+@@ -3164,10 +3191,21 @@
+ 
+ }
+ 
++// [worker] The score of every root move of the last call of GetBestMoveWithItsScore, in search order.
++// The search is fail-soft alpha-beta: a root move whose score beats the window it was searched with is
++// exact; otherwise its score is only a bound ("at most this" when the engine is the side to move).
++struct RootMoveScore {
++    int16_t move;
++    int score;
++    bool exact;
++};
++vector<RootMoveScore> rootMoveScoresOfTheLastSearch;
++
+ pair<int16_t, int> GetBestMoveWithItsScore(const int8_t& depth, const bool& turn,
+                                            vector<int16_t>& currentSortedMoves) {
+ 
+     processHandler.resetObjectArraysAndFinalStates();
++    rootMoveScoresOfTheLastSearch.clear();
+ 
+     if (currentSortedMoves.size() == 0) {
+         return {0, 0};
+@@ -3188,6 +3226,8 @@
+         long long blackPiecesBeforeCommittingTheCurrentMove = blackPieces;
+         int engineScoreBeforeCommittingTheCurrentMove = engineScore;
+         int opponentScoreBeforeCommittingTheCurrentMove = opponentScore;
++        const int alphaBeforeThisMove = alpha;
++        const int betaBeforeThisMove = beta;
+         MakeChanges(currentMove);
+         int correspondingScore = Magic(depth - 1, !turn, currentMove, alpha, beta);
+         whitePieces = whitePiecesBeforeCommittingTheCurrentMove;
+@@ -3196,6 +3236,10 @@
+         opponentScore = opponentScoreBeforeCommittingTheCurrentMove;
+         ReturnChanges(currentMove, takenPiece, numberOfMovesOfTheTakenPiece);
+ 
++        rootMoveScoresOfTheLastSearch.push_back({currentMove, correspondingScore,
++                                                 turn ? (correspondingScore > alphaBeforeThisMove)
++                                                      : (correspondingScore < betaBeforeThisMove)});
++
+         if ((turn) && (correspondingScore > bestScoreSoFar)) {
+             bestScoreSoFar = correspondingScore;
+             bestMoveWithItsScore = {currentMove, correspondingScore};
+@@ -3314,16 +3358,41 @@
+ 
+ }
+ 
+-void InitializeEveryThing(const vector<string>& previousMovesAsStandard) {
++// ############################################################
++// [worker] Initialization, split into "once per process" and "once per request" (plan 02, Phase 2).
+ 
++// The tables are built ONCE per process. This is a hard requirement, not an optimization:
++// MovesPreCalculation() only push_backs into preCalculatedMoves and never clears it, so a second
++// call would duplicate every move ray. (PieceSquaresTableInitialization() and
++// BitToSquareAndViceVersaInitialization() only assign, and none of the three reads the board,
++// the masks or ENGINE_COLOR, so building them first is the same as the old order.)
++void BuildTheTablesOnce() {
++    static bool theTablesAreBuilt = false;
++    if (theTablesAreBuilt) {
++        return;
++    }
++    theTablesAreBuilt = true;
+     MovesPreCalculation();
+     PieceSquaresTableInitialization();
+-    BoardInitialization();
++    BitToSquareAndViceVersaInitialization();
++}
++
++// Every piece of state a search reads or writes, apart from the tables above. In file mode this
++// was "free" because every process was brand new. ENGINE_COLOR must come before the two scores,
++// because InitializeEngineScore() and InitializeOpponentScore() read it.
++void ResetGameState(const bool& engineColor) {
++    ENGINE_COLOR = engineColor;
++    processHandler = ProcessHandler();      // depth, best move/score, allowed time, timers, counters
++    previousMoves.clear();                  // its back() is the root "previous move" (en passant)
++    rootMoveScoresOfTheLastSearch.clear();
++    BoardInitialization();                  // the board and numberOfMovesOfThePieceOnThisSquare
+     blackPieces = ((1ll << 16) - 1);
+     whitePieces = blackPieces << 48;
+-    BitToSquareAndViceVersaInitialization();
+     InitializeEngineScore();
+     InitializeOpponentScore();
++}
++
++void ReplayMoves(const vector<string>& previousMovesAsStandard) {
+     vector<vector<int8_t>> currentChessBoard(8, vector<int8_t>(8));
+     for (const string& currentMove : previousMovesAsStandard) {
+         for (int8_t row = 0; row < 8; row++) {
+@@ -3334,57 +3403,102 @@
+         previousMoves.push_back(processHandler.convertMoveFromStandardToInt16_t(currentMove, currentChessBoard));
+         MakeChanges(previousMoves.back());
+     }
+-
+ }
+ 
+-int main(int argc, char* argv[]) {
++// ############################################################
++// [worker] The iterative deepening of the old main(), shared by both modes so they can't drift apart.
+ 
+-    // Set the priority of the parent process (The current process)
+-    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
++struct IterationSummary {
++    int depth;
++    bool completed;
++    double ms;
++    long long nodes;
++    long long leafNodes;
++    long long pruned;
++    int16_t bestMove;
++    int score;
++    vector<long long> statesByRemainingDepth;
++    vector<long long> prunedByRemainingDepth;
++};
+ 
+-    if (argc < 2) {
+-        cout << "Insufficient argument provided." << endl;
+-        return 1;
++struct SearchOutcome {
++    ProcessHandler theFinalCompletedProcessHandler;
++    bool completedAtLeastOneDepth = false;
++    vector<RootMoveScore> rootScoresOfTheFinalDepth;
++    vector<IterationSummary> perDepth;
++};
++
++double MillisecondsSince(const chrono::high_resolution_clock::time_point& start) {
++    return chrono::duration<double, milli>(chrono::high_resolution_clock::now() - start).count();
++}
++
++IterationSummary SummarizeTheIteration(const ProcessHandler& handler, const int& depth,
++                                       const bool& completed, const double& ms) {
++    IterationSummary summary;
++    summary.depth = depth;
++    summary.completed = completed;
++    summary.ms = ms;
++    summary.nodes = handler.getTheNumberOfAllTheInnerAndFinalStatesAs64Bit();
++    summary.leafNodes = handler.getTheNumberOfAllTheFinalStates();
++    summary.pruned = handler.getTheNumberOfAllTheBrunedBranchesAs64Bit();
++    summary.bestMove = handler.getBestEngineMoveAsInt16_t();
++    summary.score = handler.getBestEngineMoveScore();
++    int lastUsedSlot = -1;
++    for (int slot = 0; slot < 51; slot++) {
++        if (handler.getTheNumberOfStatesForACertainDepth(slot) || handler.getTheNumberOfPrunedBranchesForACertainDepth(slot)) {
++            lastUsedSlot = slot;
++        }
++    }
++    for (int slot = 0; slot <= lastUsedSlot; slot++) {
++        summary.statesByRemainingDepth.push_back(handler.getTheNumberOfStatesForACertainDepth(slot));
++        summary.prunedByRemainingDepth.push_back(handler.getTheNumberOfPrunedBranchesForACertainDepth(slot));
++    }
++    return summary;
++}
++
++// maxDepth == 0: exactly the old loop (the allowed time is a hard cap checked at every node, and a
++//                new depth isn't started once 5% of it is used).
++// maxDepth  > 0: the clock is switched off and the loop stops after depth maxDepth (even depths
++//                only, like before), so the answer depends on the request alone (A/B and stability tests).
++SearchOutcome RunIterativeDeepening(const vector<string>& movesForThisThread, const int& maxDepth,
++                                    const bool& keepPerDepth) {
++
++    SearchOutcome outcome;
++    if (maxDepth > 0) {
++        processHandler.setAllowedTimeInMilliSeconds(INT_MAX);
+     }
++    const int lastDepth = (maxDepth > 0) ? min(maxDepth, 30) : 30;
+ 
+-    string jsonFileName = argv[1];
+-
+-
+-
+-    // I should get as an input the allowed time and the previous moves as standard strings moves
+-    ChessState currentChessState = ChessState();
+-    // Read the serialized data from the file
+-    ifstream readFile(jsonFileName);
+-    stringstream buffer;
+-    buffer << readFile.rdbuf();
+-    string serializedDataAsString = buffer.str();
+-
+-    // Deserialize the object from the serialized data
+-    Json receivedData = Json::parse(serializedDataAsString);
+-
+-    currentChessState = ChessState::deserializeObject(receivedData);
+-
+-    ENGINE_COLOR = currentChessState.engineColor;
+-    processHandler.setAllowedTime(currentChessState.allowedEngineTimeInSeconds);
+-    vector<string> previousMovesAsStandard = currentChessState.previousMoves;
+-
+-
+-    InitializeEveryThing(previousMovesAsStandard);
+     processHandler.setAllProcessStartTime();
+-    ProcessHandler theFinalCompletedProcessHandler;
++    ProcessHandler& theFinalCompletedProcessHandler = outcome.theFinalCompletedProcessHandler;
+ 
+-    for (int8_t depth = 2; depth <= 30; depth += 2) {
++    for (int8_t depth = 2; depth <= lastDepth; depth += 2) {
++        const auto iterationStart = chrono::high_resolution_clock::now();
+         processHandler.setEngineDepth(depth);
+         processHandler.setLastDepthCalculationStartTime();
+-        GetBestMoveAndItsScoreToInitializeProcessHandler(currentChessState.movesForThisThread);
++        GetBestMoveAndItsScoreToInitializeProcessHandler(movesForThisThread);
+         if (processHandler.processTimeExceeded()) {
+             theFinalCompletedProcessHandler.setAllProcessEndTime();
++            if (keepPerDepth) {
++                outcome.perDepth.push_back(SummarizeTheIteration(processHandler, depth, false,
++                                                                 MillisecondsSince(iterationStart)));
++            }
+             break;
+         }
+ 
+         theFinalCompletedProcessHandler = processHandler;
+         theFinalCompletedProcessHandler.setAllProcessEndTime();
+         theFinalCompletedProcessHandler.setLastDepthCalculationsEndTime();
++        outcome.completedAtLeastOneDepth = true;
++        outcome.rootScoresOfTheFinalDepth = rootMoveScoresOfTheLastSearch;
++        if (keepPerDepth) {
++            outcome.perDepth.push_back(SummarizeTheIteration(processHandler, depth, true,
++                                                             MillisecondsSince(iterationStart)));
++        }
++
++        if (maxDepth > 0) {
++            continue;   // a fixed depth ignores the time rule below
++        }
+ 
+         // The following is a temporarily additional condition
+         long double totalAllowedTimeInMilliSeconds = theFinalCompletedProcessHandler.getProcessAllowedTimeInMilliSeconds();
+@@ -3402,6 +3516,39 @@
+ 
+     }
+ 
++    return outcome;
++}
++
++// ############################################################
++// File mode: "Kernel.exe <file.json>", the same file format as before.
++
++int RunFileMode(const string& jsonFileName) {
++
++    // I should get as an input the allowed time and the previous moves as standard strings moves
++    ChessState currentChessState = ChessState();
++    // Read the serialized data from the file
++    ifstream readFile(jsonFileName);
++    stringstream buffer;
++    buffer << readFile.rdbuf();
++    string serializedDataAsString = buffer.str();
++
++    // Deserialize the object from the serialized data
++    Json receivedData = Json::parse(serializedDataAsString);
++
++    currentChessState = ChessState::deserializeObject(receivedData);
++
++    // [worker] Optional key for A/B tests. Today's Engine UCI never writes it, so its files keep
++    // the old time-based behaviour (0 = use the time budget).
++    const int maxDepth = receivedData.value("maxDepth", 0);
++
++    BuildTheTablesOnce();
++    ResetGameState(currentChessState.engineColor);
++    processHandler.setAllowedTime(currentChessState.allowedEngineTimeInSeconds);
++    ReplayMoves(currentChessState.previousMoves);
++
++    SearchOutcome outcome = RunIterativeDeepening(currentChessState.movesForThisThread, maxDepth, false);
++    ProcessHandler& theFinalCompletedProcessHandler = outcome.theFinalCompletedProcessHandler;
++
+     currentChessState.bestMove = theFinalCompletedProcessHandler.getEngineBestMoveAsStandard();
+     currentChessState.bestMoveScore = theFinalCompletedProcessHandler.getBestEngineMoveScore();
+     currentChessState.report = theFinalCompletedProcessHandler.getFinalReportAsString();
+@@ -3412,3 +3559,241 @@
+     return 0;
+ }
+ 
++// ############################################################
++// [worker] "Kernel.exe --worker": one JSON request per line on stdin, one JSON answer per line on stdout.
++
++using OrderedJson = nlohmann::ordered_json;
++
++const int WORKER_PROTOCOL_VERSION = 1;
++const string WORKER_ENGINE_VERSION = "kernel-worker-prototype-2026-10-25";
++
++double RoundToThreeDecimals(const double& value) {
++    return round(value * 1000.0) / 1000.0;
++}
++
++// Guards the board indexing in convertMoveFromStandardToInt16_t against garbage input.
++bool IsWellFormedStandardMove(const string& move) {
++    if ((move.size() != 4) && (move.size() != 5)) {
++        return false;
++    }
++    if ((move[0] < 'a') || (move[0] > 'h') || (move[2] < 'a') || (move[2] > 'h') ||
++        (move[1] < '1') || (move[1] > '8') || (move[3] < '1') || (move[3] > '8')) {
++        return false;
++    }
++    return (move.size() == 4) || (string("qrbn").find(move[4]) != string::npos);
++}
++
++vector<string> ReadMovesField(const OrderedJson& request, const string& key) {
++    vector<string> moves = request.at(key).get<vector<string>>();
++    for (const string& move : moves) {
++        if (!IsWellFormedStandardMove(move)) {
++            throw invalid_argument("\"" + key + "\" holds a malformed move: \"" + move + "\"");
++        }
++    }
++    return moves;
++}
++
++bool ReadEngineColorField(const OrderedJson& value) {
++    if (value.is_boolean()) {
++        return value.get<bool>();
++    }
++    if (value.is_number_integer()) {
++        return value.get<long long>() != 0;
++    }
++    throw invalid_argument("\"engineColor\" must be true/false (or 1/0)");
++}
++
++OrderedJson AnswerSearchRequest(const OrderedJson& request) {
++
++    const auto setupStart = chrono::high_resolution_clock::now();
++
++    const bool engineColor = ReadEngineColorField(request.at("engineColor"));
++    const vector<string> moves = ReadMovesField(request, "moves");
++    const vector<string> rootMoves = ReadMovesField(request, "rootMoves");
++    const int maxDepth = request.value("maxDepth", 0);
++    const int timeMs = request.value("timeMs", 0);
++    if ((maxDepth < 0) || (maxDepth > 30)) {
++        throw invalid_argument("\"maxDepth\" must be 0 (use timeMs) or 2..30");
++    }
++    if ((maxDepth == 0) && (timeMs <= 0)) {
++        throw invalid_argument("\"timeMs\" must be > 0 when \"maxDepth\" is 0");
++    }
++
++    ResetGameState(engineColor);
++    processHandler.setAllowedTimeInMilliSeconds(timeMs);
++    ReplayMoves(moves);
++    const double setupMs = MillisecondsSince(setupStart);
++
++    const auto searchStart = chrono::high_resolution_clock::now();
++    SearchOutcome outcome = RunIterativeDeepening(rootMoves, maxDepth, true);
++    const double searchMs = MillisecondsSince(searchStart);
++
++    const ProcessHandler& result = outcome.theFinalCompletedProcessHandler;
++    const bool ok = (!rootMoves.empty()) && outcome.completedAtLeastOneDepth;
++
++    OrderedJson answer;
++    answer["type"] = "result";
++    answer["id"] = request.contains("id") ? request["id"] : OrderedJson(nullptr);
++    answer["status"] = rootMoves.empty() ? "no_moves" : (ok ? "ok" : "no_completed_depth");
++    if (ok) {
++        answer["bestMove"] = result.getEngineBestMoveAsStandard();
++        answer["score"] = result.getBestEngineMoveScore();
++        answer["depth"] = (int)result.getEngineDepth();
++    }
++    else {
++        // File mode answers "a8a8" with score 0 here (the null move 0 printed as a square pair).
++        answer["bestMove"] = nullptr;
++        answer["score"] = nullptr;
++        answer["depth"] = 0;
++    }
++    answer["searchMs"] = RoundToThreeDecimals(searchMs);
++    answer["setupMs"] = RoundToThreeDecimals(setupMs);
++    // The last completed depth's main search, the same numbers as the old text report.
++    answer["nodes"] = ok ? result.getTheNumberOfAllTheInnerAndFinalStatesAs64Bit() : 0;
++    answer["leafNodes"] = ok ? result.getTheNumberOfAllTheFinalStates() : 0;
++    answer["pruned"] = ok ? result.getTheNumberOfAllTheBrunedBranchesAs64Bit() : 0;
++
++    long long totalNodes = 0;
++    OrderedJson perDepth = OrderedJson::array();
++    for (const IterationSummary& iteration : outcome.perDepth) {
++        totalNodes += iteration.nodes;
++        OrderedJson entry;
++        entry["depth"] = iteration.depth;
++        entry["completed"] = iteration.completed;
++        entry["ms"] = RoundToThreeDecimals(iteration.ms);
++        entry["nodes"] = iteration.nodes;
++        entry["leafNodes"] = iteration.leafNodes;
++        entry["pruned"] = iteration.pruned;
++        if (iteration.completed) {
++            entry["bestMove"] = processHandler.convertMoveFromInt16_tToStandard(iteration.bestMove);
++            entry["score"] = iteration.score;
++        }
++        entry["statesByRemainingDepth"] = iteration.statesByRemainingDepth;
++        entry["prunedByRemainingDepth"] = iteration.prunedByRemainingDepth;
++        perDepth.push_back(entry);
++    }
++    answer["totalNodes"] = totalNodes;   // every iteration, including an aborted last one
++    answer["perDepth"] = perDepth;
++
++    OrderedJson rootScores = OrderedJson::array();
++    set<string> searchedRootMoves;
++    for (const RootMoveScore& rootMoveScore : outcome.rootScoresOfTheFinalDepth) {
++        const string move = processHandler.convertMoveFromInt16_tToStandard(rootMoveScore.move);
++        searchedRootMoves.insert(move);
++        OrderedJson entry;
++        entry["move"] = move;
++        entry["score"] = rootMoveScore.score;
++        entry["exact"] = rootMoveScore.exact;
++        rootScores.push_back(entry);
++    }
++    answer["rootScores"] = rootScores;
++    // From depth 6 on, the root keeps only its 4 best moves (GetBestMoveAndItsScoreToInitializeProcessHandler).
++    OrderedJson unsearchedRootMoves = OrderedJson::array();
++    if (ok) {
++        for (const string& move : rootMoves) {
++            if (!searchedRootMoves.count(move)) {
++                unsearchedRootMoves.push_back(move);
++            }
++        }
++    }
++    if (!unsearchedRootMoves.empty()) {
++        answer["unsearchedRootMoves"] = unsearchedRootMoves;
++    }
++
++    return answer;
++}
++
++// The only writer of stdout in worker mode. It uses this executable's own C runtime, the same one as the
++// _setmode below: libstdc++-6.dll may be a build linked against another C runtime (Git Bash puts Git's
++// msvcrt-based MinGW first on PATH), and then cout would ignore the _setmode and send "\r\n".
++void WriteProtocolLine(const string& line) {
++    fwrite(line.data(), 1, line.size(), stdout);
++    fputc('\n', stdout);
++    fflush(stdout);
++}
++
++int RunWorkerMode() {
++
++    // stdout carries protocol lines only: from here on, anything else written to cout goes to stderr.
++    streambuf* const originalCoutBuffer = cout.rdbuf(cerr.rdbuf());
++    // Exactly "JSON\n" on the wire (text mode would send "\r\n"); a "\r" sent by the other side is stripped.
++    _setmode(_fileno(stdout), _O_BINARY);
++    _setmode(_fileno(stdin), _O_BINARY);
++
++    const auto initStart = chrono::high_resolution_clock::now();
++    BuildTheTablesOnce();
++    const double initMs = MillisecondsSince(initStart);
++
++    string line;
++    while (getline(cin, line)) {
++
++        if ((!line.empty()) && (line.back() == '\r')) {
++            line.pop_back();
++        }
++        if (line.find_first_not_of(" \t") == string::npos) {
++            continue;
++        }
++
++        OrderedJson answer;
++        OrderedJson id = nullptr;
++        bool quit = false;
++        try {
++            OrderedJson request = OrderedJson::parse(line);
++            if (!request.is_object()) {
++                throw invalid_argument("a request must be a JSON object");
++            }
++            if (request.contains("id")) {
++                id = request["id"];
++            }
++            const string type = request.at("type").get<string>();
++            if (type == "search") {
++                answer = AnswerSearchRequest(request);
++            }
++            else if (type == "hello") {
++                answer["type"] = "ready";
++                answer["protocol"] = WORKER_PROTOCOL_VERSION;
++                answer["engineVersion"] = WORKER_ENGINE_VERSION;
++                answer["pid"] = (long long)GetCurrentProcessId();
++                answer["initMs"] = RoundToThreeDecimals(initMs);
++            }
++            else if (type == "quit") {
++                quit = true;
++            }
++            else {
++                throw invalid_argument("unknown request type \"" + type + "\"");
++            }
++        }
++        catch (const exception& error) {
++            answer = OrderedJson::object();
++            answer["type"] = "error";
++            answer["id"] = id;
++            answer["message"] = error.what();
++        }
++
++        if (quit) {
++            break;
++        }
++        // "replace": an invalid UTF-8 byte echoed in an error message must not throw here.
++        WriteProtocolLine(answer.dump(-1, ' ', false, OrderedJson::error_handler_t::replace));
++    }
++
++    cout.rdbuf(originalCoutBuffer);
++    return 0;
++}
++
++int main(int argc, char* argv[]) {
++
++    // Set the priority of the parent process (The current process)
++    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
++
++    if ((argc >= 2) && (string(argv[1]) == "--worker")) {
++        return RunWorkerMode();
++    }
++
++    if (argc < 2) {
++        cout << "Insufficient argument provided." << endl;
++        return 1;
++    }
++
++    return RunFileMode(argv[1]);
++}
