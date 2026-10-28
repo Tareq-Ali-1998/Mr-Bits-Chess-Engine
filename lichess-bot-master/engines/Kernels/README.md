@@ -42,6 +42,8 @@ Build only, without selecting or starting games:
 
 All managed builds use C++17 and -O2. A source-hash/UTC build label, input hashes and executable SHA256 are saved in a generated `.build.json` receipt. Unchanged builds are reused; a failed compile preserves the previous executable and stops startup. The original source is never overwritten with a variant. Existing production processes must stop before their executables can be rebuilt.
 
+If startup reports **Could not install executable** with Windows **Access is denied**, compilation may have succeeded while replacement of the existing `.exe` failed. Stop any running bot first. A background application can also hold the file; a local investigation identified McAfee Framework Host holding `Engine UCI.exe`. Save your work, restart Windows to release outstanding handles, then run `Launch Server.bat` and choose the version again. If it persists, inspect the named file's permissions and the security application's event history. Compiler-start, executable-install, and build-receipt errors now report their own operation, path, and underlying OS error.
+
 `MRBITS_NEURAL_WEIGHTS_DIR` can override the shared `engines/Neural Networks` installation. Missing required weights stop the launcher before the bot starts. The menu chooses executable/source policy, not which trained weight set was used historically.
 
 ## What to measure

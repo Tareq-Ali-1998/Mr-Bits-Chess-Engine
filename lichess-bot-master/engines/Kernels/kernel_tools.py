@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import sys
 import tempfile
 
 ENGINES = Path(__file__).resolve().parents[1]
@@ -51,6 +52,16 @@ def compiler_environment() -> tuple[str, dict[str, str]]:
     return compiler, env
 
 
+def _cleanup_temporary(path: Path, primary_error: BaseException | None) -> None:
+    try:
+        path.unlink(missing_ok=True)
+    except OSError as error:
+        message = f"Could not remove temporary file '{path}': {error}"
+        if primary_error is None:
+            raise RuntimeError(message) from error
+        print(f"Warning: {message}", file=sys.stderr)
+
+
 def write_json(path: Path, value: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     with tempfile.NamedTemporaryFile(mode="w", encoding="utf-8", dir=path.parent,
@@ -60,7 +71,7 @@ def write_json(path: Path, value: dict) -> None:
     try:
         os.replace(staging, path)
     finally:
-        staging.unlink(missing_ok=True)
+        _cleanup_temporary(staging, sys.exception())
 
 
 def build(source: Path, executable: Path, label: str, *, engines: Path = ENGINES,
@@ -104,21 +115,34 @@ def build(source: Path, executable: Path, label: str, *, engines: Path = ENGINES
     command += ["-o", str(temporary)]
     print(f"Building {label} ({stamp}) ...", flush=True)
     try:
-        subprocess.run(command, cwd=engines, env=env, check=True)
+        try:
+            subprocess.run(command, cwd=engines, env=env, check=True)
+        except OSError as error:
+            raise RuntimeError(f"Could not start compiler '{compiler}' while building '{executable}': {error}") from error
         after_inputs = inputs(source, engines)
         if controller:
             for name in ("sqlite/sqlite3.c", "sqlite/sqlite3.h"):
                 after_inputs[name] = digest(engines / name)
         if after_inputs != expected:
             raise RuntimeError("Source changed during compilation. Build again before selecting it.")
-        os.replace(temporary, executable)
-        write_json(metadata_path, {"schema": "mrbits.local-build.v1", "label": label, "stamp": stamp,
-                                   "inputs": expected, "builder_sha256": builder_sha256,
-                                   "executable_sha256": digest(executable), "command": command})
-    except PermissionError as error:
-        raise RuntimeError("The executable is in use. Stop the bot/engine before rebuilding.") from error
+        try:
+            os.replace(temporary, executable)
+        except OSError as error:
+            raise RuntimeError(
+                f"Could not install executable '{executable}' from '{temporary}': {error}. "
+                "If this engine is running, stop it before rebuilding; otherwise check the file's permissions "
+                "and Windows protection history."
+            ) from error
+        try:
+            write_json(metadata_path, {"schema": "mrbits.local-build.v1", "label": label, "stamp": stamp,
+                                       "inputs": expected, "builder_sha256": builder_sha256,
+                                       "executable_sha256": digest(executable), "command": command})
+        except OSError as error:
+            raise RuntimeError(
+                f"Executable '{executable}' was installed, but could not write build receipt '{metadata_path}': {error}"
+            ) from error
     finally:
-        temporary.unlink(missing_ok=True)
+        _cleanup_temporary(temporary, sys.exception())
     return executable
 
 

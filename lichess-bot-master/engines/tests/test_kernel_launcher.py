@@ -70,6 +70,125 @@ class LauncherTests(unittest.TestCase):
         self.assertEqual(binary.read_bytes(), b"old valid executable")
         self.assertFalse(binary.with_suffix(".build.json").exists())
 
+    def test_denied_compiler_start_reports_compiler_and_native_error(self):
+        source = self.variant("v1"); binary = source.with_suffix(".exe")
+        binary.write_bytes(b"old executable")
+        denied = PermissionError(13, "compiler launch denied", "fake-g++")
+        with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
+             patch.object(tools.subprocess, "run", side_effect=denied), \
+             contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(RuntimeError) as caught:
+                tools.build_kernel("v1", engines=self.root)
+        message = str(caught.exception)
+        self.assertIn("Could not start compiler 'fake-g++'", message)
+        self.assertIn(str(binary), message); self.assertIn(str(denied), message)
+        self.assertNotIn("executable is in use", message)
+        self.assertIs(caught.exception.__cause__, denied)
+        self.assertEqual(binary.read_bytes(), b"old executable")
+
+    def test_denied_executable_install_preserves_binary_and_receipt(self):
+        source = self.variant("v1"); binary = source.with_suffix(".exe")
+        receipt = binary.with_suffix(".build.json")
+        binary.write_bytes(b"old executable"); receipt.write_text("{}")
+        denied = PermissionError(13, "executable replacement denied", str(binary))
+        replace = os.replace
+        def install(source_path, target_path):
+            if Path(target_path) == binary: raise denied
+            return replace(source_path, target_path)
+        def compile(command, **kwargs):
+            Path(command[-1]).write_bytes(b"new executable")
+        with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
+             patch.object(tools.subprocess, "run", side_effect=compile), \
+             patch.object(tools.os, "replace", side_effect=install), \
+             contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(RuntimeError) as caught:
+                tools.build_kernel("v1", engines=self.root)
+        message = str(caught.exception)
+        self.assertIn("Could not install executable", message)
+        self.assertIn(str(binary), message); self.assertIn(str(denied), message)
+        self.assertNotIn("executable is in use", message)
+        self.assertIs(caught.exception.__cause__, denied)
+        self.assertEqual(binary.read_bytes(), b"old executable")
+        self.assertEqual(receipt.read_text(), "{}")
+        self.assertFalse(binary.with_name(binary.stem + ".building.exe").exists())
+
+    def test_denied_receipt_install_reports_installed_binary_and_preserves_primary(self):
+        source = self.variant("v1"); binary = source.with_suffix(".exe")
+        receipt = binary.with_suffix(".build.json")
+        binary.write_bytes(b"old executable"); receipt.write_text("{}")
+        denied = PermissionError(13, "receipt replacement denied", str(receipt))
+        cleanup_denied = PermissionError(13, "receipt temporary cleanup denied")
+        replace, unlink = os.replace, Path.unlink
+        def install(source_path, target_path):
+            if Path(target_path) == receipt: raise denied
+            return replace(source_path, target_path)
+        def remove(path, *args, **kwargs):
+            if path.name.startswith(receipt.name + ".") and path.suffix == ".tmp":
+                raise cleanup_denied
+            return unlink(path, *args, **kwargs)
+        def compile(command, **kwargs):
+            Path(command[-1]).write_bytes(b"new executable")
+        warnings = io.StringIO()
+        with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
+             patch.object(tools.subprocess, "run", side_effect=compile), \
+             patch.object(tools.os, "replace", side_effect=install), \
+             patch.object(Path, "unlink", new=remove), \
+             contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(warnings):
+            with self.assertRaises(RuntimeError) as caught:
+                tools.build_kernel("v1", engines=self.root)
+        message = str(caught.exception)
+        self.assertIn("was installed, but could not write build receipt", message)
+        self.assertIn(str(receipt), message); self.assertIn(str(denied), message)
+        self.assertIs(caught.exception.__cause__, denied)
+        self.assertEqual(binary.read_bytes(), b"new executable")
+        self.assertEqual(receipt.read_text(), "{}")
+        self.assertIn(str(cleanup_denied), warnings.getvalue())
+
+    def test_temporary_cleanup_failure_does_not_hide_compile_failure(self):
+        source = self.variant("v1"); binary = source.with_suffix(".exe")
+        temporary = binary.with_name(binary.stem + ".building.exe")
+        binary.write_bytes(b"old executable")
+        failed = subprocess.CalledProcessError(1, "fake-g++")
+        cleanup_denied = PermissionError(13, "temporary cleanup denied", str(temporary))
+        unlink = Path.unlink
+        def remove(path, *args, **kwargs):
+            if path == temporary: raise cleanup_denied
+            return unlink(path, *args, **kwargs)
+        def compile(command, **kwargs):
+            Path(command[-1]).write_bytes(b"partial compilation")
+            raise failed
+        warnings = io.StringIO()
+        with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
+             patch.object(tools.subprocess, "run", side_effect=compile), \
+             patch.object(Path, "unlink", new=remove), \
+             contextlib.redirect_stdout(io.StringIO()), contextlib.redirect_stderr(warnings):
+            with self.assertRaises(subprocess.CalledProcessError) as caught:
+                tools.build_kernel("v1", engines=self.root)
+        self.assertIs(caught.exception, failed)
+        self.assertIn(str(cleanup_denied), warnings.getvalue())
+        self.assertEqual(binary.read_bytes(), b"old executable")
+
+    def test_temporary_cleanup_failure_alone_is_reported(self):
+        source = self.variant("v1"); binary = source.with_suffix(".exe")
+        temporary = binary.with_name(binary.stem + ".building.exe")
+        cleanup_denied = PermissionError(13, "temporary cleanup denied", str(temporary))
+        unlink = Path.unlink
+        def remove(path, *args, **kwargs):
+            if path == temporary: raise cleanup_denied
+            return unlink(path, *args, **kwargs)
+        def compile(command, **kwargs):
+            Path(command[-1]).write_bytes(b"new executable")
+        with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
+             patch.object(tools.subprocess, "run", side_effect=compile), \
+             patch.object(Path, "unlink", new=remove), contextlib.redirect_stdout(io.StringIO()):
+            with self.assertRaises(RuntimeError) as caught:
+                tools.build_kernel("v1", engines=self.root)
+        self.assertIn("Could not remove temporary file", str(caught.exception))
+        self.assertIn(str(temporary), str(caught.exception))
+        self.assertIs(caught.exception.__cause__, cleanup_denied)
+        self.assertEqual(binary.read_bytes(), b"new executable")
+        self.assertTrue(binary.with_suffix(".build.json").is_file())
+
     def test_prepare_only_never_starts_bot_and_selects_after_builds(self):
         events=[]
         with patch.object(sys,"argv",["launcher","--version","v4","--prepare-only"]), \
