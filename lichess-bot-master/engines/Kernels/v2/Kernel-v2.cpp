@@ -2263,7 +2263,7 @@ void ReturnChanges(const int16_t& currentMove, const int8_t& takenPiece, const i
 
 }
 
-// Neural ordering helpers are intentionally not called by the search yet.
+// Neural ordering helpers shared by the v2 order-only policy below.
 #include "Neural Networks/Move Ordering.hpp"
 
 void SortTheMovesWithLargeNeuralNetwork(vector<int16_t>& moves) {
@@ -2275,6 +2275,55 @@ void SortTheMovesWithSmallNeuralNetwork(vector<int16_t>& moves) {
     if (moves.empty()) return;
     mrbits::kernel_neural::SortMoves(moves, mrbits::kernel_neural::SmallModel());
 }
+
+// Returns a White-perspective score in pawn units for the supplied position.
+float EvaluatePositionWithSmallNeuralNetwork(const int8_t (&position)[8][8], const mrbits::nn::State& state) {
+    return mrbits::kernel_neural::EvaluateSmallPosition(position, state);
+}
+
+// Returns a White-perspective score in pawn units for the supplied position.
+float EvaluatePositionWithLargeNeuralNetwork(const int8_t (&position)[8][8], const mrbits::nn::State& state) {
+    return mrbits::kernel_neural::EvaluateLargePosition(position, state);
+}
+
+// V2 changes move ordering only. These admission reserves are deliberately coarse:
+// the unchanged neural sorter completes a whole batch once it has started.
+namespace mrbits::v2_policy {
+
+constexpr long long SmallMinimumReserveMs = 5, SmallReservePerMoveMs = 1;
+constexpr long long LargeMinimumReserveMs = 100, LargeReservePerMoveMs = 10;
+
+bool CanUseNeuralOrdering(size_t move_count, bool large) {
+    if (move_count < 2) return false;
+    const int allowed = processHandler.getProcessAllowedTimeInMilliSeconds();
+    if (allowed == INT_MAX) return true; // Existing fixed-depth test mode.
+    const auto elapsed = chrono::duration_cast<chrono::milliseconds>(
+        chrono::high_resolution_clock::now() - processHandler.getAllProcessStartTime()).count();
+    const long long remaining = static_cast<long long>(allowed) - elapsed;
+    const long long reserve = max(large ? LargeMinimumReserveMs : SmallMinimumReserveMs,
+        static_cast<long long>(move_count) * (large ? LargeReservePerMoveMs : SmallReservePerMoveMs));
+    return remaining >= reserve;
+}
+
+void OrderInternal(int remaining_depth, vector<int16_t>& moves) {
+    if (moves.size() < 2 || remaining_depth < 2) return;
+    if (remaining_depth >= 3 && CanUseNeuralOrdering(moves.size(), false)) {
+        SortTheMovesWithSmallNeuralNetwork(moves);
+    }
+    else {
+        SortTheMovesWithMySimpleHeuristic(moves);
+    }
+}
+
+void OrderRoot(int search_depth, vector<int16_t>& moves) {
+    if (moves.size() < 2) return;
+    SortTheMovesWithMySimpleHeuristic(moves);
+    if (search_depth >= 4 && CanUseNeuralOrdering(moves.size(), true)) {
+        SortTheMovesWithLargeNeuralNetwork(moves);
+    }
+}
+
+} // namespace mrbits::v2_policy
 
 int MagicForIterativeDeepening(const int8_t& depth, const bool& turn, const int16_t& previousMove, int alpha, int beta) {
 
@@ -2486,109 +2535,8 @@ int Magic(const int8_t& depth, const bool& turn, const int16_t& previousMove, in
 
     }
 
-    // Just a crazy version, I think it will be amazing.
-    if (depth > 1 && depth < 4) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    else if (depth > 3 && depth < 6) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-        
-        /*
-        // I will try this the next time, always remember that odd depths are
-        // bad, lol ;).
-        if (depth == 5) {
-            SortTheMovesAccordingToIterativeDeepening(3, turn, allPossibleMoves);
-        }
-        else {
-            SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-        }
-        */
-    }
-    else if (depth == 6) {
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-        // The following while loop is very risky.
-        while (allPossibleMoves.size() > 4) {
-            allPossibleMoves.pop_back();
-        }
-    }
-    else if (depth > 6) {
-        int8_t depthToGoTo = depth - 3 - (!(depth & 1));
-        SortTheMovesAccordingToIterativeDeepening(depthToGoTo, turn, allPossibleMoves);
-        // The following while loop is risky.
-        while (allPossibleMoves.size() > 4) {
-            allPossibleMoves.pop_back();
-        }
-    }
-
-
-    /*
-    // I am definitely sure that the following version will be a good one, so
-    // let's test it.
-    if (depth > 6) {
-        // The next time I will just change this to 3 and see what would happen.
-        // Thus it will be the exact same old one.
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-    }
-    else if (depth > 3) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth >= 2) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    */
-
-
-    /*
-    // The following simple logic, in a 10 + 10 Rapid game, calculates only
-    // for depths 8 and higher, not a single thread for a depth 6.
-    if (depth > 3) {
-        // I can prove that using "SortTheMovesAccordingToIterativeDeepening" with
-        // odd depths is not correct, It's obvious why, lol ;).
-        // But the next time I will just change this to 3 and see what would happen.
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth >= 2) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    */
-
-
-    /*
-    // The following code idea actually was fast.
-    if (depth < 6 && depth > 1) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    else if (depth == 6) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth > 6) {
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-    }
-    */
-
-
-    /*
-    // Some (maybe) stupid idea, but I don't know.
-    // All the following logic is just a testing to enhance the performance.
-    // It's stupid and I have proved it, but I will try odd depths when trying to sort with
-    // the function "SortTheMovesAccordingToIterativeDeepening(depth, turn, allPossibleMoves)".
-    if (depth >= 2 && depth <= 3) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    else if (depth >=4 && depth <= 6) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth >= 7 && depth <= 8) {
-        // I can prove that using "SortTheMovesAccordingToIterativeDeepening" with
-        // odd depth is not correct, because it's not even.
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-    }
-    else if (depth > 8) {
-        int8_t depthToGoTo = depth - 3 - (!(depth & 1));
-        SortTheMovesAccordingToIterativeDeepening(depthToGoTo, turn, allPossibleMoves);
-    }
-    */
-
+    // V2 only orders this node's moves; alpha-beta below keeps its existing behavior.
+    mrbits::v2_policy::OrderInternal(depth, allPossibleMoves);
 
     int currentScore = turn ? INT_MIN : INT_MAX;
     for (const int16_t& currentMove : allPossibleMoves) {
@@ -2730,9 +2678,6 @@ pair<int16_t, int> GetBestMoveWithItsScore(const int8_t& depth, const bool& turn
 
 }
 
-// ToDo for the following function:
-// I should deal with all depths that are less than 5 because of the following logic
-// I am using: "SortTheMovesAccordingToIterativeDeepening(4, 1, engineSortedMoves)";
 void GetBestMoveAndItsScoreToInitializeProcessHandler(const vector<string>& movesForThisThread) {
 
     vector<int16_t> engineSortedMoves;
@@ -2764,64 +2709,8 @@ void GetBestMoveAndItsScoreToInitializeProcessHandler(const vector<string>& move
     }
 
 
-    // The following will never affect the performance and it's maybe good
-    SortTheMovesWithMySimpleHeuristic(engineSortedMoves);
-
-    // The following piece of logic is amazing, and Yes I am writing comments for myself.
-    // I mean there are some experiments only I can know about it because it's my code.
-    // And if I want to explain it to anyone, at least he should read all the code and
-    // actually not just read, but study it too deeply, so I love this project, it's
-    // a part of my deep programming soul.
-    // Note that this function receives only even depths, so odd ones are not being processed so far.
-    switch (processHandler.getEngineDepth()) {
-        case 1:
-            break;
-
-        case 2:
-            break;
-
-        case 3:
-            break;
-
-        case 4:
-            SortTheMovesAccordingToIterativeDeepening(2, 1, engineSortedMoves);
-            break;
-
-        case 5:
-            SortTheMovesAccordingToIterativeDeepening(2, 1, engineSortedMoves);
-            break;
-
-        case 6:
-            // I can prove that using "SortTheMovesAccordingToIterativeDeepening" with
-            // odd depths is not correct, It's obvious why, lol ;).
-            SortTheMovesAccordingToIterativeDeepening(4, 1, engineSortedMoves);
-            // The following while loop is very risky.
-            while (engineSortedMoves.size() > 4) {
-                engineSortedMoves.pop_back();
-            }
-            break;
-
-        case 7:
-            SortTheMovesAccordingToIterativeDeepening(4, 1, engineSortedMoves);
-            break;
-
-        case 8:
-            SortTheMovesAccordingToIterativeDeepening(6, 1, engineSortedMoves);
-            // The following while loop is risky.
-            while (engineSortedMoves.size() > 4) {
-                engineSortedMoves.pop_back();
-            }
-            break;
-
-        default:
-            int8_t depth = processHandler.getEngineDepth();
-            int8_t depthToGoTo = depth - 3 - (!(depth & 1));
-            SortTheMovesAccordingToIterativeDeepening(depthToGoTo, 1, engineSortedMoves);
-            while (engineSortedMoves.size() > 4) {
-                engineSortedMoves.pop_back();
-            }
-            break;
-    }
+    // The root list is this worker's assigned candidates; retain every one.
+    mrbits::v2_policy::OrderRoot(processHandler.getEngineDepth(), engineSortedMoves);
 
     pair<int16_t, int> bestMoveWithItsScore = GetBestMoveWithItsScore(processHandler.getEngineDepth(), 1,
                                                                       engineSortedMoves);
@@ -3089,7 +2978,7 @@ Json AnswerSearchRequest(const Json& request) {
         rootScores.push_back(rootScore);
     }
     answer["rootScores"] = rootScores;
-    // From depth 6 on, the root keeps only its 4 best moves (GetBestMoveAndItsScoreToInitializeProcessHandler).
+    // Report any assigned root candidates absent from the completed iteration.
     Json unsearchedRootMoves = Json::array();
     if (isOk) {
         for (const string& currentMove : currentChessState.movesForThisThread) {

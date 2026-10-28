@@ -62,6 +62,22 @@ inline const nn::Large& LargeModel() {
     return model;
 }
 
+// Pure value inference: explicit position/state, White-perspective pawn units.
+// The model is immutable; each thread reuses its own fixed scratch workspace.
+inline float EvaluateSmallPosition(const std::int8_t (&position)[8][8], const nn::State& state) {
+    thread_local nn::Small::Workspace workspace;
+    const float score = SmallModel().evaluate(position, state, workspace);
+    if (!std::isfinite(score)) throw std::runtime_error("Small position evaluation produced a non-finite score");
+    return score;
+}
+
+inline float EvaluateLargePosition(const std::int8_t (&position)[8][8], const nn::State& state) {
+    thread_local nn::Large::Workspace workspace;
+    const float score = LargeModel().evaluate(position, state, workspace);
+    if (!std::isfinite(score)) throw std::runtime_error("Large position evaluation produced a non-finite score");
+    return score;
+}
+
 struct ParentPosition {
     std::int8_t cells[8][8];
     std::int16_t move_counts[8][8];

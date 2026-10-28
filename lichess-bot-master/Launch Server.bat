@@ -1,2 +1,5 @@
 @echo off
-powershell -NoExit -Command "python lichess-bot.py"
+setlocal
+cd /d "%~dp0"
+python "engines\Kernels\launch_server.py" %*
+if errorlevel 1 pause

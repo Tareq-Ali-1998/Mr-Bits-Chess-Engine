@@ -19,6 +19,7 @@
 #include "Chess State.hpp"
 // Every move goes into lichess-bot-master\database\mrbits.sqlite.
 #include "Game Database.hpp"
+#include "Kernel Selection.hpp"
 
 // ############################################################ \\
 
@@ -55,8 +56,13 @@ string RootDirectory() {
     return executableDirectory.substr(0, lastSlashIndex);
 }
 
+const mrbits::kernel_selection::Selection& SelectedKernel() {
+    static const auto selected = mrbits::kernel_selection::Read(ExecutableDirectory());
+    return selected;
+}
+
 string KernelExecutableFilePath() {
-    return ExecutableDirectory() + "\\Kernel.exe";
+    return SelectedKernel().executable.string();
 }
 
 string LogsDirectory() {
@@ -338,6 +344,13 @@ int main() {
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
 
     OpenUciLogFile(LogsDirectory());
+    try {
+        WriteToUciLog("   selected kernel version: " + SelectedKernel().version);
+    } catch (const exception& error) {
+        WriteToUciLog(string("!! Kernel selection: ") + error.what());
+        cerr << "Kernel selection: " << error.what() << endl;
+        return 1;
+    }
     char workingDirectory[1024] = "";
     _getcwd(workingDirectory, sizeof(workingDirectory));
     WriteToUciLog("== Engine UCI (build " MRBITS_BUILD_STAMP ") started, pid " + to_string(GetCurrentProcessId()));
@@ -499,7 +512,8 @@ int main() {
             moveRecord["receivedAt"] = goReceivedAt;
             moveRecord["go"] = goParameters;
             moveRecord["totalMs"] = moveTimeInMilliseconds;
-            moveRecord["engineVersion"] = MRBITS_BUILD_STAMP;
+            moveRecord["engineVersion"] = mrbits::kernel_selection::TelemetryLabel(
+                SelectedKernel(), MRBITS_BUILD_STAMP, moveRecord);
             moveRecord["opponent"] = OPPONENT;
             GetTheGameDatabase().recordMove(moveRecord);
 

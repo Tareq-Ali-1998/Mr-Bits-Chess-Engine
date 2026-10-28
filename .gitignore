@@ -83,6 +83,9 @@ venv/
 # Reproducible neural deployment weights belong in release assets, not Git history.
 /lichess-bot-master/engines/Neural Networks/*/weights.bin
 /lichess-bot-master/engines/Kernels/*/*.exe
+/lichess-bot-master/engines/Kernels/*/*.build.json
+/lichess-bot-master/engines/Kernel.build.json
+/lichess-bot-master/engines/Engine UCI.build.json
 /lichess-bot-master/Mr Bits Docs/ChatGPT Neural Network Lab/cpp/build/
 
 # ==== Editors and Windows ===========================================================

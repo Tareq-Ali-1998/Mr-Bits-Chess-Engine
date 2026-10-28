@@ -2276,6 +2276,16 @@ void SortTheMovesWithSmallNeuralNetwork(vector<int16_t>& moves) {
     mrbits::kernel_neural::SortMoves(moves, mrbits::kernel_neural::SmallModel());
 }
 
+// Returns a White-perspective score in pawn units for the supplied position.
+float EvaluatePositionWithSmallNeuralNetwork(const int8_t (&position)[8][8], const mrbits::nn::State& state) {
+    return mrbits::kernel_neural::EvaluateSmallPosition(position, state);
+}
+
+// Returns a White-perspective score in pawn units for the supplied position.
+float EvaluatePositionWithLargeNeuralNetwork(const int8_t (&position)[8][8], const mrbits::nn::State& state) {
+    return mrbits::kernel_neural::EvaluateLargePosition(position, state);
+}
+
 int MagicForIterativeDeepening(const int8_t& depth, const bool& turn, const int16_t& previousMove, int alpha, int beta) {
 
     // I am using the following one because it's too important because have I realized that some

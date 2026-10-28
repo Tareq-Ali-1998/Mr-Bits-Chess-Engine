@@ -1,65 +1,51 @@
 # Kernel experiments
 
-The [two-page complexity guide](../Neural%20Networks/TIME_COMPLEXITY_README.md) explains the per-position and full-sorting costs of both networks.
+Start with [the application/dashboard guide](../../Mr%20Bits%20Docs/START_HERE_KERNELS_AND_DASHBOARD.md). Double-click `Launch Server.bat` in the application folder to choose a Kernel; double-click `Launch Dashboard.bat` for the database viewer.
 
-The original source stays at `engines/Kernel.cpp`. The user requested these two new functions in that original file, with **no search call sites**:
+| Version | Policy | Notes |
+|---|---|---|
+| original | Existing search | `engines/Kernel.cpp` |
+| v1 | Your Large/top-four experiment | User-owned policy remains intact |
+| v2 | Large root + Small internal ordering; keep all candidates | [README](v2/README.md) |
+| v3 | Root-only cutoff: eight quiet moves plus captures/EP/promotions; no cutoff in check | [README](v3/README.md) |
+| v4 | Small ordinary leaves, 0/100 blend; Small sorting from depth six; keep all moves | [README](v4/README.md) |
+
+The versions live in `v1/Kernel-v1.cpp`, etc. They share existing engine headers and trained weights. Move generation, make/undo, worker protocol and existing terminal rules remain shared in behavior; v4 deliberately changes ordinary leaf evaluation. Related disabled ordering experiments were removed only from v2/v3/v4 to improve readability.
+
+## Public neural functions in every Kernel
 
 ```cpp
 void SortTheMovesWithLargeNeuralNetwork(vector<int16_t>& moves);
 void SortTheMovesWithSmallNeuralNetwork(vector<int16_t>& moves);
+float EvaluatePositionWithSmallNeuralNetwork(
+    const int8_t (&position)[8][8], const mrbits::nn::State& state);
+float EvaluatePositionWithLargeNeuralNetwork(
+    const int8_t (&position)[8][8], const mrbits::nn::State& state);
 ```
 
-`v1/Kernel-v1.cpp`, `v2/Kernel-v2.cpp`, and `v3/Kernel-v3.cpp` start as **byte-identical PowerShell copies of that updated original**. No different search policy has been enabled in any version. You can now edit one version without changing the others.
+Both value functions return **White-perspective pawn units**. Their state explicitly supplies White-to-move, retained castling mask (WK1/WQ2/BK4/BQ8), and raw EP file (-1 none,0..7 a..h). v4 converts Small's result to engine-perspective centipawns at its leaf boundary. The Large value wrapper is available in every Kernel and remains uncalled by search; adding it does not change any version's evaluation policy.
 
-## What each sorter does
+The sorters infer the moving side from source pieces, score each committed child once, restore all mutated board/counter/bitboard/score state even on exceptions, and rank White high first / Black low first. They retain all moves themselves; version policy decides any later deletion. Empty lists do not load models. Exact ties retain input order. Input must describe moves for one side at the current initialized node; full legality is not checked by the NN helper.
 
-1. Return immediately for an empty vector, without loading weights.
-2. Load its model once per process, on its first nonempty call.
-3. Commit each supplied move with the existing `MakeChanges` function.
-4. Evaluate the child board with the opposite side to move, retained castling rights, and the raw EP target after a double pawn push.
-5. Restore the parent board, all 64 move counters, both bitboards and both existing evaluation scores, including on exceptions.
-6. Sort the stored neural scores: White high first; Black low first. Exact ties keep the input order. Keep every move.
+Weights load once per model per process, with per-thread scratch. The board is still global: do not run mutating sort calls concurrently on the same process's board. Existing worker processes have separate state. [Evaluation/sorting complexity](../Neural%20Networks/TIME_COMPLEXITY_README.md).
 
-Each move gets **one** neural evaluation. The comparator never runs a network. For `m` moves and inference cost `C`, time is `O(m*C + m log m)` and score storage is `O(m)`. A fixed 216-byte parent snapshot is captured once per call and restored after each child. Scratch buffers are reused per thread and grow only when necessary.
+## Build and selection
 
-This is ordering, not pruning: no move is discarded. No call is installed in `Magic`, iterative deepening or any leaf evaluator. Choosing those sites and testing weighted evaluations are later experiments.
+`Launch Server.bat` discovers positive-numbered `vN` folders containing `Kernel-vN.cpp`. It builds/selects the chosen version and updates Engine UCI if necessary before launching the existing application. The default remains original until the user chooses otherwise. Selection is saved in `engines/kernel-selection.json` and applies to newly started engine processes.
 
-## State and concurrency contract
-
-Supply supported moves for **one side** from the current initialized Kernel position. The moving side comes from the source pieces, not `ENGINE_COLOR`. Use the normal Kernel table initialization before calling. These helpers do not perform full chess legality validation or exact mate/draw adjudication.
-
-No extra turn argument is required by the current API: it reads the source color of the first move, validates that all sources have that color, and gives each child the opposite side to move. For example, when the bot is White but the current search node belongs to Black, the function ranks lower White-perspective scores first. The original search's `turn` flag is engine-relative (`true` means the engine's move), so it must not be confused with a `white_to_move` flag.
-
-Castling rights use the existing home-square piece identities and move counters. This matches positions reconstructed by the Kernel's standard-start replay. If you later add arbitrary FEN input, initialize its explicit castling rights consistently; rights cannot be recovered from board occupancy alone. EP comes from the child-producing move, so the helpers do not need to push/pop `previousMoves` while inspecting children.
-
-The networks are immutable and cached; scratch is private to a thread. **The Kernel board itself is global.** Do not call these mutating helpers concurrently on the same process's board. The existing worker processes have separate globals. Supporting multiple simultaneous boards within one process would require a separate state-ownership change.
-
-## Weights and compilation
-
-The shared implementation is [`../Neural Networks/Move Ordering.hpp`](../Neural%20Networks/Move%20Ordering.hpp). Trained weights remain in `engines/Neural Networks/Small/weights.bin` and `Large/weights.bin`.
-
-The first call searches beside the executable and its ancestors, then the working directory. To select an explicit installation, set this before the process starts:
+Build only, without selecting or starting games:
 
 ```powershell
-$env:MRBITS_NEURAL_WEIGHTS_DIR = 'C:\path\to\engines\Neural Networks'
+# From lichess-bot-master:
+& 'engines/Kernels/Build Version.bat' v2
 ```
 
-Missing or corrupt weights raise an exception; no move-vector write occurs until all scores succeed. The original global state is restored if inference fails. The first successful call includes weight-loading/validation time; subsequent calls reuse the same model even if the environment variable changes.
+All managed builds use C++17 and -O2. A source-hash/UTC build label, input hashes and executable SHA256 are saved in a generated `.build.json` receipt. Unchanged builds are reused; a failed compile preserves the previous executable and stops startup. The original source is never overwritten with a variant. Existing production processes must stop before their executables can be rebuilt.
 
-From the `engines` directory, build an experimental executable without replacing `Kernel.exe`:
+`MRBITS_NEURAL_WEIGHTS_DIR` can override the shared `engines/Neural Networks` installation. Missing required weights stop the launcher before the bot starts. The menu chooses executable/source policy, not which trained weight set was used historically.
 
-```powershell
-g++ -std=c++17 -O2 -I. 'Kernels/v1/Kernel-v1.cpp' -o 'Kernels/v1/Kernel-v1.exe'
-```
+## What to measure
 
-Or run `Kernels/Build Version.bat v1` (also accepts `v2` and `v3`). The `-I.` is necessary because version files include shared engine headers from their original location. This script only compiles; it does not launch games or select a production kernel.
+The [local dashboard](../../database/dashboard/README.md) compares recorded configured variants, outcomes, timing, depths/nodes and failures. Root limits are per worker subset. NN ranking does not guarantee safe pruning; v3 can still drop important quiet checks or sacrifices. v4 neural leaf values are approximate; exact terminal results retain priority. No strength gain is assumed.
 
-## Verification
-
-From the repository root, using the lab's Python environment:
-
-```powershell
-python 'lichess-bot-master/engines/tests/kernel_neural_ordering_test.py'
-```
-
-The script generates independent python-chess children, compares both actual networks against FP32 Python outputs, checks both moving/engine colors, and verifies state restoration, special-move flags, ties, empty input, model caching and failure paths. It runs an isolated test main, not the production engine, Stockfish, or an online game. See the [trained network guide](../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md) for the measured Small/Large accuracy and CPU cost.
+Tests under `engines/tests` cover shared neural state/restoration, v2 retention/time admission, selector mapping and launcher behavior. Run `python tests/run_kernel_policy_tests.py` from `engines` to repeat the persisted v3/v4 checks. Diagnostic proofs are saved in the lab's `diagnostics/kernel-versions-20261028` and related version diagnostic folders. No online games were launched during implementation.

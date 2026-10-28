@@ -366,8 +366,11 @@ code {
     });
   </script>
 <h1 id="neural-evaluators-for-mr-bits">Neural evaluators for Mr. Bits</h1>
-<p><strong>Trained weights, native C++17 inference, no search integration yet.</strong></p>
-<p>Read <a href="../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">the illustrated lesson and results</a> first, then <a href="Small/README.md">Small</a> or <a href="Large/README.md">Large</a>. These evaluators were exported from the completed <code>clean-10m-20261026T080646Z</code> run. The original <code>Kernel.cpp</code>, <code>Engine UCI.cpp</code>, and <code>Stockfish Handler.hpp</code> are unchanged.</p>
+<p><strong>Trained weights, native C++17 inference, and versioned search experiments.</strong></p>
+<p>Use <code>Launch Server.bat</code> in the application folder to choose a Kernel. The <a href="../../Mr%20Bits%20Docs/START_HERE_KERNELS_AND_DASHBOARD.md">startup/dashboard guide</a> gives the short steps.</p>
+<p>Read the short <a href="TIME_COMPLEXITY_README.md">time-complexity README</a> for separate position-evaluation and full move-sorting bounds for both networks.</p>
+<p>Read <a href="../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">the illustrated lesson and results</a> first, then <a href="Small/README.md">Small</a> or <a href="Large/README.md">Large</a>. These evaluators were exported from the completed <code>clean-10m-20261026T080646Z</code> run.</p>
+<p><strong>28 October update:</strong> <code>Kernel.cpp</code> now exposes two neural move-ordering functions, as requested, without calling them anywhere in search. Their shared implementation is <a href="Move%20Ordering.hpp">Move Ordering.hpp</a>. See <a href="../Kernels/README.md">Kernel experiments</a> for the <code>v1</code>, <code>v2</code>, and <code>v3</code> copies, state-restoration contract, and build commands. Engine UCI and Stockfish integration were not edited for this addition.</p>
 <pre class="hljs"><code><div>Neural Networks/
   common.hpp          shared features, checked loader, arithmetic kernels
   example.cpp         runnable starting-position example

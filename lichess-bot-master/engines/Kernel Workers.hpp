@@ -376,6 +376,10 @@ class KernelWorkerPool {
                     if (isTheAnswer) {
                         answers[i].status = "answered";
                         answers[i].message = message;
+                        // Preserve the actual binary build reported in this process's hello.
+                        if (!answers[i].message.contains("engineVersion") && !worker.engineVersion.empty()) {
+                            answers[i].message["engineVersion"] = worker.engineVersion;
+                        }
                         answers[i].milliseconds = chrono::duration<double, milli>(receivedMessage.second -
                                                                                   requestTimes[i]).count();
                         isWaitingForAnswer[i] = false;
@@ -483,6 +487,7 @@ class KernelWorkerPool {
 
   private:
     struct Worker {
+        string engineVersion;                         // hello metadata; guarded by poolMutex
         int number = 0;                                     // 1..N
         unique_ptr<KernelWorkerProcess> process;
         thread readerThread;
@@ -559,6 +564,7 @@ class KernelWorkerPool {
             lock_guard<mutex> lock(this->poolMutex);
             worker.process = move(process);
             worker.inbox.clear();
+            worker.engineVersion.clear();
             worker.isReaderFinished = false;
             worker.isReady = false;
             worker.needsRespawn = false;
@@ -608,6 +614,9 @@ class KernelWorkerPool {
                     nlohmann::json message = worker->inbox.front().first;
                     worker->inbox.pop_front();
                     if (message.value("type", "") == "ready") {
+                        if (message.contains("engineVersion") && message["engineVersion"].is_string()) {
+                            worker->engineVersion = message["engineVersion"].get<string>();
+                        }
                         worker->isReady = true;
                         break;
                     }

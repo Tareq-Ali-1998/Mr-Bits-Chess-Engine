@@ -2263,7 +2263,7 @@ void ReturnChanges(const int16_t& currentMove, const int8_t& takenPiece, const i
 
 }
 
-// Neural ordering helpers are intentionally not called by the search yet.
+// Shared neural loaders/rollback remain unchanged; v3 selects their search call sites below.
 #include "Neural Networks/Move Ordering.hpp"
 
 void SortTheMovesWithLargeNeuralNetwork(vector<int16_t>& moves) {
@@ -2275,6 +2275,98 @@ void SortTheMovesWithSmallNeuralNetwork(vector<int16_t>& moves) {
     if (moves.empty()) return;
     mrbits::kernel_neural::SortMoves(moves, mrbits::kernel_neural::SmallModel());
 }
+
+// Returns a White-perspective score in pawn units for the supplied position.
+float EvaluatePositionWithSmallNeuralNetwork(const int8_t (&position)[8][8], const mrbits::nn::State& state) {
+    return mrbits::kernel_neural::EvaluateSmallPosition(position, state);
+}
+
+// Returns a White-perspective score in pawn units for the supplied position.
+float EvaluatePositionWithLargeNeuralNetwork(const int8_t (&position)[8][8], const mrbits::nn::State& state) {
+    return mrbits::kernel_neural::EvaluateLargePosition(position, state);
+}
+
+// v3 changes only move ordering and root candidate retention.
+namespace v3_ordering {
+constexpr int root_neural_min_depth = 4;
+constexpr int internal_small_min_depth = 3;
+constexpr int simple_ordering_min_depth = 2;
+constexpr size_t root_quiet_limit = 8; // Per worker, PLUS every capture/EP/promotion.
+
+// A read-only geometric guard, used only to DISABLE root pruning.
+// The castling-specific attack helper is not suitable for arbitrary king squares.
+// Missing/duplicate king or an attack means that every root candidate is retained.
+bool RootKingNeedsAllMoves(const bool movingWhite) {
+    int kingRow = -1, kingColumn = -1, kingCount = 0;
+    const int kingCode = 7 | (movingWhite ? 8 : 0);
+    for (int row = 0; row < 8; ++row) {
+        for (int column = 0; column < 8; ++column) {
+            if ((board[row][column] & 15) == kingCode) {
+                kingRow = row; kingColumn = column; ++kingCount;
+            }
+        }
+    }
+    if (kingCount != 1) return true;
+    const int enemyColorBit = movingWhite ? 0 : 8;
+    auto inside = [](int row, int column) {
+        return row >= 0 && row < 8 && column >= 0 && column < 8;
+    };
+    auto enemyAt = [&](int row, int column, int type) {
+        return inside(row, column) && (board[row][column] & 15) == (type | enemyColorBit);
+    };
+    const int pawnRow = kingRow + (movingWhite ? -1 : 1);
+    if (enemyAt(pawnRow, kingColumn - 1, 1) || enemyAt(pawnRow, kingColumn + 1, 1)) return true;
+    constexpr int knightOffsets[8][2] = {
+        {-2,-1}, {-2,1}, {-1,-2}, {-1,2}, {1,-2}, {1,2}, {2,-1}, {2,1}
+    };
+    for (const auto& offset : knightOffsets) {
+        if (enemyAt(kingRow + offset[0], kingColumn + offset[1], 3)) return true;
+    }
+    for (int dr = -1; dr <= 1; ++dr) {
+        for (int dc = -1; dc <= 1; ++dc) {
+            if (dr == 0 && dc == 0) continue;
+            if (enemyAt(kingRow + dr, kingColumn + dc, 7)) return true;
+            const bool diagonal = dr != 0 && dc != 0;
+            for (int row = kingRow + dr, column = kingColumn + dc;
+                 inside(row, column); row += dr, column += dc) {
+                const int piece = board[row][column] & 15;
+                if (!piece) continue;
+                const int type = piece & 7;
+                if ((piece & 8) == enemyColorBit &&
+                    (type == 6 || type == (diagonal ? 4 : 5))) return true;
+                break; // The first piece blocks this ray, regardless of color.
+            }
+        }
+    }
+    return false;
+}
+
+bool IsProtectedRootMove(const int16_t encodedMove) {
+    const auto move = static_cast<uint16_t>(encodedMove);
+    const int type = (move >> 12) & 7;
+    // Captures include the existing engine's king-capture terminal mechanism.
+    return (board[(move >> 6) & 7][(move >> 9) & 7] & 7) != 0 ||
+           type == 1 || type == 2 || type == 3 || type == 6 || type == 7;
+}
+
+void KeepRootCandidates(vector<int16_t>& moves) {
+    if (moves.size() <= root_quiet_limit) return;
+    const auto first = static_cast<uint16_t>(moves.front());
+    const bool movingWhite = (board[first & 7][(first >> 3) & 7] & 8) != 0;
+    if (RootKingNeedsAllMoves(movingWhite)) return;
+    vector<int16_t> retained;
+    retained.reserve(moves.size());
+    size_t quietKept = 0;
+    for (const auto move : moves) {
+        if (IsProtectedRootMove(move)) retained.push_back(move);
+        else if (quietKept < root_quiet_limit) {
+            retained.push_back(move);
+            ++quietKept;
+        }
+    }
+    moves.swap(retained); // Keep the neural order of every retained candidate.
+}
+} // namespace v3_ordering
 
 int MagicForIterativeDeepening(const int8_t& depth, const bool& turn, const int16_t& previousMove, int alpha, int beta) {
 
@@ -2486,109 +2578,18 @@ int Magic(const int8_t& depth, const bool& turn, const int16_t& previousMove, in
 
     }
 
-    // Just a crazy version, I think it will be amazing.
-    if (depth > 1 && depth < 4) {
+
+
+
+
+
+    // Internal nodes are ordered, never truncated: pseudo-legal defenses remain available.
+    if (depth >= v3_ordering::internal_small_min_depth) {
+        SortTheMovesWithSmallNeuralNetwork(allPossibleMoves);
+    }
+    else if (depth >= v3_ordering::simple_ordering_min_depth) {
         SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
     }
-    else if (depth > 3 && depth < 6) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-        
-        /*
-        // I will try this the next time, always remember that odd depths are
-        // bad, lol ;).
-        if (depth == 5) {
-            SortTheMovesAccordingToIterativeDeepening(3, turn, allPossibleMoves);
-        }
-        else {
-            SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-        }
-        */
-    }
-    else if (depth == 6) {
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-        // The following while loop is very risky.
-        while (allPossibleMoves.size() > 4) {
-            allPossibleMoves.pop_back();
-        }
-    }
-    else if (depth > 6) {
-        int8_t depthToGoTo = depth - 3 - (!(depth & 1));
-        SortTheMovesAccordingToIterativeDeepening(depthToGoTo, turn, allPossibleMoves);
-        // The following while loop is risky.
-        while (allPossibleMoves.size() > 4) {
-            allPossibleMoves.pop_back();
-        }
-    }
-
-
-    /*
-    // I am definitely sure that the following version will be a good one, so
-    // let's test it.
-    if (depth > 6) {
-        // The next time I will just change this to 3 and see what would happen.
-        // Thus it will be the exact same old one.
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-    }
-    else if (depth > 3) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth >= 2) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    */
-
-
-    /*
-    // The following simple logic, in a 10 + 10 Rapid game, calculates only
-    // for depths 8 and higher, not a single thread for a depth 6.
-    if (depth > 3) {
-        // I can prove that using "SortTheMovesAccordingToIterativeDeepening" with
-        // odd depths is not correct, It's obvious why, lol ;).
-        // But the next time I will just change this to 3 and see what would happen.
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth >= 2) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    */
-
-
-    /*
-    // The following code idea actually was fast.
-    if (depth < 6 && depth > 1) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    else if (depth == 6) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth > 6) {
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-    }
-    */
-
-
-    /*
-    // Some (maybe) stupid idea, but I don't know.
-    // All the following logic is just a testing to enhance the performance.
-    // It's stupid and I have proved it, but I will try odd depths when trying to sort with
-    // the function "SortTheMovesAccordingToIterativeDeepening(depth, turn, allPossibleMoves)".
-    if (depth >= 2 && depth <= 3) {
-        SortTheMovesWithMySimpleHeuristic(allPossibleMoves);
-    }
-    else if (depth >=4 && depth <= 6) {
-        SortTheMovesAccordingToIterativeDeepening(2, turn, allPossibleMoves);
-    }
-    else if (depth >= 7 && depth <= 8) {
-        // I can prove that using "SortTheMovesAccordingToIterativeDeepening" with
-        // odd depth is not correct, because it's not even.
-        SortTheMovesAccordingToIterativeDeepening(4, turn, allPossibleMoves);
-    }
-    else if (depth > 8) {
-        int8_t depthToGoTo = depth - 3 - (!(depth & 1));
-        SortTheMovesAccordingToIterativeDeepening(depthToGoTo, turn, allPossibleMoves);
-    }
-    */
-
 
     int currentScore = turn ? INT_MIN : INT_MAX;
     for (const int16_t& currentMove : allPossibleMoves) {
@@ -2730,9 +2731,7 @@ pair<int16_t, int> GetBestMoveWithItsScore(const int8_t& depth, const bool& turn
 
 }
 
-// ToDo for the following function:
-// I should deal with all depths that are less than 5 because of the following logic
-// I am using: "SortTheMovesAccordingToIterativeDeepening(4, 1, engineSortedMoves)";
+// Root ordering/retention is applied to this worker's supplied legal move subset.
 void GetBestMoveAndItsScoreToInitializeProcessHandler(const vector<string>& movesForThisThread) {
 
     vector<int16_t> engineSortedMoves;
@@ -2764,63 +2763,10 @@ void GetBestMoveAndItsScoreToInitializeProcessHandler(const vector<string>& move
     }
 
 
-    // The following will never affect the performance and it's maybe good
     SortTheMovesWithMySimpleHeuristic(engineSortedMoves);
-
-    // The following piece of logic is amazing, and Yes I am writing comments for myself.
-    // I mean there are some experiments only I can know about it because it's my code.
-    // And if I want to explain it to anyone, at least he should read all the code and
-    // actually not just read, but study it too deeply, so I love this project, it's
-    // a part of my deep programming soul.
-    // Note that this function receives only even depths, so odd ones are not being processed so far.
-    switch (processHandler.getEngineDepth()) {
-        case 1:
-            break;
-
-        case 2:
-            break;
-
-        case 3:
-            break;
-
-        case 4:
-            SortTheMovesAccordingToIterativeDeepening(2, 1, engineSortedMoves);
-            break;
-
-        case 5:
-            SortTheMovesAccordingToIterativeDeepening(2, 1, engineSortedMoves);
-            break;
-
-        case 6:
-            // I can prove that using "SortTheMovesAccordingToIterativeDeepening" with
-            // odd depths is not correct, It's obvious why, lol ;).
-            SortTheMovesAccordingToIterativeDeepening(4, 1, engineSortedMoves);
-            // The following while loop is very risky.
-            while (engineSortedMoves.size() > 4) {
-                engineSortedMoves.pop_back();
-            }
-            break;
-
-        case 7:
-            SortTheMovesAccordingToIterativeDeepening(4, 1, engineSortedMoves);
-            break;
-
-        case 8:
-            SortTheMovesAccordingToIterativeDeepening(6, 1, engineSortedMoves);
-            // The following while loop is risky.
-            while (engineSortedMoves.size() > 4) {
-                engineSortedMoves.pop_back();
-            }
-            break;
-
-        default:
-            int8_t depth = processHandler.getEngineDepth();
-            int8_t depthToGoTo = depth - 3 - (!(depth & 1));
-            SortTheMovesAccordingToIterativeDeepening(depthToGoTo, 1, engineSortedMoves);
-            while (engineSortedMoves.size() > 4) {
-                engineSortedMoves.pop_back();
-            }
-            break;
+    if (processHandler.getEngineDepth() >= v3_ordering::root_neural_min_depth) {
+        SortTheMovesWithLargeNeuralNetwork(engineSortedMoves);
+        v3_ordering::KeepRootCandidates(engineSortedMoves);
     }
 
     pair<int16_t, int> bestMoveWithItsScore = GetBestMoveWithItsScore(processHandler.getEngineDepth(), 1,
@@ -3089,7 +3035,7 @@ Json AnswerSearchRequest(const Json& request) {
         rootScores.push_back(rootScore);
     }
     answer["rootScores"] = rootScores;
-    // From depth 6 on, the root keeps only its 4 best moves (GetBestMoveAndItsScoreToInitializeProcessHandler).
+    // v3 may omit quiet root candidates from depth 4; captures/EP/promotions and check-node candidates are retained.
     Json unsearchedRootMoves = Json::array();
     if (isOk) {
         for (const string& currentMove : currentChessState.movesForThisThread) {

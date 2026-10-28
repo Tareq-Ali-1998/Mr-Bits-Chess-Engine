@@ -1,6 +1,8 @@
 # Neural evaluators for Mr. Bits
 
-**Trained weights, native C++17 inference, no search integration yet.**
+**Trained weights, native C++17 inference, and versioned search experiments.**
+
+Use `Launch Server.bat` in the application folder to choose a Kernel. The [startup/dashboard guide](../../Mr%20Bits%20Docs/START_HERE_KERNELS_AND_DASHBOARD.md) gives the short steps.
 
 Read the short [time-complexity README](TIME_COMPLEXITY_README.md) for separate position-evaluation and full move-sorting bounds for both networks.
 
