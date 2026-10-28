@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-small-the-compact-mr_bits-neural-evaluator">♟️ Small: the compact Mr_Bits neural evaluator</h1>
+<p style="color:#2563eb"><strong>216,961 learned parameters · FP32 weights · one White-perspective pawn score</strong></p>
+<p>This component deploys the <strong>Small best checkpoint, epoch 20</strong>, from <code>clean-10m-20261026T080646Z</code>. It supplies a standalone C++ evaluator; it does not modify or integrate itself into <code>Kernel.cpp</code>.</p>
+<pre class="hljs"><code><div>782 inputs → Linear(256) → ReLU → Linear(64) → ReLU → Linear(1)
+</div></code></pre>
+<p>The checkpoint was trained on 9,001,091 positions for 20 epochs, with a separate validation split and 499,321 held-out test positions. Its recorded <strong>FP32 test MAE is 117.46930382031158 cp</strong>. This measures agreement with filtered Stockfish search labels, not Elo, best-move recall, or pruning safety. No 95% move-retention claim has been established.</p>
+<h2 id="use-it">Use it</h2>
+<p>Include <code>Small.hpp</code> and keep its exported <code>weights.bin</code>. Add the parent <code>Neural Networks</code> directory to your include search path if using the include below. The runtime weights path is relative to your program's working directory unless you pass an absolute path.</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdint&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;Small/Small.hpp&quot;</span></span>
+
+<span class="hljs-comment">// At startup: load once, and keep this model alive.</span>
+<span class="hljs-keyword">auto</span> model = mrbits::nn::Small::<span class="hljs-built_in">load</span>(<span class="hljs-string">&quot;Small/weights.bin&quot;</span>);
+
+<span class="hljs-comment">// One reusable Workspace for each search thread.</span>
+mrbits::nn::Small::Workspace workspace;
+
+<span class="hljs-comment">// The existing board must be std::int8_t[8][8], a8 at [0][0].</span>
+<span class="hljs-comment">// Supply actual current rights and recorded EP state.</span>
+mrbits::nn::State state{<span class="hljs-literal">true</span>, <span class="hljs-number">15</span>, <span class="hljs-number">-1</span>};
+<span class="hljs-comment">// float white_pawns = model.evaluate(board, state, workspace);</span>
+</div></code></pre>
+<p>The commented final line requires your real <code>board</code> variable. For a complete compiling board example, see the <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">illustrated input and C++ guide</a>.</p>
+<p><code>State</code> contains <code>white_to_move</code>, <code>castling</code>, and <code>ep_file</code>. Castling bits are <strong>White K = 1, White Q = 2, Black K = 4, Black Q = 8</strong>. They record retained rights, not castling legality on this turn. EP is <strong><code>-1</code> none, <code>0</code> file a through <code>7</code> file h</strong>. Preserve a recorded target even if no EP capture is legal.</p>
+<h2 id="board-and-score-contract">Board and score contract</h2>
+<table>
+<thead>
+<tr>
+<th>Kernel cell type</th>
+<th style="text-align:right">Black</th>
+<th style="text-align:right">White</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pawn</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td>Knight</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">11</td>
+</tr>
+<tr>
+<td>Bishop</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">12</td>
+</tr>
+<tr>
+<td>Rook</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">13</td>
+</tr>
+<tr>
+<td>Queen</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">14</td>
+</tr>
+<tr>
+<td>King</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">15</td>
+</tr>
+</tbody>
+</table>
+<p>Empty is zero. The lower three bits are type; bit 3 marks White; higher move-related bits do not alter the represented piece. These are <strong>Kernel codes</strong>, not the dataset's compact piece codes.</p>
+<p>The returned <code>float</code> is <strong>White-perspective pawns</strong>: <code>+1.25f</code> favors White, <code>-1.25f</code> favors Black, independent of whose turn it is. Multiply by 100 only when the receiving search interface expects centipawns. Negate for Black only when converting deliberately to a side-to-move convention.</p>
+<p>The 782 mathematical inputs are <code>12×64</code> binary piece-square features plus turn, four castling flags, and nine one-hot EP choices. No clock or repetition history enters the network. The engine remains responsible for legality, checkmate, stalemate and history-dependent draw rules. The model is for orthodox chess. Its finite scalar output is not an exact mate or probability prediction.</p>
+<h2 id="memory-threading-and-performance">Memory, threading and performance</h2>
+<p>FP32 parameters occupy <strong>867,844 bytes</strong>; the actual <code>weights.bin</code> is <strong>867,908 bytes</strong>, including its 64-byte format header. The original Python <code>best.pt</code> is <strong>2,651,343 bytes</strong>, because it also carries training metadata/state. The C++ Workspace occupies <strong>2,304 bytes</strong> in this implementation.</p>
+<p>Share one loaded model through <code>const</code> references between threads, with <strong>one Workspace per thread</strong>. Copying a model object duplicates its weights. Avoid loading on each node, constructing temporary evaluators per position, or sharing mutable scratch arrays between threads.</p>
+<p>The first projection sums only active binary features; later layers remain dense. The original architecture has <strong>216,640 dense Linear MACs</strong> per position, before activations and overhead. Actual runtime depends on the CPU, compiler, caching, input handling and build options; inspect the deployment benchmark report rather than interpreting this operation count as a timing promise. Avoid <code>-ffast-math</code> in parity-focused builds because it can change numerical behavior and finite checks.</p>
+<p>On the local CPU, median portable C++ latency was <strong>1.652 µs</strong> with prebuilt active features, or <strong>2.200 µs</strong> including compact-78 conversion. AVX2/FMA measured <strong>0.955 µs / 1.213 µs</strong> respectively. Maximum fresh FP32 disagreement against Python was approximately <strong>0.000358 cp</strong> across the two builds and 592 verification positions. These warm serial measurements exclude startup, legal move generation and search; compact conversion is not the Kernel-board conversion. See the <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/reports/cpp-inference-clean-10m-20261026T080646Z/small-verification.json">exact report</a> and <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/reports/cpp-inference-clean-10m-20261026T080646Z/summary.json">shared benchmark scope</a>.</p>
+<p>An optional accumulator path can update the first projection for feature additions/removals. It requires every changed piece <strong>and</strong> turn/castling/EP feature. FP32 addition/subtraction is not perfectly reversible: save/restore the parent raw accumulator (<strong>1,024 bytes per saved Small position</strong>) or rebuild periodically, and test make/unmake drift before integration. The ordinary <code>evaluate(board, state, workspace)</code> path is the starting interface.</p>
+<h2 id="what-to-try-first">What to try first</h2>
+<p>Use the scores to <strong>order legal moves while preserving the complete legal move set</strong>, then measure search time and equal-time games against your existing engine. Low average score error is insufficient evidence to discard all but five moves.</p>
+<p>The source of truth is the <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">full guide</a>, <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/runs/clean-10m-20261026T080646Z/small/test.json">Small FP32 test report</a>, and the export metadata and deployment verification reports accompanying these files. Training/validation used bfloat16 autocast; deployment parity should compare C++ FP32 with Python FP32.</p>
+
+</body>
+</html>

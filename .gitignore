@@ -12,9 +12,10 @@ lichess-bot-master/config.yml
 
 # ==== Huge or derived data: it lives on your drives, not in git =================
 # One 21.4 GB file.
-/Chess Dataset/
+/lichess-bot-master/Mr Bits Docs/ChatGPT Neural Network Lab/Chess Dataset/
 *.zip
 /Mr_Bits_Neural_Lab_Upload.zip.sha256
+/lichess-bot-master/Mr Bits Docs/Mr_Bits_Neural_Lab_Upload.zip.sha256
 *.zst
 # Model weights and arrays. If a small one must be versioned, add a "!path" line below it.
 *.pt
@@ -27,37 +28,40 @@ lichess-bot-master/config.yml
 *.h5
 *.parquet
 
-# ==== Duplicate Stockfish copies: deleted tonight (runbook step 2) ==============
-# The one kept home is lichess-bot-master/engines/stockfish/ (tracked).
+# ==== Stray Stockfish copies ======================================================
+# The one Stockfish lives in lichess-bot-master/engines/stockfish/ (tracked): a copy anywhere else is a mistake
+# (or a rollback's temporary copy, see Mr Bits Docs/IPC and Game Database Plan/04 - Runbook for Tonight.md).
 lichess-bot-master/stockfish/
 lichess-bot-master/stockfish-windows-x86-64-avx2.exe
 lichess-bot-master/engines/stockfish-windows-x86-64-avx2.exe
-# The renamed copies during that step (stockfish.old, *.exe.old).
 *.old
 
 # ==== Runtime output of the engine and the bot ==================================
-# Text files are runtime output by default (temp_command_file.txt, daily_challenge_times.txt, ...).
+# Text files are runtime output by default (daily_challenge_times.txt, ...).
 *.txt
 !lichess-bot-master/requirements.txt
 !lichess-bot-master/test_bot/test-requirements.txt
+!/lichess-bot-master/Mr Bits Docs/ChatGPT Neural Network Lab/requirements.txt
 # Stockfish's licence (GPL v3) and contributor list travel with its binary.
 !lichess-bot-master/engines/stockfish/*.txt
 # Uncomment to version your notes in "ToDo Stuff" too:
 # !/ToDo Stuff/**/*.txt
 *.log
-lichess-bot-master/input/
-lichess-bot-master/logs/
+# Engine UCI's text logs (one file per engine start) and lichess-bot's own logs.
+lichess-bot-master/engines/logs/
 lichess-bot-master/lichess_bot_auto_logs/
-# Per-move text reports: one file per move, grows every game (a fresh history, plan 02 Phase 4).
-lichess-bot-master/history/
-lichess-bot-master/old_history/
+# The game database (+ its -wal and -shm files) and its backups: personal data that grows every game.
+lichess-bot-master/database/*.sqlite*
+lichess-bot-master/database/backup/
 # PGN files, if config.yml's pgn_directory ever points inside the repo.
 lichess-bot-master/game_records/
-# Plan 03's database (+ its -wal/-shm and backups) and the engine's telemetry: personal data that grows.
-lichess-bot-master/data/
-lichess-bot-master/telemetry/
-# Test output of the Phase 2 equivalence test (~146 files per run).
-**/stretch-phase2-kernel-worker/runs/
+# Rollback copies (04 - Runbook): backup-phase1/, and backup-v4/ if you make one. Delete them once the new
+# engine has played its games.
+lichess-bot-master/engines/backup-*/
+# Only after a rollback to an older engine, which writes these again (JSON files, text reports, logs).
+lichess-bot-master/input/
+lichess-bot-master/history/
+lichess-bot-master/logs/
 
 # ==== Python ======================================================================
 __pycache__/
@@ -70,10 +74,16 @@ venv/
 .ruff_cache/
 
 # ==== C++ build leftovers =========================================================
-# Engine UCI.exe and Kernel.exe ARE tracked on purpose: the bot runs them.
+# Engine UCI.exe and Kernel.exe ARE tracked on purpose: the bot runs them. engines/sqlite/sqlite3.o isn't:
+# Build Engines.bat compiles it again when it's missing.
 *.o
 *.obj
 *.gch
+
+# Reproducible neural deployment weights belong in release assets, not Git history.
+/lichess-bot-master/engines/Neural Networks/*/weights.bin
+/lichess-bot-master/engines/Kernels/*/*.exe
+/lichess-bot-master/Mr Bits Docs/ChatGPT Neural Network Lab/cpp/build/
 
 # ==== Editors and Windows ===========================================================
 .claude/settings.local.json

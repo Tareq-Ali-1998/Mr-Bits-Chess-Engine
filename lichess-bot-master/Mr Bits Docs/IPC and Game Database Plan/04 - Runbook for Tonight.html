@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>04 - Runbook for Tonight.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="-tonights-runbook--whats-done-and-whats-left-for-you">🌙 Tonight's Runbook — What's Done, and What's Left for You</h1>
+<p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝 <em>v1, October 25: Phase 1 (one Stockfish) · <strong>v2, October 27: the Kernel worker pool, the game database, one <code>ChessState</code> and the clean folders are in your folder, built and tested there</strong></em></p>
+<div style="background:linear-gradient(90deg,#0f766e,#1d4ed8);color:#ffffff;border-radius:14px;padding:16px 22px;margin:16px 0;">
+<p><strong>Tonight in one sentence:</strong> everything is built and tested in your real folder (28 Kernel workers alive all game, every move in <code>database\mrbits.sqlite</code>, one <code>ChessState</code>, three clean folders), so what's left is <strong>3 live games</strong>, <strong>a look at the database</strong>, the <strong>first lichess sync</strong>, and <strong>your commit</strong>. ≈ 1 hour. 🚀</p>
+</div>
+<hr />
+<h2 id="-what-i-did-in-your-folder-october-27">✅ What I did in your folder (October 27)</h2>
+<table>
+<thead>
+<tr>
+<th>What</th>
+<th>Where</th>
+<th>Proof</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>The engine</strong></td>
+<td><code>engines\</code>: <code>Engine UCI.cpp</code>, <code>Kernel.cpp</code>, and the new <code>Chess State.hpp</code>, <code>Kernel Workers.hpp</code>, <code>Game Database.hpp</code>, <code>Engine Log.hpp</code>, <code>sqlite\</code>, <code>Build Engines.bat</code>, <code>tests\</code>. Both <code>.exe</code> built with <code>Build Engines.bat</code> (stamp <code>2026-10-27_02-36-51</code>)</td>
+<td>The 3 engine tests, run from your real folder: <strong>183/183</strong>, <strong>27/27</strong>, and <strong>0 mismatches</strong> against your production <code>Kernel.exe</code></td>
+</tr>
+<tr>
+<td><strong>The database</strong></td>
+<td><code>database\</code>: <code>schema.sql</code>, <code>db.py</code>, <code>queries.py</code>, <code>sync_lichess.py</code>, <code>tests\</code></td>
+<td><code>python -m unittest discover -s tests</code>: <strong>130/130</strong></td>
+</tr>
+<tr>
+<td><strong>The folders</strong></td>
+<td><code>Mr Bits Docs\</code> holds this plan now. Deleted: <code>input\</code>, <code>history\</code>, <code>stockfish.old\</code>, the two <code>stockfish-windows-x86-64-avx2.exe.old</code>, and the plan's old <code>tested-files\</code></td>
+<td>The Stockfish copies were byte-identical to <code>engines\stockfish\</code> and used by nothing (checked: no code reference, no process)</td>
+</tr>
+<tr>
+<td><strong>A rollback copy of Phase 1</strong></td>
+<td><code>engines\backup-phase1\</code> (git ignores it): Phase 1's <code>Engine UCI.cpp</code>, <code>Engine UCI.exe</code>, <code>Stockfish Handler.hpp</code></td>
+<td>Byte-identical to what was in <code>engines\</code> before (hashes checked)</td>
+</tr>
+<tr>
+<td><strong>Small edits</strong></td>
+<td><code>.gitignore</code> (the new folders), <code>extra_game_handlers.py</code> (its comment only)</td>
+<td><code>git status</code> below</td>
+</tr>
+</tbody>
+</table>
+<div style="background:#fffbeb;border-left:6px solid #d97706;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>⚠️ Ground rules</strong></p>
+<ol>
+<li><strong>PowerShell or <code>Launch Server.bat</code> only, never Git Bash.</strong> Git Bash puts Git's own <code>libstdc++-6.dll</code> first on PATH, so the engines would run on a different C runtime.</li>
+<li><strong>After every rebuild: <code>Build Engines.bat test</code></strong> (it builds, checks that Windows lets both <code>.exe</code> run, then plays the test games). Smart App Control still blocks some fresh builds: just run the <code>.bat</code> again.</li>
+<li><strong>Nobody prints <code>config.yml</code>:</strong> it holds the token. <code>sync_lichess.py</code> reads it and never prints it.</li>
+</ol>
+</div>
+<p><strong>Paste this first in every new PowerShell window:</strong></p>
+<pre><code class="language-powershell">$repo = &quot;C:\Users\tareq\Desktop\Mr_Bits&quot;
+$lb   = &quot;$repo\lichess-bot-master&quot;
+</code></pre>
+<hr />
+<h2 id="step-1--three-live-games-yours-4560-min">Step 1 · Three live games (yours, 45–60 min)</h2>
+<p>Start the bot the usual way: <strong>double-click <code>Launch Server.bat</code></strong>.</p>
+<ol>
+<li><strong>At bot startup</strong>, lichess-bot opens and closes the engine once to check it: Stockfish starts and stops once, and <strong>no Kernel worker starts</strong> (they start with each game). The database (<code>database\mrbits.sqlite</code>) already exists, empty: the first game writes its first rows.</li>
+<li><strong>Play 3 games</strong> (challenge the bot, or let matchmaking run). Try for one longer game (more than 80 plies, i.e. past move 41: the Stockfish endgame path).</li>
+<li><strong>While a game runs</strong>, in a second PowerShell (paste the 2 variables first):</li>
+</ol>
+<pre><code class="language-powershell">Get-Process Kernel, stockfish* -ErrorAction SilentlyContinue | Where-Object { $_.Path -like &quot;$lb\*&quot; } | Group-Object ProcessName | Select-Object Name, Count
+#   expect: Kernel 28 and stockfish... 1, per game that's running
+$log = Get-ChildItem &quot;$lb\engines\logs\uci_*.log&quot; | Sort-Object LastWriteTime | Select-Object -Last 1
+Get-Content $log.FullName -Tail 15            # live: &gt;&gt; commands, &lt;&lt; answers, &quot;go -&gt; bestmove took N ms (kernel, game '...')&quot;
+Select-String -Path $log.FullName -Pattern '!!'   # must stay empty
+</code></pre>
+<ol start="4">
+<li><strong>After each game:</strong> no <code>Kernel</code> and no <code>stockfish</code> process is left from <code>$lb</code>.</li>
+</ol>
+<p>✅ <strong>Done when</strong> 3 games finish normally (any result 😄), with no <code>!!</code> line in their logs.</p>
+<p>What's normal and not a reason to roll back:</p>
+<ul>
+<li>the first two moves of each side are Stockfish's (depth 14–20, well under a second);</li>
+<li>a Kernel move thinks up to the ladder's budget (≈ 50–66 s in a 2–3 minute game: see the README's side discoveries);</li>
+<li>once more than 80 plies are played (ply 82 and later), Stockfish plays on purpose: depth 18–26 with 15 s or more on your clock (~0.5–3 s), 14–16 with less.</li>
+</ul>
+<hr />
+<h2 id="step-2--look-at-the-database-5-min">Step 2 · Look at the database (5 min)</h2>
+<pre><code class="language-powershell">cd $lb
+python database\db.py --check                 # integrity check, foreign keys + the number of rows in every table
+python database\db.py --recent                # the newest 12 moves (what decided each one, how long it took) and events
+python database\db.py --recent 40             # ... or the newest 40
+</code></pre>
+<p>The moves look like this (two lines from the fault test, where every worker was killed before ply 13, so Stockfish played it; a Kernel move shows its score and how many workers searched it):</p>
+<pre><code class="language-text">  2026-10-27 03:10:43  pOoLtEsT  ply  15  kernel             e1g1   score -110  28 workers, allowed 5 s, took 1902 ms
+  2026-10-27 03:10:39  pOoLtEsT  ply  13  no_kernel_answer   b5c6               0 workers, allowed 3 s, took 72 ms
+</code></pre>
+<p>The events are every problem the engine noticed (dead or late workers, fallbacks to Stockfish, restarts): in normal games there are <strong>none</strong>. To browse everything with a GUI, <a href="https://sqlitebrowser.org/">DB Browser for SQLite</a> opens the file directly, and reading is always fine, even during a game. ⚠️ But <em>unsaved edits</em> hold a write lock: while one is held, every record the engine stores waits up to 5 s and is then skipped (the engine's log says <code>!! database: ... was not stored</code>). A short lock costs nothing; a long one loses the moves played meanwhile. So click <em>Write Changes</em> or <em>Revert Changes</em> before a game starts.</p>
+<hr />
+<h2 id="step-3--the-first-lichess-sync-after-the-games-2-min">Step 3 · The first lichess sync (after the games, 2 min)</h2>
+<p>The engine stores its own side of every move. The <strong>results, ratings, rating changes, clocks and openings</strong> come from lichess, through the bot's token:</p>
+<pre><code class="language-powershell">cd $lb
+python database\sync_lichess.py --since 2026-10-27        # the go-live date (a local date): games from that day on
+python database\db.py --check                                   # games and moves have rows now
+</code></pre>
+<p>Run it <strong>between games</strong> (it uses the bot's token and IP). Later runs need no <code>--since</code>: it continues from where it stopped.</p>
+<h2 id="step-4--a-backup-any-time">Step 4 · A backup (any time)</h2>
+<pre><code class="language-powershell">python database\db.py --backup                # a consistent copy in database\backup\ (safe while a game runs)
+</code></pre>
+<hr />
+<div style="background:#fef2f2;border-left:6px solid #dc2626;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🔙 Rollback, any time</strong> (an illegal move, a crash, a real hang, anything odd).</p>
+<p>⚠️ <strong>A rollback overwrites the new engine files</strong>, and tonight's work isn't committed yet. Best: <strong>commit before the live games</strong> (the message is in the Git notes below); then going forward again is one <code>git restore --source=HEAD</code>. If you haven't committed, copy them aside first (git ignores <code>engines\backup-*\</code>):</p>
+<pre><code class="language-powershell">New-Item -ItemType Directory &quot;$lb\engines\backup-v4&quot; | Out-Null
+Copy-Item &quot;$lb\engines\Engine UCI.cpp&quot;, &quot;$lb\engines\Engine UCI.exe&quot;, &quot;$lb\engines\Kernel.cpp&quot;, &quot;$lb\engines\Kernel.exe&quot;, &quot;$lb\engines\Stockfish Handler.hpp&quot;, &quot;$lb\extra_game_handlers.py&quot; &quot;$lb\engines\backup-v4\&quot;
+</code></pre>
+<p>Press Ctrl+C in the bot's window, then stop whatever is left (Windows won't let anything replace a running <code>.exe</code>):</p>
+<pre><code class="language-powershell">Get-Process -Name &quot;Engine UCI&quot;, Kernel, stockfish* -ErrorAction SilentlyContinue |
+    Where-Object { $_.Path -like &quot;$lb\*&quot; } | Stop-Process -Force
+</code></pre>
+<p><strong>A · Back to Phase 1</strong> (one Stockfish, but the old 28 threads + JSON files). Phase 1 was never committed, so its files are in <code>engines\backup-phase1\</code>:</p>
+<pre><code class="language-powershell">cd &quot;$lb\engines&quot;
+Copy-Item &quot;backup-phase1\Engine UCI.exe&quot;, &quot;backup-phase1\Engine UCI.cpp&quot;, &quot;backup-phase1\Stockfish Handler.hpp&quot; . -Force
+git -C $repo restore --source=46151b4 -- &quot;lichess-bot-master/engines/Kernel.cpp&quot; &quot;lichess-bot-master/engines/Kernel.exe&quot;
+</code></pre>
+<p>Phase 1's engine creates <code>input\</code>, <code>history\</code> and <code>logs\</code> (in <code>lichess-bot-master\</code>) by itself.</p>
+<p><strong>B · Back to the version from before any AI change</strong> (your initial commit):</p>
+<pre><code class="language-powershell">cd $repo
+git restore --source=46151b4 -- &quot;lichess-bot-master/engines/Engine UCI.cpp&quot; &quot;lichess-bot-master/engines/Engine UCI.exe&quot; &quot;lichess-bot-master/engines/Kernel.cpp&quot; &quot;lichess-bot-master/engines/Kernel.exe&quot; &quot;lichess-bot-master/engines/Stockfish Handler.hpp&quot; lichess-bot-master/extra_game_handlers.py
+cd $lb
+Copy-Item -Recurse engines\stockfish stockfish      # that engine looks for Stockfish in its working folder
+New-Item -ItemType Directory input | Out-Null       # it writes its JSON files there, and never creates the folder
+</code></pre>
+<p>⚠️ In B, <code>extra_game_handlers.py</code> <strong>must</strong> come back too: the old engine doesn't declare <code>GameId</code>, so python-chess would refuse every game.</p>
+<p>Restart the bot: it runs exactly like before. The new files (headers, <code>tests\</code>, <code>database\</code>) can stay: the old engines never look at them. To go forward again: <code>git restore --source=HEAD -- &lt;the same files&gt;</code> (if v4 is committed), or copy the files back from <code>engines\backup-v4\</code>; then delete <code>lichess-bot-master\stockfish\</code> and <code>input\</code> again.</p>
+</div>
+<hr />
+<h2 id="-git-notes-git-is-yours-these-are-just-the-facts">🧷 Git notes (git is yours; these are just the facts)</h2>
+<p><strong>What changed, for your commit</strong> (<code>git status</code> will show exactly these, plus the neural-network lab's own changes):</p>
+<table>
+<thead>
+<tr>
+<th>Path</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>lichess-bot-master/engines/Engine UCI.cpp</code> · <code>Engine UCI.exe</code></td>
+<td>The pool, the database, no more files per move (on top of Phase 1, which was never committed)</td>
+</tr>
+<tr>
+<td><code>lichess-bot-master/engines/Kernel.cpp</code> · <code>Kernel.exe</code></td>
+<td>The worker <code>main()</code>; the search is unchanged</td>
+</tr>
+<tr>
+<td><code>lichess-bot-master/engines/Chess State.hpp</code> · <code>Kernel Workers.hpp</code> · <code>Game Database.hpp</code> · <code>Engine Log.hpp</code></td>
+<td>New</td>
+</tr>
+<tr>
+<td><code>lichess-bot-master/engines/Stockfish Handler.hpp</code></td>
+<td>Phase 1's persistent Stockfish (+ one comment)</td>
+</tr>
+<tr>
+<td><code>lichess-bot-master/engines/sqlite/</code> · <code>Build Engines.bat</code> · <code>tests/</code></td>
+<td>New (<code>sqlite3.o</code> is ignored: the <code>.bat</code> compiles it)</td>
+</tr>
+<tr>
+<td><code>lichess-bot-master/database/</code></td>
+<td>New (<code>mrbits.sqlite</code> and <code>backup/</code> are ignored)</td>
+</tr>
+<tr>
+<td><code>lichess-bot-master/Mr Bits Docs/IPC and Game Database Plan/</code></td>
+<td>The docs, moved here from <code>lichess-bot-master/IPC and Game Database Plan/</code> (git shows delete + new until you <code>git add -A</code>, then renames)</td>
+</tr>
+<tr>
+<td><code>lichess-bot-master/extra_game_handlers.py</code></td>
+<td><code>return {&quot;GameId&quot;: game.id}</code> (Phase 1) + its comment</td>
+</tr>
+<tr>
+<td><code>.gitignore</code></td>
+<td>The engine's logs, the database files and backups, the rollback copies (<code>engines/backup-*/</code>). <code>data/</code>, <code>telemetry/</code>, <code>old_history/</code> are gone; <code>input/</code>, <code>history/</code>, <code>logs/</code> stay only for a rollback (the old engines write them)</td>
+</tr>
+</tbody>
+</table>
+<p>A message you could use:</p>
+<pre><code>Engine UCI: persistent Kernel workers, one Stockfish, every move in SQLite
+
+- Kernel.cpp is a worker now: Engine UCI starts 28 of them once per game and
+  sends each one request line per move over a pipe (the same ChessState the
+  JSON file used to hold); the answer is one line. No more input\ files,
+  cmd.exe or new processes per move. The search itself is unchanged: 144/144
+  answers identical to the old Kernel.exe at the same depth.
+- Stockfish Handler.hpp: one Stockfish, started once per game (Phase 1).
+- Chess State.hpp: the one ChessState, included by Engine UCI and Kernel.
+- Game Database.hpp + database/: every move, every worker, every depth and
+  every candidate move goes into database/mrbits.sqlite after &quot;bestmove&quot;
+  (no more history\ reports); sync_lichess.py adds lichess's results.
+- Build Engines.bat and tests/: build, launch check, and three tests.
+- The docs moved into Mr Bits Docs/; the old Stockfish copies are deleted.
+</code></pre>
+<p><strong>Facts worth knowing:</strong></p>
+<ul>
+<li><strong>Push:</strong> <code>git push</code> (GitHub, your upstream) and <code>git push gitlab main</code>. Never <code>--all</code> or <code>--mirror</code>: the other AI agent writes its undo snapshots into your <code>.git</code> as <code>refs/codex/...</code>.</li>
+<li><strong>Big files:</strong> Git for Windows <strong>silently truncates any file over 4 GiB</strong>, and GitHub rejects files over 100 MB. The biggest new file is <code>engines\sqlite\sqlite3.c</code> (9.6 MB): fine.</li>
+<li><strong>Line endings:</strong> warnings like <em>&quot;LF will be replaced by CRLF&quot;</em> are harmless (<code>core.autocrlf=true</code>).</li>
+</ul>
+<hr />
+<h2 id="-appendix-the-tests-all-in-enginestests-and-databasetests">📦 Appendix: the tests (all in <code>engines\tests\</code> and <code>database\tests\</code>)</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Run it from</th>
+<th>What it proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>engine_test.py</code></td>
+<td><code>cd $lb\engines; python -B tests\engine_test.py</code> (or <code>Build Engines.bat test</code>)</td>
+<td>lichess-bot's startup check + 3 games, every database row checked (~1 min)</td>
+</tr>
+<tr>
+<td><code>kernel_workers_test.py</code></td>
+<td><code>cd $lb\engines; python -B tests\kernel_workers_test.py</code></td>
+<td>dead / frozen / all-dead workers, a hard kill (~1 min)</td>
+</tr>
+<tr>
+<td><code>kernel_equivalence_test.py</code></td>
+<td><code>cd $lb\engines; python -B tests\kernel_equivalence_test.py --reference &lt;another Kernel.exe&gt;</code> (an old file-mode one with the default <code>--reference-mode file</code>, or another worker build with <code>--reference-mode worker</code>)</td>
+<td>the Kernel still thinks exactly like before (~1 min)</td>
+</tr>
+<tr>
+<td><code>database\tests\</code></td>
+<td><code>cd $lb\database; python -m unittest discover -s tests</code></td>
+<td>the init, the backup, the sync (offline fixtures), every dashboard filter</td>
+</tr>
+</tbody>
+</table>
+<p>The engine tests never touch the real database (they point <code>MRBITS_DATABASE_FILE</code> at a temporary one) and play from an empty temporary folder.</p>
+<p>— <strong>Claude Opus 5.5</strong> 🤖</p>
+
+</body>
+</html>

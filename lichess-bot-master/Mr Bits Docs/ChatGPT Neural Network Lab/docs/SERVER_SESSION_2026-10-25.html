@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>SERVER_SESSION_2026-10-25.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="server-session-25-october-2026">Server session: 25 October 2026</h1>
+<p>This record is based on terminal output supplied by Tareq. Commands are run by him on the server; the assistant has no direct SSH session.</p>
+<h2 id="verified-milestone">Verified milestone</h2>
+<ul>
+<li>Remote working directory: <code>/home/Mr-Bits-Neural-Lab/ChatGPT Neural Network Lab</code>.</li>
+<li>ZIP checksum passed and <code>verify_upload.py</code> verified 71 payload files.</li>
+<li>Ubuntu initially lacked <code>ensurepip</code>. Installing <code>python3.12-venv</code>, followed by <code>python3 -m venv --system-site-packages .venv</code>, resolved that prerequisite.</li>
+<li><code>00_setup.sh</code> installed Torch 2.10.0+cu128 and the reference dependencies into the server's Python 3.12 environment.</li>
+<li>Both setup's doctor and the explicit <code>01_check.sh --require-cuda --strict-deps</code> completed successfully.</li>
+<li>Passed checks: CPU FP32, real lab CPU step, CUDA FP32, CUDA BF16, real deterministic lab CUDA step, NumPy/Torch bridge, chess rules, Zstandard, Rich, PNG plotting, and TensorBoard event writing.</li>
+</ul>
+<p>The first actual GPU/software compatibility milestone is complete. Do not repeat setup unless a new failure or environment change warrants it.</p>
+<h2 id="data-status">Data status</h2>
+<p><code>data/local-100k/</code> was included in the ZIP. It contains 89,995 train / 4,979 validation / 5,026 test positions from a bounded source-prefix pilot. The original 22 GB archive is separate; its transfer to <code>../raw/lichess_db_eval.jsonl.zst</code> was requested, but completion has not yet been verified.</p>
+<h2 id="next-checkpoint">Next checkpoint</h2>
+<p>Measure the small model's real batch throughput with the same zero-worker loader used by the starter pilot:</p>
+<pre class="hljs"><code><div>bash scripts/07_benchmark.sh small data/local-100k benchmarks/small-batches.json \
+  --device cuda --workers 0 --batches 1024 2048 4096 16384 --steps 30
+</div></code></pre>
+<p>Then run the small pilot with its existing batch-2,048/five-epoch configuration in a fresh run directory:</p>
+<pre class="hljs"><code><div>bash scripts/03_train.sh small data/local-100k runs/pilot-small --device cuda
+bash scripts/05_evaluate.sh runs/pilot-small data/local-100k
+</div></code></pre>
+<p>Review actual benchmark output and learning curves. Benchmark throughput alone does not select an accuracy-optimal batch. The pilot is an end-to-end test before broader data preparation and serious scaling; no 95% retention claim is warranted.</p>
+<h2 id="completed-first-small-model-gpu-pilot">Completed first small-model GPU pilot</h2>
+<p>Tareq supplied the successful benchmark, five-epoch training, and evaluation/export output.</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Requested batch</th>
+<th style="text-align:right">Observed training positions/s</th>
+<th style="text-align:right">Peak allocated MiB</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">1,024</td>
+<td style="text-align:right">109,682</td>
+<td style="text-align:right">76.42</td>
+</tr>
+<tr>
+<td style="text-align:right">2,048</td>
+<td style="text-align:right">145,490</td>
+<td style="text-align:right">84.52</td>
+</tr>
+<tr>
+<td style="text-align:right">4,096</td>
+<td style="text-align:right">131,891</td>
+<td style="text-align:right">101.71</td>
+</tr>
+<tr>
+<td style="text-align:right">16,384</td>
+<td style="text-align:right">138,786</td>
+<td style="text-align:right">198.67</td>
+</tr>
+</tbody>
+</table>
+<p>Each trial measured only 30 steps after two warm-ups; some trials lasted less than one second. Batch 2,048 was fastest in these observations, not a proven universal optimum. The small network's low memory footprint is expected from its 216,961 parameters; this does not demonstrate full GPU compute utilization.</p>
+<p>The actual <code>runs/pilot-small</code> run used CUDA BF16 autocast, batch 2,048, seed 20261023, five epochs and 220 optimizer updates. Validation Huber decreased from 1.0492 to 0.88409; validation MAE decreased from 136.2 to about 120.0 cp. Best epoch: 5.</p>
+<p>Test evaluation on 5,026 positions reported MAE 118.9413 cp, RMSE 221.3048 cp, 54.60% within 50 cp, and 70.47% within 100 cp. Reference MAEs: constant zero 137.1301 cp; basic material 155.8575 cp. These are finite-cp regression metrics, not move-retention accuracy. Low-material test MAE was 216.66 cp, indicating substantial remaining weakness.</p>
+<p>Plotting generated <code>runs/pilot-small/curves.png</code>; serialized export parity had zero measured max absolute difference. Best checkpoint SHA-256: <code>b6f5adbb205d98675ba03251b30aaea7f4d5ce72d5ec4ee3f564f6c35575be11</code>.</p>
+<p>The earlier CPU demo used a different seed and batch, and made 880 updates rather than 220. Its lower error is not evidence that CPU training is inherently better. Compare fixed data and controlled learning budgets.</p>
+<p>The trailing <code>bash: runs/pilot-small/: Is a directory</code> was caused by entering the folder path as a command after successful evaluation. To inspect it, use <code>ls -lh runs/pilot-small</code>.</p>
+<h2 id="next-actions-after-this-result">Next actions after this result</h2>
+<ol>
+<li>Benchmark the large model with the same loader settings, then run and evaluate its fresh five-epoch pilot in <code>runs/pilot-large</code>.</li>
+<li>Confirm the full raw archive actually exists and has finished transferring at <code>../raw/lichess_db_eval.jsonl.zst</code>.</li>
+<li>Prepare a broader accepted dataset in a new directory before serious scaling. Keep the 100k pilot as the initial workflow reference, not the final strength test.</li>
+<li>Use validation for subsequent tuning. A low regression loss does not establish the 95% move-retention goal.</li>
+</ol>
+<p>The large model and custom variants have not yet produced supplied server results.</p>
+<h2 id="unattended-large-run-started-26-october">Unattended large run started: 26 October</h2>
+<p>Tareq uploaded the new launcher and started the documented nohup command. <code>ps</code> confirmed parent PID120565. The source checksum stage completed, all CUDA/BF16 checks passed again, and the full large architecture completed its disposable GPU preflight: batch2,048,10measuredsteps,20,480examples in0.18888seconds, about108,427positions/s and416.47MiB peak allocated. This is a short workload measurement, not a sustained-training prediction.</p>
+<p>At the latest supplied output, <code>big-10m-v1</code> had entered CPU preparation with16workers. It reported226,560raw records scanned and159,523clean unique candidates at23seconds. The active plan remains up to20million scanned records, up to10million selected accepted positions, then sequential small/large training and evaluation. Full-scale training has not yet been observed in supplied output.</p>
+<p>The user's laptop can disconnect after the confirmed nohup start. The NebiusVM must stay running. Use the existing log/status files to check progress; do not rerun setup or launch the pipeline again while its PID is alive.</p>
+<h2 id="completion-confirmed-on-return">Completion confirmed on return</h2>
+<p>The next supplied server inspection confirms state <code>complete</code>, stage <code>finished</code>, at <code>2026-10-25T23:23:43.619042+00:00</code> (26October03:23Dubai). Elapsed wall time was7,632.34seconds, approximately2hours7minutes12seconds. Both experiments finished with evaluation/export and the final comparison report. The prepared manifest and both final checkpoints exist, and the process search returned no matching active job.</p>
+<p>Full quality metrics have not yet been supplied; the last30log lines show only the end of one model's bucketed report. Do not infer a winner, exact selected count, number of epochs, or move-retention rate from that tail. Next actions are artifact backup through SFTP and a concise full-results summary. Existing outputs should be reused, not restarted.</p>
+<h2 id="subsequent-complete-scalar-summary">Subsequent complete scalar summary</h2>
+<p>The user then supplied exact counts and both result/test summaries. The accepted release has10,000,000positions:9,001,091train,499,588validation,499,321test. Both models completed20epochs and selected epoch20 as their best validation checkpoint.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th style="text-align:right">Test MAE, cp</th>
+<th style="text-align:right">Test RMSE, cp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small</td>
+<td style="text-align:right">117.47</td>
+<td style="text-align:right">199.78</td>
+</tr>
+<tr>
+<td>Large</td>
+<td style="text-align:right">90.82</td>
+<td style="text-align:right">173.57</td>
+</tr>
+<tr>
+<td>Constant zero</td>
+<td style="text-align:right">168.39</td>
+<td style="text-align:right">Not supplied</td>
+</tr>
+<tr>
+<td>Basic material</td>
+<td style="text-align:right">177.94</td>
+<td style="text-align:right">Not supplied</td>
+</tr>
+</tbody>
+</table>
+<p>Large reduces same-test MAE by about22.7% relative to small,46.1% relative to zero, and49.0% relative to material. These are scalar errors against the stored teacher distribution, not accuracy percentages, Elo, or top-k move retention. The larger design is the leading scalar predictor in this comparison; deployment still depends on move ranking and inference cost.</p>
+<p>The full curves and checkpoint artifacts have not yet been inspected locally. Epoch20 being best means the cap was reached at the observed best validation point; it does not prove convergence, that more epochs help, or that all tactical subsets generalize. Next: inspect curves/coverage and construct a complete-legal-child validation benchmark, preserving an independent final ranking test for frozen decisions.</p>
+<p>This progress record was written after the initial upload. The server ZIP is still the valid uploaded snapshot; no reupload is needed for these commands.</p>
+
+</body>
+</html>

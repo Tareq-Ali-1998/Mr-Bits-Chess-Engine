@@ -1,0 +1,114 @@
+{
+  "schema": "chesslab.cpp-fp32.v1",
+  "model_spec": {
+    "name": "small",
+    "kind": "mlp",
+    "input_dim": 782,
+    "hidden": [
+      256,
+      64
+    ],
+    "activation": "relu"
+  },
+  "format": "64-byte versioned header + little-endian IEEE754 float32 payload",
+  "feature_contract": {
+    "version": "board782_v1",
+    "input_size": 782,
+    "packed_size": 78,
+    "packed_piece_codes": [
+      "empty",
+      "P",
+      "N",
+      "B",
+      "R",
+      "Q",
+      "K",
+      "p",
+      "n",
+      "b",
+      "r",
+      "q",
+      "k"
+    ],
+    "plane_order": [
+      "P",
+      "N",
+      "B",
+      "R",
+      "Q",
+      "K",
+      "p",
+      "n",
+      "b",
+      "r",
+      "q",
+      "k"
+    ],
+    "square_order": "a8,b8,...,h8,a7,...,h1",
+    "turn": "feature 768: 1 White, 0 Black",
+    "castling": "features 769..772: White K,Q; Black k,q; retained rights",
+    "en_passant": "773 none; 774..781 file a..h; preserve recorded FEN target",
+    "history": "halfmove clock and repetition history unavailable; engine handles draws"
+  },
+  "output": {
+    "perspective": "white",
+    "units": "pawns",
+    "activation": "linear, unbounded",
+    "terminal_policy": "caller resolves exact terminals and draws before inference"
+  },
+  "checkpoint": "best.pt",
+  "checkpoint_sha256": "ae7d34fb5972043e3c73342767610909a7680a8173f349eaef83313688461da4",
+  "epoch": 20,
+  "step": 87920,
+  "data_fingerprint": "f80ec3878a2d69b866ccfa5347a268c6c481f5b1f918cbba1a7dd6365326b77e",
+  "target": {
+    "perspective": "white",
+    "units": "pawns",
+    "clip_pawns": 15.0
+  },
+  "torch_version": "2.10.0+cpu",
+  "quantized": false,
+  "layout": {
+    "header_bytes": 64,
+    "payload_bytes": 867844,
+    "payload_crc32": "b7efd362",
+    "layers": [
+      {
+        "name": "0",
+        "input": 782,
+        "output": 256,
+        "weight_layout": "input_output",
+        "weight_offset_bytes": 64,
+        "weight_bytes": 800768,
+        "bias_offset_bytes": 800832,
+        "bias_bytes": 1024
+      },
+      {
+        "name": "2",
+        "input": 256,
+        "output": 64,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 801856,
+        "weight_bytes": 65536,
+        "bias_offset_bytes": 867392,
+        "bias_bytes": 256
+      },
+      {
+        "name": "4",
+        "input": 64,
+        "output": 1,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 867648,
+        "weight_bytes": 256,
+        "bias_offset_bytes": 867904,
+        "bias_bytes": 4
+      }
+    ],
+    "parameters": 216961,
+    "linear_layers": 3,
+    "dense_macs": 216640,
+    "float32_weight_bytes": 867844
+  },
+  "verification": "Run scripts/verify_cpp.py to check actual C++ outputs against this checkpoint",
+  "sha256": "93e72c41ba0fda1561cbcd3f6bebe32c399388870b2fc8b15135775beb58befd"
+}

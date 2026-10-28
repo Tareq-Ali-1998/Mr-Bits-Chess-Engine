@@ -1,0 +1,163 @@
+{
+  "schema": "chesslab.experiment-comparison.v1",
+  "comparable_groups": [
+    [
+      {
+        "run": "/home/Mr-Bits-Neural-Lab/ChatGPT Neural Network Lab/runs/clean-10m-20261026T080646Z/large",
+        "model": {
+          "name": "large",
+          "kind": "residual",
+          "input_dim": 782,
+          "width": 1024,
+          "blocks": 8,
+          "head": 256,
+          "activation": "relu"
+        },
+        "parameters": 17858049,
+        "data_fingerprint": "f80ec3878a2d69b866ccfa5347a268c6c481f5b1f918cbba1a7dd6365326b77e",
+        "target_contract": {
+          "clip_pawns": 15.0,
+          "huber_delta": 1.0,
+          "perspective": "white",
+          "units": "pawns"
+        },
+        "batch_size": 2048,
+        "seed": 20261023,
+        "epochs_completed": 20,
+        "steps": 87920,
+        "best_epoch": 20,
+        "best_val_huber": 0.6146177878916279,
+        "mae_cp_at_best_epoch": 90.91106513562835,
+        "training_seconds": 2332.335673726,
+        "test_metrics": {
+          "n": 499321,
+          "huber": 0.6138006459506934,
+          "mae_cp": 90.8242293011166,
+          "rmse_cp": 173.5659051718218,
+          "bias_cp": -2.544820890946876,
+          "within_25_cp": 0.3935504414995564,
+          "within_50_cp": 0.5820143755219588,
+          "within_100_cp": 0.752732210341644,
+          "target_clip_fraction": 0.0,
+          "zero_baseline_mae_cp": 168.39025396488432,
+          "material_baseline_mae_cp": 177.94438447411585,
+          "absolute_target_buckets": {
+            "0_50": {
+              "n": 226569,
+              "mae_cp": 40.804889429191455
+            },
+            "50_200": {
+              "n": 134192,
+              "mae_cp": 68.69956953923558
+            },
+            "200_600": {
+              "n": 104738,
+              "mae_cp": 162.46182376178936
+            },
+            "600_1500": {
+              "n": 33815,
+              "mae_cp": 291.7279135451613
+            },
+            "1500_plus": {
+              "n": 7,
+              "mae_cp": 811.9252113359315
+            }
+          },
+          "material_phase_buckets": {
+            "low_material": {
+              "n": 114511,
+              "mae_cp": 117.68486887903882
+            },
+            "medium_material": {
+              "n": 89550,
+              "mae_cp": 122.53828371951782
+            },
+            "high_material": {
+              "n": 295260,
+              "mae_cp": 70.78821943904498
+            }
+          }
+        }
+      },
+      {
+        "run": "/home/Mr-Bits-Neural-Lab/ChatGPT Neural Network Lab/runs/clean-10m-20261026T080646Z/small",
+        "model": {
+          "name": "small",
+          "kind": "mlp",
+          "input_dim": 782,
+          "hidden": [
+            256,
+            64
+          ],
+          "activation": "relu"
+        },
+        "parameters": 216961,
+        "data_fingerprint": "f80ec3878a2d69b866ccfa5347a268c6c481f5b1f918cbba1a7dd6365326b77e",
+        "target_contract": {
+          "clip_pawns": 15.0,
+          "huber_delta": 1.0,
+          "perspective": "white",
+          "units": "pawns"
+        },
+        "batch_size": 2048,
+        "seed": 20261023,
+        "epochs_completed": 20,
+        "steps": 87920,
+        "best_epoch": 20,
+        "best_val_huber": 0.8304187715291521,
+        "mae_cp_at_best_epoch": 117.36567088740286,
+        "training_seconds": 1751.060920820999,
+        "test_metrics": {
+          "n": 499321,
+          "huber": 0.8311656711934808,
+          "mae_cp": 117.46930382031158,
+          "rmse_cp": 199.7820215901521,
+          "bias_cp": -11.49521980664952,
+          "within_25_cp": 0.27679989425640017,
+          "within_50_cp": 0.46695612641967793,
+          "within_100_cp": 0.6617626737108994,
+          "target_clip_fraction": 0.0,
+          "zero_baseline_mae_cp": 168.39025396488432,
+          "material_baseline_mae_cp": 177.94438447411585,
+          "absolute_target_buckets": {
+            "0_50": {
+              "n": 226569,
+              "mae_cp": 54.013774048564194
+            },
+            "50_200": {
+              "n": 134192,
+              "mae_cp": 75.72943624116759
+            },
+            "200_600": {
+              "n": 104738,
+              "mae_cp": 213.58949795280427
+            },
+            "600_1500": {
+              "n": 33815,
+              "mae_cp": 410.375596300993
+            },
+            "1500_plus": {
+              "n": 7,
+              "mae_cp": 995.906697000776
+            }
+          },
+          "material_phase_buckets": {
+            "low_material": {
+              "n": 114511,
+              "mae_cp": 161.7007558510194
+            },
+            "medium_material": {
+              "n": 89550,
+              "mae_cp": 156.70647374193538
+            },
+            "high_material": {
+              "n": 295260,
+              "mae_cp": 88.41465242842038
+            }
+          }
+        }
+      }
+    ]
+  ],
+  "notes": "Grouped by identical prepared release and target/loss contract; ordered by validation Huber within a group. MAE is from that checkpoint's epoch. Different seeds, update counts and training budgets remain explicit. This does not select an engine-strength winner. Use validation for decisions; test inclusion is explicit."
+}

@@ -1,0 +1,487 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TIME_COMPLEXITY_README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-neural-evaluation-and-move-sorting-the-actual-complexity">⏱️ Neural evaluation and move sorting: the actual complexity</h1>
+
+<p><strong>Mr. Bits · Current C++ implementation · 28 October 2026</strong></p>
+<blockquote>
+<p>Bro, both evaluators are formally <strong>O(1) for our fixed networks on an 8×8 board</strong>. That does not mean equal speed: Small and Large perform very different amounts of work. These expanded formulas show what that constant contains. 💙</p>
+</blockquote>
+<h2 id="1-evaluating-one-position-">1. Evaluating one position 🧠</h2>
+<table>
+<thead>
+<tr>
+<th>Symbol</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>S</code></td>
+<td>Board squares: <strong>64</strong></td>
+</tr>
+<tr>
+<td><code>P</code></td>
+<td>Occupied squares/pieces: at most <strong>32 in legal chess</strong></td>
+</tr>
+<tr>
+<td><code>A</code></td>
+<td>Active binary inputs: <code>P + White-turn flag + retained castling flags + 1 EP option</code>; at most <strong>38 for legal positions</strong></td>
+</tr>
+<tr>
+<td><code>W</code>, <code>H</code></td>
+<td>Projection width and final hidden width</td>
+</tr>
+<tr>
+<td><code>B</code></td>
+<td>Residual blocks: <strong>8</strong> for Large</td>
+</tr>
+</tbody>
+</table>
+<p>Our mathematical input has 782 features, but almost all are zero. The C++ adapter scans the board, sorts the <code>P</code> piece-feature indices, and appends state flags: <strong><code>O(S + P log(P+1))</code></strong>. The first layer then adds only the <code>A</code> active weight columns: <strong><code>O(A×W)</code></strong>. Later layers are dense, including when ReLU produces zeros.</p>
+<h3 id="-small-782--256--64--1">🟢 Small: <code>782 → 256 → 64 → 1</code></h3>
+<p>Using <code>Ws=256</code>, <code>Hs=64</code>, its complete board-to-score bound is:</p>
+<pre class="hljs"><code><div>Csmall = O(S + P log(P+1) + A×Ws + Ws×Hs + Hs)
+       = O(S + P log(P+1) + A×256 + 16,448)
+</div></code></pre>
+<p>The sparse projection performs <code>A×256</code> additions. The remaining layers perform <strong><code>256×64 + 64 = 16,448</code> multiply-accumulates (MACs)</strong>. With <code>A=38</code>, the first projection adds <strong>9,728</strong> weight values. Biases, feature validation, resets and ReLUs add lower-order work covered by the bound.</p>
+<h3 id="-large-782--1024--8-residual-blocks--256--1">🟠 Large: <code>782 → 1024 → 8 residual blocks → 256 → 1</code></h3>
+<p>Each block has <strong>two dense <code>1024×1024</code> matrices</strong>, plus its residual addition and ReLUs. Using <code>Wl=1024</code>, <code>Hl=256</code>:</p>
+<pre class="hljs"><code><div>Clarge = O(S + P log(P+1) + A×Wl + 2B×Wl² + Wl×Hl + Hl)
+       = O(S + P log(P+1) + A×1024 + 17,039,616)
+</div></code></pre>
+<p>After the sparse projection, there are <strong><code>16×1024² + 1024×256 + 256 = 17,039,616</code> MACs</strong>. At <code>A=38</code>, the projection adds <strong>38,912</strong> values. The residual/bias/activation terms are lower order here. These counts distinguish additions from MACs; they are not exact CPU instruction counts.</p>
+<p><strong>Why no <code>782×W</code> term?</strong> The deployed first layer skips zero inputs. A fully dense implementation would perform <strong>216,640 MACs for Small</strong> or <strong>17,840,384 for Large</strong>, excluding biases and activations. Our current sorter rebuilds the sparse projection for each child; it does <strong>not</strong> use incremental accumulator updates yet.</p>
+<div class="page-break"></div>
+<h2 id="2-sorting-one-complete-move-list-️">2. Sorting one complete move list ♟️</h2>
+<p>Let <strong><code>m = moves.size()</code></strong>. Both public functions follow this workflow:</p>
+<pre class="hljs"><code><div>validate moves → save parent once → [commit → evaluate → restore] × m
+               → sort cached scores → write ordered moves back
+</div></code></pre>
+<p>Each move gets <strong>one</strong> evaluation. The comparator only compares stored scores and input indices for ties, so inference is multiplied by <code>m</code>, not by <code>m log m</code>. Validation and writing the result each cost <code>O(m)</code>. Applying a move and deriving its flags cost <code>O(1)</code>; restoring the current 216-byte parent snapshot also costs <code>O(1)</code> on our fixed board.</p>
+<p><strong>Which turn?</strong> The vector-only functions infer the moving color from the first move's source piece and validate that every move has that color. White sorts higher scores first; Black sorts lower scores first. The child receives the opposite side to move. <code>ENGINE_COLOR</code> identifies the bot, not necessarily the side moving at a recursive node; it is not used to choose this ordering direction.</p>
+<table>
+<thead>
+<tr>
+<th>Full sorting call</th>
+<th>Time complexity, after loading weights</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small network</td>
+<td><strong><code>O(m×Csmall + m log m)</code></strong></td>
+</tr>
+<tr>
+<td>Large network</td>
+<td><strong><code>O(m×Clarge + m log m)</code></strong></td>
+</tr>
+</tbody>
+</table>
+<p>With the architecture terms expanded, using maximum <code>P</code> and <code>A</code> across the children:</p>
+<pre class="hljs"><code><div>Small: O(m×[S + P log(P+1) + A×Ws + Ws×Hs + Hs] + m log m)
+Large: O(m×[S + P log(P+1) + A×Wl + 2B×Wl² + Wl×Hl + Hl] + m log m)
+</div></code></pre>
+<p>Parent snapshot/restore contributes <code>O(m×S)</code> when parameterizing board size; it is already covered by each formula's board-scan term. More precisely, differing child costs contribute <code>Σ C(child)</code> instead of <code>m×Cmax</code>.</p>
+<p><strong>For fixed networks, both sorters simplify to <code>O(m log m)</code></strong>, with a substantial linear evaluation term hidden in that notation. In practical move lists, Large's dense evaluation work can dominate sorting. For illustration, 40 child evaluations perform <strong>657,920 post-projection MACs with Small</strong>, versus <strong>681,584,640 with Large</strong>, before counting projections and other work. This is not a measured runtime ratio.</p>
+<h3 id="startup-empty-lists-and-memory-">Startup, empty lists and memory 📦</h3>
+<ul>
+<li><strong>Empty list:</strong> <code>O(1)</code> return, with no model loading. <strong>One move:</strong> still evaluated once.</li>
+<li><strong>First nonempty call:</strong> adds <strong><code>O(N)</code></strong> loading/CRC/finite-value validation for that model's <code>N</code> parameters, plus filesystem lookup. Models are then cached <strong>per process</strong>; weights are not read for every position.</li>
+<li><strong>Extra score storage:</strong> <code>O(m)</code> for a fresh call; the thread-local buffer retains capacity for the largest list seen. Inference scratch is fixed below, plus the fixed parent snapshot.</li>
+</ul>
+<table>
+<thead>
+<tr>
+<th>Resident storage</th>
+<th style="text-align:right">Small</th>
+<th style="text-align:right">Large</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Parameters <code>N</code></td>
+<td style="text-align:right">216,961</td>
+<td style="text-align:right">17,858,049</td>
+</tr>
+<tr>
+<td>FP32 weights</td>
+<td style="text-align:right">867,844 bytes</td>
+<td style="text-align:right">71,432,196 bytes</td>
+</tr>
+<tr>
+<td>Workspace per calling thread</td>
+<td style="text-align:right">2,304 bytes</td>
+<td style="text-align:right">13,312 bytes</td>
+</tr>
+</tbody>
+</table>
+<p>AVX2/FMA, caches and memory bandwidth change execution time, <strong>not these Big-O classes</strong> on fixed hardware. Training sample counts and epochs do not enter inference complexity. A forward pass does no chess-tree search; these formulas cover <strong>one position or one move list</strong>, not the whole alpha-beta tree.</p>
+<p>Verified against <a href="Small/Small.hpp">Small.hpp</a>, <a href="Large/Large.hpp">Large.hpp</a>, <a href="common.hpp">common.hpp</a> and <a href="Move%20Ordering.hpp">Move Ordering.hpp</a>. See the <a href="../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">full guide</a> for measured CPU timings.</p>
+
+</body>
+</html>

@@ -1,0 +1,11 @@
+# Bootstrap installs or validates the CUDA/CPU Torch build before this file.
+# Do not add --upgrade here: preserve a working image-provided PyTorch.
+# Non-Torch direct dependencies are pinned for this release. Transitive packages
+# remain platform-resolved; diagnostics/environment-pip-freeze.txt records them.
+torch>=2.7
+numpy==2.4.1
+chess==1.10.0
+zstandard==0.25.0
+rich==13.7.1
+matplotlib==3.10.8
+tensorboard==2.20.0

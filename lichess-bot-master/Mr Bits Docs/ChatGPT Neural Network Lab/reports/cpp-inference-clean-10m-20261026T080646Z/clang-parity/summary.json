@@ -1,0 +1,106 @@
+{
+  "schema": "chesslab.cpp-verification.v1",
+  "created_at_utc": "2026-10-26T20:40:13.758397+00:00",
+  "harness_python_sha256": "718418b9a11c544659e4cc4e9f94ba586b1fc675f2206f91587ce5bb3f4c3537",
+  "host": {
+    "platform": "Windows-11-10.0.26300-SP0",
+    "machine": "AMD64",
+    "processor": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel"
+  },
+  "torch": {
+    "version": "2.10.0+cpu",
+    "threads": 1,
+    "interop_threads": 1,
+    "config": "PyTorch built with:\n  - C++ Version: 201703\n  - MSVC 194234444\n  - Intel(R) oneAPI Math Kernel Library Version 2025.3-Product Build 20251007 for Intel(R) 64 architecture applications\n  - Intel(R) MKL-DNN v3.7.1 (Git Hash 8d263e693366ef8db40acc569cc7d8edf644556d)\n  - OpenMP 2019\n  - LAPACK is enabled (usually provided by MKL)\n  - CPU capability usage: AVX2\n  - Build settings: BLAS_INFO=mkl, BUILD_TYPE=Release, COMMIT_SHA=449b1768410104d3ed79d3bcfe4ba1d65c7f22c0, CXX_COMPILER=C:/actions-runner/_work/pytorch/pytorch/pytorch/.ci/pytorch/windows/tmp_bin/sccache-cl.exe, CXX_FLAGS=/DWIN32 /D_WINDOWS /EHsc /Zc:__cplusplus /bigobj /FS /utf-8 -DUSE_PTHREADPOOL -DNDEBUG -DUSE_KINETO -DLIBKINETO_NOCUPTI -DLIBKINETO_NOROCTRACER -DLIBKINETO_NOXPUPTI=ON -DUSE_XNNPACK -DSYMBOLICATE_MOBILE_DEBUG_HANDLE /wd4624 /wd4068 /wd4067 /wd4267 /wd4661 /wd4717 /wd4244 /wd4804 /wd4273, LAPACK_INFO=mkl, PERF_WITH_AVX=1, PERF_WITH_AVX2=1, TORCH_VERSION=2.10.0, USE_CUDA=0, USE_CUDNN=OFF, USE_CUSPARSELT=OFF, USE_GFLAGS=OFF, USE_GLOG=OFF, USE_GLOO=ON, USE_MKL=ON, USE_MKLDNN=ON, USE_MPI=OFF, USE_NCCL=OFF, USE_NNPACK=OFF, USE_OPENMP=ON, USE_ROCM=OFF, USE_ROCM_KERNEL_ASSERT=OFF, USE_XCCL=OFF, USE_XPU=OFF, \n"
+  },
+  "compiler": {
+    "path": "C:\\My Programs\\CodeBlocks\\MinGW\\bin\\clang++.exe",
+    "version": "(built by Brecht Sanders, r3) clang version 19.1.7\nTarget: x86_64-w64-windows-gnu\nThread model: posix\nInstalledDir: C:/My Programs/CodeBlocks/MinGW/bin\n"
+  },
+  "compilation": {
+    "portable": {
+      "command": [
+        "C:\\My Programs\\CodeBlocks\\MinGW\\bin\\clang++.exe",
+        "-O3",
+        "-DNDEBUG",
+        "-std=c++17",
+        "-pthread",
+        "-Wall",
+        "-Wextra",
+        "-mno-avx",
+        "-mno-avx2",
+        "-mno-fma",
+        "-static-libstdc++",
+        "-static-libgcc",
+        "-I",
+        "C:\\Users\\tareq\\Desktop\\Mr_Bits\\lichess-bot-master\\engines\\Neural Networkds",
+        "C:\\Users\\tareq\\Desktop\\Mr_Bits\\ChatGPT Neural Network Lab\\cpp\\verify_cpp.cpp",
+        "-o",
+        "C:\\Users\\tareq\\Desktop\\Mr_Bits\\ChatGPT Neural Network Lab\\reports\\cpp-inference-clean-10m-20261026T080646Z\\clang-parity\\verify-cpp-portable.exe"
+      ],
+      "stdout": "",
+      "stderr": "C:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_alloc.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_exception.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_personality.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(new_op.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(vterminate.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(locale.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTISt11logic_error[_ZTISt11logic_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTSSt16invalid_argument[_ZTSSt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTISt16invalid_argument[_ZTISt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTISt11logic_error[_ZTISt11logic_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTSSt16invalid_argument[_ZTSSt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTISt16invalid_argument[_ZTISt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(locale_init.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(random.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(random.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(random.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(system_error.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(system_error.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(system_error.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(thread.o): duplicate section `.rdata$_ZTSNSt6thread6_StateE[_ZTSNSt6thread6_StateE]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_alloc.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_array_new.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_cast.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_typeid.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_aux_runtime.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(guard.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(cxx11-ios_failure.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(cxx11-ios_failure.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(cxx11-ios_failure.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(ios_failure.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\n",
+      "source_sha256": "369297c731cff3629f6aa62f5ea185c61cc4cb051488053e6f767b6afe97e921",
+      "header_sha256": {
+        "common.hpp": "79af5c47d8966b1977da135372cf4e9ee67071147fcde1c77f6855526ab4476c",
+        "Small/Small.hpp": "a74ecb94302030457bc6c7062b254521deb3368b64949475794c1e760854375c",
+        "Large/Large.hpp": "c565584ddb1f1bfb08daa6ba89a4c626f7b37f20cbef02bfe752edc929260215"
+      },
+      "executable_sha256": "0025b8bd3acba860016b94dbb0f0e14370a8dbec8157c30f531b285f089c5a3b"
+    },
+    "avx2": {
+      "command": [
+        "C:\\My Programs\\CodeBlocks\\MinGW\\bin\\clang++.exe",
+        "-O3",
+        "-DNDEBUG",
+        "-std=c++17",
+        "-pthread",
+        "-Wall",
+        "-Wextra",
+        "-mavx2",
+        "-mfma",
+        "-static-libstdc++",
+        "-static-libgcc",
+        "-I",
+        "C:\\Users\\tareq\\Desktop\\Mr_Bits\\lichess-bot-master\\engines\\Neural Networkds",
+        "C:\\Users\\tareq\\Desktop\\Mr_Bits\\ChatGPT Neural Network Lab\\cpp\\verify_cpp.cpp",
+        "-o",
+        "C:\\Users\\tareq\\Desktop\\Mr_Bits\\ChatGPT Neural Network Lab\\reports\\cpp-inference-clean-10m-20261026T080646Z\\clang-parity\\verify-cpp-avx2.exe"
+      ],
+      "stdout": "",
+      "stderr": "C:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_alloc.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_exception.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_personality.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(new_op.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(vterminate.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(locale.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTISt11logic_error[_ZTISt11logic_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTSSt16invalid_argument[_ZTSSt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTISt16invalid_argument[_ZTISt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(stdexcept.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTISt11logic_error[_ZTISt11logic_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTSSt16invalid_argument[_ZTSSt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTISt16invalid_argument[_ZTISt16invalid_argument]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(functexcept.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(locale_init.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(random.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(random.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(random.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(system_error.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(system_error.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(system_error.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(thread.o): duplicate section `.rdata$_ZTSNSt6thread6_StateE[_ZTSNSt6thread6_StateE]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_alloc.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_array_new.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_cast.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(bad_typeid.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(eh_aux_runtime.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(guard.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(cxx11-ios_failure.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(cxx11-ios_failure.o): duplicate section `.rdata$_ZTSSt13runtime_error[_ZTSSt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(cxx11-ios_failure.o): duplicate section `.rdata$_ZTISt13runtime_error[_ZTISt13runtime_error]' has different size\nC:/My Programs/CodeBlocks/MinGW/lib\\libstdc++.a(ios_failure.o): duplicate section `.rdata$_ZTSSt9exception[_ZTSSt9exception]' has different size\n",
+      "source_sha256": "369297c731cff3629f6aa62f5ea185c61cc4cb051488053e6f767b6afe97e921",
+      "header_sha256": {
+        "common.hpp": "79af5c47d8966b1977da135372cf4e9ee67071147fcde1c77f6855526ab4476c",
+        "Small/Small.hpp": "a74ecb94302030457bc6c7062b254521deb3368b64949475794c1e760854375c",
+        "Large/Large.hpp": "c565584ddb1f1bfb08daa6ba89a4c626f7b37f20cbef02bfe752edc929260215"
+      },
+      "executable_sha256": "67e1d621a8aa84544120fd4013595719a7def3923c03f0943d79e5218ea947e3"
+    }
+  },
+  "runtime_cpu": {
+    "runtime_avx2": true,
+    "runtime_fma": true
+  },
+  "skipped": [],
+  "corpus": {
+    "schema": "chesslab.cpp-corpus.v1",
+    "seed": 20261027,
+    "prepared_validation_positions": 256,
+    "total_unique_positions": 592,
+    "dataset_fingerprint": "f80ec3878a2d69b866ccfa5347a268c6c481f5b1f918cbba1a7dd6365326b77e",
+    "packed_sha256": "7fc7c3b0887d3ac0d38fed2134f82133b38eb35fe2c34f3f2e937655a1533caf"
+  },
+  "benchmark_scope": "Warm CPU serial per-position inference. C++ prebuilt sparse features and packed-adapter timing reported separately; Torch pre-expanded FP32 inputs include Python/PyTorch dispatch. No thread-affinity pin or host-isolation guarantee. Four-thread checks test correctness only, not speed.",
+  "models": {
+    "small": {
+      "passed": true,
+      "report": "small-verification.json"
+    },
+    "large": {
+      "passed": true,
+      "report": "large-verification.json"
+    }
+  },
+  "passed": true
+}

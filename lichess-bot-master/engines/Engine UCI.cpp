@@ -7,482 +7,163 @@
 #include <ctime>
 #include <filesystem>
 #include <iomanip>
-#include <windows.h>    // FindFirstFile, FILE_ATTRIBUTE_DIRECTORY
-#include <direct.h>     // _getcwd, _mkdir
+#include <windows.h>    // GetModuleFileNameA, CreateDirectoryA
+#include <direct.h>     // _getcwd
 #include <algorithm>
+#include <mutex>
+#include <cctype>
 
 // ############################################################ \\
 
-#include "Stockfish Handler.hpp"
-#include "json.hpp"
+// ChessState, the Kernel workers, the one Stockfish, the log (and Json, ENGINE_NAME, rng).
+#include "Chess State.hpp"
+// Every move goes into lichess-bot-master\database\mrbits.sqlite.
+#include "Game Database.hpp"
 
 // ############################################################ \\
 
-using Json = nlohmann::json;
+// The lichess game id. lichess-bot sends it through "setoption name GameId value ..." when it creates the
+// engine for a game (see extra_game_handlers.py), and every move of the game is stored under it.
+string GAME_ID = "";
+// The id this game is stored under: GAME_ID, or a local one when nobody sent a game id (a test by hand).
+string DATABASE_GAME_ID = "";
+
+// The opponent, as python-chess sends it through "setoption name UCI_Opponent value <title> <rating>
+// <computer|human> <name>" right after every "ucinewgame".
+Json OPPONENT = nullptr;
+
+// A label for the log and the database. Changing it (g++ -DMRBITS_BUILD_STAMP=...) also gives the .exe a new
+// hash, which matters on this PC: Windows Smart App Control judges every new .exe on its first launch, and
+// if it blocks one build, a rebuild with a new stamp gets a new verdict.
+#ifndef MRBITS_BUILD_STAMP
+#define MRBITS_BUILD_STAMP "dev"
+#endif
+
+// The number of Kernel workers (they were the 28 threads, each with its own brand-new Kernel.exe).
+const int NUMBER_OF_KERNEL_WORKERS = 28;
 
 // ############################################################ \\
 
-const string ENGINE_NAME = "Mr. Bits";
-
-// ############################################################ \\
-
-string GAME_NAME = "";
-
-// ############################################################ \\
-
-// ############################################################ \\
-// Random number generator for shuffling after the new MinGW C++11 update
-static std::mt19937 rng(std::random_device{}());
-
-// ############################################################ \\
-
-class ChessState {
-
-  public:
-
-    StockfishHandler stockfishHandler;
-    vector<string> previousMoves;
-    // The following is the flag engineColor, it's True or 1, if the engine is
-    // white, and the default value of the engine is white
-    bool engineColor;
-    int allowedEngineTimeInSeconds;
-    string bestMove;
-    int bestMoveScore;
-    int numberOfThreads;
-    string report;
-    vector<string> movesForThisThread;
-    int theNumberOfOpeningMovesToGetFromStockfish;
-
-    ChessState() : engineColor(1), previousMoves({}), allowedEngineTimeInSeconds(30) {
-        this->stockfishHandler = StockfishHandler();
-        // this->bestMove = stockfishHandler.getBestMoveByDepth(this->getMovesStringFromPreviousMoves(), 12);
-        this->bestMove = "It should be a default value like the previous line but I want to maintain more time";
-        this->bestMoveScore = 0;
-        this->numberOfThreads = 4;
-        this->theNumberOfOpeningMovesToGetFromStockfish = 7;
+// Every path comes from the folder of this .exe (ExecutableDirectory() is in "Stockfish Handler.hpp"), and
+// never from the folder the engine was launched from. That was the reason for my Stockfish copies.
+string RootDirectory() {
+    string executableDirectory = ExecutableDirectory();
+    size_t lastSlashIndex = executableDirectory.find_last_of("\\/");
+    if (lastSlashIndex == string::npos) {
+        return executableDirectory + "\\..";
     }
-
-    void setallowedEngineTimeInSeconds(const int& allowedEngineTimeInSeconds) {
-        this->allowedEngineTimeInSeconds = allowedEngineTimeInSeconds;
-    }
-
-    void setEngineColor(const bool& engineColor) {
-        this->engineColor = engineColor;
-    }
-
-    void setTheNumberOfOpeningMovesToGetFromStockfish(
-        const int& theNumberOfOpeningMovesToGetFromStockfish) {
-        this->theNumberOfOpeningMovesToGetFromStockfish =
-            theNumberOfOpeningMovesToGetFromStockfish;
-    }
-
-    int getTheNumberOfOpeningMovesToGetFromStockfish() {
-        return this->theNumberOfOpeningMovesToGetFromStockfish;
-    }
-
-    void setBestMove(const string& bestMove) {
-        this->bestMove = bestMove;
-    }
-
-    void setBestMoveScore(const int& bestMoveScore) {
-        this->bestMoveScore = bestMoveScore;
-    }
-
-    void setNumberOfThreads(const int& numberOfThreads) {
-        this->numberOfThreads = numberOfThreads;
-    }
-
-    void sayHelloAndGetEngineColorAndTheAllowedMoveTimeAndTheNumberOfThreadsAndMoreInfo() {
-
-        cout << "\nHello, I am " << ENGINE_NAME << " chess engine, and "
-                "I am better than Stockfish chess engine, so\n"
-                "let's play our game ;) .\n"
-                "Yes I am talking to you my opponent, if you want to choose "
-                "White press 1, otherwise press 0:\n";
-        int choice;
-        cin >> choice;
-
-        int theNumberOfThreads;
-        cout << endl << "Please input the number of threads:" << endl;
-        cin >> this->numberOfThreads;
-
-        cout << endl << "Please enter the maximum allowed time for a single thread in seconds:\n";
-        cin >> this->allowedEngineTimeInSeconds;
-
-        cout << endl << "Please enter how many opening moves you want me (The engine moves\nonly not including your moves) to use depending on Stockfish:\n";
-        cin >> this->theNumberOfOpeningMovesToGetFromStockfish;
-
-        if (choice) {
-            cout << "\n" << ENGINE_NAME << " engine is Black, and you are White, let's"
-                    " move on ;) :\n\n\n";
-        }
-        else {
-            cout << "\n" << ENGINE_NAME << " engine is White, you are Black, let's"
-                    " move on ;) :\n\n";
-        }
-        cout << "##################################################" << endl << endl;
-
-        this->engineColor = (!((bool)(choice)));
-
-    }
-
-    bool engineTurnNow() {
-        return (((((int)(this->previousMoves.size())) & 1) && (!this->engineColor)) ||
-                ((!(((int)(this->previousMoves.size())) & 1)) && (engineColor)));
-    }
-
-    string getMovesStringFromPreviousMoves() const {
-        string movesString = "";
-        for (const string& currentMove : this->previousMoves) {
-            movesString += currentMove;
-            movesString += " ";
-        }
-        return movesString;
-    }
-
-    bool isValidMove(const string& correspondingMove) {
-
-        string movesString = this->getMovesStringFromPreviousMoves();
-
-        vector<string> validMoves = this->stockfishHandler.getAllPossibleMoves(movesString);
-
-        for (const string& validMove : validMoves) {
-            if (correspondingMove == validMove) {
-                return 1;
-            }
-        }
-
-        return 0;
-
-    }
-
-    Json serializeObject() const {
-
-        Json serializedObjectAsJson;
-        serializedObjectAsJson["engineColor"] = this->engineColor;
-        serializedObjectAsJson["allowedEngineTimeInSeconds"] = this->allowedEngineTimeInSeconds;
-        serializedObjectAsJson["previousMoves"] = this->previousMoves;
-        serializedObjectAsJson["bestMove"] = this->bestMove;
-        serializedObjectAsJson["bestMoveScore"] = this->bestMoveScore;
-        serializedObjectAsJson["movesForThisThread"] = this->movesForThisThread;
-        serializedObjectAsJson["report"] = this->report;
-
-        return serializedObjectAsJson;
-
-    }
-
-    static ChessState deserializeObject(const Json& serializedObjectAsJson) {
-
-        ChessState deserializedObject = ChessState();
-        deserializedObject.engineColor = serializedObjectAsJson["engineColor"];
-        deserializedObject.allowedEngineTimeInSeconds = serializedObjectAsJson["allowedEngineTimeInSeconds"];
-        deserializedObject.previousMoves = serializedObjectAsJson["previousMoves"];
-        deserializedObject.bestMove = serializedObjectAsJson["bestMove"];
-        deserializedObject.bestMoveScore = serializedObjectAsJson["bestMoveScore"];
-        deserializedObject.movesForThisThread = serializedObjectAsJson["movesForThisThread"];
-        deserializedObject.report = serializedObjectAsJson["report"];
-
-        return deserializedObject;
-
-    }
-
-    string getEngineMoveWithThreading() {
-
-        vector<string> allPossibleMoves = this->stockfishHandler.getAllPossibleMoves(
-                                              this->getMovesStringFromPreviousMoves());
-
-        if (allPossibleMoves.size() == 0) {
-            this->report += "\n          ####################\n";
-            this->report += "    There is not a single valid move for this position.";
-            this->report += "\n          ####################\n";
-            return this->report;
-
-        }
-        else if (allPossibleMoves.size() == 1) {
-            this->report += "\n          ####################\n";
-            this->report += "    There is only one possible move, currently I don't";
-            this->report += "care about other details\n    like the current move score.";
-            this->report += "\n          ####################\n";
-            return allPossibleMoves[0];
-        }
-
-        // I should modify all the following function according to each game maybe, it's easy to
-        // manipulate with and super important in many other sides.
-        if (this->previousMoves.size() < (this->theNumberOfOpeningMovesToGetFromStockfish * 2)) {
-
-            if ((this->allowedEngineTimeInSeconds >= 60) && (this->previousMoves.size() > 80)) {
-                return this->stockfishHandler.getBestMoveByDepth(
-                    this->getMovesStringFromPreviousMoves(), 26);
-            }
-            if ((this->allowedEngineTimeInSeconds >= 30) && (this->previousMoves.size() > 80)) {
-                return this->stockfishHandler.getBestMoveByDepth(
-                    this->getMovesStringFromPreviousMoves(), 24);
-            }
-            else if ((this->allowedEngineTimeInSeconds >= 20) && (this->previousMoves.size() > 80)) {
-                return this->stockfishHandler.getBestMoveByDepth(
-                    this->getMovesStringFromPreviousMoves(), 22);
-            }
-            else if ((this->allowedEngineTimeInSeconds >= 10) && (this->previousMoves.size() > 80)) {
-                return this->stockfishHandler.getBestMoveByDepth(
-                    this->getMovesStringFromPreviousMoves(), 18);
-            }
-
-            // Not to lost on time or so because of deeper Stockfish depths.
-            if (this->allowedEngineTimeInSeconds <= 3) {
-                return this->stockfishHandler.getBestMoveByDepth(
-                    this->getMovesStringFromPreviousMoves(), 14);
-            }
-            else if (this->allowedEngineTimeInSeconds <= 5) {
-                return this->stockfishHandler.getBestMoveByDepth(
-                    this->getMovesStringFromPreviousMoves(), 16);
-            }
-
-            // seed the random number generator with current time.
-            srand(time(0));
-            vector<int> possibleDepths = {14, 16, 18, 20};
-            int8_t randomChosenDepth = possibleDepths[rand() % 4];
-            return this->stockfishHandler.getBestMoveByDepth(
-                this->getMovesStringFromPreviousMoves(), randomChosenDepth);
-            
-        }
-
-
-        int threadsNumberForThisPosition = min(this->numberOfThreads,
-                                               (int)allPossibleMoves.size());
-
-        vector<vector<pair<int, string>>> movesWithTheirScores(threadsNumberForThisPosition);
-
-        vector<vector<string>> movesForEachThread(threadsNumberForThisPosition, vector<string>(0));
-        std::shuffle(allPossibleMoves.begin(), allPossibleMoves.end(), rng);
-
-        int helperNum = 1;
-        for (const string& currentMove : allPossibleMoves) {
-            movesForEachThread[helperNum % threadsNumberForThisPosition].push_back(currentMove);
-            helperNum++;
-        }
-
-        vector<thread> threads(threadsNumberForThisPosition);
-        vector<string> threadsReports(threadsNumberForThisPosition);
-        for (int i = 0; i < threads.size(); i++) {
-            ChessState currentChessState = *this;
-            currentChessState.movesForThisThread = movesForEachThread[i];
-
-            threads[i] = thread([=, &movesWithTheirScores, &threadsReports]() mutable {
-
-                // this_thread::sleep_for(chrono::milliseconds(i * 50));
-                // this_thread::sleep_for(chrono::milliseconds(10));
-
-                // Set priority of the thread to high.
-                // I should check commenting the following and check what happends then because
-                // I was calling the following one in the beginning of the main function here
-                // in this file:
-                // SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
-                // So I should manipulate those just to learn what's happening.
-                SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
-
-                // Save the serialized data to a file.
-                string jsonFileName = "input/thread_" + to_string(i + 1);
-                jsonFileName += "_serialized_data";
-                jsonFileName += ".json";
-                ofstream file(jsonFileName);
-                file << currentChessState.serializeObject().dump(4);
-                file.close();
-
-                currentChessState.executeExeFileWithArguments("engines/Kernel.exe", jsonFileName);
-
-                // Read the serialized data from the file.
-                ifstream readFile(jsonFileName);
-                stringstream buffer;
-                buffer << readFile.rdbuf();
-                string serializedDataAsString = buffer.str();
-
-                // Deserialize the object from the serialized data.
-                Json receivedData = Json::parse(serializedDataAsString);
-
-                ChessState receivedChessState = currentChessState.deserializeObject(receivedData);
-
-                movesWithTheirScores[i].push_back({receivedChessState.bestMoveScore, receivedChessState.bestMove});
-                threadsReports[i] = receivedChessState.report;
-
-            });
-
-        }
-
-
-        for (int i = 0; i < threads.size(); i++) {
-            threads[i].join();
-        }
-
-        // The following one is just preparing the final report to log into history.
-        for (const string& threadReport : threadsReports) {
-            this->report += "\n          ####################\n";
-            this->report += threadReport;
-            this->report += "\n          ####################\n";
-        }
-
-        vector<pair<int, string>> allMovesWithTheirScores;
-        for (const auto& vec : movesWithTheirScores) {
-            for (const auto& currentPair : vec) {
-                allMovesWithTheirScores.push_back(currentPair);
-            }
-        }
-
-        sort(allMovesWithTheirScores.begin(), allMovesWithTheirScores.end(),
-             greater<pair<int, string>>());
-
-        this->bestMove = allMovesWithTheirScores[0].second;
-        this->bestMoveScore = allMovesWithTheirScores[0].first;
-
-        return allMovesWithTheirScores[0].second;
-
-    }
-
-
-    /*
-     * I will implement a function that sort the moves on depth 6, and then handle
-     * the threads' moves distribution process efficiently in a smart way to reduce time.
-     * I am definitely sure this will affect the performance a lot.
-     */
-
-
-
-     void executeExeFileWithArguments(string filePath, const string& jsonFileName) const {
-        // This function executes a compiled ".exe" file with a JSON filename as its argument.
-        // It is launched a child process via the Windows Command Prompt (cmd.exe) using.
-        // the "system" function.
-
-        // Note: CMD is not as flexible as PowerShell when it comes to path syntax — it expects
-        // backslashes ('\\') instead of forward slashes ('/') in this case when using
-        // the "system(command.c_str())" function.
-        // PowerShell accepts both, but since system() uses CMD under the hood, we convert all
-        // slashes to backslashes here to ensure compatibility.
-        // This has been tested and confirmed.
-        replace(filePath.begin(), filePath.end(), '/', '\\');
-
-        string command = ".\\" + filePath;
-        command += " ";
-        command += "\"";
-        command += jsonFileName;
-        command += "\"";
-        system(command.c_str());
-    }
-
-    // I should Check the logic of the following three functions more, they are not 100% accurate.
-    // The following three functions should be reimplemented on the StockfishHandler class.
-    bool isCheckmatePosition() {
-        return this->stockfishHandler.isCheckmatePosition(
-                                        this->getMovesStringFromPreviousMoves());
-    }
-    
-    bool isTiePosition() {
-        return this->stockfishHandler.isStalematePosition(
-                                        this->getMovesStringFromPreviousMoves());
-    }
-
-    bool isStalematePosition() {
-        return 0;
-    }
-
-};
-
-
-
-
-
-
-void InitializeGameNameAndHistoryFolder(const int& numberOfMovesSoFar) {
-
-    // ensure history exists under cwd
-    if (_mkdir("history") != 0 && errno != EEXIST) {
-        cout << "Failed to create history folder! Errno: " << errno << endl;
-    }
-
-    if (numberOfMovesSoFar < 2) {
-        // Generate timestamped game name
-        auto now = chrono::system_clock::now();
-        time_t now_time = chrono::system_clock::to_time_t(now);
-        tm tm_struct = *localtime(&now_time);
-
-        ostringstream oss;
-        oss << put_time(&tm_struct, "%Y-%m-%d_%H-%M-%S");
-        GAME_NAME = oss.str();
-    }
-    else {
-
-        // Scan "history" for subdirectories
-        vector<string> folderNames;
-        WIN32_FIND_DATAA findData;
-        HANDLE hFind = FindFirstFileA("history\\*", &findData);
-        if (hFind != INVALID_HANDLE_VALUE) {
-            do {
-                // check for directory and skip "." & ".."
-                if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-                    string name = findData.cFileName;
-                    if (name != "." && name != "..")
-                        folderNames.push_back(name);
-                }
-            } while (FindNextFileA(hFind, &findData));
-            FindClose(hFind);
-        }
-
-        if (!folderNames.empty()) {
-            // sort lexicographically and pick the last (newest timestamp)
-            sort(folderNames.begin(), folderNames.end());
-            GAME_NAME = folderNames.back();
-        }
-        else {
-            // fallback: generate a new timestamped name
-            auto now       = chrono::system_clock::now();
-            time_t t       = chrono::system_clock::to_time_t(now);
-            tm tm_struct   = *localtime(&t);
-
-            ostringstream oss;
-            oss << put_time(&tm_struct, "%Y-%m-%d_%H-%M-%S");
-            GAME_NAME = oss.str();
-        }
-
-    }
-
-    // then ensure history\GAME_NAME exists
-    string fullPath = string("history\\") + GAME_NAME;
-    if (_mkdir(fullPath.c_str()) != 0 && errno != EEXIST) {
-        cout << "Failed to create game folder! Errno: " << errno << endl;
-    }
-
+    return executableDirectory.substr(0, lastSlashIndex);
 }
 
-void PrintToTextFile(const string& content) {
-    // build timestamped filename.
-    auto now       = chrono::system_clock::now();
-    time_t t       = chrono::system_clock::to_time_t(now);
-    tm tm_struct   = *localtime(&t);
+string KernelExecutableFilePath() {
+    return ExecutableDirectory() + "\\Kernel.exe";
+}
 
-    ostringstream oss;
-    oss << put_time(&tm_struct, "%Y-%m-%d_%H-%M-%S");
-    string filename = oss.str() + ".txt";
+string LogsDirectory() {
+    return ExecutableDirectory() + "\\logs";
+}
 
-    // get the repo root (where PowerShell was launched).
-    char cwd[1024];
-    _getcwd(cwd, sizeof(cwd));
-    string rootPath(cwd);
+// The tests point MRBITS_DATABASE_FILE at a temporary database, so they never touch the real games.
+string DatabaseFilePath() {
+    const char* databaseFilePathForTheTests = getenv("MRBITS_DATABASE_FILE");
+    if (databaseFilePathForTheTests && *databaseFilePathForTheTests) {
+        return databaseFilePathForTheTests;
+    }
+    return RootDirectory() + "\\database\\mrbits.sqlite";
+}
 
-    // write into history/GAME_NAME/
-    string filePath = rootPath + "\\history\\" + GAME_NAME + "\\" + filename;
-    ofstream outfile(filePath);
-    if (!outfile) {
-        cout << "Error creating file: " << filename << endl;
+string DatabaseSchemaFilePath() {
+    return RootDirectory() + "\\database\\schema.sql";
+}
+
+bool DoesPathExist(const string& path) {
+    return GetFileAttributesA(path.c_str()) != INVALID_FILE_ATTRIBUTES;
+}
+
+string ToLowerCase(string text) {
+    for (char& currentCharacter : text) {
+        currentCharacter = (char)tolower((unsigned char)currentCharacter);
+    }
+    return text;
+}
+
+long long UnixTimeInMilliseconds() {
+    return chrono::duration_cast<chrono::milliseconds>(chrono::system_clock::now().time_since_epoch()).count();
+}
+
+// ############################################################ \\
+
+// One UCI line to lichess-bot, flushed at once. Without the flush, the line waits in the buffer until the next
+// getline(cin) (cin is tied to cout), so everything done after printing it would still be on my clock.
+void SendUciLine(const string& line) {
+    cout << line << "\n" << flush;
+    WriteToUciLog("<< " + line);
+}
+
+// A problem goes to the log AND to the database's events table.
+void RecordEvent(const string& level, const string& source, const string& message, const int& ply = 0) {
+    WriteToUciLog("!! " + source + ": " + message);
+    GetTheGameDatabase().recordEvent(DATABASE_GAME_ID.empty() ? GAME_ID : DATABASE_GAME_ID, ply, level, source,
+                                     message);
+}
+
+// "setoption name GameId value tN252leL". The name can have spaces, and the value is everything after
+// " value " (it can be empty). UCI option names are case-insensitive.
+void ApplySetOptionLine(const string& line) {
+    size_t namePosition = line.find(" name ");
+    if (namePosition == string::npos) {
+        WriteToUciLog("   malformed setoption ignored");
         return;
     }
-    outfile << content;
-    outfile.close();
+    size_t nameStartIndex = namePosition + 6;
+    size_t valuePosition = line.find(" value ", nameStartIndex);
+    string optionName, optionValue;
+    if (valuePosition != string::npos) {
+        optionName = TrimSpaces(line.substr(nameStartIndex, valuePosition - nameStartIndex));
+        optionValue = TrimSpaces(line.substr(valuePosition + 7));
+    }
+    else {
+        optionName = TrimSpaces(line.substr(nameStartIndex));
+        // "setoption name GameId value" with nothing after "value"
+        if (optionName.size() >= 6 && ToLowerCase(optionName.substr(optionName.size() - 6)) == " value") {
+            optionName = TrimSpaces(optionName.substr(0, optionName.size() - 6));
+        }
+    }
+    // "<empty>" (and "none") is how an empty default can come back from python-chess.
+    if (optionValue == "<empty>" || optionValue == "none") {
+        optionValue = "";
+    }
+
+    if (ToLowerCase(optionName) == "gameid") {
+        GAME_ID = optionValue;
+        DATABASE_GAME_ID = "";
+        WriteToUciLog("   GameId = '" + GAME_ID + "'");
+    }
+    else if (ToLowerCase(optionName) == "uci_opponent") {
+        // python-chess 1.10.0 sends "<title|none> <rating|none> <computer|human> <name, may contain spaces>".
+        istringstream fields(optionValue);
+        string title, rating, kind, name;
+        fields >> title >> rating >> kind;
+        getline(fields, name);
+        // A rating is plain digits, 9 at most, so stoi() can never throw here.
+        bool isRating = !rating.empty() && rating.size() <= 9 &&
+                        all_of(rating.begin(), rating.end(), [](unsigned char c) { return isdigit(c) != 0; });
+        OPPONENT = Json::object();
+        OPPONENT["title"] = (title.empty() || title == "none") ? Json(nullptr) : Json(title);
+        OPPONENT["rating"] = isRating ? Json(stoi(rating)) : Json(nullptr);
+        OPPONENT["isBot"] = (kind == "computer") ? Json(true) : ((kind == "human") ? Json(false) : Json(nullptr));
+        OPPONENT["name"] = TrimSpaces(name).empty() ? Json(nullptr) : Json(TrimSpaces(name));
+        WriteToUciLog("   UCI_Opponent = " + OPPONENT.dump());
+    }
+    else {
+        WriteToUciLog("   ignored unknown option '" + optionName + "'");
+    }
 }
 
+// ############################################################ \\
 
-
-
-
-// Function to send the "go" command to my engine's "Kernel.exe" asking for the best move.
-string getBestMoveFromEngine(string position, int wtime, int btime, int winc, int binc) {
+// moveRecord gets everything the database stores about this move (Engine UCI adds the rest after "bestmove").
+string getBestMoveFromEngine(string position, int wtime, int btime, int winc, int binc, Json& moveRecord) {
 
     // ############################################################ \\
     //                            Notes                             \\
@@ -512,16 +193,13 @@ string getBestMoveFromEngine(string position, int wtime, int btime, int winc, in
         currentChessState.previousMoves.push_back(position.substr(i, len));
         i += len + 1;
     }
-    
-    int numberOfMovesSoFar = currentChessState.previousMoves.size();
-    InitializeGameNameAndHistoryFolder(numberOfMovesSoFar);
 
     // Set the engine's color, and we know its color from the number of moves so far.
     bool engineColor = !(currentChessState.previousMoves.size() & 1);
     currentChessState.setEngineColor(engineColor);
 
     currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(2);
-    currentChessState.setNumberOfThreads(28);
+    currentChessState.setNumberOfThreads(NUMBER_OF_KERNEL_WORKERS);
 
     // I have to manipulate the engine's timing system a lot, which is partially represented
     // by the following code snippet. There are so many other places related to the timing
@@ -586,27 +264,11 @@ string getBestMoveFromEngine(string position, int wtime, int btime, int winc, in
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
     // Handle for the best move after setting everything
 
+    string engineMove;
+    double tieCheckMilliseconds = 0;
     if (currentChessState.previousMoves.size() <
         (currentChessState.getTheNumberOfOpeningMovesToGetFromStockfish() * 2)) {
-        string engineMove = currentChessState.getEngineMoveWithThreading();
-        string finalReport = "";
-        if (currentChessState.previousMoves.size() < 2) {
-            finalReport = "\n     #####  ";
-            finalReport += "It is the first engine's move, so lichess specify a small\n";
-            finalReport += "time (usually 5 seconds for white)for abandation.";
-            finalReport += " #####\n\n";
-            finalReport = "\n     #####  Thread allowed time in seconds: ";
-            finalReport += to_string(currentChessState.allowedEngineTimeInSeconds);
-            finalReport += " seconds.  #####\n\n";
-        }
-        else {
-            finalReport = "\n     #####  Thread allowed time in seconds: ";
-            finalReport += to_string(currentChessState.allowedEngineTimeInSeconds);
-            finalReport += " seconds.  #####\n\n";
-        }
-        finalReport += currentChessState.report;
-        PrintToTextFile(finalReport);
-        return engineMove;
+        engineMove = currentChessState.getEngineMoveWithThreading();
     }
     /*
      * The following condition is a temporarily experiment to let Stockfish plays
@@ -614,58 +276,95 @@ string getBestMoveFromEngine(string position, int wtime, int btime, int winc, in
      */
     else if (currentChessState.previousMoves.size() > 80) {
         currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(1000000);
-        string engineMove = currentChessState.getEngineMoveWithThreading();
-        string finalReport = "\n     #####  Thread allowed time in seconds: ";
-        finalReport += to_string(currentChessState.allowedEngineTimeInSeconds);
-        finalReport += " seconds.  #####\n\n";
-        finalReport += "Now it's the end game phase when Stockfish has started ";
-        finalReport += "playing from now on.\n";
-        PrintToTextFile(finalReport);
-        return engineMove;
+        engineMove = currentChessState.getEngineMoveWithThreading();
     }
     /*
      * Now checking if it's a move that leads directly to a stupid tie position
      * problem by my Kernel, and let Stockfish fix that issue by playing the
      * best move.
      */
-    string engineMove = currentChessState.getEngineMoveWithThreading();
-    if (currentChessState.stockfishHandler.isTiePosition(
-            currentChessState.getMovesStringFromPreviousMoves() + " " + engineMove)) {
-        int currentNumberOfMovesToGetFromStockfish =
-            currentChessState.getTheNumberOfOpeningMovesToGetFromStockfish();
-        currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(400);
-        engineMove = currentChessState.getEngineMoveWithThreading();
-        currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(currentNumberOfMovesToGetFromStockfish);
-        string finalReport = "\n     #####  Thread allowed time in seconds: ";
-        finalReport += to_string(currentChessState.allowedEngineTimeInSeconds);
-        finalReport += " seconds  #####\n\n";
-        finalReport += "My Engine's Kernel played a Tie move. Stockfish corrected it\n\n";
-        finalReport += currentChessState.report;
-        PrintToTextFile(finalReport);
-        return engineMove;
-    }
     else {
-        string finalReport = "\n     #####  Thread allowed time in seconds: ";
-        finalReport += to_string(currentChessState.allowedEngineTimeInSeconds);
-        finalReport += " seconds  #####\n\n";
-        finalReport += currentChessState.report;
-        PrintToTextFile(finalReport);
-        return engineMove;
+        engineMove = currentChessState.getEngineMoveWithThreading();
+        // Only a Kernel move is checked: the other paths are Stockfish's own moves, or the only legal move
+        // (and Stockfish would give that same move back).
+        chrono::steady_clock::time_point tieCheckStartTime = chrono::steady_clock::now();
+        bool isTieMove = (currentChessState.decisionPath == "kernel") &&
+                         currentChessState.stockfishHandler.isTiePosition(
+                             currentChessState.getMovesStringFromPreviousMoves() + " " + engineMove);
+        tieCheckMilliseconds = MillisecondsSince(tieCheckStartTime);
+        if (isTieMove) {
+            int currentNumberOfMovesToGetFromStockfish =
+                currentChessState.getTheNumberOfOpeningMovesToGetFromStockfish();
+            currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(400);
+            engineMove = currentChessState.getEngineMoveWithThreading();
+            currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(currentNumberOfMovesToGetFromStockfish);
+            // My Engine's Kernel played a Tie move. Stockfish corrected it.
+            currentChessState.decisionPath = "stalemate_override";
+        }
     }
+
+    // What the database keeps about this move. (Before, a text report went into history\<game>\<time>.txt.)
+    moveRecord["ply"] = (int)currentChessState.previousMoves.size() + 1;
+    moveRecord["ourColor"] = engineColor ? "white" : "black";
+    moveRecord["allowedSeconds"] = allowedEngineTimeInSeconds;
+    moveRecord["path"] = currentChessState.decisionPath;
+    moveRecord["legalMoves"] = currentChessState.numberOfLegalMoves;
+    moveRecord["workers"] = currentChessState.kernelWorkersAnswers.size();
+    moveRecord["bestMove"] = engineMove;
+    moveRecord["bestScore"] = (currentChessState.decisionPath == "kernel") ? Json(currentChessState.bestMoveScore)
+                                                                          : Json(nullptr);
+    moveRecord["stockfishDepth"] = (currentChessState.decisionPath.rfind("stockfish", 0) == 0 ||
+                                    currentChessState.decisionPath == "stalemate_override" ||
+                                    currentChessState.decisionPath == "no_kernel_answer")
+                                       ? Json(currentChessState.stockfishDepthUsed) : Json(nullptr);
+    moveRecord["legalMovesMs"] = currentChessState.legalMovesMilliseconds;
+    moveRecord["kernelMs"] = currentChessState.kernelWorkersMilliseconds;
+    moveRecord["tieCheckMs"] = tieCheckMilliseconds;
+    moveRecord["kernelWorkers"] = currentChessState.kernelWorkersAnswers;
+
+    return engineMove;
 
 }
 
+// ############################################################ \\
 
-
-
+// Called before the engine exits, normally or not: the Kernel workers stop, and the last moves are written.
+void ShutDownTheHelpers() {
+    GetTheKernelWorkerPool().shutdown();
+    GetTheGameDatabase().close(3000);
+}
 
 int main() {
     SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+
+    OpenUciLogFile(LogsDirectory());
+    char workingDirectory[1024] = "";
+    _getcwd(workingDirectory, sizeof(workingDirectory));
+    WriteToUciLog("== Engine UCI (build " MRBITS_BUILD_STAMP ") started, pid " + to_string(GetCurrentProcessId()));
+    WriteToUciLog("   exe dir   : " + ExecutableDirectory());
+    WriteToUciLog("   root dir  : " + RootDirectory());
+    WriteToUciLog("   cwd       : " + string(workingDirectory));
+    WriteToUciLog("   stockfish : " + StockfishExecutableFilePath() +
+                  (DoesPathExist(StockfishExecutableFilePath()) ? "" : "   <-- MISSING"));
+    WriteToUciLog("   kernel    : " + KernelExecutableFilePath() +
+                  (DoesPathExist(KernelExecutableFilePath()) ? "" : "   <-- MISSING"));
+
+    // Nothing starts here yet: the Kernel workers start on "ucinewgame" (so lichess-bot's quick check of the
+    // engine at startup costs nothing), and the database opens in its own thread.
+    GetTheKernelWorkerPool().configure(KernelExecutableFilePath(), LogsDirectory() + "\\kernel_workers_stderr.log",
+                                       NUMBER_OF_KERNEL_WORKERS);
+    GetTheGameDatabase().open(DatabaseFilePath(), DatabaseSchemaFilePath());
+    int lastStockfishRestartCount = 0;
 
     string line;
     string position = "startpos";
     int wtime = 0, btime = 0, winc = 0, binc = 0;
     while (getline(cin, line)) {
+        while (!line.empty() && (line.back() == '\r' || line.back() == '\n')) {
+            line.pop_back();
+        }
+        WriteToUciLog(">> " + line);
+
         function<vector<string>(const string&, char)> split = [](const string& str, char delimiter)
                    -> vector<string> {
             vector<string> tokens;
@@ -684,13 +383,35 @@ int main() {
         }
 
         if (tokens[0] == "uci") {
-            cout << "id name Mr. Bits Chess Engine\n";
-            cout << "id author Tareq Ali\n";
-            cout << "uciok\n";
+            SendUciLine("id name Mr. Bits Chess Engine");
+            SendUciLine("id author Tareq Ali");
+            // python-chess refuses to send an option the engine didn't declare, so both are declared here.
+            SendUciLine("option name GameId type string default <empty>");
+            SendUciLine("option name UCI_Opponent type string default <empty>");
+            SendUciLine("uciok");
         } else if (tokens[0] == "isready") {
-            cout << "readyok\n";
+            // The one Stockfish of this game starts here, before the first "go". lichess-bot also sends
+            // "isready" when it checks the engine at startup, so a missing or blocked Stockfish shows up there:
+            // without Stockfish there are no legal moves, so I don't answer "readyok" at all, and lichess-bot
+            // stops right away instead of the first game dying on its first move.
+            try {
+                GetTheStockfishProcess().ensureStarted();
+            } catch (const exception& error) {
+                RecordEvent("error", "stockfish", string("could not start: ") + error.what() + "  -> exiting without readyok");
+                ShutDownTheHelpers();
+                return 1;
+            }
+            SendUciLine("readyok");
+        } else if (tokens[0] == "setoption") {
+            ApplySetOptionLine(line);
         } else if (tokens[0] == "ucinewgame") {
+            // GAME_ID stays: python-chess sends GameId BEFORE "ucinewgame" (and UCI_Opponent right after it).
             position = "startpos";
+            DATABASE_GAME_ID = "";
+            OPPONENT = nullptr;
+            // The Kernel workers start now, in the background: they are ready long before the first Kernel
+            // move (ply 5 or 6, after Stockfish's two opening moves), and that move waits for them if they aren't.
+            GetTheKernelWorkerPool().startInTheBackground();
         } else if (tokens[0] == "position") {
             if (tokens.size() < 2) {
                 continue;
@@ -724,6 +445,16 @@ int main() {
             }
         } else if (tokens[0] == "go") {
 
+            // The "go" parameters exactly as they were sent, for the database (the code below copies
+            // "movetime" into wtime and btime).
+            Json goParameters = Json::object();
+            for (int i = 1; i + 1 < tokens.size(); ++i) {
+                if (tokens[i] == "wtime" || tokens[i] == "btime" || tokens[i] == "winc" || tokens[i] == "binc" ||
+                    tokens[i] == "movetime") {
+                    goParameters[tokens[i]] = stoi(tokens[i + 1]);
+                }
+            }
+
             if (tokens.size() == 3 && tokens[1] == "movetime") {
                 wtime = stoi(tokens[2]);
                 btime = stoi(tokens[2]);
@@ -740,12 +471,76 @@ int main() {
                     }
                 }
             }
-            string bestMove = getBestMoveFromEngine(position, wtime, btime, winc, binc);
-            cout << "bestmove " << bestMove << "\n";
+
+            if (DATABASE_GAME_ID.empty()) {
+                DATABASE_GAME_ID = GAME_ID.empty() ? "local-" + to_string(UnixTimeInMilliseconds()) : GAME_ID;
+            }
+            long long goReceivedAt = UnixTimeInMilliseconds();
+            chrono::steady_clock::time_point goReceivedTime = chrono::steady_clock::now();
+            Json moveRecord = Json::object();
+            string bestMove;
+            try {
+                bestMove = getBestMoveFromEngine(position, wtime, btime, winc, binc, moveRecord);
+            } catch (const exception& error) {
+                // Stockfish failed twice in a row, for example. Without it I can't play this move, so I stop,
+                // and the log and the database say why.
+                RecordEvent("error", "engine", string("go failed: ") + error.what() + "  -> exiting");
+                ShutDownTheHelpers();
+                return 1;
+            }
+            double moveTimeInMilliseconds = MillisecondsSince(goReceivedTime);
+            SendUciLine("bestmove " + bestMove);
+
+            // Everything below happens after "bestmove" is sent, so it's not on my clock. (The only slow part is
+            // restarting a worker that died, ~30 ms each, and an opponent's answer takes longer than that anyway.)
+            WriteToUciLog("   go -> bestmove took " + to_string((long long)moveTimeInMilliseconds) + " ms (" +
+                          moveRecord.value("path", "") + ", game '" + DATABASE_GAME_ID + "')");
+            moveRecord["gameId"] = DATABASE_GAME_ID;
+            moveRecord["receivedAt"] = goReceivedAt;
+            moveRecord["go"] = goParameters;
+            moveRecord["totalMs"] = moveTimeInMilliseconds;
+            moveRecord["engineVersion"] = MRBITS_BUILD_STAMP;
+            moveRecord["opponent"] = OPPONENT;
+            GetTheGameDatabase().recordMove(moveRecord);
+
+            int ply = moveRecord.value("ply", 0);
+            int numberOfFailedWorkers = 0;
+            for (const Json& workerRecord : moveRecord["kernelWorkers"]) {
+                numberOfFailedWorkers += (workerRecord.value("status", "") != "ok");
+            }
+            if (numberOfFailedWorkers > 0) {
+                RecordEvent("warning", "kernel workers", to_string(numberOfFailedWorkers) + " of " +
+                            to_string(moveRecord["kernelWorkers"].size()) + " gave no usable answer", ply);
+            }
+            if (moveRecord.value("path", "") == "no_kernel_answer") {
+                RecordEvent("error", "kernel workers", "no usable answer at all: Stockfish played the move", ply);
+            }
+            // The workers that timed out or died are replaced now, so the next move has all of them again.
+            string respawnError;
+            int numberOfReplacedWorkers = GetTheKernelWorkerPool().respawnTheDeadWorkers(respawnError);
+            if (numberOfReplacedWorkers > 0 && respawnError.empty()) {
+                RecordEvent("info", "kernel workers", "restarted " + to_string(numberOfReplacedWorkers) + " worker(s)",
+                            ply);
+            }
+            else if (numberOfReplacedWorkers > 0) {
+                RecordEvent("warning", "kernel workers", "tried to restart " + to_string(numberOfReplacedWorkers) +
+                            " worker(s): " + respawnError, ply);
+            }
+            int stockfishRestartCount = GetTheStockfishProcess().restartCount();
+            if (stockfishRestartCount != lastStockfishRestartCount) {
+                RecordEvent("warning", "stockfish", "Stockfish was restarted (" + to_string(stockfishRestartCount) +
+                            " time(s) in this game)", ply);
+                lastStockfishRestartCount = stockfishRestartCount;
+            }
         } else if (tokens[0] == "quit") {
+            WriteToUciLog("== quit");
             break;
+        } else {
+            WriteToUciLog("   ignored command");
         }
     }
 
+    ShutDownTheHelpers();
+    WriteToUciLog("== exit");
     return 0;
 }

@@ -1,14 +1,12 @@
 
 #include <windows.h>
+#include <io.h>      // _setmode, _fileno
+#include <fcntl.h>   // _O_BINARY
 
 // ############################################################ \\
 
-#include "Stockfish Handler.hpp"
-#include "json.hpp"
-
-// ############################################################ \\
-
-using Json = nlohmann::json;
+// ChessState (the same one as in Engine UCI), Json, ENGINE_NAME, rng, and "Stockfish Handler.hpp".
+#include "Chess State.hpp"
 
 // ############################################################ \\
 
@@ -16,7 +14,6 @@ using Json = nlohmann::json;
 
 // ############################################################ \\
 
-const string ENGINE_NAME = "Mr. Bits";
 const int PIECE_VALUE[8] = {0, 100, 100, 300, 300, 500, 900, 10000000};
 const int CHECKMATE_FLAG_SCORE_DIFFERENCE = 100000;
 
@@ -37,360 +34,6 @@ vector<vector<int16_t>> pieceSquaresTable[16];
 vector<vector<int16_t>> preCalculatedMoves[8][8][8][2];
 
 // ############################################################ \\
-// Random number generator for shuffling after the new MinGW C++11 update
-static std::mt19937 rng(std::random_device{}());
-
-// ############################################################ \\
-
-class ChessState {
-
-    public:
-  
-      StockfishHandler stockfishHandler;
-      vector<string> previousMoves;
-      // The following is the flag engineColor, it's True or 1, if the engine is
-      // white, and the default value of the engine is white
-      bool engineColor;
-      int allowedEngineTimeInSeconds;
-      string bestMove;
-      int bestMoveScore;
-      int numberOfThreads;
-      string report;
-      vector<string> movesForThisThread;
-      int theNumberOfOpeningMovesToGetFromStockfish;
-  
-      ChessState() : engineColor(1), previousMoves({}), allowedEngineTimeInSeconds(30) {
-          this->stockfishHandler = StockfishHandler();
-          // this->bestMove = stockfishHandler.getBestMoveByDepth(this->getMovesStringFromPreviousMoves(), 12);
-          this->bestMove = "It should be a default value like the previous line but I want to maintain more time";
-          this->bestMoveScore = 0;
-          this->numberOfThreads = 4;
-          this->theNumberOfOpeningMovesToGetFromStockfish = 7;
-      }
-  
-      void setallowedEngineTimeInSeconds(const int& allowedEngineTimeInSeconds) {
-          this->allowedEngineTimeInSeconds = allowedEngineTimeInSeconds;
-      }
-  
-      void setEngineColor(const bool& engineColor) {
-          this->engineColor = engineColor;
-      }
-  
-      void setTheNumberOfOpeningMovesToGetFromStockfish(
-          const int& theNumberOfOpeningMovesToGetFromStockfish) {
-          this->theNumberOfOpeningMovesToGetFromStockfish =
-              theNumberOfOpeningMovesToGetFromStockfish;
-      }
-  
-      int getTheNumberOfOpeningMovesToGetFromStockfish() {
-          return this->theNumberOfOpeningMovesToGetFromStockfish;
-      }
-  
-      void setBestMove(const string& bestMove) {
-          this->bestMove = bestMove;
-      }
-  
-      void setBestMoveScore(const int& bestMoveScore) {
-          this->bestMoveScore = bestMoveScore;
-      }
-  
-      void setNumberOfThreads(const int& numberOfThreads) {
-          this->numberOfThreads = numberOfThreads;
-      }
-  
-      void sayHelloAndGetEngineColorAndTheAllowedMoveTimeAndTheNumberOfThreadsAndMoreInfo() {
-  
-          cout << "\nHello, I am " << ENGINE_NAME << " chess engine, and "
-                  "I am better than Stockfish chess engine, so\n"
-                  "let's play our game ;) .\n"
-                  "Yes I am talking to you my opponent, if you want to choose "
-                  "White press 1, otherwise press 0:\n";
-          int choice;
-          cin >> choice;
-  
-          int theNumberOfThreads;
-          cout << endl << "Please input the number of threads:" << endl;
-          cin >> this->numberOfThreads;
-  
-          cout << endl << "Please enter the maximum allowed time for a single thread in seconds:\n";
-          cin >> this->allowedEngineTimeInSeconds;
-  
-          cout << endl << "Please enter how many opening moves you want me (The engine moves\nonly not including your moves) to use depending on Stockfish:\n";
-          cin >> this->theNumberOfOpeningMovesToGetFromStockfish;
-  
-          if (choice) {
-              cout << "\n" << ENGINE_NAME << " engine is Black, and you are White, let's"
-                      " move on ;) :\n\n\n";
-          }
-          else {
-              cout << "\n" << ENGINE_NAME << " engine is White, you are Black, let's"
-                      " move on ;) :\n\n";
-          }
-          cout << "##################################################" << endl << endl;
-  
-          this->engineColor = (!((bool)(choice)));
-  
-      }
-  
-      bool engineTurnNow() {
-          return (((((int)(this->previousMoves.size())) & 1) && (!this->engineColor)) ||
-                  ((!(((int)(this->previousMoves.size())) & 1)) && (engineColor)));
-      }
-  
-      string getMovesStringFromPreviousMoves() const {
-          string movesString = "";
-          for (const string& currentMove : this->previousMoves) {
-              movesString += currentMove;
-              movesString += " ";
-          }
-          return movesString;
-      }
-  
-      bool isValidMove(const string& correspondingMove) {
-  
-          string movesString = this->getMovesStringFromPreviousMoves();
-  
-          vector<string> validMoves = this->stockfishHandler.getAllPossibleMoves(movesString);
-  
-          for (const string& validMove : validMoves) {
-              if (correspondingMove == validMove) {
-                  return 1;
-              }
-          }
-  
-          return 0;
-  
-      }
-  
-      Json serializeObject() const {
-  
-          Json serializedObjectAsJson;
-          serializedObjectAsJson["engineColor"] = this->engineColor;
-          serializedObjectAsJson["allowedEngineTimeInSeconds"] = this->allowedEngineTimeInSeconds;
-          serializedObjectAsJson["previousMoves"] = this->previousMoves;
-          serializedObjectAsJson["bestMove"] = this->bestMove;
-          serializedObjectAsJson["bestMoveScore"] = this->bestMoveScore;
-          serializedObjectAsJson["movesForThisThread"] = this->movesForThisThread;
-          serializedObjectAsJson["report"] = this->report;
-  
-          return serializedObjectAsJson;
-  
-      }
-  
-      static ChessState deserializeObject(const Json& serializedObjectAsJson) {
-  
-          ChessState deserializedObject = ChessState();
-          deserializedObject.engineColor = serializedObjectAsJson["engineColor"];
-          deserializedObject.allowedEngineTimeInSeconds = serializedObjectAsJson["allowedEngineTimeInSeconds"];
-          deserializedObject.previousMoves = serializedObjectAsJson["previousMoves"];
-          deserializedObject.bestMove = serializedObjectAsJson["bestMove"];
-          deserializedObject.bestMoveScore = serializedObjectAsJson["bestMoveScore"];
-          deserializedObject.movesForThisThread = serializedObjectAsJson["movesForThisThread"];
-          deserializedObject.report = serializedObjectAsJson["report"];
-  
-          return deserializedObject;
-  
-      }
-  
-      string getEngineMoveWithThreading() {
-  
-          vector<string> allPossibleMoves = this->stockfishHandler.getAllPossibleMoves(
-                                                this->getMovesStringFromPreviousMoves());
-  
-          if (allPossibleMoves.size() == 0) {
-              this->report += "\n          ####################\n";
-              this->report += "    There is not a single valid move for this position.";
-              this->report += "\n          ####################\n";
-              return this->report;
-  
-          }
-          else if (allPossibleMoves.size() == 1) {
-              this->report += "\n          ####################\n";
-              this->report += "    There is only one possible move, currently I don't";
-              this->report += "care about other details\n    like the current move score.";
-              this->report += "\n          ####################\n";
-              return allPossibleMoves[0];
-          }
-  
-          // I should modify all the following function according to each game maybe, it's easy to
-          // manipulate with and super important in many other sides.
-          if (this->previousMoves.size() < (this->theNumberOfOpeningMovesToGetFromStockfish * 2)) {
-  
-              if ((this->allowedEngineTimeInSeconds >= 60) && (this->previousMoves.size() > 80)) {
-                  return this->stockfishHandler.getBestMoveByDepth(
-                      this->getMovesStringFromPreviousMoves(), 30);
-              }
-              if ((this->allowedEngineTimeInSeconds >= 30) && (this->previousMoves.size() > 80)) {
-                  return this->stockfishHandler.getBestMoveByDepth(
-                      this->getMovesStringFromPreviousMoves(), 28);
-              }
-              else if ((this->allowedEngineTimeInSeconds >= 20) && (this->previousMoves.size() > 80)) {
-                  return this->stockfishHandler.getBestMoveByDepth(
-                      this->getMovesStringFromPreviousMoves(), 24);
-              }
-              else if ((this->allowedEngineTimeInSeconds >= 10) && (this->previousMoves.size() > 80)) {
-                  return this->stockfishHandler.getBestMoveByDepth(
-                      this->getMovesStringFromPreviousMoves(), 20);
-              }
-  
-              // Not to lost on time or so because of deeper Stockfish depths.
-              if (this->allowedEngineTimeInSeconds <= 3) {
-                  return this->stockfishHandler.getBestMoveByDepth(
-                      this->getMovesStringFromPreviousMoves(), 18);
-              }
-              else if (this->allowedEngineTimeInSeconds <= 5) {
-                  return this->stockfishHandler.getBestMoveByDepth(
-                      this->getMovesStringFromPreviousMoves(), 20);
-              }
-  
-              // seed the random number generator with current time.
-              srand(time(0));
-              vector<int> possibleDepths = {24, 26, 28, 30};
-              int8_t randomChosenDepth = possibleDepths[rand() % 4];
-              return this->stockfishHandler.getBestMoveByDepth(
-                  this->getMovesStringFromPreviousMoves(), randomChosenDepth);
-              
-          }
-  
-  
-          int threadsNumberForThisPosition = min(this->numberOfThreads,
-                                                 (int)allPossibleMoves.size());
-  
-          vector<vector<pair<int, string>>> movesWithTheirScores(threadsNumberForThisPosition);
-  
-          vector<vector<string>> movesForEachThread(threadsNumberForThisPosition, vector<string>(0));
-          std::shuffle(allPossibleMoves.begin(), allPossibleMoves.end(), rng);
-  
-          int helperNum = 1;
-          for (const string& currentMove : allPossibleMoves) {
-              movesForEachThread[helperNum % threadsNumberForThisPosition].push_back(currentMove);
-              helperNum++;
-          }
-  
-          vector<thread> threads(threadsNumberForThisPosition);
-          vector<string> threadsReports(threadsNumberForThisPosition);
-          for (int i = 0; i < threads.size(); i++) {
-              ChessState currentChessState = *this;
-              currentChessState.movesForThisThread = movesForEachThread[i];
-  
-              threads[i] = thread([=, &movesWithTheirScores, &threadsReports]() mutable {
-  
-                  // this_thread::sleep_for(chrono::milliseconds(i * 50));
-                  // this_thread::sleep_for(chrono::milliseconds(10));
-  
-                  // Set priority of the thread to high.
-                  // I should check commenting the following and check what happends then because
-                  // I was calling the following one in the beginning of the main function here
-                  // in this file:
-                  // SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
-                  // So I should manipulate those just to learn what's happening.
-                  SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_HIGHEST);
-  
-                  // Save the serialized data to a file.
-                  string jsonFileName = "input/thread_" + to_string(i + 1);
-                  jsonFileName += "_serialized_data";
-                  jsonFileName += ".json";
-                  ofstream file(jsonFileName);
-                  file << currentChessState.serializeObject().dump(4);
-                  file.close();
-  
-                  currentChessState.executeExeFileWithArguments("engines/Kernel.exe", jsonFileName);
-  
-                  // Read the serialized data from the file.
-                  ifstream readFile(jsonFileName);
-                  stringstream buffer;
-                  buffer << readFile.rdbuf();
-                  string serializedDataAsString = buffer.str();
-  
-                  // Deserialize the object from the serialized data.
-                  Json receivedData = Json::parse(serializedDataAsString);
-  
-                  ChessState receivedChessState = currentChessState.deserializeObject(receivedData);
-  
-                  movesWithTheirScores[i].push_back({receivedChessState.bestMoveScore, receivedChessState.bestMove});
-                  threadsReports[i] = receivedChessState.report;
-  
-              });
-  
-          }
-  
-  
-          for (int i = 0; i < threads.size(); i++) {
-              threads[i].join();
-          }
-  
-          // The following one is just preparing the final report to log into history.
-          for (const string& threadReport : threadsReports) {
-              this->report += "\n          ####################\n";
-              this->report += threadReport;
-              this->report += "\n          ####################\n";
-          }
-  
-          vector<pair<int, string>> allMovesWithTheirScores;
-          for (const auto& vec : movesWithTheirScores) {
-              for (const auto& currentPair : vec) {
-                  allMovesWithTheirScores.push_back(currentPair);
-              }
-          }
-  
-          sort(allMovesWithTheirScores.begin(), allMovesWithTheirScores.end(),
-               greater<pair<int, string>>());
-  
-          this->bestMove = allMovesWithTheirScores[0].second;
-          this->bestMoveScore = allMovesWithTheirScores[0].first;
-  
-          return allMovesWithTheirScores[0].second;
-  
-      }
-  
-  
-      /*
-       * I will implement a function that sort the moves on depth 6, and then handle
-       * the threads' moves distribution process efficiently in a smart way to reduce time.
-       * I am definitely sure this will affect the performance a lot.
-       */
-  
-  
-  
-       void executeExeFileWithArguments(string filePath, const string& jsonFileName) const {
-          // This function executes a compiled ".exe" file with a JSON filename as its argument.
-          // It is launched a child process via the Windows Command Prompt (cmd.exe) using.
-          // the "system" function.
-  
-          // Note: CMD is not as flexible as PowerShell when it comes to path syntax — it expects
-          // backslashes ('\\') instead of forward slashes ('/') in this case when using
-          // the "system(command.c_str())" function.
-          // PowerShell accepts both, but since system() uses CMD under the hood, we convert all
-          // slashes to backslashes here to ensure compatibility.
-          // This has been tested and confirmed.
-          replace(filePath.begin(), filePath.end(), '/', '\\');
-  
-          string command = ".\\" + filePath;
-          command += " ";
-          command += "\"";
-          command += jsonFileName;
-          command += "\"";
-          system(command.c_str());
-      }
-  
-      // I should Check the logic of the following three functions more, they are not 100% accurate.
-      // The following three functions should be reimplemented on the StockfishHandler class.
-      bool isCheckmatePosition() {
-          return this->stockfishHandler.isCheckmatePosition(
-                                          this->getMovesStringFromPreviousMoves());
-      }
-      
-      bool isTiePosition() {
-          return this->stockfishHandler.isStalematePosition(
-                                          this->getMovesStringFromPreviousMoves());
-      }
-  
-      bool isStalematePosition() {
-          return 0;
-      }
-  
-  };
-
 
 class ProcessHandler {
 
@@ -487,6 +130,11 @@ class ProcessHandler {
         this->allowedTimeInMilliSeconds = allowedTimeInSeconds * 1000;
     }
 
+    // A fixed-depth search (only in the tests) switches the clock off with INT_MAX milliseconds.
+    void setAllowedTimeInMilliSeconds(const int& allowedTimeInMilliSeconds) {
+        this->allowedTimeInMilliSeconds = allowedTimeInMilliSeconds;
+    }
+
 
 
     // And here are the getters of my class
@@ -535,6 +183,27 @@ class ProcessHandler {
 
     long long getTheNumberOfAllTheFinalStates() const {
         return this->theNumberOfAllTheFinalStates;
+    }
+
+    // The raw counters, for the per-depth numbers of the answer. The index is the REMAINING depth of the
+    // node (0 = a leaf), and the move-ordering searches inside the tree count into the same slots.
+    long long getTheNumberOfStatesForACertainDepth(const int& depth) const {
+        return this->theNumberOfAllStatesForEachDepth[depth];
+    }
+
+    long long getTheNumberOfPrunedBranchesForACertainDepth(const int& depth) const {
+        return this->theNumberOfPrunedBranchesForEachDepth[depth];
+    }
+
+    // The same totals as the two old getters, but summed in 64 bits (those use accumulate(..., 0), so they
+    // sum in int and would wrap above 2,147,483,647 nodes).
+    long long getTheNumberOfAllTheInnerAndFinalStatesAs64Bit() const {
+        return accumulate(this->theNumberOfAllStatesForEachDepth, this->theNumberOfAllStatesForEachDepth + 51, 0LL);
+    }
+
+    long long getTheNumberOfAllTheBrunedBranchesAs64Bit() const {
+        return accumulate(this->theNumberOfPrunedBranchesForEachDepth,
+                          this->theNumberOfPrunedBranchesForEachDepth + 51, 0LL);
     }
 
     long long getTheNumberOfAllTheInnerStates() const {
@@ -797,191 +466,9 @@ class ProcessHandler {
  * lead to more impact with alpha-beta pruning, and slow down the whole process, and I have tested that a lot
  * in every way.
  */
-class Trie {
+#include "Trie.hpp"
 
-  private:
-    class TrieNode {
-
-      public:
-        int8_t nodeFrequency;
-        TrieNode* children[32];
-
-        TrieNode() : nodeFrequency(1) {
-            memset(this->children, 0, sizeof(this->children));
-        }
-
-    }* root;
-    vector<int8_t> smartBoardSquaresOrdering;
-
-  public:
-    Trie() : root(new TrieNode()) {
-        for (int8_t row = 0; row < 8; row++) {
-            for (int8_t column = 0; column < 8; column++) {
-                this->smartBoardSquaresOrdering.push_back(row + (column << 3));
-            }
-        }
-        std::shuffle(this->smartBoardSquaresOrdering.begin(), this->smartBoardSquaresOrdering.end(), rng);
-    }
-
-    ~Trie() {
-      if (root != nullptr) {
-        delete root;
-      }
-    }
-
-    void insertBoard(const int16_t& previousMove) {
-
-        bool enPassantPossible = 0;
-        int8_t previousMoveDestinationRow = (previousMove >> 6) & 7;
-        int8_t previousMoveDestinationColumn = (previousMove >> 9) & 7;
-        if (((board[previousMoveDestinationRow][previousMoveDestinationColumn] & 7) == 1) &&
-            (numberOfMovesOfThePieceOnThisSquare[previousMoveDestinationRow][previousMoveDestinationColumn] == 1) &&
-            ((previousMoveDestinationRow == 3) || (previousMoveDestinationRow == 4))) {
-
-            enPassantPossible = 1;
-
-        }
-
-        TrieNode* currentNode = this->root;
-
-        for (const int8_t& square : smartBoardSquaresOrdering) {
-
-            int8_t currentCellRow = square & 7;
-            int8_t currentCellColumn = (square >> 3) & 7;
-            int8_t currentCellInfo = board[currentCellRow][currentCellColumn];
-
-            // The following condition is true for all the pieces except when it comes to the castling special move
-            if (numberOfMovesOfThePieceOnThisSquare[currentCellRow][currentCellColumn]) {
-                //currentCellInfo |= 16;
-            }
-
-            if (((currentCellInfo & 7) == 1) && (enPassantPossible) &&
-                (previousMoveDestinationRow == currentCellRow) &&
-                ((currentCellInfo & 8) != (board[previousMoveDestinationRow][previousMoveDestinationColumn] & 8)) &&
-                (abs(previousMoveDestinationColumn - currentCellColumn) == 1)) {
-
-                currentCellInfo ^= 3;
-
-            }
-
-            if (currentNode->children[currentCellInfo] == nullptr) {
-                currentNode->children[currentCellInfo] = new TrieNode();
-            }
-            else {
-                currentNode->children[currentCellInfo]->nodeFrequency++;
-            }
-
-            currentNode = currentNode->children[currentCellInfo];
-        }
-
-    }
-
-    void deleteBoard(const int16_t& previousMove) {
-
-        stack<pair<TrieNode*, int8_t>> toDelete;
-
-        bool enPassantPossible = 0;
-        int8_t previousMoveDestinationRow = (previousMove >> 6) & 7;
-        int8_t previousMoveDestinationColumn = (previousMove >> 9) & 7;
-        if (((board[previousMoveDestinationRow][previousMoveDestinationColumn] & 7) == 1) &&
-            (numberOfMovesOfThePieceOnThisSquare[previousMoveDestinationRow][previousMoveDestinationColumn] == 1) &&
-            ((previousMoveDestinationRow == 3) || (previousMoveDestinationRow == 4))) {
-
-            enPassantPossible = 1;
-
-        }
-
-        TrieNode* currentNode = this->root;
-
-        for (const int8_t& square : smartBoardSquaresOrdering) {
-
-            int8_t currentCellRow = square & 7;
-            int8_t currentCellColumn = (square >> 3) & 7;
-            int8_t currentCellInfo = board[currentCellRow][currentCellColumn];
-
-            // The following condition is true for all the pieces except when it comes to the castling special move
-            if (numberOfMovesOfThePieceOnThisSquare[currentCellRow][currentCellColumn]) {
-                //currentCellInfo |= 16;
-            }
-
-            if (((currentCellInfo & 7) == 1) && (enPassantPossible) &&
-                (previousMoveDestinationRow == currentCellRow) &&
-                ((currentCellInfo & 8) != (board[previousMoveDestinationRow][previousMoveDestinationColumn] & 8)) &&
-                (abs(previousMoveDestinationColumn - currentCellColumn) == 1)) {
-
-                currentCellInfo ^= 3;
-
-            }
-
-            currentNode->children[currentCellInfo]->nodeFrequency--;
-            if (currentNode->children[currentCellInfo]->nodeFrequency == 0) {
-                toDelete.push({currentNode, currentCellInfo});
-            }
-            currentNode = currentNode->children[currentCellInfo];
-
-
-        }
-
-        while (toDelete.size()) {
-
-            TrieNode* nodeToDelete;
-            int8_t nodeToDeleteIndex;
-            tie(nodeToDelete, nodeToDeleteIndex) = toDelete.top();
-            toDelete.pop();
-            delete nodeToDelete->children[nodeToDeleteIndex];
-            nodeToDelete->children[nodeToDeleteIndex] = nullptr;
-
-        }
-
-    }
-
-    bool boardExist(const int16_t& previousMove) {
-
-        bool enPassantPossible = 0;
-        int8_t previousMoveDestinationRow = (previousMove >> 6) & 7;
-        int8_t previousMoveDestinationColumn = (previousMove >> 9) & 7;
-        if (((board[previousMoveDestinationRow][previousMoveDestinationColumn] & 7) == 1) &&
-            (numberOfMovesOfThePieceOnThisSquare[previousMoveDestinationRow][previousMoveDestinationColumn] == 1) &&
-            ((previousMoveDestinationRow == 3) || (previousMoveDestinationRow == 4))) {
-
-            enPassantPossible = 1;
-
-        }
-
-        TrieNode* currentNode = this->root;
-
-        for (const int8_t& square : smartBoardSquaresOrdering) {
-
-            int8_t currentCellRow = square & 7;
-            int8_t currentCellColumn = (square >> 3) & 7;
-            int8_t currentCellInfo = board[currentCellRow][currentCellColumn];
-
-            // The following condition is true for all the pieces except when it comes to the castling special move
-            if (numberOfMovesOfThePieceOnThisSquare[currentCellRow][currentCellColumn]) {
-                //currentCellInfo |= 16;
-            }
-
-            if (((currentCellInfo & 7) == 1) && (enPassantPossible) &&
-                (previousMoveDestinationRow == currentCellRow) &&
-                ((currentCellInfo & 8) != (board[previousMoveDestinationRow][previousMoveDestinationColumn] & 8)) &&
-                (abs(previousMoveDestinationColumn - currentCellColumn) == 1)) {
-
-                currentCellInfo ^= 3;
-
-            }
-
-            if (currentNode->children[currentCellInfo] == nullptr) {
-                return 0;
-            }
-            currentNode = currentNode->children[currentCellInfo];
-
-        }
-
-        return 1;
-
-    }
-
-} myTrieForCheckingForBoardCycles[2];
+Trie myTrieForCheckingForBoardCycles[2];
 
 // ############################################################ \\
 
@@ -2776,6 +2263,19 @@ void ReturnChanges(const int16_t& currentMove, const int8_t& takenPiece, const i
 
 }
 
+// Neural ordering helpers are intentionally not called by the search yet.
+#include "Neural Networks/Move Ordering.hpp"
+
+void SortTheMovesWithLargeNeuralNetwork(vector<int16_t>& moves) {
+    if (moves.empty()) return;
+    mrbits::kernel_neural::SortMoves(moves, mrbits::kernel_neural::LargeModel());
+}
+
+void SortTheMovesWithSmallNeuralNetwork(vector<int16_t>& moves) {
+    if (moves.empty()) return;
+    mrbits::kernel_neural::SortMoves(moves, mrbits::kernel_neural::SmallModel());
+}
+
 int MagicForIterativeDeepening(const int8_t& depth, const bool& turn, const int16_t& previousMove, int alpha, int beta) {
 
     // I am using the following one because it's too important because have I realized that some
@@ -3164,10 +2664,21 @@ vector<int16_t> GetAllPossibleMoves() {
 
 }
 
+// The score of every root move of the last GetBestMoveWithItsScore() call, in search order. The search is
+// fail-soft alpha-beta, so a root move's score is exact only when it beat the window it was searched with;
+// otherwise it's only a bound ("at most this" when the engine is the side to move).
+struct RootMoveScore {
+    int16_t move;
+    int score;
+    bool exact;
+};
+vector<RootMoveScore> rootMoveScoresOfTheLastSearch;
+
 pair<int16_t, int> GetBestMoveWithItsScore(const int8_t& depth, const bool& turn,
                                            vector<int16_t>& currentSortedMoves) {
 
     processHandler.resetObjectArraysAndFinalStates();
+    rootMoveScoresOfTheLastSearch.clear();
 
     if (currentSortedMoves.size() == 0) {
         return {0, 0};
@@ -3188,6 +2699,8 @@ pair<int16_t, int> GetBestMoveWithItsScore(const int8_t& depth, const bool& turn
         long long blackPiecesBeforeCommittingTheCurrentMove = blackPieces;
         int engineScoreBeforeCommittingTheCurrentMove = engineScore;
         int opponentScoreBeforeCommittingTheCurrentMove = opponentScore;
+        const int alphaBeforeThisMove = alpha;
+        const int betaBeforeThisMove = beta;
         MakeChanges(currentMove);
         int correspondingScore = Magic(depth - 1, !turn, currentMove, alpha, beta);
         whitePieces = whitePiecesBeforeCommittingTheCurrentMove;
@@ -3195,6 +2708,10 @@ pair<int16_t, int> GetBestMoveWithItsScore(const int8_t& depth, const bool& turn
         engineScore = engineScoreBeforeCommittingTheCurrentMove;
         opponentScore = opponentScoreBeforeCommittingTheCurrentMove;
         ReturnChanges(currentMove, takenPiece, numberOfMovesOfTheTakenPiece);
+
+        rootMoveScoresOfTheLastSearch.push_back({currentMove, correspondingScore,
+                                                 turn ? (correspondingScore > alphaBeforeThisMove)
+                                                      : (correspondingScore < betaBeforeThisMove)});
 
         if ((turn) && (correspondingScore > bestScoreSoFar)) {
             bestScoreSoFar = correspondingScore;
@@ -3314,16 +2831,52 @@ void GetBestMoveAndItsScoreToInitializeProcessHandler(const vector<string>& move
 
 }
 
-void InitializeEveryThing(const vector<string>& previousMovesAsStandard) {
+// ############################################################ \\
+//                            Notes                             \\
+// Kernel.exe is a worker now. Engine UCI starts it once per    \\
+// game, and then, for every move, it writes one request line   \\
+// into my stdin (a ChessState in JSON, exactly what the JSON   \\
+// file used to hold, plus "type" and "id"), and I answer with  \\
+// one line on my stdout. The search itself didn't change at    \\
+// all: the old main() loop is RunIterativeDeepening() below.   \\
+// ############################################################ \\
 
+#ifndef MRBITS_BUILD_STAMP
+#define MRBITS_BUILD_STAMP "dev"
+#endif
+
+// The tables are built ONCE per process. This is a hard requirement, not an optimization:
+// MovesPreCalculation() only push_backs into preCalculatedMoves and never clears it, so a second call
+// would duplicate every bishop, rook and queen ray, with the same move and score but many more nodes.
+// (PieceSquaresTableInitialization() and BitToSquareAndViceVersaInitialization() only assign, and none of
+// the three reads the board, the masks or ENGINE_COLOR, so building them first is the same as the old order.)
+void BuildTheTablesOnce() {
+    static bool theTablesAreBuilt = false;
+    if (theTablesAreBuilt) {
+        return;
+    }
+    theTablesAreBuilt = true;
     MovesPreCalculation();
     PieceSquaresTableInitialization();
-    BoardInitialization();
+    BitToSquareAndViceVersaInitialization();
+}
+
+// Everything a search reads or writes, apart from the tables above. When every move started a brand-new
+// process this was free. ENGINE_COLOR must come first, because InitializeEngineScore() and
+// InitializeOpponentScore() read it (and so does MakeChanges() while the moves are replayed).
+void ResetGameState(const bool& engineColor) {
+    ENGINE_COLOR = engineColor;
+    processHandler = ProcessHandler();      // depth, best move and score, allowed time, timers, counters
+    previousMoves.clear();                  // its back() is the root's "previous move" (en passant)
+    rootMoveScoresOfTheLastSearch.clear();
+    BoardInitialization();                  // the board and numberOfMovesOfThePieceOnThisSquare
     blackPieces = ((1ll << 16) - 1);
     whitePieces = blackPieces << 48;
-    BitToSquareAndViceVersaInitialization();
     InitializeEngineScore();
     InitializeOpponentScore();
+}
+
+void ReplayMoves(const vector<string>& previousMovesAsStandard) {
     vector<vector<int8_t>> currentChessBoard(8, vector<int8_t>(8));
     for (const string& currentMove : previousMovesAsStandard) {
         for (int8_t row = 0; row < 8; row++) {
@@ -3334,57 +2887,80 @@ void InitializeEveryThing(const vector<string>& previousMovesAsStandard) {
         previousMoves.push_back(processHandler.convertMoveFromStandardToInt16_t(currentMove, currentChessBoard));
         MakeChanges(previousMoves.back());
     }
-
 }
 
-int main(int argc, char* argv[]) {
+// ############################################################ \\
 
-    // Set the priority of the parent process (The current process)
-    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+struct IterationSummary {
+    int depth;
+    bool completed;
+    double milliseconds;
+    long long nodes;
+    long long leafNodes;
+    long long pruned;
+    int16_t bestMove;
+    int score;
+};
 
-    if (argc < 2) {
-        cout << "Insufficient argument provided." << endl;
-        return 1;
-    }
-
-    string jsonFileName = argv[1];
-
-
-
-    // I should get as an input the allowed time and the previous moves as standard strings moves
-    ChessState currentChessState = ChessState();
-    // Read the serialized data from the file
-    ifstream readFile(jsonFileName);
-    stringstream buffer;
-    buffer << readFile.rdbuf();
-    string serializedDataAsString = buffer.str();
-
-    // Deserialize the object from the serialized data
-    Json receivedData = Json::parse(serializedDataAsString);
-
-    currentChessState = ChessState::deserializeObject(receivedData);
-
-    ENGINE_COLOR = currentChessState.engineColor;
-    processHandler.setAllowedTime(currentChessState.allowedEngineTimeInSeconds);
-    vector<string> previousMovesAsStandard = currentChessState.previousMoves;
-
-
-    InitializeEveryThing(previousMovesAsStandard);
-    processHandler.setAllProcessStartTime();
+struct SearchOutcome {
     ProcessHandler theFinalCompletedProcessHandler;
+    bool completedAtLeastOneDepth = false;
+    vector<RootMoveScore> rootScoresOfTheFinalDepth;
+    vector<IterationSummary> perDepth;
+};
 
-    for (int8_t depth = 2; depth <= 30; depth += 2) {
+IterationSummary SummarizeTheIteration(const ProcessHandler& handler, const int& depth, const bool& completed,
+                                       const double& milliseconds) {
+    IterationSummary summary;
+    summary.depth = depth;
+    summary.completed = completed;
+    summary.milliseconds = milliseconds;
+    summary.nodes = handler.getTheNumberOfAllTheInnerAndFinalStatesAs64Bit();
+    summary.leafNodes = handler.getTheNumberOfAllTheFinalStates();
+    summary.pruned = handler.getTheNumberOfAllTheBrunedBranchesAs64Bit();
+    summary.bestMove = handler.getBestEngineMoveAsInt16_t();
+    summary.score = handler.getBestEngineMoveScore();
+    return summary;
+}
+
+// The old main() loop. maxDepth == 0 is exactly the old way (the allowed time is a hard cap checked at every
+// node, and a new depth isn't started once 5% of it is used). maxDepth > 0 is only for the tests: the clock
+// is switched off and the loop stops after that depth (even depths only, like always).
+SearchOutcome RunIterativeDeepening(const vector<string>& movesForThisThread, const int& maxDepth) {
+
+    SearchOutcome outcome;
+    if (maxDepth > 0) {
+        processHandler.setAllowedTimeInMilliSeconds(INT_MAX);
+    }
+    const int lastDepth = (maxDepth > 0) ? min(maxDepth, 30) : 30;
+
+    processHandler.setAllProcessStartTime();
+    ProcessHandler& theFinalCompletedProcessHandler = outcome.theFinalCompletedProcessHandler;
+
+    for (int8_t depth = 2; depth <= lastDepth; depth += 2) {
+        chrono::high_resolution_clock::time_point iterationStartTime = chrono::high_resolution_clock::now();
         processHandler.setEngineDepth(depth);
         processHandler.setLastDepthCalculationStartTime();
-        GetBestMoveAndItsScoreToInitializeProcessHandler(currentChessState.movesForThisThread);
+        GetBestMoveAndItsScoreToInitializeProcessHandler(movesForThisThread);
         if (processHandler.processTimeExceeded()) {
             theFinalCompletedProcessHandler.setAllProcessEndTime();
+            outcome.perDepth.push_back(SummarizeTheIteration(processHandler, depth, false,
+                                                             MillisecondsSince(iterationStartTime)));
             break;
         }
 
         theFinalCompletedProcessHandler = processHandler;
         theFinalCompletedProcessHandler.setAllProcessEndTime();
         theFinalCompletedProcessHandler.setLastDepthCalculationsEndTime();
+        outcome.completedAtLeastOneDepth = true;
+        outcome.rootScoresOfTheFinalDepth = rootMoveScoresOfTheLastSearch;
+        outcome.perDepth.push_back(SummarizeTheIteration(processHandler, depth, true,
+                                                         MillisecondsSince(iterationStartTime)));
+
+        if (maxDepth > 0) {
+            // A fixed depth ignores the time rule below.
+            continue;
+        }
 
         // The following is a temporarily additional condition
         long double totalAllowedTimeInMilliSeconds = theFinalCompletedProcessHandler.getProcessAllowedTimeInMilliSeconds();
@@ -3402,13 +2978,221 @@ int main(int argc, char* argv[]) {
 
     }
 
-    currentChessState.bestMove = theFinalCompletedProcessHandler.getEngineBestMoveAsStandard();
-    currentChessState.bestMoveScore = theFinalCompletedProcessHandler.getBestEngineMoveScore();
-    currentChessState.report = theFinalCompletedProcessHandler.getFinalReportAsString();
-    ofstream file(jsonFileName);
-    file << currentChessState.serializeObject().dump(4);
-    file.close();
+    return outcome;
+}
 
+// ############################################################ \\
+
+double RoundToThreeDecimals(const double& value) {
+    return round(value * 1000.0) / 1000.0;
+}
+
+// It protects the board indexing in convertMoveFromStandardToInt16_t from garbage input.
+bool IsWellFormedStandardMove(const string& move) {
+    if ((move.size() != 4) && (move.size() != 5)) {
+        return false;
+    }
+    if ((move[0] < 'a') || (move[0] > 'h') || (move[2] < 'a') || (move[2] > 'h') ||
+        (move[1] < '1') || (move[1] > '8') || (move[3] < '1') || (move[3] > '8')) {
+        return false;
+    }
+    return (move.size() == 4) || (string("qrbn").find(move[4]) != string::npos);
+}
+
+Json AnswerSearchRequest(const Json& request) {
+
+    chrono::high_resolution_clock::time_point setupStartTime = chrono::high_resolution_clock::now();
+
+    // The request is a ChessState: the previous moves, my color, my allowed time and my root moves.
+    ChessState currentChessState = ChessState::deserializeObject(request);
+    for (const string& currentMove : currentChessState.previousMoves) {
+        if (!IsWellFormedStandardMove(currentMove)) {
+            throw invalid_argument("\"previousMoves\" holds a malformed move: \"" + currentMove + "\"");
+        }
+    }
+    for (const string& currentMove : currentChessState.movesForThisThread) {
+        if (!IsWellFormedStandardMove(currentMove)) {
+            throw invalid_argument("\"movesForThisThread\" holds a malformed move: \"" + currentMove + "\"");
+        }
+    }
+    // 0 = use the allowed time, like always. A fixed depth is only for the tests.
+    const int maxDepth = request.value("maxDepth", 0);
+    if ((maxDepth < 0) || (maxDepth > 30)) {
+        throw invalid_argument("\"maxDepth\" must be 0 (use the allowed time) or 2..30");
+    }
+
+    ResetGameState(currentChessState.engineColor);
+    processHandler.setAllowedTime(currentChessState.allowedEngineTimeInSeconds);
+    ReplayMoves(currentChessState.previousMoves);
+    const double setupMilliseconds = MillisecondsSince(setupStartTime);
+
+    chrono::high_resolution_clock::time_point searchStartTime = chrono::high_resolution_clock::now();
+    SearchOutcome outcome = RunIterativeDeepening(currentChessState.movesForThisThread, maxDepth);
+    const double searchMilliseconds = MillisecondsSince(searchStartTime);
+
+    const ProcessHandler& theFinalCompletedProcessHandler = outcome.theFinalCompletedProcessHandler;
+    const bool hasNoMoves = currentChessState.movesForThisThread.empty();
+    const bool isOk = (!hasNoMoves) && outcome.completedAtLeastOneDepth;
+
+    Json answer;
+    answer["type"] = "result";
+    answer["id"] = request.contains("id") ? request["id"] : Json(nullptr);
+    answer["status"] = hasNoMoves ? "no_moves" : (isOk ? "ok" : "no_completed_depth");
+    if (isOk) {
+        answer["bestMove"] = theFinalCompletedProcessHandler.getEngineBestMoveAsStandard();
+        answer["score"] = theFinalCompletedProcessHandler.getBestEngineMoveScore();
+        answer["depth"] = (int)theFinalCompletedProcessHandler.getEngineDepth();
+    }
+    else {
+        // The old file answered "a8a8" with score 0 here (the empty move printed as a square pair).
+        answer["bestMove"] = nullptr;
+        answer["score"] = nullptr;
+        answer["depth"] = 0;
+    }
+    answer["setupMs"] = RoundToThreeDecimals(setupMilliseconds);
+    answer["searchMs"] = RoundToThreeDecimals(searchMilliseconds);
+    // The last completed depth's main search: the same numbers as the old text report.
+    answer["nodes"] = isOk ? theFinalCompletedProcessHandler.getTheNumberOfAllTheInnerAndFinalStatesAs64Bit() : 0;
+    answer["leafNodes"] = isOk ? theFinalCompletedProcessHandler.getTheNumberOfAllTheFinalStates() : 0;
+    answer["pruned"] = isOk ? theFinalCompletedProcessHandler.getTheNumberOfAllTheBrunedBranchesAs64Bit() : 0;
+
+    long long totalNodes = 0;
+    Json perDepth = Json::array();
+    for (const IterationSummary& iteration : outcome.perDepth) {
+        totalNodes += iteration.nodes;
+        Json depthRecord;
+        depthRecord["depth"] = iteration.depth;
+        depthRecord["completed"] = iteration.completed;
+        depthRecord["ms"] = RoundToThreeDecimals(iteration.milliseconds);
+        depthRecord["nodes"] = iteration.nodes;
+        depthRecord["leafNodes"] = iteration.leafNodes;
+        depthRecord["pruned"] = iteration.pruned;
+        if (iteration.completed) {
+            depthRecord["bestMove"] = processHandler.convertMoveFromInt16_tToStandard(iteration.bestMove);
+            depthRecord["score"] = iteration.score;
+        }
+        perDepth.push_back(depthRecord);
+    }
+    // Every iteration, an aborted last one included.
+    answer["totalNodes"] = totalNodes;
+    answer["perDepth"] = perDepth;
+
+    Json rootScores = Json::array();
+    set<string> searchedRootMoves;
+    for (const RootMoveScore& rootMoveScore : outcome.rootScoresOfTheFinalDepth) {
+        string move = processHandler.convertMoveFromInt16_tToStandard(rootMoveScore.move);
+        searchedRootMoves.insert(move);
+        Json rootScore;
+        rootScore["move"] = move;
+        rootScore["score"] = rootMoveScore.score;
+        rootScore["exact"] = rootMoveScore.exact;
+        rootScores.push_back(rootScore);
+    }
+    answer["rootScores"] = rootScores;
+    // From depth 6 on, the root keeps only its 4 best moves (GetBestMoveAndItsScoreToInitializeProcessHandler).
+    Json unsearchedRootMoves = Json::array();
+    if (isOk) {
+        for (const string& currentMove : currentChessState.movesForThisThread) {
+            if (!searchedRootMoves.count(currentMove)) {
+                unsearchedRootMoves.push_back(currentMove);
+            }
+        }
+    }
+    answer["unsearchedRootMoves"] = unsearchedRootMoves;
+
+    return answer;
+
+}
+
+// The only writer of my stdout. fwrite uses this executable's own C runtime (the same one as the _setmode
+// below), so every line ends in a bare "\n" even when libstdc++-6.dll comes from somewhere else (Git Bash
+// puts Git's own one first on PATH, and then cout would ignore the _setmode and send "\r\n").
+void WriteProtocolLine(const string& line) {
+    fwrite(line.data(), 1, line.size(), stdout);
+    fputc('\n', stdout);
+    fflush(stdout);
+}
+
+int RunWorkerMode() {
+
+    // My stdout carries the answer lines only: from here on, anything written to cout goes to stderr.
+    streambuf* originalCoutBuffer = cout.rdbuf(cerr.rdbuf());
+    _setmode(_fileno(stdout), _O_BINARY);
+    _setmode(_fileno(stdin), _O_BINARY);
+
+    chrono::high_resolution_clock::time_point initializationStartTime = chrono::high_resolution_clock::now();
+    BuildTheTablesOnce();
+    const double initializationMilliseconds = MillisecondsSince(initializationStartTime);
+
+    string line;
+    while (getline(cin, line)) {
+
+        if ((!line.empty()) && (line.back() == '\r')) {
+            line.pop_back();
+        }
+        if (line.find_first_not_of(" \t") == string::npos) {
+            continue;
+        }
+
+        Json answer;
+        Json id = nullptr;
+        bool isQuitRequested = false;
+        try {
+            Json request = Json::parse(line);
+            if (!request.is_object()) {
+                throw invalid_argument("a request must be a JSON object");
+            }
+            if (request.contains("id")) {
+                id = request["id"];
+            }
+            string requestType = request.at("type").get<string>();
+            if (requestType == "search") {
+                answer = AnswerSearchRequest(request);
+            }
+            else if (requestType == "hello") {
+                answer["type"] = "ready";
+                answer["protocol"] = 1;
+                answer["engineVersion"] = string("kernel-") + MRBITS_BUILD_STAMP;
+                answer["pid"] = (long long)GetCurrentProcessId();
+                answer["initMs"] = RoundToThreeDecimals(initializationMilliseconds);
+            }
+            else if (requestType == "quit") {
+                isQuitRequested = true;
+            }
+            else {
+                throw invalid_argument("unknown request type \"" + requestType + "\"");
+            }
+        }
+        catch (const exception& error) {
+            answer = Json::object();
+            answer["type"] = "error";
+            answer["id"] = id;
+            answer["message"] = error.what();
+        }
+
+        if (isQuitRequested) {
+            break;
+        }
+        // "replace": an invalid UTF-8 byte echoed in an error message must never throw here.
+        WriteProtocolLine(answer.dump(-1, ' ', false, Json::error_handler_t::replace));
+    }
+
+    cout.rdbuf(originalCoutBuffer);
     return 0;
 }
 
+int main(int argc, char* argv[]) {
+
+    // Set the priority of the parent process (The current process)
+    SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+
+    // The old way ("Kernel.exe <file.json>") is gone. An old Engine UCI that still calls me like that gets a
+    // clear error at once, instead of a worker that waits for its input forever.
+    if (argc >= 2) {
+        cerr << "Kernel.exe doesn't read JSON files any more: Engine UCI starts it as a worker, with no arguments."
+             << endl;
+        return 1;
+    }
+
+    return RunWorkerMode();
+}

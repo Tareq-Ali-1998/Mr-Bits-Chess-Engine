@@ -1,0 +1,785 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>01 - Tutorial - How Two Processes Talk.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="-how-two-processes-talk--a-tutorial-for-mr-bits">🎓 How Two Processes Talk — A Tutorial for Mr. Bits</h1>
+<p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝 <em>October 23, 2026 · v2, October 25: corrected with what the prototypes measured on your laptop · <strong>v4, October 27: as built</strong></em></p>
+<blockquote>
+<p>🗑️ <strong>This is the temporary tutorial you asked for.</strong> Delete it once you've learned it. Phase 3 is built now, so it has done its job, and deleting it breaks no link: the README only names it in its reading order (plain text, so take it out of that list too), and plan 02 no longer points into it. Plan 03 and the runbook (04) don't depend on it.</p>
+<p>✅ = measured on your laptop: October 23–25 (your old binaries and the prototypes), unless it says <strong>October 27</strong>, which means the built engine.</p>
+</blockquote>
+<hr />
+<h2 id="1-️-the-name-of-the-thing">1. 🏷️ The name of the thing</h2>
+<div style="background:#eff6ff;border-left:6px solid #2563eb;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>It's called IPC: Inter-Process Communication.</strong> The specific technique you're describing (&quot;Engine UCI gives the input to the Kernel directly&quot;) is <strong>pipes</strong>: connecting a child process's <code>stdin</code> and <code>stdout</code> to pipes owned by the parent.</p>
+<p>It is <strong>not</strong> &quot;pipelining&quot;. Pipelining means splitting work into stages that overlap in time, like a CPU working on several instructions at once, or an assembly line. Both words contain &quot;pipe&quot;, so everyone mixes them up at first 😄.</p>
+</div>
+<p>The words you'll meet, translated into Mr. Bits:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Meaning</th>
+<th>In Mr. Bits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Process</strong></td>
+<td>A running program with its own private memory</td>
+<td><code>Engine UCI.exe</code>, each <code>Kernel.exe</code>, Stockfish, lichess-bot</td>
+</tr>
+<tr>
+<td><strong>Thread</strong></td>
+<td>A line of execution <em>inside</em> a process, sharing that process's memory</td>
+<td>Before: up to 28 <code>std::thread</code>s per move in Engine UCI, each waiting for its own brand-new <code>Kernel.exe</code>. Now: one reader thread per Kernel worker, plus the database's writer thread</td>
+</tr>
+<tr>
+<td><strong>IPC</strong></td>
+<td>Any way two processes exchange data</td>
+<td>Before: JSON files in <code>input\</code>. Now: pipes</td>
+</tr>
+<tr>
+<td><strong>Pipe</strong></td>
+<td>A one-way byte channel the operating system manages, with a write end and a read end</td>
+<td>How lichess-bot talks to Engine UCI, and now also how Engine UCI talks to Stockfish and to every Kernel worker</td>
+</tr>
+<tr>
+<td><strong>stdin / stdout / stderr</strong></td>
+<td>The three standard streams every process is born with</td>
+<td><code>cin</code>, <code>cout</code>, <code>cerr</code></td>
+</tr>
+<tr>
+<td><strong>Redirection</strong></td>
+<td>Connecting a child's stdin/stdout to pipes (or files) instead of the console</td>
+<td>What python-chess does to Engine UCI, and what Engine UCI now does to Stockfish and the Kernel workers</td>
+</tr>
+<tr>
+<td><strong>Spawn</strong></td>
+<td>Create a new process</td>
+<td>Before: <code>system()</code> → <code>cmd.exe</code> → <code>Kernel.exe</code>, up to 28 times per move. Now: <code>CreateProcess</code> → <code>Kernel.exe</code> directly, 28 times per game (plus one for each worker that dies)</td>
+</tr>
+<tr>
+<td><strong>Handle</strong></td>
+<td>Windows' name for an open file, pipe end or process</td>
+<td>Each pipe has two: a read end and a write end</td>
+</tr>
+<tr>
+<td><strong>Worker / worker pool</strong></td>
+<td>Long-lived child processes that wait for jobs</td>
+<td>Built: 28 Kernels alive for the whole game (<code>engines\Kernel Workers.hpp</code>)</td>
+</tr>
+<tr>
+<td><strong>Protocol</strong></td>
+<td>The agreed message format</td>
+<td>UCI between lichess-bot and Engine UCI (and between Engine UCI and Stockfish); JSON Lines between Engine UCI and the Kernel workers</td>
+</tr>
+<tr>
+<td><strong>Framing</strong></td>
+<td>How the reader knows where one message ends</td>
+<td>One message per line, in UCI and in JSON Lines</td>
+</tr>
+<tr>
+<td><strong>JSON Lines</strong> (a.k.a. NDJSON)</td>
+<td>One compact JSON object per line</td>
+<td>The format for Engine UCI ⇄ Kernel</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2--a-process-in-60-seconds">2. 🧱 A process in 60 seconds</h2>
+<ul>
+<li><strong>Every process has its own memory.</strong> A <code>Kernel.exe</code> cannot read Engine UCI's variables, even on the same machine; the operating system forbids it. That isolation is a feature: one crash can't corrupt another program. It's also why your globals (<code>board</code>, <code>whitePieces</code>…) are safe in 28 processes and would <em>not</em> be safe in 28 threads.</li>
+<li>So when processes need to share data, <strong>they need a channel the operating system provides</strong>: a file, a pipe, a socket, shared memory…</li>
+<li><strong>Every process is born with three open &quot;files&quot;:</strong> <code>stdin</code> (number 0), <code>stdout</code> (1) and <code>stderr</code> (2). In a terminal they're the keyboard and the screen. But the parent that starts a process can connect them to <em>anything</em>: a file, or a pipe.</li>
+</ul>
+<hr />
+<h2 id="3--surprise-you-already-wrote-a-pipe-program">3. 😄 Surprise: you already wrote a pipe program</h2>
+<p>Look at Engine UCI's <code>main()</code>, as you first wrote it:</p>
+<pre><code class="language-cpp">while (getline(cin, line)) {             // read one command from stdin
+    ...
+    cout &lt;&lt; &quot;bestmove &quot; &lt;&lt; bestMove &lt;&lt; &quot;\n&quot;;   // answer on stdout
+}
+</code></pre>
+<p>It never opens a file or a socket, yet lichess-bot talks to it all game long. How? lichess-bot uses python-chess, which starts <code>Engine UCI.exe</code> with its <code>stdin</code> and <code>stdout</code> <strong>connected to pipes</strong> (<code>SimpleEngine.popen_uci</code> in <code>lib/engine_wrapper.py</code>). python-chess writes <code>position …</code> and <code>go …</code> lines into one pipe and reads your <code>bestmove …</code> from the other.</p>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    LB["🐍 lichess-bot&lt;br/&gt;(python-chess)"]:::py --&gt;|"pipe → your cin:&lt;br/&gt;position startpos moves e2e4 …&lt;br/&gt;go wtime 118000 btime 120000 …"| UCI["⚙️ Engine UCI.exe&lt;br/&gt;while (getline(cin, line))"]:::cpp
+    UCI --&gt;|"your cout → pipe:&lt;br/&gt;bestmove e7e5"| LB
+    classDef py fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef cpp fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+</div></code></pre>
+<p><strong>That's exactly the mechanism Engine UCI now uses with the Kernel workers and with Stockfish.</strong> You don't need to learn a new world, just the parent's side of it.</p>
+<div style="background:#f5f3ff;border-left:6px solid #7c3aed;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🤓 A hidden detail that saved you, until it doesn't:</strong> <code>cout &lt;&lt; &quot;bestmove ...&quot; &lt;&lt; &quot;\n&quot;</code> has no flush, and output to a pipe is buffered. So why does lichess-bot receive it immediately? Because in C++, <strong><code>cin</code> is &quot;tied&quot; to <code>cout</code></strong>: before every <code>getline(cin, …)</code>, the library flushes <code>cout</code> automatically. Your loop goes straight back to <code>getline</code> after printing, so the answer gets flushed by luck 😄.</p>
+<p>The day you add work <em>after</em> the print (a log line, telemetry), that work runs <strong>before</strong> the move leaves. Measured ✅: 1.5 s of work after an unflushed <code>bestmove</code> made python-chess wait 2,399 ms instead of 907 ms. So: <strong>flush explicitly after every message</strong>, and don't rely on the tie. Your <code>Engine UCI.cpp</code> does now (<code>SendUciLine()</code> ends every line with <code>flush</code>), and that day has come: the database record and the worker restarts run right <em>after</em> <code>bestmove</code>.</p>
+</div>
+<hr />
+<h2 id="4--what-happened-before-step-by-step-with-measured-costs">4. 🐢 What happened before, step by step (with measured costs)</h2>
+<p>Your original engine (the initial commit), before Phases 1, 2 and 3:</p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant UCI as Engine UCI
+    participant SF as Stockfish
+    participant T as 28 threads
+    participant K as Kernel.exe ×28
+    UCI-&gt;&gt;SF: popen → NEW Stockfish process: "go perft 1"
+    SF--&gt;&gt;UCI: legal moves, then the process exits (~0.3–0.55 s)
+    UCI-&gt;&gt;T: split the root moves into 28 buckets
+    T-&gt;&gt;T: write input/thread_N_serialized_data.json
+    T-&gt;&gt;K: system() → cmd.exe → NEW Kernel.exe file.json
+    K-&gt;&gt;K: read JSON, build tables, replay the game, search
+    K-&gt;&gt;T: overwrite the JSON file, exit
+    T-&gt;&gt;UCI: read JSON back, merge scores
+    UCI-&gt;&gt;SF: popen → NEW Stockfish again: stalemate check (~0.3–0.55 s)
+    UCI--&gt;&gt;UCI: write history/…/time.txt, print bestmove
+</div></code></pre>
+<p>Measured on your laptop with your real binaries, October 23–25 ✅:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cmd.exe</code> start (paid by every <code>system()</code> and <code>popen()</code>)</td>
+<td>~25 ms</td>
+</tr>
+<tr>
+<td>One fresh Stockfish process answering <code>go perft 1</code></td>
+<td><strong>~0.55 s</strong> on Oct 23 (worst run 2.0 s), <strong>~0.31–0.34 s</strong> on Oct 25: it depends on how busy the laptop is</td>
+</tr>
+<tr>
+<td>The same query to a Stockfish kept alive and fed through pipes</td>
+<td><strong>~0.2 ms</strong> (0.18–0.29 ms)</td>
+</tr>
+<tr>
+<td>One <code>Kernel.exe</code> with a 1 s budget: wall time vs. its own search time</td>
+<td>172 ms vs. 126 ms</td>
+</tr>
+<tr>
+<td>28 <code>Kernel.exe</code> at once: whole batch vs. search per worker</td>
+<td>537 ms vs. ~227 ms</td>
+</tr>
+<tr>
+<td>The same 28 workers kept alive: one request to each and all 28 answers back</td>
+<td><strong>~0.4 ms</strong> (measured with dummy workers)</td>
+</tr>
+</tbody>
+</table>
+<p>So at a 1-second cap, a move cost ≈ <strong>0.6–1.1 s of Stockfish launches + ≈ 0.3 s of Kernel launches + ≈ 0.25 s of real search</strong>. That was most of the 2.16 s median your lichess logs showed for moves with a 1 s cap: these three parts add up to ≈ 1.2–1.7 s, and the rest was never broken down. Either way, most of each fast move was <em>startup</em>, not thinking.</p>
+<div style="background:#f8fafc;border-left:6px solid #475569;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>📜 History repeats:</strong> in the 1990s, web servers ran a brand-new program for every web request (&quot;CGI&quot;). It was simple, and it was slow, because starting a process costs far more than the work it did. The fix was <strong>FastCGI</strong>: start the program once, keep it alive, and send it requests through a pipe or socket. That's exactly the move from &quot;spawn <code>Kernel.exe</code> per move&quot; to &quot;a worker pool for the whole game&quot;. You re-invented CGI; now you've upgraded to FastCGI 😄.</p>
+</div>
+<h3 id="-and-now-october-27-as-built">🚀 …and now (October 27, as built)</h3>
+<p>Every helper starts <strong>once per game</strong> and stays alive: <strong>one Stockfish</strong> (it starts on <code>isready</code>) and <strong>28 Kernel workers</strong> (they start in a background thread on <code>ucinewgame</code>, and are usually ready before the first Kernel move at ply 5 or 6; if not, that one move waits for them, see plan 02 §2). A Kernel move is then <strong>one JSON line each way per worker</strong>, and the database write waits until <code>bestmove</code> has left:</p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant LB as lichess-bot
+    participant UCI as Engine UCI
+    participant SF as Stockfish ×1
+    participant K as Kernel workers ×28
+    participant DB as database writer thread
+    Note over UCI,K: started once per game: Stockfish on "isready", the 28 workers on "ucinewgame"
+    LB-&gt;&gt;UCI: position startpos moves … then go …
+    UCI-&gt;&gt;SF: "go perft 1" through the pipe, same process all game
+    SF--&gt;&gt;UCI: the legal moves
+    UCI-&gt;&gt;K: one JSON line per worker: the ChessState + its share of the root moves
+    K--&gt;&gt;UCI: one JSON line each, before the deadline (allowed time + 2 s)
+    UCI-&gt;&gt;SF: stalemate check on the position after the Kernel's move
+    UCI--&gt;&gt;LB: bestmove …, flushed at once
+    UCI-&gt;&gt;DB: then, off your clock: the move record (one transaction)
+    Note over UCI,K: also after bestmove: a new process for any worker that died or timed out
+</div></code></pre>
+<p>Measured with the built engine on your laptop, October 27 ✅:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Starting one Kernel worker (<code>CreateProcess</code>, no <code>cmd.exe</code>): 28 per game, none per move</td>
+<td><strong>17.7 ms</strong> median, 37 ms max (280 launches)</td>
+</tr>
+<tr>
+<td>Starting the one Stockfish, on <code>isready</code></td>
+<td>~1.1 s on a cold first launch</td>
+</tr>
+<tr>
+<td>A typical Kernel move with a 3–5 s budget</td>
+<td>~1.7–2.3 s, and that's the search itself (your 5% rule decides when it stops): the pipe round trip is negligible next to it</td>
+</tr>
+<tr>
+<td>Replacing a worker that died or timed out</td>
+<td>~22–40 ms each, after <code>bestmove</code>, so off your clock. All 28 at once (only after a catastrophe): 0.4–0.9 s in 19 of 21 runs, 3.7 s and 5.2 s in the other 2 (both while the neural-network lab's heavy jobs were running), and that can eat into your next move's clock</td>
+</tr>
+</tbody>
+</table>
+<p>⚠️ <strong>Not measured yet:</strong> a live lichess game with the built engine (runbook 04, step 1). The 2.16 s above came from your lichess logs at a 1 s cap; these numbers come from tests on your laptop at other budgets, so they don't compare directly, and the real gain per move on lichess is still to be seen.</p>
+<hr />
+<h2 id="5-️-the-menu-of-ipc-mechanisms">5. 🍽️ The menu of IPC mechanisms</h2>
+<table>
+<thead>
+<tr>
+<th>Mechanism</th>
+<th>How it works</th>
+<th>Speed</th>
+<th>Difficulty</th>
+<th>For Mr. Bits?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Files</strong> (before)</td>
+<td>Writer writes a file; reader reads it after some signal (here: the process exiting)</td>
+<td>Slow-ish, and forces a new process per message</td>
+<td>Easy</td>
+<td>❌ Retired: <code>Kernel.exe</code> has no file mode any more</td>
+</tr>
+<tr>
+<td><strong>Anonymous pipes</strong> + redirected stdin/stdout</td>
+<td>Parent creates pipes; the child inherits them as its stdin/stdout</td>
+<td>Microseconds per message (0.2 ms round trip with Stockfish, 0.4 ms for all 28 workers ✅)</td>
+<td>Medium</td>
+<td>⭐ <strong>The recommended choice, and what Mr. Bits uses now</strong></td>
+</tr>
+<tr>
+<td><strong>Named pipes</strong></td>
+<td>A pipe with a name (<code>\\.\pipe\mrbits</code>) that any process can open</td>
+<td>Same as pipes</td>
+<td>Medium+</td>
+<td>If processes are started independently, or if you need a real read timeout (overlapped I/O, §6)</td>
+</tr>
+<tr>
+<td><strong>Sockets</strong> (TCP on <code>localhost</code>)</td>
+<td>Like a network connection, on a port number</td>
+<td>Fast (tens of µs)</td>
+<td>Medium+</td>
+<td>If you want the same code on Linux (Nebius) or across machines</td>
+</tr>
+<tr>
+<td><strong>Shared memory</strong> (file mapping)</td>
+<td>Both processes map the same RAM</td>
+<td>Fastest (no copying at all)</td>
+<td>Hard: needs locks and synchronization</td>
+<td>Later: a transposition table shared by all workers</td>
+</tr>
+<tr>
+<td><strong>Threads</strong> (no IPC at all)</td>
+<td>One process, shared memory</td>
+<td>Fastest</td>
+<td>Hardest for Mr. Bits: every global must become per-thread</td>
+<td>The long-term option (the &quot;thread-local state&quot; in <code>Claude Docs/01 - Fable 5 Honest Evaluation of Mr Bits.md</code>)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6--how-a-pipe-works-inside">6. 🔧 How a pipe works inside</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    A["Process A&lt;br/&gt;write(…)"]:::p --&gt;|"bytes"| B["🧺 OS buffer&lt;br/&gt;(4 KB by default on Windows)"]:::os
+    B --&gt;|"bytes"| C["Process B&lt;br/&gt;read(…)"]:::p
+    classDef p fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef os fill:#fef3c7,stroke:#d97706,color:#78350f
+</div></code></pre>
+<p>Four rules explain almost every pipe bug:</p>
+<ol>
+<li><strong>One-way.</strong> A conversation needs <strong>two pipes</strong>: requests go into the child's stdin, answers come out of its stdout.</li>
+<li><strong>A byte stream, not messages.</strong> The reader can receive half a message, or two at once. You need <strong>framing</strong> (§7).</li>
+<li><strong>Blocking.</strong> <code>read</code> waits until data arrives. <code>write</code> waits if the buffer is full, i.e. if nobody is reading. On Windows, a read on an anonymous pipe <strong>can't time out by itself</strong>: it blocks until data arrives or every write end closes.</li>
+<li><strong>End of file.</strong> When <em>every</em> write end of a pipe is closed, including copies a child inherited by accident, the reader gets EOF. On Windows, <code>ReadFile</code> then fails with <code>ERROR_BROKEN_PIPE</code> (109), which <code>getline</code> turns into end of input. That's how an <em>idle</em> worker knows its parent is gone and exits. A worker in the middle of a search doesn't read stdin, so it doesn't notice: only the Job Object (step 7 below) stops it.</li>
+</ol>
+<h3 id="starting-a-child-with-pipes-on-windows-the-steps">Starting a child with pipes on Windows (the steps)</h3>
+<p><code>engines\Kernel Workers.hpp</code> does all of this for the 28 Kernel workers, and your <code>Stockfish Handler.hpp</code> does the same for the one Stockfish, with small differences (its stderr goes to <code>NUL</code>, it uses <code>CREATE_NO_WINDOW</code> instead of <code>DETACHED_PROCESS</code>, its own Job Object has <code>JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE</code> only and is made at its first start, and its read timeout is a watchdog timer, see below). Here's what each step is for:</p>
+<ol>
+<li><strong><code>CreatePipe</code> twice</strong>, one pipe for the child's stdin and one for its stdout. Pass <code>nSize = 65536</code>: the default is only 4 KB, and 64 KB pipes made big answers 4.5× faster ✅.</li>
+<li><strong>Create both pipes non-inheritable</strong> (<code>lpPipeAttributes = NULL</code>). Right before <code>CreateProcess</code>, make only the child's three handles inheritable (<code>SetHandleInformation(h, HANDLE_FLAG_INHERIT, HANDLE_FLAG_INHERIT)</code>), and pass a <code>STARTUPINFOEX</code> whose <strong><code>PROC_THREAD_ATTRIBUTE_HANDLE_LIST</code></strong> holds exactly those three (flag <code>EXTENDED_STARTUPINFO_PRESENT</code>). The child then inherits nothing else:
+<ul>
+<li>not its own stdin's write end (otherwise EOF never arrives: the classic bug);</li>
+<li>not another worker's pipe ends. Measured ✅: 28 workers spawned in parallel without the list left 27 of 28 deaths undetectable, because a sibling held a copy of each one's stdout;</li>
+<li>not Engine UCI's own stdin/stdout from python-chess (without the list, Python saw EOF 3 s late ✅).</li>
+</ul>
+</li>
+<li><strong>Fill the <code>STARTUPINFOEX</code></strong> (<code>StartupInfo.cb = sizeof(STARTUPINFOEX)</code>) with <code>STARTF_USESTDHANDLES</code>: <code>hStdInput</code> and <code>hStdOutput</code> = the child's pipe ends, <code>hStdError</code> = a log file opened with <code>FILE_APPEND_DATA</code> and <code>FILE_SHARE_READ | FILE_SHARE_WRITE</code> (your pool opens that same file, <code>engines\logs\kernel_workers_stderr.log</code>, once for every worker it starts, so all 28 append to one file, and it normally stays empty). All three must be inheritable and listed once each, and the list must stay alive until <code>CreateProcess</code> returns.</li>
+<li><strong><code>CreateProcess(fullExePath, writableQuotedCommandLine, …, bInheritHandles = TRUE, CREATE_SUSPENDED | DETACHED_PROCESS | EXTENDED_STARTUPINFO_PRESENT, …)</code></strong> starts <code>Kernel.exe</code> <strong>directly</strong>, with no <code>cmd.exe</code> in between.
+<ul>
+<li><code>fullExePath</code> comes from the executable's own folder (plan 02, rule 8). Your code uses the <code>A</code> versions (<code>CreateProcessA</code>, <code>GetModuleFileNameA</code>): fine for <code>C:\Users\tareq\Desktop\Mr_Bits</code>, but a folder name with characters outside your Windows code page would need the <code>W</code> versions.</li>
+<li>The command line is just the quoted path (<code>&quot;C:\…\engines\Kernel.exe&quot;</code>), with <strong>no arguments</strong>: a worker needs none. It must sit in a writable buffer, because <code>CreateProcess</code> may modify it.</li>
+<li><code>DETACHED_PROCESS</code> means no console window and no <code>conhost.exe</code> per worker (<code>CREATE_NO_WINDOW</code> would add one each).</li>
+<li>No priority flag is needed: the child starts at NORMAL, and Kernel's <code>main()</code> raises itself to HIGH, as it always did.</li>
+<li>One <code>CreateProcess</code> costs ~15–40 ms on this laptop (October 27: 17.7 ms median, 37 ms max over 280 launches of <code>Kernel.exe</code>), so the pool starts once per game, never per move.</li>
+</ul>
+</li>
+<li><strong>Close the child's ends in the parent immediately after <code>CreateProcess</code> returns</strong> (success or failure), before starting the next worker. An end left open means the parent never sees EOF when that worker dies, and the next child may inherit it.</li>
+<li><strong>Talk with <code>WriteFile</code></strong> (loop until every byte is written) <strong>and a small buffered <code>ReadFile</code> line reader</strong> that splits on <code>\n</code> and drops one trailing <code>\r</code>. One line can take many <code>ReadFile</code> calls. <code>ReadFile</code> failing with <code>ERROR_BROKEN_PIPE</code> (109) means EOF; <code>WriteFile</code> failing with <code>ERROR_NO_DATA</code> (232) means the worker is dead. (Standard C++ streams can't wrap a Windows handle.)</li>
+<li><strong>Put every worker in one Job Object</strong>, created once, before the first worker starts:
+<ul>
+<li><code>CreateJobObject</code>, then <code>SetInformationJobObject</code> with <code>JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE | JOB_OBJECT_LIMIT_DIE_ON_UNHANDLED_EXCEPTION</code>;</li>
+<li>start each worker <code>CREATE_SUSPENDED</code>, call <code>AssignProcessToJobObject</code>, then <code>ResumeThread</code>, so it never runs outside the job;</li>
+<li>keep the job handle open (and non-inheritable) all game. When Engine UCI exits or is killed, even with <code>taskkill /F</code>, Windows kills every worker, busy or idle (0 of 28 alive 0.1 s later ✅). Without it, busy workers ran on for seconds. October 27, the built engine: after a hard kill of Engine UCI, 0 Kernel and 0 Stockfish were left ✅ (Stockfish has its own job).</li>
+<li>If Engine UCI is already inside a job, Windows 8+ simply nests the new one ✅.</li>
+</ul>
+</li>
+</ol>
+<p><strong>And the read timeout?</strong> Rule 3 says a read can't time out. The pool gives each worker <strong>one reader thread</strong> that pushes every line it reads into a queue. The move waits on a condition variable with a deadline (<code>wait_until</code>), and a worker still silent at the deadline is killed with <code>TerminateProcess</code>. That ends its reader's blocked <code>ReadFile</code> in ~1.2 ms ✅. In your pool the deadline is the allowed time + 2 s (October 27: a frozen worker was cut off at 7,005–7,024 ms for a 7,000 ms deadline ✅), and the killed worker is replaced right after <code>bestmove</code>. Stockfish, one process asked one question at a time, gets a simpler guard: a watchdog timer (<code>CreateTimerQueueTimer</code>) kills it when a question takes too long (10 s, or 300 s for a search), and then it's restarted once and asked again.</p>
+<p>The Linux version (for Nebius one day) is <code>pipe()</code> + <code>fork()</code> + <code>dup2()</code> + <code>exec()</code>. Small portable libraries do it for both systems: <strong>tiny-process-library</strong> (MIT), <strong>reproc</strong> (MIT), or <strong>Boost.Process</strong>.</p>
+<p><strong>Why not <code>popen</code>?</strong> Your old <code>Stockfish Handler.hpp</code> used <code>popen</code>. It's one-way only (read <em>or</em> write), and it goes through <code>cmd.exe</code>. That's why the handler wrote its commands into <code>temp_command_file.txt</code> and piped the file in with <code>&lt;</code>, starting a new Stockfish for every single question. It's also why <code>getBestMoveByDepth</code> sent its <code>go</code> twice: the end of the file acted as <code>quit</code> and stopped a lone search at once (your theory, confirmed ✅). Phase 1 replaced all of it with one Stockfish and two pipes, and one <code>go</code> is enough now: a pipe has no end of file until you close it.</p>
+<h3 id="the-shape-of-both-sides-pseudo-code">The shape of both sides (pseudo-code)</h3>
+<pre><code>// Kernel.exe  (the child, started with NO arguments: an argument → a clear error on stderr, exit code 1)
+cout → stderr; _setmode(stdout and stdin, binary)   // nothing but answers may reach stdout
+build the move tables ONCE                          // a second build doubles every slider move
+while (getline(cin, line)):                         // one request per line
+    strip a trailing '\r'
+    request = parse(line)                           // a bad line → an &quot;error&quot; answer, never a crash
+    if request.type == &quot;quit&quot;: break
+    if request.type == &quot;hello&quot;: answer = ready
+    else:                                           // &quot;search&quot;
+        reset the game state, replay request.previousMoves
+        answer = search(request.movesForThisThread, request.allowedEngineTimeInSeconds)
+    fwrite(answer.toOneLine()); fputc('\n'); fflush(stdout)   // one answer per line, flushed
+</code></pre>
+<pre><code>// Engine UCI.exe  (the parent), once per game: on &quot;ucinewgame&quot;, in a background thread
+job = createKillOnCloseJob()
+for i in 1..28: worker[i] = spawnWithPipes(ExecutableDirectory() + &quot;\\Kernel.exe&quot;, job)   // no arguments
+                writeLine(worker[i], hello)
+wait (deadline: 10 s) until every worker has answered ready
+
+// every Kernel move
+for each of min(28, usable workers, legal moves) workers: writeLine(worker.stdin, request with a new id)   // its round-robin share of the shuffled root moves
+wait on a condition variable (deadline = allowed time + 2 s) until each reader thread has delivered the answer with that id
+kill every worker still silent; respawn it after bestmove is printed AND flushed
+</code></pre>
+<hr />
+<h2 id="7-️-framing-where-does-one-message-end">7. ✂️ Framing: where does one message end?</h2>
+<p>A pipe delivers a <em>stream</em> of bytes, so you must agree on boundaries. There are two classic answers:</p>
+<ul>
+<li><strong>A delimiter:</strong> one message per line, ended by <code>\n</code>. UCI does this.</li>
+<li><strong>A length prefix:</strong> send 4 bytes with the size, then exactly that many bytes.</li>
+</ul>
+<p><strong>Recommendation: JSON Lines</strong>, one JSON object per line. You already use nlohmann/json, so that's what Engine UCI and the workers speak now. A real exchange with your built worker (October 27: Black to move after 1. e4 e5 2. Nf3, a 1 s budget, three root moves; <code>…</code> marks what I shortened):</p>
+<pre><code>{&quot;allowedEngineTimeInSeconds&quot;:1,&quot;bestMove&quot;:&quot;…&quot;,&quot;bestMoveScore&quot;:0,&quot;engineColor&quot;:false,&quot;id&quot;:29,&quot;movesForThisThread&quot;:[&quot;b8c6&quot;,&quot;d7d6&quot;,&quot;g8f6&quot;],&quot;previousMoves&quot;:[&quot;e2e4&quot;,&quot;e7e5&quot;,&quot;g1f3&quot;],&quot;report&quot;:&quot;&quot;,&quot;type&quot;:&quot;search&quot;}
+{&quot;bestMove&quot;:&quot;g8f6&quot;,&quot;depth&quot;:6,&quot;id&quot;:29,&quot;leafNodes&quot;:193753,&quot;nodes&quot;:206146,&quot;perDepth&quot;:[…],&quot;pruned&quot;:9985,&quot;rootScores&quot;:[…],&quot;score&quot;:-150,&quot;searchMs&quot;:76.586,&quot;setupMs&quot;:0.016,&quot;status&quot;:&quot;ok&quot;,&quot;totalNodes&quot;:209411,&quot;type&quot;:&quot;result&quot;,&quot;unsearchedRootMoves&quot;:[]}
+</code></pre>
+<p>The request is the whole <code>ChessState</code>, exactly what the old JSON file held (so <code>bestMove</code>, <code>bestMoveScore</code> and <code>report</code> ride along, unused by the search), plus <code>type</code> and <code>id</code>. nlohmann/json writes the keys in alphabetical order, which is why <code>type</code> comes last: a JSON reader doesn't care. (And your 5% rule stopped this search after depth 6, at 77 ms of its second.)</p>
+<p>⚠️ Use <code>json.dump()</code> <strong>without</strong> an indent. The old JSON files used <code>dump(4)</code>, which pretty-prints one object over many lines: fine for a file, wrong for line framing. Engine UCI now sends <code>request.dump()</code>, one line per request. Newlines <em>inside</em> strings (like the Kernel's old text report) are escaped as <code>\n</code> by the JSON library, so they're safe.</p>
+<p>Three Windows traps, all hit by the prototypes ✅:</p>
+<ul>
+<li><strong><code>\r\n</code>:</strong> a child's stdout is in text mode, so each <code>\n</code> arrives as <code>\r\n</code>. Strip one trailing <code>\r</code> from every line you read (python-chess does the same), especially before comparing with strings like <code>readyok</code>. The child's text-mode <code>cin</code> already turns <code>\r\n</code> into <code>\n</code>. Your worker sidesteps the trap: its stdout is binary and written with <code>fwrite</code>, so its lines end in a bare <code>\n</code> (October 27: not one <code>\r</code> byte ✅), and both sides still strip a stray <code>\r</code>.</li>
+<li><strong>Invalid UTF-8:</strong> a plain <code>dump()</code> throws <code>type_error.316</code> on a string that isn't valid UTF-8. In the worker, use <code>dump(-1, ' ', false, nlohmann::json::error_handler_t::replace)</code>: yours does.</li>
+<li><strong>Byte <code>0x1A</code>:</strong> in text mode it means end of file: a text-mode child that receives one quietly exits (the prototypes' worker did). Your worker's stdin is binary, so there it's just a byte: that line is bad JSON, the worker answers <code>error</code> and carries on (October 27 ✅). JSON escapes it anyway, so it can't come out of <code>dump()</code>; never write raw bytes into a worker's stdin.</li>
+</ul>
+<hr />
+<h2 id="8--the-nine-classic-pipe-bugs-six-classics--three-windows-ones">8. 🐛 The nine classic pipe bugs (six classics + three Windows ones)</h2>
+<div style="background:#fef2f2;border-left:6px solid #dc2626;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<ol>
+<li>
+<p><strong>Forgot to flush</strong> → the answer sits in a buffer and both sides wait forever, or it leaves late: the old Engine UCI's <code>bestmove</code> only went out at the next <code>getline</code> (§3). Flush after every message.</p>
+</li>
+<li>
+<p><strong>Stray output on stdout</strong> → the protocol is corrupted. A worker's stdout must carry <em>only</em> protocol messages. Your worker makes sure of it: before it builds its tables, it points <code>cout</code> at <code>stderr</code>, so even an old print (<code>PrintTheBoard</code>'s <code>W</code>/<code>B</code>/<code>.</code>, the old <code>cout</code> report: nothing calls them now, but if something ever does) lands in <code>engines\logs\kernel_workers_stderr.log</code> instead of the pipe. The answers are written by one function only, with <code>fwrite</code> + <code>fflush</code>. And the old way of calling it (<code>Kernel.exe &lt;file.json&gt;</code>) gets a clear error on <code>stderr</code> (&quot;Kernel.exe doesn't read JSON files any more…&quot;) and exit code 1, instead of a worker that waits forever for input.</p>
+</li>
+<li>
+<p><strong>Full-buffer deadlock</strong> → the child writes lots of output that nobody reads, its buffer fills (only 4 KB by default for <code>CreatePipe(…, 0)</code>; pass 65536), and it blocks while the parent waits for it. Give each worker a reader thread that always drains its stdout, and send stderr to a file, never to a pipe nobody reads. The mirror case exists too: a request bigger than the buffer blocks the parent's <code>WriteFile</code> until the worker reads, so keep one request in flight per worker.</p>
+</li>
+<li>
+<p><strong>Inherited handle leak</strong> → a child keeps a copy of a pipe end it shouldn't have.</p>
+<ul>
+<li>If it's <strong>its own stdin's write end</strong>, it never gets EOF.</li>
+<li>If it's a <strong>sibling worker's stdout write end</strong>, killing or crashing that sibling is never noticed (measured: 27 of 28 workers with parallel spawns).</li>
+<li>If it's <strong>Engine UCI's own stdout</strong> to python-chess, that pipe stays open after Engine UCI exits.</li>
+</ul>
+<p>The fix is <code>PROC_THREAD_ATTRIBUTE_HANDLE_LIST</code> with exactly the child's three handles (step 2 in §6).</p>
+</li>
+<li>
+<p><strong>Partial reads</strong> → always read up to the <code>\n</code>, never &quot;one read = one message&quot;.</p>
+</li>
+<li>
+<p><strong>Orphan processes</strong> → if the parent crashes, workers keep running. Use a Job Object (step 7 in §6).</p>
+</li>
+<li>
+<p><strong>Hung worker</strong> → <code>ReadFile</code> on an anonymous pipe has no timeout. Wait for answers with a deadline (a reader thread + a condition variable), then <code>TerminateProcess</code> the silent worker; that ends the blocked read with <code>ERROR_BROKEN_PIPE</code>.</p>
+</li>
+<li>
+<p><strong><code>\r\n</code> line endings</strong> → a text-mode child's <code>\n</code> arrives as <code>\r\n</code>. Strip the <code>\r</code>, or <code>&quot;readyok\r&quot; == &quot;readyok&quot;</code> is false.</p>
+</li>
+<li>
+<p><strong>Writing to a dead worker</strong> → <code>WriteFile</code> fails with <code>ERROR_NO_DATA</code> (232): treat that as &quot;worker died&quot;. On Linux the same event is <code>SIGPIPE</code>, which kills the parent unless it's ignored.</p>
+</li>
+</ol>
+</div>
+<hr />
+<h2 id="9--the-whole-lesson-in-four-lines">9. 🎯 The whole lesson in four lines</h2>
+<ol>
+<li>You already wrote a pipe-based program: Engine UCI talking to lichess-bot.</li>
+<li>Before, Engine UCI talked to the Kernel with <strong>files</strong> and paid to <strong>start a new process every time</strong> (and started Stockfish from scratch twice per move). <strong>Now</strong> it starts one Stockfish and 28 Kernel workers once per game, and talks to all of them over pipes.</li>
+<li>Best practice is to <strong>start once and talk over pipes</strong>: a worker pool, one compact message per line, flushed, with a deadline on every answer.</li>
+<li>The measured payoff for one Stockfish question is <strong>0.3–0.55 s → 0.2 ms</strong>, and an opening move Stockfish plays (depth 14) went from <strong>670 ms to 80 ms</strong> end to end (October 25, Phase 1). On the Kernel side, the launches per move are gone and the pipe round trip is negligible; what that gains in live lichess games is still to be measured. Plan 02 describes how it's built, and runbook 04 is tonight's checklist.</li>
+</ol>
+<p>— <strong>Claude Opus 5.5</strong> 🤖</p>
+
+</body>
+</html>

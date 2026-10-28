@@ -1,0 +1,29 @@
+{
+  "python_unit_tests": {
+    "passed": 56,
+    "failed": 0
+  },
+  "original_engine_files_current_sha256": {
+    "Kernel.cpp": "a7b5a4ac412baf5fd97fa59750368e1a277685b57b46c5a237d08953cb3263a9",
+    "Engine UCI.cpp": "c3278b3e013ee623eb74705d3f5a6eacef4186f0cc7a3af606d8914017052969",
+    "Stockfish Handler.hpp": "30c13b74775cd5563ce0e31901ebb23f59a61bda6f2ffa38789e63e97bc456e5"
+  },
+  "cpp_example_compile": "GCC14.2 C++17 -O3 -Wall -Wextra -Wpedantic -Werror",
+  "upload_allowlist": {
+    "files": 87,
+    "raw_archive_excluded": true,
+    "cpp_verification_source_included": true
+  },
+  "documentation": {
+    "new_markdown_files": 4,
+    "local_links_checked": 36,
+    "rendered_with": "markdown-it common Markdown + HTML",
+    "utf8": true
+  },
+  "exported_weight_checksums": "both match model.json",
+  "cpp_parity_compilers": [
+    "GCC14.2.0 portable and AVX2/FMA",
+    "Clang19.1.7 portable and AVX2/FMA"
+  ],
+  "all_recorded_header_and_driver_hashes_match": true
+}

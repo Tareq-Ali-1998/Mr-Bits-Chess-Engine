@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README - Start Here.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-mr-bits--engine-communication--game-database">🔌🗄️ Mr. Bits — Engine Communication &amp; Game Database</h1>
+<p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝
+<em>October 23, 2026 · v2, October 25: reviewed and prototyped · v3, October 25 evening: Phase 1 (one Stockfish) in your code · <strong>v4, October 27: all of it is built — the Kernel worker pool, the game database, one <code>ChessState</code>, and the clean folders</strong></em></p>
+<div style="background:linear-gradient(90deg,#0f766e,#1d4ed8);color:#ffffff;border-radius:14px;padding:16px 22px;margin:16px 0;">
+<p><strong>In one sentence:</strong> every helper process now starts <strong>once per game</strong> and stays alive — one Stockfish and 28 Kernel workers — and they all talk to Engine UCI through <strong>pipes</strong>: no JSON files, no <code>cmd.exe</code>, no new process per move. <strong>Every move, every worker, every depth and every candidate move goes into one SQLite database</strong>, ready for the dashboard. 🚀</p>
+</div>
+<blockquote>
+<p>⚠️ <strong>Viewing note:</strong> these files use Mermaid diagrams and small HTML color boxes, like the docs in <code>Claude Docs/</code>. The <code>.html</code> files next to them are exported from <strong>this</strong> version, in the same style as your VS Code export.</p>
+</blockquote>
+<hr />
+<h2 id="-where-things-stand-october-27">🚦 Where things stand (October 27)</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Phase 1:</strong> one Stockfish, in one place, kept alive</td>
+<td>✅ in your code since October 25</td>
+</tr>
+<tr>
+<td><strong>Phase 2:</strong> <code>Kernel.exe</code> is a worker (one JSON line in, one JSON line out)</td>
+<td>✅ built. <strong>0 mismatches</strong> against your production <code>Kernel.exe</code> on 144 requests</td>
+</tr>
+<tr>
+<td><strong>Phase 3:</strong> the pool of 28 Kernel workers inside Engine UCI</td>
+<td>✅ built. Tested with a dead worker, a frozen worker, all workers dead, and a hard kill of the engine</td>
+</tr>
+<tr>
+<td><strong>One <code>ChessState</code></strong></td>
+<td>✅ <code>engines\Chess State.hpp</code>, included by both <code>Engine UCI.cpp</code> and <code>Kernel.cpp</code></td>
+</tr>
+<tr>
+<td><strong>The game database</strong></td>
+<td>✅ <code>database\mrbits.sqlite</code>. Engine UCI writes it after every move. The Python side has the init, the backup, the lichess sync and the dashboard queries, with tests</td>
+</tr>
+<tr>
+<td><strong>No more files per move</strong></td>
+<td>✅ <code>input\</code> and <code>history\</code> are gone</td>
+</tr>
+<tr>
+<td><strong>One Stockfish copy</strong></td>
+<td>✅ the 3 old copies are deleted (byte-identical to <code>engines\stockfish\</code>, used by nothing)</td>
+</tr>
+<tr>
+<td><strong>Live games</strong></td>
+<td>⏳ <strong>yours</strong>: <a href="04%20-%20Runbook%20for%20Tonight.md">04 - Runbook</a></td>
+</tr>
+<tr>
+<td><strong>The dashboard (the live board)</strong></td>
+<td>Later: it needs its design first. The database, its indexes and its filters are ready for it</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="-where-everything-lives-now">📁 Where everything lives now</h2>
+<pre><code class="language-text">lichess-bot-master\
+├── engines\                      ← the engine (C++)
+│   ├── Engine UCI.cpp            the UCI front end: lichess-bot ⇄ Mr. Bits
+│   ├── Chess State.hpp           THE ChessState (one copy for both programs)
+│   ├── Kernel Workers.hpp        the 28 Kernel workers and their pipes
+│   ├── Game Database.hpp         writes every move into the database
+│   ├── Engine Log.hpp            the text log, for debugging
+│   ├── Stockfish Handler.hpp     the one Stockfish, kept alive
+│   ├── Kernel.cpp                your search (unchanged) + the worker's main()
+│   ├── json.hpp, sqlite\         the two libraries (nlohmann JSON, SQLite 3.54.1)
+│   ├── Build Engines.bat         builds both .exe files (and checks Windows lets them run)
+│   ├── tests\                    3 tests: the engine, the workers under trouble, the Kernel's answers
+│   ├── stockfish\                the one Stockfish
+│   ├── backup-phase1\            Phase 1's engine, for a rollback (not in git: delete it after the live games)
+│   └── logs\                     Engine UCI's text logs (not in git)
+├── database\                     ← the game database
+│   ├── schema.sql                every table, index and view
+│   ├── mrbits.sqlite             the database itself (not in git)
+│   ├── db.py                     --init, --backup, --check, --recent
+│   ├── sync_lichess.py           adds lichess's side: results, ratings, clocks, openings
+│   ├── queries.py                what the dashboard will read (filters, paging, stats)
+│   └── tests\
+├── Mr Bits Docs\                 ← every document (this folder is in here)
+└── lib\, docs\, wiki\, …         lichess-bot's own files, untouched
+</code></pre>
+<p><strong>Reading order:</strong> for tonight, <strong>this page → 04</strong>. For the <em>why</em> and the <em>how</em>: 01 (the tutorial) → 02 (the engine) → 03 (the database).</p>
+<hr />
+<h2 id="️-before--now">🗺️ Before → now</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    subgraph BEFORE["😰 Before, every move"]
+        direction TB
+        A1["Engine UCI"]:::uci --&gt;|"write 28 JSON files"| A2["📄 input/thread_N.json"]:::file
+        A1 --&gt;|"28 × system() → cmd.exe → Kernel.exe"| A3["🧠 28 brand-new Kernel processes"]:::slow
+        A3 --&gt;|"overwrite the JSON files, exit"| A2
+        A1 --&gt;|"2 × popen → brand-new Stockfish"| A4["🐟 Stockfish, started twice"]:::slow
+        A1 --&gt;|"one text report"| A5["📄 history/…/time.txt"]:::file
+    end
+    subgraph NOW["🚀 Now, started once per game"]
+        direction TB
+        B1["Engine UCI"]:::uci &lt;--&gt;|"one JSON line each way, per move"| B2["🧠 28 Kernel workers, alive all game"]:::fast
+        B1 &lt;--&gt;|"UCI over pipes"| B3["🐟 one Stockfish, alive all game"]:::fast
+        B1 --&gt;|"after bestmove: one transaction"| B4["🗄️ database/mrbits.sqlite"]:::db
+        B4 --&gt; B5["📊 dashboard (later)"]:::db
+    end
+    BEFORE ~~~ NOW
+    classDef uci fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef file fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef slow fill:#fee2e2,stroke:#dc2626,color:#7f1d1d
+    classDef fast fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef db fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+</div></code></pre>
+<p><strong>What did NOT change:</strong> your search, your evaluation, the time ladder, the Stockfish depths, the shuffle and the round-robin split of the root moves, and how the best answer is picked. The workers get exactly what the JSON file used to hold (the same <code>ChessState</code> fields), and they think exactly like before: same move, same score, same node counts.</p>
+<hr />
+<h2 id="-what-was-tested-on-copies-first-then-again-in-your-real-folder-with-the-real-python-chess-1100">🧪 What was tested (on copies first, then again in your real folder, with the real python-chess 1.10.0)</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>What it proves</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>engines\tests\engine_test.py</code></td>
+<td>lichess-bot's startup check, a game as White, a game as Black, a game without GameId. <strong>Every database row is checked against what python-chess saw</strong>: the plies, the moves, the <code>go</code> parameters, the time ladder (recomputed), the paths, the Stockfish depths, the workers' root moves (= exactly the legal moves), each worker's depths and candidates, and that the chosen move is the best worker answer</td>
+<td>✅ <strong>183 / 183</strong></td>
+</tr>
+<tr>
+<td><code>engines\tests\kernel_workers_test.py</code></td>
+<td>A worker that died while waiting (it gets no moves, so the other 27 still search <strong>every</strong> legal move), a frozen worker (cut off at the deadline: 7,005–7,024 ms for 7,000), a worker killed in the middle of its search, every worker dead (Stockfish plays that move, then all 28 come back: 0.4–0.9 s in 19 of 21 runs, 3.7 s and 5.2 s in the other 2, while the neural-network lab's heavy jobs were running), and Engine UCI killed hard (<strong>0</strong> Kernel and <strong>0</strong> Stockfish left running)</td>
+<td>✅ <strong>27 / 27</strong></td>
+</tr>
+<tr>
+<td><code>engines\tests\kernel_equivalence_test.py</code></td>
+<td>The new worker against your <strong>production</strong> <code>Kernel.exe</code>: 72 positions at the depth the old one reached (6 or 8), 144 requests shuffled through <strong>one</strong> worker (so no state can leak between moves)</td>
+<td>✅ <strong>0 mismatches</strong> in move, score, nodes, leaf nodes and pruned branches</td>
+</tr>
+<tr>
+<td><code>database\tests\</code></td>
+<td>The init, the backup, the lichess sync (offline fixtures: casual games, draws, mate, flags, berserk, fromPosition, …), every dashboard filter, and <code>schema.sql</code> itself: two programs applying it at once, a failure halfway, and that <strong>no</strong> dashboard query ever scans the engine's tables</td>
+<td>✅ <strong>130 / 130</strong></td>
+</tr>
+<tr>
+<td><code>Kernel.exe</code> missing</td>
+<td>Every Kernel move falls back to Stockfish (depth 14), the database says why, the game goes on</td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="-decided">✅ Decided</h2>
+<ul>
+<li><strong>Phase 1 → 2 → 3, all done</strong>, and the old file mode is retired: the equivalence test proved the new path gives identical answers, so there's no switch to keep (rollback: the Phase 1 copy in <code>engines\backup-phase1\</code>, or git, see 04).</li>
+<li><strong>JSON Lines</strong> between Engine UCI and the workers (one JSON object per line).</li>
+<li><strong>&quot;Database only&quot;</strong> (your words): SQLite is compiled into Engine UCI, and there's no JSON or log file in between. The write happens in its own thread and only <strong>after</strong> <code>bestmove</code> is sent, so it never costs clock time. If the database can't be opened, the engine keeps playing and the log says so.</li>
+<li><strong>One <code>ChessState</code></strong>: the Engine UCI copy was the complete one (the Kernel's copy differed only in the Stockfish depths inside a function the Kernel never calls), so that's the one in <code>Chess State.hpp</code>.</li>
+<li><strong>A fresh history</strong>: no old games are imported. The lichess sync starts on your go-live date.</li>
+</ul>
+<h2 id="-still-yours-to-decide">🤔 Still yours to decide</h2>
+<ol>
+<li><strong>Smart App Control is ON</strong>, and it still blocks some fresh builds. My recommendation stays: <strong>keep it on</strong>. <code>Build Engines.bat</code> gives every build a new stamp, so when it blocks one, running the <code>.bat</code> again is enough. ⚠️ Turning it off has been one-way on Windows 11 so far.</li>
+<li><strong>Build <code>Kernel.exe</code> with <code>-O2</code>?</strong> On October 25, <code>-O2 -march=native</code> gave bit-identical answers and a 3.6× faster search (plain <code>-O2</code> wasn't measured, and <code>-march=native</code> ties the <code>.exe</code> to this CPU). <code>python -B tests\kernel_equivalence_test.py --reference Kernel.exe --reference-mode worker --worker Kernel_O2.exe</code> checks an <code>-O2</code> build in about a minute. A deeper search changes which moves get played, so A/B it in games first.</li>
+<li><strong>The worker count</strong>: still 28. Now that the pool exists, 16 / 20 / 24 / 28 can be measured with real games. (The two engine tests expect 28: change <code>NUMBER_OF_KERNEL_WORKERS</code> in them too, or <code>Build Engines.bat test</code> fails.)</li>
+<li><strong>The time ladder</strong> still allows <strong>51–66 s for one move</strong> in a 2+3 game (below). That's unchanged on purpose (same behavior), but it's a real time-forfeit risk.</li>
+<li><strong>The dashboard</strong>: Streamlit (recommended) + Datasette for browsing, when you're ready to design it (03 §7).</li>
+</ol>
+<hr />
+<h2 id="-side-discoveries-still-true-not-fixed-on-purpose">🔎 Side discoveries (still true, not fixed on purpose)</h2>
+<table>
+<thead>
+<tr>
+<th>Found</th>
+<th>Why it matters</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⏱️ <strong>The time ladder allows 51–66 s for one move</strong> in a 2+3 game (50 + winc/3000 with 60–120 s left; 65 + winc/3000 for White and 60 + binc/3000 for Black with ≥ 120 s left), and the 5% rule only stops <em>starting</em> new depths</td>
+<td>In game <code>tN252leL</code>, plies 5 and 7 took 29.1 s and 54.0 s out of a 2-minute clock</td>
+<td><code>Engine UCI.cpp</code>, <code>getBestMoveFromEngine</code></td>
+</tr>
+<tr>
+<td>🤝 <strong><code>isTiePosition</code> only detects stalemate</strong></td>
+<td>No threefold, 50-move or insufficient-material draws, so the stalemate override can't see the other draws</td>
+<td><code>Stockfish Handler.hpp</code></td>
+</tr>
+<tr>
+<td>♟️ <strong><code>position fen …</code> isn't really supported</strong></td>
+<td>The Kernel replays every game from the start position, so a game that starts from a FEN (lichess &quot;From position&quot;) would be searched from the wrong board</td>
+<td><code>Engine UCI.cpp</code> + the Kernel</td>
+</tr>
+<tr>
+<td>⌛ <strong>python-chess gives clock-based moves no timeout at all</strong></td>
+<td>A hung Engine UCI would block the game until lichess flags it. The Stockfish watchdog and the workers' deadline (allowed time + 2 s) are the protection now</td>
+<td>02</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Fixed along the way:</strong> a move with no legal move sent the report text as the move (now <code>0000</code>); the Kernel workers were 28 brand-new processes per move (now a pool); two moves in one second overwrote each other's report (there are no reports any more: the database has one row per move).</p>
+<hr />
+<h2 id="-how-i-made-this-and-what-i-touched">🧾 How I made this (and what I touched)</h2>
+<ul>
+<li><strong>Built and tested on copies first</strong>, then applied to your folder (the hashes of your files were checked right before, so nothing of yours was overwritten blindly).</li>
+<li><strong>Written in your style:</strong> <code>this-&gt;</code>, your long names, your banners and Notes boxes, your comments in the first person. The search in <code>Kernel.cpp</code> is untouched: only the file's tail (the worker's <code>main()</code>), a few <code>ProcessHandler</code> getters and the root loop's score recording are new.</li>
+<li><strong>Reviewed adversarially:</strong> 4 reviewers (concurrency, behavior parity, the database, the UCI protocol), each with a skeptic who tried to refute every finding. Of 10 findings, the skeptics refuted 5. The other 5 held up: 4 different problems, since two reviewers found the same one. All 4 are fixed and re-tested:
+<ul>
+<li>root moves of a worker that died <em>before</em> the move are now given to the living workers;</li>
+<li>two engines starting at the same moment can't break each other's database setup (it was a whole game lost, 19 times in 160 in the reviewer's race test; now 0 in 180);</li>
+<li>a reader never sees a view missing;</li>
+<li>a database locked at the start of a game no longer loses that game.</li>
+</ul>
+</li>
+<li><strong>I never</strong> started lichess-bot, used the token, contacted lichess, or opened the neural-network folders (<code>ChatGPT …</code>, <code>engines\Neural Networkds\</code>). Git is yours: I committed nothing, and the only git file I edited is <code>.gitignore</code> (merged with the other agent's lines, which are untouched).</li>
+</ul>
+<p>— <strong>Claude Opus 5.5</strong> 🤖</p>
+
+</body>
+</html>

@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="neural-evaluators-for-mr-bits">Neural evaluators for Mr. Bits</h1>
+<p><strong>Trained weights, native C++17 inference, no search integration yet.</strong></p>
+<p>Read <a href="../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">the illustrated lesson and results</a> first, then <a href="Small/README.md">Small</a> or <a href="Large/README.md">Large</a>. These evaluators were exported from the completed <code>clean-10m-20261026T080646Z</code> run. The original <code>Kernel.cpp</code>, <code>Engine UCI.cpp</code>, and <code>Stockfish Handler.hpp</code> are unchanged.</p>
+<pre class="hljs"><code><div>Neural Networks/
+  common.hpp          shared features, checked loader, arithmetic kernels
+  example.cpp         runnable starting-position example
+  Small/
+    Small.hpp         782 -&gt; 256 -&gt; 64 -&gt; 1, ReLU hidden layers
+    weights.bin       actual trained FP32 parameters, 867,908 bytes
+    model.json        checkpoint/source hashes and exact binary layout
+    README.md         usage and performance explanation
+  Large/
+    Large.hpp         782 -&gt; 1024 -&gt; 8 residual blocks -&gt; 256 -&gt; 1
+    weights.bin       actual trained FP32 parameters, 71,432,260 bytes
+    model.json        checkpoint/source hashes and exact binary layout
+    README.md         usage and performance explanation
+</div></code></pre>
+<p>The <code>.hpp</code> files contain the implementation. The <code>.bin</code> files contain the learned numbers; keep them with the deployment. A 17.8-million-number C++ source initializer would slow parsing and compilation and make reviews impractical. Loading a compact file <strong>once at startup</strong> adds no disk access to subsequent evaluation calls. No PyTorch, Python, CUDA, or third-party C++ libraries are needed by the executable.</p>
+<h2 id="try-the-c-example">Try the C++ example</h2>
+<p>In this directory, with GCC or Clang:</p>
+<pre class="hljs"><code><div>g++ -std=c++17 -O3 -Wall -Wextra -Wpedantic example.cpp -o nn_example
+./nn_example small Small/weights.bin
+./nn_example large Large/weights.bin
+</div></code></pre>
+<p>On Windows PowerShell the executable is <code>nn_example.exe</code>; run <code>./nn_example.exe ...</code>. A compiler path containing spaces must be invoked with PowerShell's <code>&amp;</code> operator.</p>
+<p>If the <strong>deployment CPU</strong> supports AVX2 and FMA, build a separate faster executable:</p>
+<pre class="hljs"><code><div>g++ -std=c++17 -O3 -mavx2 -mfma example.cpp -o nn_example_avx2
+</div></code></pre>
+<p>That executable requires those CPU instructions. There is no runtime instruction dispatcher. Use the default portable build for unknown machines. Keep the compile settings consistent across translation units including these headers; do not mix portable and AVX2 definitions in one executable. Avoid <code>-ffast-math</code>: the loader's finite-value checks and numerical agreement are part of this deployment contract.</p>
+<h2 id="what-goes-into-the-function">What goes into the function?</h2>
+<p>Your existing <code>int8_t board[8][8]</code> representation is supported directly: row0 is rank8; column0 is filea; low-three-bit types are <code>1=P, 3=N, 4=B, 5=R, 6=Q, 7=K</code>; bit3 means White. Supply side to move, retained castling rights, and the current raw en-passant target file explicitly. Castling bits are <code>1=WK, 2=WQ, 4=BK, 8=BQ</code>; EP is <code>-1</code> for none or <code>0..7</code> for filesa..h. Do not infer those state values only from which pieces remain on the board.</p>
+<p>The returned <code>float</code> is <strong>White-perspective pawns</strong>: multiply by100 for centipawns. It is a learned estimate with a linear, unbounded output. The caller resolves checkmate, stalemate, repetition, and rule-based draws first. Neither model sees move history or halfmove clocks.</p>
+<p>Create one model at startup, share it through <code>const</code> references, and give each worker its own <code>Model::Workspace</code>. Each evaluation uses fixed scratch storage and does not allocate memory. Optional raw-accumulator update methods are available for a later measured make/unmake integration; they are not wired into the engine today.</p>
+<h2 id="reproduce-the-exports">Reproduce the exports</h2>
+<p>From the lab directory, using its Python environment:</p>
+<pre class="hljs"><code><div>python -m chesslab.export_cpp --checkpoint runs/clean-10m-20261026T080646Z/small/best.pt --output <span class="hljs-string">&quot;../../engines/Neural Networks/Small/weights.bin&quot;</span> --reuse-existing
+python -m chesslab.export_cpp --checkpoint runs/clean-10m-20261026T080646Z/large/best.pt --output <span class="hljs-string">&quot;../../engines/Neural Networks/Large/weights.bin&quot;</span> --reuse-existing
+</div></code></pre>
+<p>The exporter accepts only these exact frozen architectures and activations. Future network variants need a matching exporter and inference implementation; they cannot silently reuse this binary ABI. Existing exports are reused only when both the source checkpoint hash and exported file hash match.</p>
+<p><code>weights.bin</code> is ignored by Git to keep large generated artifacts out of source history. Before publishing later, attach the trained weights/checkpoints as versioned release assets, include their <code>model.json</code> manifests, and document how to download them. Keep the current local copies: this task does not upload or publish anything.</p>
+
+</body>
+</html>

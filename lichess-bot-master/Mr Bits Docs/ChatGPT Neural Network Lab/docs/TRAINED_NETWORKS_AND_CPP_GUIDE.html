@@ -1,0 +1,1067 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>TRAINED_NETWORKS_AND_CPP_GUIDE.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-your-trained-chess-networks-from-782-inputs-to-a-c-score">♟️ Your trained chess networks: from 782 inputs to a C++ score</h1>
+<p style="color:#2563eb;font-size:1.15em"><strong>Mr_Bits Neural Network Lab · a practical lesson and a record of what we actually trained</strong></p>
+<p><strong>27 October 2026 · Run: <code>clean-10m-20261026T080646Z</code> · Feature contract: <code>board782_v1</code></strong></p>
+<p>Bro, we now have two real trained evaluators. Each takes a chess position and produces <strong>one signed number in White-perspective pawn units</strong>. The Small model is a compact candidate for frequent CPU calls. The Large model predicts the held-out teacher scores better, but carries much more computation. Both are useful experiments; neither has an established Elo or a demonstrated 95% best-move retention rate yet. ❤️</p>
+<p>This guide explains the exact models, their input and output, what their results mean, and how their separate C++ headers fit beside your engine. It documents the downloaded run, rather than assuming every current default configuration was used. <strong>Your existing <code>Kernel.cpp</code> is not changed by these evaluator components.</strong></p>
+<blockquote>
+<p>🟦 <strong>Read this first:</strong> evaluation error, move ordering quality, and engine playing strength are three different measurements. We have held-out evaluation error. We still need a complete legal-child ranking benchmark and equal-time engine matches before claiming the network improves search.</p>
+</blockquote>
+<h2 id="1-the-whole-story-on-one-page">1. The whole story on one page</h2>
+<p><img src="assets/trained-cpp-guide/feature_flow.svg" alt="Feature flow from the Kernel representation to the neural score"></p>
+<p>During <strong>training</strong>, we already know a Stockfish search score for each accepted position. We show the network a position, compare its prediction with that score, and adjust its weights. During <strong>inference</strong>, the weights are frozen: supply a new position, run arithmetic through those weights, receive a score. No Stockfish search, training, dataset scan, GPU rental, or Python interpreter is required by the standalone C++ evaluator.</p>
+<p>The label is a searched engine estimate, not a mathematically perfect answer. Training a static network to imitate searched scores is useful precisely because it tries to compress some expensive search knowledge into a cheaper function. It does not make the network a complete search engine.</p>
+<pre class="hljs"><code><div>TRAINING, performed offline
+position + saved Stockfish score → prediction → loss → weight update
+                                      repeated for many mini-batches
+
+INFERENCE, performed inside an eventual engine integration
+position + current state → frozen weights → one estimated score
+</div></code></pre>
+<p>For now, the trained models are <strong>general evaluators</strong>. We did not train separate opening, middlegame, and endgame specialists in this run.</p>
+<h2 id="2-exactly-what-enters-the-network-">2. Exactly what enters the network? 🧩</h2>
+<p>The mathematical input is a vector of <strong>782 <code>float32</code> features</strong>. Each feature is currently a binary <code>0</code> or <code>1</code>. It is not a FEN string, an image, 64 raw piece numbers, or the future moves Stockfish searched.</p>
+<h3 id="the-768-piece-square-features">The 768 piece-square features</h3>
+<p>We have 12 piece kinds, including color, and 64 squares. Each kind gets a plane of 64 indicators:</p>
+<table>
+<thead>
+<tr>
+<th>Plane</th>
+<th>Piece</th>
+<th style="text-align:right">Input indices</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>White pawn <code>P</code></td>
+<td style="text-align:right">0–63</td>
+</tr>
+<tr>
+<td>1</td>
+<td>White knight <code>N</code></td>
+<td style="text-align:right">64–127</td>
+</tr>
+<tr>
+<td>2</td>
+<td>White bishop <code>B</code></td>
+<td style="text-align:right">128–191</td>
+</tr>
+<tr>
+<td>3</td>
+<td>White rook <code>R</code></td>
+<td style="text-align:right">192–255</td>
+</tr>
+<tr>
+<td>4</td>
+<td>White queen <code>Q</code></td>
+<td style="text-align:right">256–319</td>
+</tr>
+<tr>
+<td>5</td>
+<td>White king <code>K</code></td>
+<td style="text-align:right">320–383</td>
+</tr>
+<tr>
+<td>6</td>
+<td>Black pawn <code>p</code></td>
+<td style="text-align:right">384–447</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Black knight <code>n</code></td>
+<td style="text-align:right">448–511</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Black bishop <code>b</code></td>
+<td style="text-align:right">512–575</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Black rook <code>r</code></td>
+<td style="text-align:right">576–639</td>
+</tr>
+<tr>
+<td>10</td>
+<td>Black queen <code>q</code></td>
+<td style="text-align:right">640–703</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Black king <code>k</code></td>
+<td style="text-align:right">704–767</td>
+</tr>
+</tbody>
+</table>
+<p>The square index follows <strong><code>a8, b8, …, h8, a7, …, h1</code></strong>. With zero-based array row and column:</p>
+<pre class="hljs"><code><div>square_index = row * 8 + column
+feature_index = plane * 64 + square_index
+
+a8 = 0       h8 = 7
+a7 = 8       h7 = 15
+...
+a1 = 56      h1 = 63
+</div></code></pre>
+<p>For a White knight on <code>f3</code>, the row is 5, column is 5, square index is 45, and feature <code>64 + 45 = 109</code> is <code>1</code>. The other piece planes at that square remain <code>0</code>. An empty square activates no piece feature. This keeps identity distinct: we do not tell the network that a queen is numerically “six times a pawn.” It learns relationships from separate indicators.</p>
+<h3 id="the-remaining-14-flags">The remaining 14 flags</h3>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Index</th>
+<th>Meaning</th>
+<th>Encoding</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">768</td>
+<td>Side to move</td>
+<td><code>1</code> White; <code>0</code> Black</td>
+</tr>
+<tr>
+<td style="text-align:right">769</td>
+<td>White kingside castling right</td>
+<td><code>1</code> if retained</td>
+</tr>
+<tr>
+<td style="text-align:right">770</td>
+<td>White queenside castling right</td>
+<td><code>1</code> if retained</td>
+</tr>
+<tr>
+<td style="text-align:right">771</td>
+<td>Black kingside castling right</td>
+<td><code>1</code> if retained</td>
+</tr>
+<tr>
+<td style="text-align:right">772</td>
+<td>Black queenside castling right</td>
+<td><code>1</code> if retained</td>
+</tr>
+<tr>
+<td style="text-align:right">773</td>
+<td>No recorded en passant target</td>
+<td>One EP choice must be <code>1</code></td>
+</tr>
+<tr>
+<td style="text-align:right">774–781</td>
+<td>Recorded EP file <code>a</code>–<code>h</code></td>
+<td>One-hot file choice</td>
+</tr>
+</tbody>
+</table>
+<p>Castling rights mean <strong>rights still retained</strong>, not whether castling is legal this turn. A piece blocking <code>f1</code> does not erase White's kingside right. An attacked transit square does not erase it either. Legal move generation decides whether castling can actually be played.</p>
+<p>En passant preserves the recorded target file, including a target for which no legal capture exists. The target rank follows from whose turn it is in orthodox chess: rank 6 for White to move, rank 3 for Black. “EP unavailable” activates index 773 rather than making all nine EP features zero.</p>
+<p><strong><code>768 + 1 + 4 + 9 = 782</code>.</strong> These exact conventions must match training. Rotating the board, reversing colors, or guessing missing rights produces a different input, even if the C++ arithmetic itself is flawless.</p>
+<h3 id="why-do-the-stored-records-have-only-78-input-bytes">Why do the stored records have only 78 input bytes?</h3>
+<p>The dataset stores a compact representation to avoid saving mostly zero floats:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Compact indices</th>
+<th>Content</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right">0–63</td>
+<td>Piece code for each square, in the same <code>a8</code> → <code>h1</code> order</td>
+</tr>
+<tr>
+<td style="text-align:right">64</td>
+<td>White-to-move flag</td>
+</tr>
+<tr>
+<td style="text-align:right">65–68</td>
+<td>Castling flags: White K, White Q, Black K, Black Q</td>
+</tr>
+<tr>
+<td style="text-align:right">69</td>
+<td>EP none</td>
+</tr>
+<tr>
+<td style="text-align:right">70–77</td>
+<td>EP files <code>a</code>–<code>h</code></td>
+</tr>
+</tbody>
+</table>
+<p>Compact piece codes are <code>0</code> empty; <code>1,2,3,4,5,6</code> White pawn, knight, bishop, rook, queen, king; <code>7,8,9,10,11,12</code> the corresponding Black pieces. Expansion converts the 64 codes into 768 binary features and copies the 14 flags. <strong>A compact <code>78</code>-byte position and an expanded <code>782</code>-float position represent the same information.</strong></p>
+<p>The complete prepared row is <strong>108 bytes</strong>, because it also stores a 4-byte cp label, 2-byte depth, 8-byte node count, and 16-byte position key. Those metadata fields are not additional neural inputs. See <a href="DATA_PIPELINE.md">the data pipeline</a> for the disk layout.</p>
+<h3 id="your-kernel-uses-a-different-piece-encoding">Your Kernel uses a different piece encoding</h3>
+<p>Your engine's lower three bits encode type, while bit 3 marks White. Its knight code is <code>3</code>, not the compact dataset's <code>2</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Piece</th>
+<th style="text-align:right">Kernel Black</th>
+<th style="text-align:right">Kernel White</th>
+<th style="text-align:right">Compact White</th>
+<th style="text-align:right">Compact Black</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Empty</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">—</td>
+<td style="text-align:right">0</td>
+<td style="text-align:right">0</td>
+</tr>
+<tr>
+<td>Pawn</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">9</td>
+<td style="text-align:right">1</td>
+<td style="text-align:right">7</td>
+</tr>
+<tr>
+<td>Knight</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">11</td>
+<td style="text-align:right">2</td>
+<td style="text-align:right">8</td>
+</tr>
+<tr>
+<td>Bishop</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">12</td>
+<td style="text-align:right">3</td>
+<td style="text-align:right">9</td>
+</tr>
+<tr>
+<td>Rook</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">13</td>
+<td style="text-align:right">4</td>
+<td style="text-align:right">10</td>
+</tr>
+<tr>
+<td>Queen</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">14</td>
+<td style="text-align:right">5</td>
+<td style="text-align:right">11</td>
+</tr>
+<tr>
+<td>King</td>
+<td style="text-align:right">7</td>
+<td style="text-align:right">15</td>
+<td style="text-align:right">6</td>
+<td style="text-align:right">12</td>
+</tr>
+</tbody>
+</table>
+<p>The adapter reads the low nibble, maps the types, and ignores higher move-related bits. <strong>Do not pass compact dataset codes into an API expecting Kernel codes.</strong> State must come from your engine's current position: castling rights cannot be reconstructed reliably from piece placement alone.</p>
+<h3 id="what-the-network-cannot-see">What the network cannot see</h3>
+<p><code>board782_v1</code> has no halfmove clock, fullmove number, repetition history, move list, last capture, or game ID. The source export did not supply the missing history. Appending <code>0 1</code> when parsing a four-field FEN provides parser counters; it does not recover the real game history.</p>
+<p>The engine must still handle legal moves, checkmate, stalemate, repetition and move-count draw rules using its complete state. The models support <strong>orthodox chess</strong>, not arbitrary variants or Chess960 positions. The source continuation notation uses Chess960-compatible castling notation, but that notation alone does not turn our feature contract into a Chess960 model.</p>
+<h2 id="3-exactly-what-comes-out-">3. Exactly what comes out? 🎯</h2>
+<p>One <strong>FP32 signed White-perspective pawn score</strong>:</p>
+<table>
+<thead>
+<tr>
+<th style="text-align:right">Network output</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:right"><code>+0.35f</code></td>
+<td>Estimated White advantage of 0.35 pawn units</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>-1.20f</code></td>
+<td>Estimated Black advantage of 1.20 pawn units</td>
+</tr>
+<tr>
+<td style="text-align:right"><code>0.0f</code></td>
+<td>Approximately balanced according to the learned evaluator</td>
+</tr>
+</tbody>
+</table>
+<p>The perspective remains White even when Black is to move. To rank legal children, White prefers higher scores; Black prefers lower scores. A negamax search that stores side-to-move scores must convert consistently:</p>
+<pre class="hljs"><code><div><span class="hljs-type">float</span> side_to_move_pawns = state.white_to_move ? white_pawns : -white_pawns;
+</div></code></pre>
+<p>Keep the units explicit. Multiply by <code>100</code> only at a boundary that expects centipawns. A <code>+1.0</code> neural score does not mean a 100% winning probability, and a <code>+9.0</code> score does not prove a literal queen is missing.</p>
+<p>Training targets were <code>clamp(raw_cp / 100, -15, +15)</code>. Accepted labels already satisfy <code>|cp| &lt;= 1500</code>, so this release's recorded test clipping fraction is zero. The final network layer is <strong>linear</strong>: the prediction itself is not clamped to <code>[-15, +15]</code> and can go outside that range. It is neither a mate-distance output nor an exact terminal detector.</p>
+<h2 id="4-meet-the-two-actual-architectures-">4. Meet the two actual architectures 🧠</h2>
+<p><img src="assets/trained-cpp-guide/model_architectures.svg" alt="Actual trained Small and Large architectures"></p>
+<h3 id="small-a-compact-multilayer-perceptron">Small: a compact multilayer perceptron</h3>
+<pre class="hljs"><code><div>782 → Linear(256) → ReLU → Linear(64) → ReLU → Linear(1)
+</div></code></pre>
+<p>Each Linear layer computes weighted sums and adds biases. For example, one first-layer unit computes <code>b + w₀x₀ + … + w₇₈₁x₇₈₁</code>. ReLU means <code>max(0, value)</code>. Combining learned sums with nonlinear activations lets later layers represent relationships between pieces and state flags, rather than only adding fixed piece values.</p>
+<p>Small contains <strong>216,961 learned parameters</strong>: weights and biases. It has three Linear layers, two hidden layers and <strong>216,640 dense Linear multiply-accumulates</strong> per position. That operation count excludes biases, activations, feature handling, validation, and other overhead.</p>
+<h3 id="large-a-wider-residual-network">Large: a wider residual network</h3>
+<pre class="hljs"><code><div>782 → Linear(1024) → ReLU
+    → 8 residual blocks, each at width 1024
+    → Linear(256) → ReLU → Linear(1)
+
+One residual block:
+h_next = ReLU(h + Linear₂(ReLU(Linear₁(h))))
+</div></code></pre>
+<p>The <code>h + ...</code> is a skip connection. The block can learn a correction while keeping its incoming representation available. This helps optimization of a deeper network; it does not guarantee better chess for every input.</p>
+<p>Large contains <strong>17,858,049 parameters</strong>, 19 Linear layers, and <strong>17,840,384 dense Linear multiply-accumulates</strong> per position. It has about 82 times Small's parameters. Its better prediction error is real in this run; whether it earns its CPU cost inside search is a separate experiment.</p>
+<h3 id="depth-has-two-completely-different-meanings-here">“Depth” has two completely different meanings here</h3>
+<p><strong>Neural depth</strong> is the sequence of learned transformations used for one evaluation. <strong>Search depth</strong> is how far the chess engine explores moves. A network with 19 Linear layers does not search 19 moves ahead. It does no explicit move tree traversal during one forward pass.</p>
+<p>The network can learn patterns associated with future consequences because the teacher labels came from search. That is different from proving those consequences in the current position. Quiet sacrifices and tactical exceptions remain reasons to retain search.</p>
+<h2 id="5-what-20-epochs-actually-did-">5. What 20 epochs actually did 📚</h2>
+<p>The actual downloaded release selected <strong>10,000,000 distinct visible inputs</strong> from a bounded scan:</p>
+<pre class="hljs"><code><div>first 20,000,000 raw records scanned
+     ↓ structural, search-quality and finite-score filters
+13,515,498 accepted unique candidates
+     ↓ deterministic hash selection within that scanned pool
+10,000,000 prepared positions
+     ├── 9,001,091 training positions
+     ├──   499,588 validation positions
+     └──   499,321 held-out test positions
+</div></code></pre>
+<p>This is not a uniform sample of the complete Lichess archive. The hash selection samples the accepted <strong>20-million-record prefix</strong>. Archive ordering, human analysis choices, related positions, and filtering can still bias the distribution. Exact repeated visible inputs were kept in one hash split; nearby but different positions can remain correlated because complete game provenance was unavailable.</p>
+<p>Preparation selected the strongest saved analysis by <code>(depth, knodes)</code> and then its first PV. This release required depth <strong>20–80</strong>, at least <strong>1,000 knodes</strong>, a finite score within <strong>±1,500 cp</strong>, a structurally valid nonterminal orthodox parent, and a fully legal saved continuation. Mate labels were rejected. One thousand knodes means one million searched nodes; a reported depth is selective search depth, not proof that every branch was exhaustively searched that far. The continuation was checked for legality but was <strong>not supplied as a neural input</strong>.</p>
+<p>Both models saw the same training release and used:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Actual downloaded run</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Epochs completed</td>
+<td>20 each</td>
+</tr>
+<tr>
+<td>Mini-batch size</td>
+<td>2,048</td>
+</tr>
+<tr>
+<td>Updates per epoch</td>
+<td>4,396, including the final short batch</td>
+</tr>
+<tr>
+<td>Total optimizer updates</td>
+<td>87,920 each</td>
+</tr>
+<tr>
+<td>Optimizer</td>
+<td>AdamW</td>
+</tr>
+<tr>
+<td>Learning rate</td>
+<td>0.0003</td>
+</tr>
+<tr>
+<td>Weight decay</td>
+<td>0.0001</td>
+</tr>
+<tr>
+<td>Training loss</td>
+<td>Huber; delta 1.0 pawn</td>
+</tr>
+<tr>
+<td>Gradient clipping</td>
+<td>Global norm 1.0</td>
+</tr>
+<tr>
+<td>Seed</td>
+<td>20261023</td>
+</tr>
+<tr>
+<td>Best checkpoint</td>
+<td>Epoch 20 for both, selected by validation Huber</td>
+</tr>
+<tr>
+<td>Training/validation arithmetic</td>
+<td>CUDA bfloat16 autocast</td>
+</tr>
+<tr>
+<td>Saved learned parameters</td>
+<td>FP32</td>
+</tr>
+<tr>
+<td>Held-out test evaluation</td>
+<td>FP32, explicitly recorded in each <code>test.json</code></td>
+</tr>
+<tr>
+<td>Recorded GPU</td>
+<td>NVIDIA RTX PRO 6000 Blackwell Server Edition</td>
+</tr>
+</tbody>
+</table>
+<p>An <strong>epoch</strong> is one traversal of the training split. Twenty epochs means roughly <strong>180,021,820 training-position presentations per model</strong>, with the same 9,001,091 examples revisited. It does not mean we acquired 180 million independent positions or trained on validation/test records.</p>
+<p>A <strong>mini-batch</strong> groups positions for parallel arithmetic. The network predicts them, the loss compares predictions with labels, backpropagation computes how weights influenced the error, and AdamW updates those weights. Repeating this process builds the learned function.</p>
+<p>Huber loss behaves quadratically near a correct answer and linearly for large errors. It makes big mistakes matter without letting a few extreme examples dominate as strongly as pure squared error. It remains a training objective, not a chess rating.</p>
+<h3 id="activations-why-not-just-add-more-linear-layers">Activations: why not just add more Linear layers?</h3>
+<p>Several Linear layers without nonlinear activations collapse algebraically into one affine transformation. ReLU makes the composition more expressive. ReLU inside the network does <strong>not</strong> forbid negative chess evaluations: the final Linear layer can output either sign.</p>
+<p>The lab can build other activation experiments, including GELU, SiLU and tanh. Changing an activation changes the function and generally requires training an appropriate model. Replacing ReLU in the deployed C++ code while keeping these weights would not be an optimization of the same model; it would deploy a different, unvalidated evaluator.</p>
+<h3 id="more-epochs-are-an-experiment-not-a-guarantee">More epochs are an experiment, not a guarantee</h3>
+<p><img src="assets/trained-cpp-guide/actual_learning_curves.svg" alt="Actual learning curves from full-precision CSV values"></p>
+<p>This plot uses the actual <code>metrics.csv</code> values, not rounded console summaries. The source training and validation passes used bfloat16 autocast; full decimal logging does not change that arithmetic precision.</p>
+<p>Both validation MAEs continued to improve overall and both best checkpoints occurred at epoch 20. That supports testing a controlled continuation. However, Large's training Huber reached <code>0.35408567000012436</code> while validation Huber remained <code>0.6146177878916279</code>. That gap is a warning to watch generalization. It does not establish that epoch 21 will be worse, nor that unlimited additional training will help.</p>
+<p>Choose experiments on validation, save the best validation checkpoint, and keep the final test set reserved for declared comparisons. Consider learning-rate scheduling, data coverage and tactical examples alongside more epochs. Do not repeatedly tune settings against the final test and still call it untouched evidence.</p>
+<h2 id="6-honest-results-better-score-prediction-with-important-gaps-">6. Honest results: better score prediction, with important gaps 📊</h2>
+<p>The following are the downloaded <strong>FP32 held-out test</strong> metrics on <strong>499,321 positions</strong>. Their original numerical precision is preserved below; machine-readable originals remain in the run directories.</p>
+<table>
+<thead>
+<tr>
+<th>Metric</th>
+<th style="text-align:right">Small</th>
+<th style="text-align:right">Large</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Mean absolute error, cp</td>
+<td style="text-align:right">117.46930382031158</td>
+<td style="text-align:right">90.8242293011166</td>
+</tr>
+<tr>
+<td>Root mean squared error, cp</td>
+<td style="text-align:right">199.7820215901521</td>
+<td style="text-align:right">173.5659051718218</td>
+</tr>
+<tr>
+<td>Signed prediction bias, cp</td>
+<td style="text-align:right">-11.49521980664952</td>
+<td style="text-align:right">-2.544820890946876</td>
+</tr>
+<tr>
+<td>Huber loss</td>
+<td style="text-align:right">0.8311656711934808</td>
+<td style="text-align:right">0.6138006459506934</td>
+</tr>
+<tr>
+<td>Fraction within 25 cp</td>
+<td style="text-align:right">0.27679989425640017</td>
+<td style="text-align:right">0.3935504414995564</td>
+</tr>
+<tr>
+<td>Fraction within 50 cp</td>
+<td style="text-align:right">0.46695612641967793</td>
+<td style="text-align:right">0.5820143755219588</td>
+</tr>
+<tr>
+<td>Fraction within 100 cp</td>
+<td style="text-align:right">0.6617626737108994</td>
+<td style="text-align:right">0.752732210341644</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interpretation:</strong> Large's average absolute miss is about <code>0.908</code> pawn units, versus Small's <code>1.175</code>, on this filtered distribution. Large is within half a pawn of its teacher on about 58.2% of these positions. These fractions describe score proximity, not move accuracy or a probability that the network is “correct.”</p>
+<p>The test's always-zero baseline has MAE <code>168.39025396488432 cp</code>; the simple material baseline has <code>177.94438447411585 cp</code>. Both networks improve on those baselines. This supports that they learned useful structure beyond these particular baselines, but does not establish superiority over your existing handcrafted evaluator or any Stockfish NNUE.</p>
+<p>RMSE exceeds MAE because larger misses receive more emphasis. The negative bias means a small average shift toward Black in the residual error, not that the network always undervalues White. One average does not reveal whether a specific tactical position is safe.</p>
+<h3 id="material-coverage-exposes-where-work-remains">Material coverage exposes where work remains</h3>
+<table>
+<thead>
+<tr>
+<th>Material bucket</th>
+<th style="text-align:right">Test positions</th>
+<th style="text-align:right">Small MAE, cp</th>
+<th style="text-align:right">Large MAE, cp</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low material</td>
+<td style="text-align:right">114,511</td>
+<td style="text-align:right">161.7007558510194</td>
+<td style="text-align:right">117.68486887903882</td>
+</tr>
+<tr>
+<td>Medium material</td>
+<td style="text-align:right">89,550</td>
+<td style="text-align:right">156.70647374193538</td>
+<td style="text-align:right">122.53828371951782</td>
+</tr>
+<tr>
+<td>High material</td>
+<td style="text-align:right">295,260</td>
+<td style="text-align:right">88.41465242842038</td>
+<td style="text-align:right">70.78821943904498</td>
+</tr>
+</tbody>
+</table>
+<p>These buckets count non-pawn material with knight/bishop = 1, rook = 2, queen = 4, summed across both colors. Low is at most 8; medium is 9–16; high is above 16. They are <strong>material buckets</strong>, not exact opening/middlegame/endgame classifications. A closed middlegame and an early opening can both have high material.</p>
+<p>The models are weaker on low/medium material in this test. Endgame-specialist training is a plausible later experiment, but first inspect coverage and failure cases. Missing draw history cannot be fixed by merely widening the network. Exact immediate terminals and supported tablebase probes should still take precedence.</p>
+<blockquote>
+<p>🟧 <strong>The biggest missing chess metric:</strong> these scalar test records do not give an independently scored complete set of legal children for every parent. Therefore they cannot establish best-move recall@5, safe pruning percentages, or the chance of discarding a unique defense.</p>
+</blockquote>
+<p>The preparation policy rejected mate labels and scores beyond ±15 pawns, so tactical mates and decisive tails are not represented as ordinary regression targets. Even among accepted examples, deeper search is an estimate and teacher versions vary. The held-out metric is evidence about this target distribution, not a guarantee across all chess.</p>
+<h2 id="7-the-c-components-load-once-score-many-times-️">7. The C++ components: load once, score many times ⚙️</h2>
+<p>The standalone deployment lives beside your engine in this deliberately named folder:</p>
+<pre class="hljs"><code><div>lichess-bot-master/engines/Neural Networks/
+├── common.hpp
+├── Small/
+│   ├── Small.hpp
+│   ├── weights.bin
+│   └── README.md
+└── Large/
+    ├── Large.hpp
+    ├── weights.bin
+    └── README.md
+</div></code></pre>
+<p>The trained C++17 model is code <strong>plus its corresponding weights file</strong>. Including a header alone does not embed tens of megabytes of learned weights. <code>load(path)</code> reads the binary once into an object. Keep that object alive across positions and moves; loading on every leaf would turn inexpensive arithmetic into repeated disk I/O, parsing and memory allocation. The standalone executable does not depend on PyTorch or any third-party C++ inference library.</p>
+<p>The C++ binary uses the learned <strong>FP32</strong> parameters. It is not an INT8 or FP16 quantization. The original PyTorch training checkpoints remain separate so training and experiments can continue.</p>
+<h3 id="a-complete-minimal-call">A complete minimal call</h3>
+<p>Place this example where the relative header path is appropriate, or add the <code>Neural Networks</code> directory to your compiler's include paths:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdint&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;iostream&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;Small/Small.hpp&quot;</span></span>
+
+<span class="hljs-function"><span class="hljs-type">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span> </span>{
+    <span class="hljs-comment">// Kernel piece codes; [0][0] is a8 and [7][7] is h1.</span>
+    <span class="hljs-type">const</span> std::<span class="hljs-type">int8_t</span> board[<span class="hljs-number">8</span>][<span class="hljs-number">8</span>] = {
+        {<span class="hljs-number">5</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">6</span>, <span class="hljs-number">7</span>, <span class="hljs-number">4</span>, <span class="hljs-number">3</span>, <span class="hljs-number">5</span>},
+        {<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>},
+        {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>},
+        {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>},
+        {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>},
+        {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>},
+        {<span class="hljs-number">9</span>, <span class="hljs-number">9</span>, <span class="hljs-number">9</span>, <span class="hljs-number">9</span>, <span class="hljs-number">9</span>, <span class="hljs-number">9</span>, <span class="hljs-number">9</span>, <span class="hljs-number">9</span>},
+        {<span class="hljs-number">13</span>, <span class="hljs-number">11</span>, <span class="hljs-number">12</span>, <span class="hljs-number">14</span>, <span class="hljs-number">15</span>, <span class="hljs-number">12</span>, <span class="hljs-number">11</span>, <span class="hljs-number">13</span>}
+    };
+
+    <span class="hljs-keyword">auto</span> model = mrbits::nn::Small::<span class="hljs-built_in">load</span>(<span class="hljs-string">&quot;Small/weights.bin&quot;</span>);
+    mrbits::nn::Small::Workspace workspace;
+    <span class="hljs-comment">// White turn; all four retained castling rights; no EP target.</span>
+    mrbits::nn::State state{<span class="hljs-literal">true</span>, <span class="hljs-number">15</span>, <span class="hljs-number">-1</span>};
+    <span class="hljs-type">const</span> <span class="hljs-type">float</span> white_pawns = model.<span class="hljs-built_in">evaluate</span>(board, state, workspace);
+    std::cout &lt;&lt; white_pawns &lt;&lt; <span class="hljs-string">&#x27;\n&#x27;</span>;
+}
+</div></code></pre>
+<p>For Large, include <code>Large/Large.hpp</code>, call <code>mrbits::nn::Large::load(...)</code>, and use <code>mrbits::nn::Large::Workspace</code>. The board/state/output contract is identical. The weights path is resolved against the process's <strong>working directory</strong>, not automatically against the header location; production callers should resolve and pass a reliable path.</p>
+<p><code>State</code> has these exact fields:</p>
+<pre class="hljs"><code><div><span class="hljs-keyword">struct</span> <span class="hljs-title class_">State</span> {
+    <span class="hljs-type">bool</span> white_to_move;
+    std::<span class="hljs-type">uint8_t</span> castling;  <span class="hljs-comment">// WK=1, WQ=2, BK=4, BQ=8</span>
+    std::<span class="hljs-type">int8_t</span> ep_file;    <span class="hljs-comment">// -1 none; 0=a through 7=h</span>
+};
+</div></code></pre>
+<p>For example, White queenside plus Black kingside rights are <code>2 | 4</code>, or <code>6</code>. A recorded EP target on file <code>e</code> means <code>ep_file = 4</code>. The board parameter is an <strong>8×8 <code>std::int8_t</code> array</strong>, matching your Kernel's cell storage. An <code>int[8][8]</code> is a different C++ type; do not reinterpret it as bytes.</p>
+<h3 id="what-a-workspace-is-and-why-one-belongs-to-each-thread">What a Workspace is, and why one belongs to each thread</h3>
+<p>A forward pass needs temporary arrays for hidden activations. A <code>Workspace</code> provides reusable scratch memory so evaluating a position does not repeatedly allocate those arrays.</p>
+<pre class="hljs"><code><div>one model loaded once, used read-only
+             │
+      ┌──────┼─────────┐
+      ▼      ▼         ▼
+  thread A thread B thread C
+  its own  its own  its own
+ workspace workspace workspace
+</div></code></pre>
+<p>Several search threads can share the frozen model through <code>const</code> references while each keeps its own Workspace. Copying the model object copies its parameter storage, so passing it by value to every worker wastes memory. The actual Workspace sizes are <strong>2,304 bytes for Small</strong> and <strong>13,312 bytes for Large</strong>, including raw projection accumulators and scratch arrays. Large fuses its second residual Linear result, skip addition and ReLU into one destination. Sharing one mutable Workspace concurrently would race: one position's intermediate values would overwrite another's. The caller must also ensure its board and state are not being mutated concurrently while an evaluation reads them.</p>
+<p>This organization removes Python process launches and per-evaluation file handoffs from neural inference. How your Engine UCI and Kernel processes communicate remains a separate integration decision.</p>
+<h2 id="8-where-the-cpu-cost-really-goes-">8. Where the CPU cost really goes 🚀</h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th style="text-align:right">Small</th>
+<th style="text-align:right">Large</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learned parameters</td>
+<td style="text-align:right">216,961</td>
+<td style="text-align:right">17,858,049</td>
+</tr>
+<tr>
+<td>FP32 parameter payload</td>
+<td style="text-align:right">867,844 bytes</td>
+<td style="text-align:right">71,432,196 bytes</td>
+</tr>
+<tr>
+<td>Actual <code>weights.bin</code>, including 64-byte header</td>
+<td style="text-align:right">867,908 bytes</td>
+<td style="text-align:right">71,432,260 bytes</td>
+</tr>
+<tr>
+<td>Payload in MiB</td>
+<td style="text-align:right">About 0.828</td>
+<td style="text-align:right">About 68.123</td>
+</tr>
+<tr>
+<td>Original <code>best.pt</code> checkpoint</td>
+<td style="text-align:right">2,651,343 bytes</td>
+<td style="text-align:right">214,382,535 bytes</td>
+</tr>
+<tr>
+<td>Dense Linear MACs per position</td>
+<td style="text-align:right">216,640</td>
+<td style="text-align:right">17,840,384</td>
+</tr>
+</tbody>
+</table>
+<p>The weights binary also has a small format header; the payload figures above count learned floats only. The Python checkpoint is larger because it contains training state and metadata, including AdamW state. Its file size is not the inference model's required parameter memory. Runtime memory also includes Workspace arrays, container overhead, executable/code and any copies the caller creates.</p>
+<h3 id="sparse-first-projection-use-the-boards-actual-structure">Sparse first projection: use the board's actual structure</h3>
+<p>Most of the 782 inputs are zero. A legal position has at most 32 occupied squares, plus one EP feature, up to four castling flags, and possibly the White-turn flag. The first Linear layer can therefore sum only the <strong>active feature columns</strong>, beginning with the bias. Multiplication by zero disappears, and multiplication by one becomes addition.</p>
+<p>That is an exact algebraic optimization of this binary input contract. Different accumulation order can produce small floating-point differences, so cross-language checks still need explicit tolerances.</p>
+<p>This helps Small substantially because its first projection dominates its original dense operation count. Large spends most of its work in the sixteen dense <code>1024 × 1024</code> layers inside its residual blocks. Making only Large's first projection sparse cannot erase that bulk. Memory locality and cache capacity matter as well; weights do not become cheap just because the training GPU was powerful.</p>
+<h3 id="simd-batching-and-precision">SIMD, batching and precision</h3>
+<p>A portable C++ implementation can keep contiguous weights and loops that optimizing compilers can vectorize. Architecture-specific SIMD or tuned linear algebra may improve throughput after measuring the target CPU. SIMD processes several values per instruction; it does not reduce parameter count or automatically preserve every rounding detail. Compiler settings and CPU instruction support must be recorded with timing results.</p>
+<p>Batching sibling positions can improve hardware utilization, especially for Large. It also requires building those children, can delay a useful early alpha-beta cutoff, and is not automatically profitable at every node. Measure complete engine behavior, not only a matrix multiplication isolated from search.</p>
+<p>FP16/INT8 deployment, distillation from Large into Small, and a purpose-designed incrementally updatable evaluator are further experiments. Each needs parity or quality measurements. The current binaries remain FP32; there is no hidden claim that quantization has already preserved chess quality.</p>
+<p>The optional accumulator interface can update the first projection after feature additions/removals. It needs exact changes for captures, promotion, castling, EP, turn and rights. FP32 addition and subtraction are not perfectly reversible; many make/unmake cycles can accumulate drift. Saving/restoring the parent's raw accumulator costs <strong>1,024 bytes per Small position</strong> or <strong>4,096 bytes per Large position</strong>; periodic rebuilding is another strategy to measure. The interface does <strong>not</strong> make the later dense layers incremental, and it does not turn the trained architecture into Stockfish NNUE. Start with <code>evaluate(board, state, workspace)</code>; add incremental state only after make/unmake parity is demonstrated.</p>
+<p>A <a href="../reports/cpp-inference-clean-10m-20261026T080646Z/incremental-usage.md">reproducible accumulator stress check</a> completed 256 starting-position ↔ <code>e2e4</code> feature-delta round trips, rebuilding every 16. The maximum observed score drift was about <strong>0.000167 cp for Small</strong> and <strong>0.000156 cp for Large</strong>; full rebuilds restored the raw accumulators exactly. This is a bounded numerical check of those fixtures and that rebuild policy, not a universal drift guarantee or a chess-strength test.</p>
+<h3 id="what-the-local-c-verification-actually-measured">What the local C++ verification actually measured</h3>
+<p>The final harness <strong>passed on 592 unique positions</strong>: 256 from the prepared validation split and 336 special fixtures/legal-walk positions. It compared the actual exported weights with <strong>Python/PyTorch CPU FP32</strong>, without autocast, using both portable and AVX2/FMA C++ builds. Across both builds, maximum fresh-evaluation disagreement was approximately <strong>0.000358 cp for Small</strong> and <strong>0.001192 cp for Large</strong>. These are implementation-parity differences, far smaller than the models' teacher-prediction error.</p>
+<p>The harness also checked both board adapters, malformed input/weight rejection, fresh accumulators, bounded feature deltas, and concurrent correctness with <strong>four private Workspaces</strong>. The four-thread check measured correctness, not parallel throughput. The separate 32-position delta-chain check observed at most about <strong>0.011873 cp</strong> Large score drift before rebasing; do not confuse it with either fresh-inference parity or the narrower starting-position/<code>e2e4</code> round-trip check above.</p>
+<p>Here are the measured <strong>median warm serial CPU latencies</strong>, with one PyTorch compute thread and five timing rounds. The compiler was GCC 14.2.0 on the local Windows x64 Intel host. These are CPU measurements, not GPU measurements:</p>
+<table>
+<thead>
+<tr>
+<th>Timed path</th>
+<th style="text-align:right">Small</th>
+<th style="text-align:right">Large</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python/PyTorch FP32, pre-expanded inputs, one call per position</td>
+<td style="text-align:right">39.163 µs</td>
+<td style="text-align:right">2.520 ms</td>
+</tr>
+<tr>
+<td>Portable C++, prebuilt active features</td>
+<td style="text-align:right">1.652 µs</td>
+<td style="text-align:right">3.598 ms</td>
+</tr>
+<tr>
+<td>Portable C++, compact-78 adapter + evaluation</td>
+<td style="text-align:right">2.200 µs</td>
+<td style="text-align:right">4.010 ms</td>
+</tr>
+<tr>
+<td>AVX2/FMA C++, prebuilt active features</td>
+<td style="text-align:right">0.955 µs</td>
+<td style="text-align:right">2.820 ms</td>
+</tr>
+<tr>
+<td>AVX2/FMA C++, compact-78 adapter + evaluation</td>
+<td style="text-align:right">1.213 µs</td>
+<td style="text-align:right">2.940 ms</td>
+</tr>
+</tbody>
+</table>
+<p><strong>One millisecond is 1,000 microseconds.</strong> Large's AVX2/FMA evaluation took roughly 3,000 times Small's prebuilt-feature call here. Small's narrow sparse path performed very well in this local test. Large's optimized C++ path was still about <strong>12% slower than PyTorch's</strong> single-position call, so this result does not support a Large C++ speedup claim. Efficient deployed code cannot remove the cost of seventeen million mostly dense operations per position.</p>
+<p>The timing scopes matter. C++ prebuilt-feature timing excludes feature preparation. The second C++ path starts with the <strong>compact 78-byte representation</strong>, not the Kernel's <code>int8_t[8][8]</code> board adapter. PyTorch starts with expanded <code>[1,782]</code> FP32 inputs and includes Python/PyTorch dispatch. Neither path includes move generation, making/unmaking legal children, sorting, search, startup weight loading, or GPU work. The host was not pinned/isolated; consult the per-round ranges before treating close timing differences as stable.</p>
+<p>AVX2/FMA binaries require those instructions on the deployment CPU; these headers do not dispatch automatically at runtime. Use the portable build for an unknown target. Match compiler options across translation units and avoid <code>-ffast-math</code> when checking numerical agreement and finite-value validation.</p>
+<p>The <a href="../reports/cpp-inference-clean-10m-20261026T080646Z/summary.json">verification summary</a>, <a href="../reports/cpp-inference-clean-10m-20261026T080646Z/small-verification.json">Small report</a>, and <a href="../reports/cpp-inference-clean-10m-20261026T080646Z/large-verification.json">Large report</a> preserve exact numbers, hashes, tolerances, timing scopes, compiler commands and host metadata. Training/validation curves used bfloat16 autocast; deployment parity compares FP32 against FP32. A parity test is not another complete held-out chess evaluation.</p>
+<p>To reproduce from the lab directory, use a <strong>new</strong> output folder and a CPU that supports the requested builds:</p>
+<pre class="hljs"><code><div>python scripts/verify_cpp.py <span class="hljs-literal">--help</span>
+python scripts/verify_cpp.py <span class="hljs-literal">--models</span> small large <span class="hljs-literal">--builds</span> portable avx2 <span class="hljs-literal">--validation-positions</span> <span class="hljs-number">256</span> <span class="hljs-literal">--rounds</span> <span class="hljs-number">5</span> <span class="hljs-literal">--output</span> reports/<span class="hljs-built_in">cpp</span><span class="hljs-literal">-inference-recheck</span>
+</div></code></pre>
+<p>Use <code>--builds portable</code> for a portable-only run, and <code>--compiler &quot;PATH TO g++.exe&quot;</code> when the compiler is not on your PATH. The harness reads the trained checkpoints and weights; it does not retrain the networks or edit the engine.</p>
+<p>For search, still measure complete move-ranking latency, nodes per second and equal-time game results. Load weights once at startup, outside the per-position loop. These warm network microbenchmarks are <strong>not engine nodes per second</strong> and cannot establish whether pruning or deeper search improves playing strength.</p>
+<h2 id="9-how-we-should-use-these-networks-in-search-">9. How we should use these networks in search ♜</h2>
+<p>My first experiment would use <strong>Small for move ordering</strong>, retain all legal moves, and compare against your unchanged search. Large can serve as a research comparator, a selectively called evaluator, or a teacher for later distillation. Its presence alone does not prove those uses pay off.</p>
+<pre class="hljs"><code><div>generate every legal move
+       ↓
+make each child with correct updated state
+       ↓
+score children; White high first / Black low first
+       ↓
+search in that order with normal exact rules and safeguards
+       ↓
+measure strength and time against a fixed baseline
+</div></code></pre>
+<p>Better ordering can cause alpha-beta to find useful bounds earlier. That allows more pruning based on search bounds without asserting that a low neural score makes a move impossible. Permanently discarding every move below the top five is a much stronger and riskier hypothesis: an evaluator can easily underrate the only move that avoids mate.</p>
+<p><strong>A trust factor is a tunable heuristic, not a calibrated confidence guarantee.</strong> The network outputs a score, not a verified error bar. Averaging Small and Large or observing that they agree does not establish safety, because they share training data, missing features and teacher biases.</p>
+<p>Before hard pruning, build an independent benchmark that searches <strong>every legal child</strong> with a declared teacher budget. Measure strict best-move recall@1/@5/@7, near-best recall, cp regret and mate failures separately; inspect White and Black results, legal-move counts and material/tactical coverage. <a href="MOVE_RANKING.md">The implemented ranking tools</a> already describe that distinction and the leakage checks.</p>
+<p>A 95% recall@5 target means five percent of measured parents still lose all teacher-best moves. In a long search that can be consequential. Report confidence intervals and failure categories, not only one headline percentage. We have <strong>not measured 95% retention for these downloaded checkpoints</strong>.</p>
+<p>Once ordering is useful, selective reductions with re-search can be tested before permanent omission. Protect checks, forcing moves, unique evasions, immediate terminals and sensitive late-game cases according to a measured search policy. Such safeguards reduce some risks; they do not prove the remaining pruning sound.</p>
+<h2 id="10-the-next-learning-experiments-in-a-sensible-order-️">10. The next learning experiments, in a sensible order 🛠️</h2>
+<ol>
+<li><strong>Establish the deployment baseline.</strong> Verify input mapping, Python/C++ FP32 parity, startup behavior and CPU cost. Freeze model hashes so future comparisons identify the actual weights.</li>
+<li><strong>Measure ranking quality.</strong> Use independently searched complete legal-child sets, including tactical defenses and low-material positions. Do not reuse sparse saved PVs as if they covered every move equally.</li>
+<li><strong>Test ordering in the engine.</strong> Use a fixed baseline, matched openings and equal wall-clock budgets. Include inference overhead; lower cp MAE alone does not select the engine-strength winner.</li>
+<li><strong>Improve coverage.</strong> Sample beyond the same source prefix. Audit related-position leakage and teacher consistency. Add carefully labeled hard examples from failure analysis, preserving a frozen final test.</li>
+<li><strong>Try a training continuation.</strong> Lower learning rates or scheduling may be worthwhile. Choose on validation; track the growing train/validation gap and compare against simply adding better data.</li>
+<li><strong>Try distillation and specialists.</strong> Large can provide additional teacher signals for a smaller model, but inherits its own mistakes. A material-aware or endgame specialist needs enough representative data and a smooth, measured gating policy. Compare it against a single general model at the same inference budget.</li>
+<li><strong>Reconsider architecture if leaf cost dominates.</strong> A network designed for incremental board updates may fit search better than this general residual model. First measure what the current compact model can do.</li>
+</ol>
+<p>No one experiment makes an engine “perfect.” What makes this project convincing is that every claimed improvement has a repeatable target: correct state, measured predictions, measured ranking, measured runtime, then measured games. That is a strong engineering story in its own right, bro. ❤️</p>
+<h2 id="11-files-to-keep-together-and-sources-of-truth">11. Files to keep together and sources of truth</h2>
+<p>The raw archive now belongs inside <strong><code>ChatGPT Neural Network Lab/Chess Dataset/</code></strong>. Prepared records live under <code>data/</code>; the downloaded trained run under <code>runs/</code>; deployment files under <code>lichess-bot-master/engines/Neural Networks/</code>. These roles are different. Deleting the training dataset is not necessary to load a C++ evaluator, but the source, release fingerprint, configs, checkpoints and reports are valuable reproducibility artifacts.</p>
+<p>The exact downloaded data fingerprint is:</p>
+<pre class="hljs"><code><div>f80ec3878a2d69b866ccfa5347a268c6c481f5b1f918cbba1a7dd6365326b77e
+</div></code></pre>
+<p>The source records supporting this guide are:</p>
+<ul>
+<li><a href="../chesslab/features.py">Frozen input encoding</a>, <a href="../chesslab/kernel_adapter.py">Kernel mapping</a>, <a href="../chesslab/models.py">architectures</a>, <a href="../chesslab/train.py">training</a>, and <a href="../chesslab/metrics.py">metric definitions</a>.</li>
+<li><a href="../runs/clean-10m-20261026T080646Z/small/config.json">Actual Small configuration</a> and <a href="../runs/clean-10m-20261026T080646Z/small/data_manifest.json">prepared data manifest</a>.</li>
+<li><a href="../runs/clean-10m-20261026T080646Z/small/test.json">Small FP32 test report</a> and <a href="../runs/clean-10m-20261026T080646Z/large/test.json">Large FP32 test report</a>.</li>
+<li><a href="../runs/clean-10m-20261026T080646Z/small/metrics.csv">Small per-epoch CSV</a>, <a href="../runs/clean-10m-20261026T080646Z/large/metrics.csv">Large per-epoch CSV</a>, and <a href="../runs/clean-10m-20261026T080646Z/comparison.json">downloaded comparison</a>.</li>
+<li><a href="../../../engines/Neural%20Networks/Small/README.md">Small C++ component</a> and <a href="../../../engines/Neural%20Networks/Large/README.md">Large C++ component</a>.</li>
+</ul>
+<p>Colors and diagrams are presentation aids; the text, tables and code contain the full contract. SVG figures are local files and remain available without a Mermaid plugin or network connection. When converting this Markdown to HTML, keep the relative <code>assets/</code> folder beside the rendered document, or embed its SVG images in your converter.</p>
+
+</body>
+</html>

@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="540" viewBox="0 0 1000 540" role="img" aria-labelledby="title desc">
+<title id="title">From Kernel board to neural score</title>
+<desc id="desc">Kernel piece codes are converted to compact piece codes, which identify active input features. The input comprises 768 piece-square indicators, one turn flag, four castling flags, and nine en-passant options. Frozen weights turn the input into a White-perspective pawn score.</desc>
+<defs><marker id="arrow" markerWidth="9" markerHeight="9" refX="8" refY="4" orient="auto"><path d="M0 0 L8 4 L0 8" fill="none" stroke="#64748b" stroke-width="1.5"/></marker></defs>
+<rect width="1000" height="540" rx="24" fill="#f8fafc"/>
+<g font-family="Segoe UI,Arial,sans-serif" text-anchor="middle">
+<text x="500" y="43" font-size="27" fill="#0f172a" font-weight="700">Different representations, exactly the same position</text>
+<g fill="#dbeafe" stroke="#93c5fd"><rect x="30" y="85" width="270" height="105" rx="12"/><rect x="365" y="85" width="270" height="105" rx="12"/><rect x="700" y="85" width="270" height="105" rx="12"/></g>
+<g fill="#1e3a8a" font-size="20" font-weight="600"><text x="165" y="120">Kernel board + State</text><text x="500" y="120">78 compact values</text><text x="835" y="120">782 neural features</text></g>
+<g fill="#334155" font-size="15"><text x="165" y="150">8×8 cells; a8 at [0][0]</text><text x="165" y="173">explicit turn / rights / EP file</text><text x="500" y="150">64 codes + 14 flags</text><text x="500" y="173">storage representation</text><text x="835" y="150">piece-square indicators + flags</text><text x="835" y="173">mathematical model input</text></g>
+<g stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"><path d="M300 138 H352"/><path d="M635 138 H687"/></g>
+<rect x="70" y="235" width="860" height="72" rx="12" fill="#ede9fe" stroke="#c4b5fd"/>
+<text x="500" y="264" fill="#5b21b6" font-size="21" font-weight="700">768 piece features + 1 turn + 4 castling + 9 EP = 782</text>
+<text x="500" y="290" fill="#334155" font-size="15">12 planes × 64 squares; EP has an explicit “none” option.</text>
+<g fill="#ecfdf5" stroke="#a7f3d0"><rect x="70" y="352" width="350" height="109" rx="12"/><rect x="580" y="352" width="350" height="109" rx="12"/></g>
+<text x="245" y="386" fill="#065f46" font-size="20" font-weight="700">Frozen FP32 weights</text><text x="245" y="416" fill="#334155" font-size="16">loaded once; reused for every position</text><text x="245" y="440" fill="#334155" font-size="16">scratch workspace belongs to one thread</text>
+<text x="755" y="386" fill="#065f46" font-size="20" font-weight="700">float: White pawn score</text><text x="755" y="416" fill="#334155" font-size="16">+1.25 favors White; −1.25 favors Black</text><text x="755" y="440" fill="#334155" font-size="16">neural estimate, not an exact result</text>
+<path d="M420 406 H567" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+<text x="500" y="505" fill="#9a3412" font-size="17">Clocks, repetition, legal moves, checkmate and draw rules stay with the engine.</text>
+</g></svg>

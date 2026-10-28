@@ -1,0 +1,876 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>02 - Plan - Engine UCI and Kernel Communication.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="-plan--fast-communication-between-engine-uci-the-kernel-and-stockfish">🔌 Plan — Fast Communication Between Engine UCI, the Kernel and Stockfish</h1>
+<p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝 <em>October 23, 2026 · v2, October 25: every phase reviewed and prototyped on copies · v3, October 25 evening: Phase 1 + GameId are in your code, built and tested · <strong>v4, October 27: as built</strong> · what's left for you is in <code>04 - Runbook for Tonight.md</code></em></p>
+<div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>✅ As built (October 27):</strong> every helper now starts <strong>once per game</strong> and stays alive: <strong>one Stockfish</strong> (at <code>isready</code>) and <strong>28 Kernel workers</strong> (at <code>ucinewgame</code>), all talking to Engine UCI through pipes. For a Kernel move, Engine UCI writes <strong>one JSON line to each worker</strong> (the same <code>ChessState</code> your JSON file used to hold, plus <code>type</code> and <code>id</code>) and reads one line back: no files, no <code>cmd.exe</code>, no new process per move. The workers think <strong>exactly like your old <code>Kernel.exe</code></strong> (0 mismatches over 144 requests). Everything around the search now costs <strong>a few milliseconds per Kernel move</strong> (2.5–10.3 ms in the final tests) instead of ~0.3 s; the one exception is a game's first Kernel move, which can wait for the workers' start (§2). A dead worker costs at most its own root moves, for that one move; a frozen one costs its moves too, and holds that move until the deadline (the allowed time + 2 s: 7.0 s instead of ~2 s in the test). Every move goes into <code>database\mrbits.sqlite</code> right after <code>bestmove</code>. The old file mode is retired (the rollback is <code>engines\backup-phase1\</code> plus git, see 04). Still unproven: <strong>your live games</strong>. 🚀</p>
+</div>
+<div style="background:#eff6ff;border-left:6px solid #2563eb;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🔬 History: what the October 25 reviews changed</strong> (8 agents in the morning, 4 reviewers in the evening, then my own builds and tests):</p>
+<ul>
+<li><strong>Phase 1 + GameId went into your code</strong> that evening, and passed the python-chess smoke test, 140/140 identical answers against the old handler, 19/19 kill-and-restart tests and the failure tests.</li>
+<li><strong>5 traps caught by the morning review:</strong> <code>cmd.exe</code> quoting and the <code>input\</code> / <code>history\</code> folders (both gone now, with the files); the ownership trap (58 <code>StockfishHandler</code>s per move); <strong>Smart App Control</strong> (ON, it judges every new <code>.exe</code>); and the unflushed <code>bestmove</code>.</li>
+<li><strong>3 bugs in the old code, fixed:</strong> a failed Kernel launch could play <code>bestmove It should be a default value…</code>; the engine crashed with no explanation when Stockfish wasn't found; two moves finishing within one second overwrote each other's history report.</li>
+<li><strong>Corrected numbers:</strong> a fresh Stockfish costs <strong>0.3–0.55 s depending on load</strong>; a query to the kept-alive one, <strong>~0.2 ms</strong>.</li>
+</ul>
+</div>
+<hr />
+<h2 id="1--the-architecture-as-built">1. 🎯 The architecture, as built</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    LB["🐍 lichess-bot&lt;br/&gt;one Engine UCI per game"]:::py &lt;--&gt;|"UCI over pipes&lt;br/&gt;(unchanged)"| UCI["⚙️ Engine UCI.exe&lt;br/&gt;the orchestrator"]:::uci
+    UCI &lt;--&gt;|"UCI over pipes&lt;br/&gt;started at isready"| SF["🐟 one Stockfish&lt;br/&gt;alive all game"]:::sf
+    subgraph POOL["🧠 28 Kernel workers, started at ucinewgame"]
+        direction TB
+        W1["Kernel.exe #1"]:::k
+        W2["Kernel.exe #2"]:::k
+        WN["… Kernel.exe #28"]:::k
+    end
+    UCI &lt;--&gt;|"JSON Lines over pipes&lt;br/&gt;one line each way per move"| POOL
+    UCI --&gt;|"after bestmove,&lt;br/&gt;in its own thread"| DB["🗄️ database/mrbits.sqlite&lt;br/&gt;(plan 03)"]:::db
+    UCI -.-&gt;|"text log"| LOG["📝 engines/logs/uci_*.log"]:::log
+    POOL -.-&gt;|"stderr, normally empty"| ERR["📝 engines/logs/&lt;br/&gt;kernel_workers_stderr.log"]:::log
+    style POOL fill:#f0fdf4,stroke:#16a34a,color:#14532d
+    classDef py fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef uci fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef sf fill:#e0f2fe,stroke:#0284c7,color:#0c4a6e
+    classDef k fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef db fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef log fill:#f1f5f9,stroke:#64748b,color:#0f172a
+</div></code></pre>
+<p>lichess-bot starts <strong>one Engine UCI process per game</strong> (<code>play_game</code> → <code>engine_wrapper.create_engine</code>), so &quot;alive for the whole game&quot; comes for free: Engine UCI starts its helpers once, and at <code>quit</code> they all go (the workers get <code>{&quot;type&quot;:&quot;quit&quot;}</code> and half a second to exit, whatever is left is killed, and the Job Objects take care of the rest, even after a <code>taskkill /F</code>). ⚠️ It also starts Engine UCI <strong>once at bot startup</strong>, only to check it (<code>lichess-bot.py</code> 1131–1133: handshake, <code>isready</code>, <code>quit</code>). That check opens the log and the database, starts and stops Stockfish once, and starts <strong>no Kernel worker</strong>: they start at <code>ucinewgame</code>, which the check never sends (0.4–1.2 s in 4 test runs). And no Stockfish means no <code>readyok</code>, so a missing or blocked Stockfish stops lichess-bot right at startup instead of killing the first game. (A missing or blocked <code>Kernel.exe</code> does <strong>not</strong> stop it: see §5.)</p>
+<h3 id="design-rules-all-eight-hold-in-the-built-code">Design rules (all eight hold in the built code)</h3>
+<ol>
+<li><strong>Start once, reuse forever.</strong> No <code>system()</code>, no <code>popen()</code>, no <code>cmd.exe</code> and no temp files are left anywhere in the engine: Stockfish and the workers are started with <code>CreateProcess</code>, once per game, and the only files Engine UCI writes are the two logs and the database.</li>
+<li><strong>Engine UCI is the only boss.</strong> The workers never talk to each other, to Stockfish or to lichess-bot.</li>
+<li><strong>A child's stdout carries protocol messages only.</strong> Inside <code>Kernel.cpp</code>, <code>cout</code> goes to stderr, and the answer lines are written with <code>fwrite</code> (a bare <code>\n</code>, flushed). The workers' stderr goes to <strong><code>engines\logs\kernel_workers_stderr.log</code></strong> (one file for all 28; it stays empty in a normal game, and the engine test checks that), Stockfish's to <code>NUL</code>, and Engine UCI's own text log to <code>engines\logs\uci_&lt;date&gt;-&lt;time&gt;_pid&lt;pid&gt;.log</code>. (lichess-bot throws Engine UCI's own stderr away: in this version <code>silence_stderr: false</code> means <code>DEVNULL</code>.)</li>
+<li><strong>One message per line, flushed the moment it's written</strong> (JSON Lines). Slow work only <em>after</em> the flush: <code>bestmove</code> goes out first, then the database record, the events and the restarts.</li>
+<li><strong>Every search carries an <code>id</code></strong>, so a late answer from a timed-out worker can never be mistaken for the current move's answer.</li>
+<li><strong>Everything is measured, in the database.</strong> Per move: <code>t_legal_ms</code>, <code>t_kernel_ms</code>, <code>t_tie_check_ms</code> and <code>t_total_ms</code> (<code>engine_moves</code>); per worker: <code>setup_ms</code> and <code>search_ms</code>; per depth: <code>ms</code>; and the <code>v_engine_moves</code> view adds <code>overhead_ms</code> (the move's time minus its slowest worker's search). Plan 03 has the tables.</li>
+<li><strong>The old file mode is retired.</strong> It stayed until the equivalence test proved identical answers (§4, Phase 2). Now <code>Kernel.exe</code> has no file mode and no flag, and the rollback is <code>engines\backup-phase1\</code> plus git (04).</li>
+<li><strong>Paths come from the executable's own folder, never from the working directory</strong> (Phase 1a): <code>engines\</code> for Stockfish, <code>Kernel.exe</code> and the logs, and its parent <code>lichess-bot-master\</code> for <code>database\</code>. The engine test plays from an empty temporary folder to prove it.</li>
+</ol>
+<hr />
+<h2 id="2--where-the-time-goes-measured-">2. 📏 Where the time goes (measured ✅)</h2>
+<table>
+<thead>
+<tr>
+<th>Per move</th>
+<th>Oct 23</th>
+<th>Oct 25 (laptop shared with other agents)</th>
+<th><strong>Oct 27, as built</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Starting Stockfish for the legal moves (<code>go perft 1</code>)</td>
+<td>~0.55 s</td>
+<td>~0.31–0.34 s median (max 0.74 s)</td>
+<td><strong>0.11–0.64 ms</strong> (<code>t_legal_ms</code>: one query to the live Stockfish)</td>
+</tr>
+<tr>
+<td>Starting Stockfish again: the stalemate check (Kernel moves) or the depth search (Stockfish moves)</td>
+<td>~0.55 s</td>
+<td>~0.31–0.34 s</td>
+<td>the check: <strong>0.14–0.72 ms</strong>; a whole depth-14 Stockfish move: <strong>64–81 ms</strong></td>
+</tr>
+<tr>
+<td>Starting 28 Kernels (<code>cmd.exe</code> + process + JSON), beyond their search</td>
+<td>~0.3 s</td>
+<td>—</td>
+<td><strong>2.5–10.3 ms</strong>, <em>everything</em> around the search included (<code>overhead_ms</code>); the 28 processes start once per game</td>
+</tr>
+<tr>
+<td>The actual search inside the workers</td>
+<td>~0.23 s</td>
+<td>—</td>
+<td>the same search, the same 5% rule</td>
+</tr>
+<tr>
+<td><strong>Total, measured in your lichess logs at a 1 s cap</strong></td>
+<td><strong>median 2.16 s</strong></td>
+<td>—</td>
+<td><strong>not measured yet</strong> 🟡: the tests use 3 s and 5 s budgets. By the rows above it should be the search plus a few ms (the October estimate: ≈ 0.3 s)</td>
+</tr>
+</tbody>
+</table>
+<p><em>(The October 27 column comes from the final test runs' own database rows: 53 engine moves, 32 of them Kernel moves, on this laptop. The overhead leaves out the frozen-worker test moves, which wait for the deadline on purpose, and one first move of a game that waited for the workers' start (below). October 25 had measured ~0.2 ms per Stockfish query and ~0.4 ms for the pool's round trip with dummy workers; with 28 real Kernels the queries take 0.1–0.7 ms, and everything around the search, the round trip included, 2.5–10.3 ms.)</em></p>
+<p><strong>End to end</strong> ✅ (real python-chess 1.10.0, the exact calls lichess-bot makes; the test clock is 9 s + 3 s, so a Kernel move gets 3 s or 5 s):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>The old handler (Oct 25)</th>
+<th>Phase 1 (Oct 25)</th>
+<th><strong>As built (Oct 27)</strong></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>An opening move that Stockfish plays at depth 14</td>
+<td>670–675 ms</td>
+<td>77–92 ms</td>
+<td><strong>64–81 ms</strong></td>
+</tr>
+<tr>
+<td>The first move of each side (<code>go movetime 10000</code> → 5 s → depth 16)</td>
+<td>—</td>
+<td>—</td>
+<td><strong>75–222 ms</strong> inside the engine; <strong>0.33–0.50 s</strong> for python-chess, because the <code>isready</code> sent right before it is what starts Stockfish (~0.24–0.28 s)</td>
+</tr>
+<tr>
+<td>A Kernel move (28 workers)</td>
+<td>median 2.49 s (4 samples)</td>
+<td>median 2.21 s (8 samples)</td>
+<td>median <strong>1.90 s</strong> (27 samples, 1.43–2.66 s)</td>
+</tr>
+<tr>
+<td>Stockfish processes per game</td>
+<td>2 new ones per move</td>
+<td>exactly 1</td>
+<td>exactly 1</td>
+</tr>
+<tr>
+<td>Kernel processes</td>
+<td>28 new ones per Kernel move</td>
+<td>28 new ones per Kernel move</td>
+<td><strong>28 per game</strong>, alive all game</td>
+</tr>
+</tbody>
+</table>
+<p><em>(The October 27 column is the engine's own <code>go</code> → <code>bestmove</code> time, <code>t_total_ms</code>: python-chess's own timer is only 0.5–7 ms longer on every move except the first. Read the Kernel row with care: the move is mostly its search, and with a 3–5 s budget every worker whose depth 6 ends before the 5% mark (150 or 250 ms) starts depth 8, which is another ~1–2 s. So these medians move with the positions; what the pool itself changed is the overhead row above. Endgame moves weren't timed end to end: from ply 82 on (more than 80 plies played), Stockfish searches depth 18–26 on purpose (14–16 with less than 15 s on the clock), ~0.5–3 s.)</em></p>
+<p><strong>The pool's own numbers</strong> (October 27):</p>
+<ul>
+<li><strong>Starting a worker:</strong> <code>CreateProcess</code> of <code>Kernel.exe</code> takes 17.7 ms median and 37 ms max (280 launches), and its move tables 0.44 ms (<code>initMs</code>). The 28 start in a background thread at <code>ucinewgame</code>.</li>
+<li>⚠️ <strong>The first Kernel move of a game waits for that start</strong> if it isn't finished. With this build (<code>2026-10-27_02-36-51</code>) it waited in 5 of its 14 test games, 135–645 ms (in the final runs only once, 135 ms), because the test's opponent answers instantly. At worst it waits until the start's own deadline (10 s after the workers are started), if a worker never answers <code>hello</code>. In a live game, two opponent moves and their lichess round trips come in between, so it should be rare. It isn't measured live yet: <code>overhead_ms</code> on each game's first Kernel move will tell.</li>
+<li><strong>A frozen worker:</strong> the move waits exactly until the deadline, 7,005–7,024 ms for 7,000 (5 s + 2 s) with the final build.</li>
+<li><strong>Restarts,</strong> after <code>bestmove</code>: one worker ~22–40 ms; all 28 at once 0.4–0.9 s in 19 of 21 runs, but <strong>3.7 s and 5.2 s</strong> in the other 2, while the neural-network lab's heavy jobs were running. The fastest real <code>bestmove</code> → next <code>go</code> in your lichess logs is 365 ms, so one restart never costs clock time. The all-28 case only follows a catastrophe, and then it can (§5).</li>
+<li><strong>Replaying the game</strong> inside a worker (<code>setupMs</code>): 0.01–0.3 ms. Writing the 28 requests and reading the 28 answers is part of the 2.5–10.3 ms above.</li>
+</ul>
+<hr />
+<h2 id="3--the-protocol-engine-uci--kernel-worker-as-built">3. 📜 The protocol (Engine UCI ⇄ Kernel worker), as built</h2>
+<p>Every message is <strong>one line of compact JSON</strong> ending in a bare <code>\n</code>: requests on the worker's stdin, answers on its stdout. This section is exactly what the code does: <code>RunWorkerMode</code> and <code>AnswerSearchRequest</code> in <code>Kernel.cpp</code>, <code>serializeObject</code> and <code>getEngineMoveWithThreading</code> in <code>Chess State.hpp</code>, <code>askAllWorkers</code> in <code>Kernel Workers.hpp</code>. The examples are <strong>real</strong>: the handshake comes from the final equivalence run, and the request and the answer are worker 3 at ply 11 of the engine test's game <code>tN252leL</code> (October 27; the test borrows the id of your real lichess game), rebuilt from that game's moves and the rows it left in the test database. They're shown pretty here only for reading. On the wire, each one is a single line with its keys in alphabetical order (that's how nlohmann's <code>json</code> writes an object).</p>
+<p><strong>The handshake</strong>, once per worker start:</p>
+<pre><code class="language-json">{&quot;type&quot;:&quot;hello&quot;}
+{&quot;engineVersion&quot;:&quot;kernel-2026-10-27_02-36-51&quot;,&quot;initMs&quot;:0.441,&quot;pid&quot;:77144,&quot;protocol&quot;:1,&quot;type&quot;:&quot;ready&quot;}
+</code></pre>
+<p><code>engineVersion</code> is <code>kernel-</code> + the build stamp, and <code>initMs</code> is the move tables, built once per process. A worker gets no request before its <code>ready</code>.</p>
+<p><strong>A search request</strong>, once per worker per Kernel move:</p>
+<pre><code class="language-json">{&quot;allowedEngineTimeInSeconds&quot;:5,
+ &quot;bestMove&quot;:&quot;It should be a default value like the previous line but I want to maintain more time&quot;,
+ &quot;bestMoveScore&quot;:0,
+ &quot;engineColor&quot;:true,
+ &quot;id&quot;:86,
+ &quot;movesForThisThread&quot;:[&quot;f3e5&quot;,&quot;f3g5&quot;],
+ &quot;previousMoves&quot;:[&quot;e2e4&quot;,&quot;e7e5&quot;,&quot;g1f3&quot;,&quot;b8c6&quot;,&quot;b1c3&quot;,&quot;g8f6&quot;,&quot;f1d3&quot;,&quot;f8c5&quot;,&quot;d3b5&quot;,&quot;d7d6&quot;],
+ &quot;report&quot;:&quot;&quot;,
+ &quot;type&quot;:&quot;search&quot;}
+</code></pre>
+<p>It's <code>ChessState::serializeObject()</code>: the 7 fields your JSON file used to hold, with <code>movesForThisThread</code> = this worker's bucket, plus <code>&quot;type&quot;:&quot;search&quot;</code> and an <code>&quot;id&quot;</code>. Nothing else: no <code>gameId</code>, no <code>ply</code>, no <code>timeMs</code> (the October 25 draft had them; the worker doesn't need them, and the database gets them from Engine UCI).</p>
+<ul>
+<li><strong><code>previousMoves</code></strong>: every move of the game so far, from the start position. The worker replays them (0.01–0.3 ms).</li>
+<li><strong><code>engineColor</code></strong> and <strong><code>allowedEngineTimeInSeconds</code></strong>: your color and the time ladder's budget, in <strong>seconds</strong>. The worker sets it with <code>setAllowedTime</code> and searches exactly like the file mode did: the hard cap checked at every node, and no new depth once 5% of it is used.</li>
+<li><strong><code>bestMove</code></strong>, <strong><code>bestMoveScore</code></strong>, <strong><code>report</code></strong>: <code>ChessState</code>'s defaults (yes, that's the placeholder sentence 😄). The worker requires every key (<code>deserializeObject</code> reads them with <code>at()</code> now, so a missing one gets an <code>error</code> answer instead of garbage), but never uses these three.</li>
+<li><strong><code>id</code></strong>: one counter per Engine UCI process, a new id for every request. (Ply 11 was that game's fourth Kernel move: its 28 requests were ids 84–111, and worker 3's was 86.)</li>
+<li><strong><code>maxDepth</code></strong> (optional, <strong>tests only</strong>: Engine UCI never sends it): 0 or absent means &quot;use the allowed time&quot;. A depth up to 30 switches the clock off (an <code>INT_MAX</code> budget), skips the 5% rule and stops after that depth. Only even depths are searched, so 5 means 4. Anything outside 0…30 is an error. (On October 25 this caught a real trap: with the clock still on, <code>maxDepth</code> 8 under a 300 ms budget silently returned the depth-6 answer.)</li>
+</ul>
+<p><strong>The answer:</strong></p>
+<pre><code class="language-json">{&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;depth&quot;:6,&quot;id&quot;:86,&quot;leafNodes&quot;:126634,&quot;nodes&quot;:138244,
+ &quot;perDepth&quot;:[{&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;completed&quot;:true,&quot;depth&quot;:2,&quot;leafNodes&quot;:51,&quot;ms&quot;:0.038,&quot;nodes&quot;:53,&quot;pruned&quot;:1,&quot;score&quot;:-160},
+             {&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;completed&quot;:true,&quot;depth&quot;:4,&quot;leafNodes&quot;:4087,&quot;ms&quot;:5.657,&quot;nodes&quot;:4408,&quot;pruned&quot;:254,&quot;score&quot;:-195},
+             {&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;completed&quot;:true,&quot;depth&quot;:6,&quot;leafNodes&quot;:126634,&quot;ms&quot;:382.625,&quot;nodes&quot;:138244,&quot;pruned&quot;:8821,&quot;score&quot;:-125}],
+ &quot;pruned&quot;:8821,
+ &quot;rootScores&quot;:[{&quot;exact&quot;:true,&quot;move&quot;:&quot;f3g5&quot;,&quot;score&quot;:-125},{&quot;exact&quot;:false,&quot;move&quot;:&quot;f3e5&quot;,&quot;score&quot;:-130}],
+ &quot;score&quot;:-125,&quot;searchMs&quot;:388.323,&quot;setupMs&quot;:0.03,&quot;status&quot;:&quot;ok&quot;,&quot;totalNodes&quot;:142705,&quot;type&quot;:&quot;result&quot;,
+ &quot;unsearchedRootMoves&quot;:[]}
+</code></pre>
+<p>What the fields are for:</p>
+<ul>
+<li><strong><code>id</code></strong>: the request's id, echoed (<code>null</code> if it had none). The pool takes a <code>result</code> or an <code>error</code> only if it carries <strong>exactly</strong> this move's id for that worker. Anything else in the worker's inbox (a late answer to an older request, a line that isn't JSON) is skipped.</li>
+<li><strong><code>status</code></strong>: <code>ok</code>, <code>no_moves</code> (an empty bucket, which Engine UCI never sends) or <code>no_completed_depth</code> (not even depth 2 finished in time). Only <code>ok</code> can count. For the other two, <code>bestMove</code> and <code>score</code> are <code>null</code>, <code>depth</code> is 0, and <code>nodes</code>, <code>leafNodes</code> and <code>pruned</code> are 0 (<code>totalNodes</code> and <code>perDepth</code> still report what was searched, an aborted depth 2 for <code>no_completed_depth</code>). (The file mode answered <code>a8a8</code> with score 0 there.)</li>
+<li><strong><code>bestMove</code></strong>, <strong><code>score</code></strong>, <strong><code>depth</code></strong>: the last <strong>completed</strong> depth's best root move, its score, and that depth. Here depth 6 ended at ~388 ms, past the 5% mark of a 5 s budget (250 ms), so depth 8 never started.</li>
+<li><strong><code>nodes</code></strong>, <strong><code>leafNodes</code></strong>, <strong><code>pruned</code></strong>: the last completed depth's main search (the same numbers as the old text report), counted in 64 bits. <strong><code>totalNodes</code></strong>: every iteration, an aborted last one included (here 53 + 4,408 + 138,244 = 142,705).</li>
+<li><strong><code>perDepth</code></strong>: one entry per iteration. An aborted one has <code>&quot;completed&quot;:false</code> and no <code>bestMove</code> / <code>score</code>.</li>
+<li><strong><code>rootScores</code></strong>: every root move searched at the last completed depth, in search order. ⚠️ A score is <strong>exact</strong> only if it beat the window it was searched with: always true for the first move searched and for every new best. The others failed low and are only bounds. Here <code>f3g5</code> was searched first (−125, exact), and <code>f3e5</code> is &quot;at most −130&quot;. (October 25: 126 exact scores checked against full-window searches, 0 wrong.)</li>
+<li><strong><code>unsearchedRootMoves</code></strong>: this worker's moves that the last completed depth didn't search (from depth 6 on, the root keeps only its 4 best-ordered moves). With 28 workers, a bucket holds 1 or 2 moves in almost every position, so this list fills only when few workers are usable.</li>
+<li><strong><code>setupMs</code></strong> / <strong><code>searchMs</code></strong>: replaying the game vs thinking.</li>
+</ul>
+<p><strong>The other messages:</strong></p>
+<ul>
+<li><strong>An error</strong>, from the worker, for anything it can't answer: not JSON, not an object, no <code>type</code> or an unknown one, a missing <code>ChessState</code> key, a malformed move, <code>maxDepth</code> out of range. For example <code>{&quot;id&quot;:86,&quot;message&quot;:&quot;\&quot;movesForThisThread\&quot; holds a malformed move: \&quot;e2e9\&quot;&quot;,&quot;type&quot;:&quot;error&quot;}</code>. The worker never dies on bad input; the pool records that worker as <code>error</code>, with the message.</li>
+<li><strong><code>{&quot;type&quot;:&quot;quit&quot;}</code></strong>, or simply the end of its stdin: the worker exits with code 0, without answering.</li>
+<li><strong><code>Kernel.exe</code> started with an argument</strong> (the old <code>Kernel.exe &lt;file.json&gt;</code>): one line on stderr, <code>Kernel.exe doesn't read JSON files any more: Engine UCI starts it as a worker, with no arguments.</code>, and exit code 1.</li>
+</ul>
+<p><strong>One Kernel move, end to end:</strong></p>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant LB as 🐍 lichess-bot
+    participant U as ⚙️ Engine UCI
+    participant SF as 🐟 Stockfish
+    participant W as 🧠 28 Kernel workers
+    participant DB as 🗄️ database thread
+    LB-&gt;&gt;U: position startpos moves …, then go wtime … btime …
+    U-&gt;&gt;SF: go perft 1
+    SF--&gt;&gt;U: the legal moves
+    Note over U: shuffle, deal round-robin into min(28, usable workers, legal moves) buckets
+    U-&gt;&gt;W: one search line per worker, back to back
+    W--&gt;&gt;U: one result line each, until the deadline (allowed time + 2 s)
+    Note over U: keep the ok answers from each worker's own bucket, the best (score, move) wins
+    U-&gt;&gt;SF: the stalemate check on that move
+    U-&gt;&gt;LB: bestmove, flushed at once
+    U-)DB: the move, its workers, depths and candidates
+    Note over U,W: off the clock, a dead or late worker is replaced
+</div></code></pre>
+<p><strong>How Engine UCI uses the answers</strong> (<code>getEngineMoveWithThreading</code>: your logic, new plumbing):</p>
+<ol>
+<li><strong>The legal moves</strong> come from Stockfish (<code>go perft 1</code>). None → <code>bestmove 0000</code> (<code>no_legal_move</code>; before, the report text was sent as the move). One → played at once (<code>only_move</code>).</li>
+<li><strong>The buckets:</strong> N = min(28, usable workers, legal moves). <em>Usable</em> = started, ready and still alive, so a worker that died while waiting gets no moves, and none of the root moves are lost with it. The legal moves are shuffled, then dealt round-robin exactly like before: the k-th move goes to bucket k mod N, counting from k = 1 (that's why workers 2–6 got two moves each at ply 11: 33 moves, 28 buckets). With all 28 alive, it's exactly the old split. N = 0 → Stockfish plays the move at depth 14 (<code>no_kernel_answer</code>).</li>
+<li><strong>One request per bucket</strong>, written back to back before the wait starts, then <strong>one deadline for all of them: the allowed time + 2 s.</strong> The workers stop by themselves at the allowed time; the 2 s are only for a worker that hangs.</li>
+<li><strong>Each worker ends with one status</strong>, stored in <code>worker_runs</code>: <code>ok</code>, <code>no_moves</code>, <code>no_completed_depth</code>, <code>error</code>, <code>timeout</code> (still silent at the deadline: killed at once, restarted after <code>bestmove</code>), <code>dead</code> (its output ended: it exited or crashed), or <code>rejected</code> (next point).</li>
+<li><strong>An answer counts only if</strong> its status is <code>ok</code>, its <code>bestMove</code> is <strong>one of that worker's own moves</strong>, and its <code>score</code> is an <strong>integer</strong>. Otherwise it's <code>rejected</code>, with the reason (<code>bestMove 'X' isn't one of this worker's moves</code> / <code>its score isn't an integer</code>).</li>
+<li><strong>The pick is unchanged:</strong> all the (score, move) pairs, sorted with <code>greater&lt;pair&lt;int,string&gt;&gt;</code>. The highest score wins, and a tie goes to the larger move string. No usable answer at all → Stockfish plays at depth 14 (<code>no_kernel_answer</code>), and the events table says why.</li>
+<li>Then, as before, <strong>the stalemate check</strong>, only on a Kernel move now (the other paths are Stockfish's own moves or the only legal move): a move that stalemates is replaced by Stockfish's (<code>stalemate_override</code>). Then <code>bestmove</code>, flushed, and only after it the database, the events and the restarts.</li>
+</ol>
+<div style="background:#fffbeb;border-left:6px solid #d97706;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>⚠️ Unchanged on purpose, and now visible in the database: the pick compares different depths.</strong> Every worker stops on its own clock (the 5% rule). In the test game <code>tN252leL</code> at ply 5 (a 3 s budget), 22 of the 27 workers reached depth 8 and 5 stopped at depth 6 (their depth 6 ended after the 150 ms mark). The move came from one of those 5: <code>b1c3</code> at −40 (depth 6), while the best depth-8 answer was <code>f1d3</code> at −115. Your file mode did exactly the same, so it's not a regression. But it means the move depends on CPU timing as well as on the position. <code>worker_runs.depth</code> shows it for every move; comparing at one common depth is a Phase 5 idea.</p>
+</div>
+<hr />
+<h2 id="4-️-the-phases">4. 🛣️ The phases</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    P0["0 · Baseline timers&lt;br/&gt;→ folded into 4"]:::later --&gt; P1["1 · One Stockfish,&lt;br/&gt;one place, kept alive&lt;br/&gt;✅ October 25"]:::done
+    P1 --&gt; P2["2 · Kernel.exe&lt;br/&gt;is a worker&lt;br/&gt;✅ October 27"]:::done
+    P2 --&gt; P3["3 · The worker pool&lt;br/&gt;in Engine UCI&lt;br/&gt;✅ October 27"]:::done
+    P3 --&gt; P4["4 · GameId + the database&lt;br/&gt;✅ October 27"]:::db
+    P4 --&gt; P5["5 · Unlocks, later:&lt;br/&gt;stop, ponder, TT…"]:::later
+    classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef db fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef later fill:#f1f5f9,stroke:#64748b,color:#0f172a
+</div></code></pre>
+<h3 id="phase-0--baseline-timers--folded-into-phase-4-">Phase 0 — Baseline timers → folded into Phase 4 ✅</h3>
+<p>The per-stage stopwatch became database columns in <code>engine_moves</code>: <code>t_legal_ms</code> and <code>t_kernel_ms</code> (timed inside <code>getEngineMoveWithThreading</code> and added with <code>+=</code>, because the stalemate override calls it a second time), <code>t_tie_check_ms</code> (in <code>getBestMoveFromEngine</code>) and <code>t_total_ms</code>; <code>setup_ms</code> and <code>search_ms</code> per worker; <code>ms</code> per depth; and <code>overhead_ms</code> in the <code>v_engine_moves</code> view. The text log still says <code>go -&gt; bestmove took N ms (path, game '…')</code> for every move.</p>
+<h3 id="phase-1--stockfish-one-copy-in-one-place-kept-alive--the-biggest-win">Phase 1 — Stockfish: one copy, in one place, kept alive ⭐ the biggest win</h3>
+<h4 id="1a--one-stockfish-in-one-place-">1a · One Stockfish, in one place 🧹</h4>
+<p><strong>Status ✅ in your code since October 25, finished on October 27:</strong> the three duplicate copies (<code>lichess-bot-master\stockfish\</code>, <code>engines\stockfish-windows-x86-64-avx2.exe</code> and <code>lichess-bot-master\stockfish-windows-x86-64-avx2.exe</code>, renamed <code>.old</code> on October 25) are <strong>deleted</strong>. They were byte-identical to the kept one (41,409,024 bytes, Stockfish 16) and used by nothing (no code reference, no process). The one home is <code>engines\stockfish\stockfish-windows-x86-64-avx2.exe</code>, next to <code>Engine UCI.exe</code>, the only program that queries it.</p>
+<div style="background:#fffbeb;border-left:6px solid #d97706;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🔍 The root cause of your old path problem:</strong> a relative path like <code>&quot;stockfish/stockfish-windows-x86-64-avx2.exe&quot;</code> is resolved against the <strong>current working directory</strong>, the folder the program was <em>launched from</em>, not the folder where the <code>.exe</code> lives. lichess-bot launches Engine UCI from <code>lichess-bot-master\</code>, and you launched it by hand from <code>engines\</code>, so the package got copied to both places 😄. <strong>The fix:</strong> <code>ExecutableDirectory()</code> (<code>GetModuleFileNameA</code>, in <code>Stockfish Handler.hpp</code>) = <code>engines\</code>, and every path is built from it (<code>RootDirectory()</code> = its parent, for <code>database\</code>). The engine logs its paths at startup, with the Stockfish and Kernel paths marked <code>&lt;-- MISSING</code> if absent.</p>
+</div>
+<p><strong>Exit ✅:</strong> one Stockfish, found from any working directory (the engine test plays from an empty temporary folder), and the duplicates are gone.</p>
+<h4 id="1b--keep-it-alive">1b · Keep it alive</h4>
+<p><strong>Status ✅ in your code since October 25,</strong> unchanged on October 27 except one comment (it now names the Kernel workers that the pool can start at the same moment). In short:</p>
+<ul>
+<li><strong><code>StockfishProcess</code></strong>, the one persistent Stockfish, lives behind <code>GetTheStockfishProcess()</code> (a function-local static). Your <code>StockfishHandler</code> keeps every old public function and only forwards to it, so <code>ChessState</code> still holds it by value. ⚠️ <strong>That's the ownership trap:</strong> one Kernel move used to build 58 handlers, so a process started in a constructor would have meant 58 Stockfish processes per move. The worker pool is ONE global for the same reason.</li>
+<li><strong>Started at <code>isready</code></strong> (or on first use) with <code>CreateProcess</code> and two pipes, stderr to <code>NUL</code>, inside a Job Object with &quot;kill on close&quot;. If it can't start, there's no <code>readyok</code>. It takes ~0.3 s, or ~1.1 s cold on the first launch.</li>
+<li><strong>Framing</strong> (from raw byte captures): <code>isready</code> → <code>readyok</code> before every query (it drains what the last answer left behind), then each command is read to its own terminator: <code>go perft 1</code> → <code>Nodes searched</code>, <code>go depth N</code> → <code>bestmove</code>, <code>eval</code> → <code>Final evaluation</code>. The <code>\r</code> is stripped (Stockfish writes CRLF). ⚠️ <code>isready</code> is not a barrier while a <code>go</code> runs.</li>
+<li><strong>Before each <code>go depth N</code>: <code>ucinewgame</code> + <code>isready</code>, then ONE <code>go depth N</code>.</strong> That reproduces a fresh process exactly. Your old double command existed because end-of-file acts as <code>quit</code> for Stockfish (your theory, confirmed), and it made ~1.5% of the old bestmoves slightly random (5 of 340); a legacy-compat switch reproduces them exactly, for tests only.</li>
+<li><strong>One mutex</strong> around every query, and <strong>a watchdog per query</strong> (10 s for perft/eval/isready, 300 s for <code>go depth</code>) that turns a hang into a death. A death means <strong>restart once and retry</strong>; a second failure throws, and Engine UCI logs <code>go failed</code>, writes the event and exits with code 1.</li>
+<li><strong>Today's meaning of the checks is kept:</strong> <code>isTiePosition</code> = <strong>stalemate only</strong>; Engine UCI never calls <code>isCheckmatePosition</code> or <code>isStalematePosition</code>, and <code>isStalematePosition</code> still always returns false.</li>
+<li><strong>Handle hygiene:</strong> Stockfish's pipe ends are inheritable only around its own <code>CreateProcess</code>, and a handle list gives it exactly its three handles, so a Kernel worker started at the same moment can never inherit them (and the other way round).</li>
+</ul>
+<p><strong>Exit ✅ (October 25):</strong> legal moves, stalemate, checkmate and eval identical <strong>100%</strong> (140/140); bestmove identical with legacy-compat on (140/140); opening Stockfish moves ~8× faster end to end (670 → 80 ms).</p>
+<h3 id="phase-2--kernelexe-is-a-worker">Phase 2 — <code>Kernel.exe</code> is a worker</h3>
+<p><strong>Status ✅ built and tested (October 27).</strong> <code>Kernel.exe</code> has <strong>no file mode and no flag any more.</strong> Started with no arguments (the only way Engine UCI starts it), it's a worker (<code>RunWorkerMode</code>). Started with any argument, it prints one clear line on stderr and exits 1, so an old Engine UCI that still calls <code>Kernel.exe &lt;file.json&gt;</code> fails at once instead of waiting forever. The search itself is untouched: <code>RunIterativeDeepening()</code> <strong>is</strong> the old <code>main()</code> loop (even depths 2…30, the hard time cap at every node, no new depth once 5% of the allowed time is used).</p>
+<p>What the new tail of <code>Kernel.cpp</code> does, and why:</p>
+<ul>
+<li><strong><code>BuildTheTablesOnce()</code></strong>: a hard requirement, not an optimization. <code>MovesPreCalculation()</code> only <code>push_back</code>s, so a second call doubles every bishop, rook and queen ray: the same move and score, but more nodes with every request (October 25: 33 → 45 pseudo-legal moves; at depth 6 the worker hung). It takes 0.44 ms.</li>
+<li><strong>Per request, in this order</strong> (<code>AnswerSearchRequest</code>): read the <code>ChessState</code> (with <code>at()</code>, so a missing key is an error instead of garbage) and check that every move is well-formed; then <strong><code>ResetGameState(engineColor)</code></strong>: <code>ENGINE_COLOR</code> <strong>first</strong> (the two score functions and <code>MakeChanges</code> read it), then <code>processHandler</code>, <code>previousMoves</code>, the root scores, the board, the two masks and the two scores; <strong>then</strong> <code>setAllowedTime(seconds)</code>, because the reset puts the budget back to 10,000 ms; then <code>ReplayMoves</code>, then the search. October 25's mutation test is why the order matters: forgetting the board, the masks, the color or the scores gives <strong>wrong answers silently</strong> (632 / 604 / 322 / 143 mismatches).</li>
+<li><strong>Clean stdout:</strong> <code>cout</code> is redirected to stderr, stdin and stdout are switched to binary, and <code>WriteProtocolLine</code> writes each answer with <code>fwrite</code> + <code>'\n'</code> + <code>fflush</code>. Every line ends in a bare <code>\n</code>, even under Git Bash's <code>libstdc++-6.dll</code>, where <code>_setmode</code> doesn't reach <code>cout</code>.</li>
+<li><strong>It never dies on bad input:</strong> every exception becomes an <code>error</code> line, and the answers are dumped with <code>error_handler_t::replace</code>, so invalid UTF-8 can't throw.</li>
+<li><strong><code>rootScores</code></strong> are recorded inside <code>GetBestMoveWithItsScore</code> (the root loop, where each move's score exists) and kept for the last <strong>completed</strong> depth. <code>nodes</code> and <code>pruned</code> are summed in 64 bits (the <code>…As64Bit</code> getters: the old ones sum into an <code>int</code>).</li>
+<li><strong>Build:</strong> plain <code>g++</code> like always (that's <code>-O0</code>), with the <code>-DMRBITS_BUILD_STAMP</code> that <code>Build Engines.bat</code> sets. <strong><code>-O2</code> is still yours to decide</strong> (README): on October 25, <code>-O2 -march=native</code> gave bit-identical answers on 144 requests and a 3.6× faster search (plain <code>-O2</code> was never measured on its own, and <code>-march=native</code> ties the <code>.exe</code> to this CPU), and <code>kernel_equivalence_test.py --reference-mode worker</code> checks a new build against the current one.</li>
+</ul>
+<p><strong>Exit ✅ (October 27):</strong> <code>tests\kernel_equivalence_test.py</code> against your <strong>production <code>Kernel.exe</code></strong> (the file-mode one, sha256 <code>d0fe2de950d199e0…</code>). The old exe searched 72 positions for 1 s each and completed depth 6 or 8; then <strong>ONE</strong> worker got <strong>144 requests</strong> (every position twice, both colors, shuffled) at those depths: <strong>0 mismatches</strong> in <code>bestMove</code>, score, nodes, leaf nodes, pruned and depth, 0 differences between repeats, exit code 0, 0 bytes on stderr. One worker for everything is the point: on October 25 a stale color gave 0 repeat differences, and only the comparison with the file mode caught it. (The 11,000-request flat-memory run was on the October 25 prototype; the October 27 tests don't repeat it.)</p>
+<h3 id="phase-3--the-worker-pool-inside-engine-uci">Phase 3 — The worker pool inside Engine UCI</h3>
+<p><strong>Status ✅ built and tested (October 27):</strong> <code>engines\Kernel Workers.hpp</code> (~700 lines, in your style), used from <code>ChessState::getEngineMoveWithThreading</code>.</p>
+<ul>
+<li><strong><code>KernelWorkerProcess</code></strong>, one worker: two 64 KB pipes with all four ends non-inheritable. Under a start mutex, the worker's three ends (stdin, stdout and the stderr log) become inheritable, and a <code>PROC_THREAD_ATTRIBUTE_HANDLE_LIST</code> gives it <strong>exactly</strong> those three. <code>CreateProcess</code> gets the quoted full path and no arguments, with <code>DETACHED_PROCESS</code> (no console, no <code>conhost.exe</code> per worker) and <code>CREATE_SUSPENDED</code>: the worker is resumed only once it's inside the Job Object. Engine UCI closes its copies of the worker's ends at once, so a death is visible: the reader's <code>ReadFile</code> fails with a broken pipe.</li>
+<li><strong><code>KernelWorkerPool</code></strong>, the 28: ONE global (<code>GetTheKernelWorkerPool()</code>), never a <code>ChessState</code> member, the same trap as Stockfish. Anonymous pipes have no read timeout, so every worker gets <strong>one reader thread</strong> that puts each line into its inbox. (October 25 measured the alternatives: <code>CancelSynchronousIo</code> can lose a cancel, and <code>PeekNamedPipe</code> polling costs 15.6 ms per message.)</li>
+<li><strong>Start:</strong> <code>configure()</code> at Engine UCI's start starts nothing. <strong><code>ucinewgame</code></strong> starts the 28 in a background thread, inside one Job Object (kill on close, and die on an unhandled exception). Each worker answers <code>hello</code> with <code>ready</code>, and the start waits up to 10 s for all of them. The first Kernel move joins that thread (and starts the pool itself if no <code>ucinewgame</code> came), then uses whichever workers are ready.</li>
+<li><strong>Per Kernel move:</strong> the usable workers get the buckets (§3). <code>askAllWorkers</code> writes every request, then waits on a condition variable until each worker has answered or died, or the deadline (allowed time + 2 s) has passed. A worker still silent then is a <strong><code>timeout</code></strong>: killed at once with <code>TerminateProcess</code>, without waiting for it.</li>
+<li><strong>After <code>bestmove</code>:</strong> every worker that timed out, died during the move or died while waiting is replaced (<code>respawnTheDeadWorkers</code>: kill, wait for its reader, start a new one, then wait up to 3 s for its <code>ready</code>), and the events table says so.</li>
+<li><strong>Shutdown</strong> (<code>quit</code>, or the end of the input): <code>{&quot;type&quot;:&quot;quit&quot;}</code> and the end of their stdin to every worker, half a second in total to exit, then whatever is left is killed and the Job closed.</li>
+</ul>
+<p><strong>What changed from the October 25 plan, on purpose:</strong></p>
+<ul>
+<li>the start moved from Engine UCI's start to <strong><code>ucinewgame</code></strong>, so lichess-bot's startup check starts no worker at all;</li>
+<li><strong>one shared stderr file</strong>, <code>engines\logs\kernel_workers_stderr.log</code>, instead of one per worker (it stays empty in a normal game);</li>
+<li><strong>no file-mode fallback</strong>, since there's no file mode any more: a move with no usable answer is played by Stockfish at depth 14 (<code>no_kernel_answer</code>), and the events table says why;</li>
+<li>a late worker's moves are <strong>not re-dispatched</strong>: they're simply missing from that one move;</li>
+<li>stale ids and non-JSON lines are skipped, not counted, and the test-only seeded shuffle wasn't needed (the tests check instead that the buckets together hold exactly the legal moves).</li>
+</ul>
+<p><strong>Found by the October 27 adversarial review, and fixed:</strong> a worker that died <em>while waiting</em> still got its bucket, so its root moves were never searched for that move. Now only usable workers get buckets, and an idle dead worker is restarted after <code>bestmove</code> like the others.</p>
+<p><strong>Exit:</strong></p>
+<ul>
+<li>✅ <strong>The hang and crash tests against the real workers:</strong> <code>tests\kernel_workers_test.py</code>, <strong>27 / 27</strong> in the final runs. A worker killed while waiting gets no moves, and the other 27 search <strong>all 29 legal moves</strong>. A frozen worker gives one <code>timeout</code> at exactly the deadline (7,005–7,024 ms for 7,000), and is killed and restarted. A worker killed mid-search gives one <code>dead</code> (only its own moves lost, for that move), and is restarted. With every worker dead, no worker is asked, Stockfish plays at depth 14 (<code>no_kernel_answer</code>), and all 28 come back. And after a hard kill of Engine UCI: 0 Kernel and 0 Stockfish left, and every move before the kill stored.</li>
+<li>🟡 <strong>The overhead target</strong> (total time − the slowest worker's search) <strong>under 50 ms</strong>: 2.5–10.3 ms on every Kernel move except a game's first one (§2). When the workers' start isn't finished yet, that move took 135–645 ms in 5 of the 14 test games with this build. Live, two opponent moves come first, so it should be rare: <code>overhead_ms</code> on each game's first Kernel move will tell.</li>
+<li>⏳ <strong>0 crashes or timeouts over 50 live games</strong>, and a match against the old build: not run yet. The first 3 games are tonight's runbook.</li>
+</ul>
+<h3 id="phase-4--gameid--the-database-the-bridge-to-plan-03">Phase 4 — GameId + the database: the bridge to plan 03</h3>
+<p><strong>Status ✅:</strong> GameId since October 25, the database since October 27. You chose <strong>&quot;database only&quot;</strong>: instead of the planned <code>telemetry/*.jsonl</code> files, SQLite 3.54.1 is compiled into Engine UCI (<code>engines\sqlite\</code>), and every move goes straight into <code>database\mrbits.sqlite</code>, with no file in between.</p>
+<ul>
+<li><strong>The options:</strong> the <code>uci</code> reply declares <code>option name GameId type string default &lt;empty&gt;</code> <strong>and</strong> <code>option name UCI_Opponent type string default &lt;empty&gt;</code> (python-chess refuses to send an option the engine didn't declare). <code>&lt;empty&gt;</code> and <code>none</code> both mean &quot;no value&quot;. Option names are compared case-insensitively, and the value is everything after <code>value</code>.</li>
+<li><strong>The real wire order</strong> (python-chess 1.10.0, checked in the engine test's logs):
+<ol>
+<li><code>uci</code> → <code>uciok</code>;</li>
+<li><code>setoption name GameId value tN252leL</code>, when lichess-bot creates the engine: <strong>before</strong> <code>ucinewgame</code>, so <code>ucinewgame</code> never clears it;</li>
+<li>at the first move: <code>ucinewgame</code> (→ the 28 workers start), <code>setoption name UCI_Opponent value BOT 1692 computer Demolito_L4</code> (<code>&lt;title|none&gt; &lt;rating|none&gt; &lt;computer|human&gt; &lt;name&gt;</code>, right after every <code>ucinewgame</code>), <code>isready</code> (→ Stockfish starts), <code>position startpos moves …</code>, <code>go movetime 10000</code> (the first move of each side);</li>
+<li>later moves: <code>go wtime … btime … winc … binc …</code>;</li>
+<li>at the end: <code>isready</code> + <code>quit</code>. No result is ever sent: that's what <code>sync_lichess.py</code> is for (plan 03).</li>
+</ol>
+</li>
+<li><strong><code>extra_game_handlers.py</code></strong> returns <code>{&quot;GameId&quot;: game.id}</code>, spelled exactly <code>GameId</code>. ⚠️ If you ever roll the engine back to one that doesn't declare it, roll this line back too: an undeclared option makes <code>configure()</code> raise, and lichess-bot kills the engine before the game (04, rollback B).</li>
+<li><strong>GameId is only a database key now</strong> (a bound SQL parameter, never part of a path), so the old <code>[A-Za-z0-9_-]{1,64}</code> filter left with the history folders. A game without a GameId is stored as <code>local-&lt;unix ms&gt;</code>.</li>
+<li><strong>After <code>bestmove</code> (flushed first),</strong> the move record goes to the database's writer thread, which stores it in <strong>one transaction</strong>: <code>engine_games</code> (an upsert, with the opponent), one <code>engine_moves</code> row (the <code>go</code> parameters exactly as received, the ladder's <code>allowed_seconds</code>, the path, <code>stockfish_depth</code> and the four timers), one <code>worker_runs</code> row per worker, its <code>worker_depths</code> and its <code>root_candidates</code>. The first move is stored as <code>movetime_ms</code> 10000: Engine UCI's copies of it into wtime/btime are never stored. Problems go to <code>events</code> (failed workers, fallbacks, restarts). If the database can't be opened, the engine keeps playing and the log says so. Plan 03 has the rest.</li>
+<li><strong>The paths</strong> stored per move: <code>kernel</code>, <code>stockfish_opening</code>, <code>stockfish_endgame</code>, <code>stalemate_override</code>, <code>only_move</code>, <code>no_kernel_answer</code>, <code>no_legal_move</code>.</li>
+<li>⚠️ <strong>Why the flush matters</strong> (October 25, measured): the old <code>bestmove</code> wasn't flushed, so the move only left when the loop got back to <code>getline()</code>, and 1.5 s of work after an unflushed <code>bestmove</code> made python-chess wait 2,399 ms instead of 907 ms.</li>
+<li><strong>The fresh start you chose:</strong> <code>history\</code> and <code>input\</code> are gone; the database has one row per move.</li>
+</ul>
+<h3 id="phase-5--what-this-unlocks-later-one-at-a-time">Phase 5 — What this unlocks (later, one at a time)</h3>
+<table>
+<thead>
+<tr>
+<th>Unlock</th>
+<th>Why it needs persistent workers (or what's ready for it)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong><code>stop</code></strong> (end a search early)</td>
+<td>You can only interrupt a process that's alive and listening. A worker still reads its next line only after answering, so <code>stop</code> needs a second reading thread inside the worker; the ids are already there</td>
+</tr>
+<tr>
+<td><strong>Pondering</strong></td>
+<td><code>config.yml</code> says <code>ponder: true</code>, but Engine UCI prints <code>bestmove X</code> with no <code>ponder Y</code>, and python-chess only sends <code>go ponder</code> after a <code>bestmove X ponder Y</code>. It needs a ponder move, <code>stop</code>/<code>ponderhit</code> handling (the main loop has neither), and ideally <code>option name Ponder type check default false</code>. With live workers you could think on the opponent's time</td>
+</tr>
+<tr>
+<td><strong>Keeping memory between moves</strong></td>
+<td>A transposition table (item 3 in <code>Claude Docs/01</code>) or neural-net weights (<code>Claude Docs/02</code>) can now survive from move to move, instead of being rebuilt 28 times per move</td>
+</tr>
+<tr>
+<td><strong>Incremental positions</strong></td>
+<td>Send only the new moves instead of the whole game (cheap already: <code>setupMs</code> 0.01–0.3 ms)</td>
+</tr>
+<tr>
+<td><strong>Tuning the worker count</strong></td>
+<td><code>NUMBER_OF_KERNEL_WORKERS</code> in <code>Engine UCI.cpp</code> (and the same constant in <code>tests\engine_test.py</code> and <code>tests\kernel_workers_test.py</code>, which expect 28; the second one also waits for the event text <code>restarted 28 worker(s)</code>): measure 16 / 20 / 24 / 28 in real games now that the pool exists. The earlier benchmark found 28 workers ≈ 8–9× one core on your laptop</td>
+</tr>
+<tr>
+<td><strong>One depth for every worker</strong></td>
+<td>The answers already carry every completed depth (<code>perDepth</code>), so Engine UCI could compare all the workers at the deepest depth they <em>all</em> completed, with no protocol change (§3's yellow box). It changes the moves, so A/B it in games first</td>
+</tr>
+<tr>
+<td><strong>Threads instead of processes</strong></td>
+<td>The final form: one process, shared memory, a shared TT. It needs every global moved into a per-thread state struct, a big refactor for another day</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="5-️-risks-whats-handled-whats-still-open">5. ⚠️ Risks: what's handled, what's still open</h2>
+<table>
+<thead>
+<tr>
+<th>Risk</th>
+<th>What could happen</th>
+<th>Status (October 27)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Smart App Control (ON on this PC)</strong></td>
+<td>Every new <code>.exe</code> hash is judged on its first launch (October 25: it blocked 2 of 3 builds of <code>Engine UCI.exe</code>, and even a byte-copy of the old one, <code>WinError 4551</code>)</td>
+<td>🟡 <strong>Handled, still there.</strong> <code>Build Engines.bat</code> stamps every build (a new hash) and launch-checks both <code>.exe</code> files: if one is blocked, run it again. ⚠️ A blocked or missing <code>Kernel.exe</code> doesn't fail lichess-bot's startup check (no worker starts there): every Kernel move then falls back to Stockfish at depth 14, the log says why (for a blocked one, <code>… Smart App Control blocked this Kernel.exe, rebuild it</code>), and <code>events</code> gets rows. The game goes on, but it's Stockfish playing instead of your Kernel, so check the <code>!!</code> lines (runbook)</td>
+</tr>
+<tr>
+<td><strong>Git Bash's runtime DLLs</strong></td>
+<td>Git puts its own <code>libstdc++-6.dll</code> first on PATH: a different C runtime</td>
+<td>🟡 The worker lines are safe either way (<code>fwrite</code>, a bare <code>\n</code>, and Engine UCI strips a <code>\r</code> anyway). Still: start everything from PowerShell or <code>Launch Server.bat</code></td>
+</tr>
+<tr>
+<td>Deadlock</td>
+<td>Both sides wait forever</td>
+<td>✅ By design: every line is flushed, one reader thread per worker always drains its pipe, and stdout carries only protocol</td>
+</tr>
+<tr>
+<td><strong>A hung Engine UCI</strong></td>
+<td>python-chess gives clock-based moves <strong>no timeout at all</strong>, so a hang blocks the game until lichess flags it</td>
+<td>✅ For the workers (the deadline, then a kill) and for Stockfish (the watchdog). 🟡 The watchdog on <code>go depth</code> is 300 s, longer than a whole blitz clock: a hung Stockfish search would still lose that game on time, only not silently</td>
+</tr>
+<tr>
+<td>State leaks between requests</td>
+<td>Different answers to the same request</td>
+<td>✅ The equivalence test through ONE worker: 0 mismatches, 0 repeat differences</td>
+</tr>
+<tr>
+<td>Crashed or hung worker</td>
+<td>A move with missing root moves</td>
+<td>✅ Tested (§4): a worker that died while waiting costs nothing; one that dies during a move costs only its own moves, for that move; one that freezes also holds that move until the deadline (the allowed time + 2 s: 7,005–7,024 ms instead of ~2 s in the test, and up to 53–68 s with a 2+3 game's ladder); with all of them dead, Stockfish plays</td>
+</tr>
+<tr>
+<td>A failed Kernel launch</td>
+<td>The old engine played the placeholder text as its move</td>
+<td>✅ Impossible now: an answer counts only with status <code>ok</code>, a <code>bestMove</code> from that worker's own bucket and an integer score</td>
+</tr>
+<tr>
+<td>Orphan processes</td>
+<td>Old Kernels eat your CPU after a crash</td>
+<td>✅ Job Objects with kill-on-close: a hard kill of Engine UCI left 0 Kernel and 0 Stockfish behind</td>
+</tr>
+<tr>
+<td><strong>A process-start stall under load</strong></td>
+<td>The all-28 restart runs on Engine UCI's main loop after <code>bestmove</code> (and waits up to 3 s for the <code>ready</code>s), so the next <code>position</code>/<code>go</code> waits behind it. The first Kernel move of a game can also wait for the start (§2)</td>
+<td>🟡 <strong>Open.</strong> 0.4–0.9 s in 19 of 21 test runs, but 3.7 s and 5.2 s in the other 2 (while the neural-network lab's heavy jobs were running): if the opponent had answered faster, those seconds would have been on your clock. It only follows a catastrophe (every worker dead); one restart (~22–40 ms) is far below the fastest reply in your lichess logs (365 ms). The fix, if it ever matters: restart in the background thread, like the start at <code>ucinewgame</code></td>
+</tr>
+<tr>
+<td>⏱️ <strong>The time ladder</strong></td>
+<td><strong>51–66 s for one move</strong> in a 2+3 game, and the 5% rule only stops <em>starting</em> new depths, so a search can use all of it</td>
+<td>🔴 <strong>Open, unchanged on purpose</strong> (same behavior). In your real lichess game <code>tN252leL</code>, plies 5 and 7 took 29.1 s and 54.0 s out of a 2-minute clock. Yours to decide (README)</td>
+</tr>
+<tr>
+<td>🤝 <strong><code>isTiePosition</code> = stalemate only</strong></td>
+<td>No threefold, 50-move or insufficient-material draws, so the stalemate override can't see the other draws</td>
+<td>🔴 <strong>Open, unchanged</strong></td>
+</tr>
+<tr>
+<td>♟️ <strong><code>position fen …</code></strong></td>
+<td>Engine UCI parses it, but the Kernel and Stockfish both replay the moves from the start position, so a game that starts from a FEN (lichess &quot;From position&quot;) would be searched on the wrong board, and its moves could be illegal</td>
+<td>🔴 <strong>Open.</strong> Until it's fixed, don't let the bot accept &quot;From position&quot; games</td>
+</tr>
+<tr>
+<td>🎲 <strong>Mixed depths in the pick</strong></td>
+<td>The best (score, move) can come from a shallower worker (§3's yellow box)</td>
+<td>🟡 <strong>Open, unchanged on purpose</strong>: your file mode did the same. A Phase 5 idea</td>
+</tr>
+<tr>
+<td>Windows-only code</td>
+<td>Can't run matches on the Linux Nebius box</td>
+<td>🟡 Open: the process code lives in <code>KernelWorkerProcess</code> / <code>KernelWorkerPool</code> and <code>StockfishProcess</code>, so a Linux version is mostly those classes</td>
+</tr>
+<tr>
+<td>Merge conflicts with the neural-net work</td>
+<td>Two agents editing <code>Kernel.cpp</code></td>
+<td>🟡 Small: the search is untouched. Only the file's tail (the worker's <code>main()</code>), a few <code>ProcessHandler</code> getters and the root loop's score recording are new, and the Kernel's own <code>ChessState</code> copy is gone (it includes <code>Chess State.hpp</code>). Keep separate git branches</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="6-️-status-and-whats-left">6. ⏱️ Status and what's left</h2>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Status</th>
+<th>What's left</th>
+<th>Payoff</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0 · Baseline timers</td>
+<td>✅ folded into 4</td>
+<td>—</td>
+<td>Every stage timer is a database column</td>
+</tr>
+<tr>
+<td>1 · One Stockfish, one place, kept alive (+ GameId, flush, safe Kernel merge)</td>
+<td>✅ in your code (October 25)</td>
+<td>— (the duplicate copies are deleted)</td>
+<td>Opening Stockfish moves 670 → ~80 ms; −124 MB of duplicates; no more path problems</td>
+</tr>
+<tr>
+<td>2 · <code>Kernel.exe</code> is a worker</td>
+<td>✅ built (October 27)</td>
+<td>—</td>
+<td>The same answers as your old <code>Kernel.exe</code>, with no files and no <code>cmd.exe</code></td>
+</tr>
+<tr>
+<td>3 · The worker pool</td>
+<td>✅ built (October 27)</td>
+<td>Your live games (runbook, step 1), then 50 games with nothing in <code>events</code></td>
+<td>~0.3 s of process starts per Kernel move → a few ms; deadlines, crash safety, no orphans</td>
+</tr>
+<tr>
+<td>4 · GameId + the database</td>
+<td>✅ built (October 27)</td>
+<td>The first lichess sync (runbook, step 3)</td>
+<td>Every move, worker, depth and candidate in SQLite: plan 03</td>
+</tr>
+<tr>
+<td>5 · Unlocks</td>
+<td>later, one at a time</td>
+<td>—</td>
+<td><code>stop</code>, pondering, a TT, the worker count, one common depth…</td>
+</tr>
+<tr>
+<td><strong>Total remaining</strong></td>
+<td></td>
+<td><strong>≈ 1 hour tonight</strong> (the runbook), then live games</td>
+<td>The ≈ 0.3 s fast move (at a 1 s cap) is still an estimate 🟡: your games will measure it</td>
+</tr>
+</tbody>
+</table>
+<p>— <strong>Claude Opus 5.5</strong> 🤖</p>
+
+</body>
+</html>

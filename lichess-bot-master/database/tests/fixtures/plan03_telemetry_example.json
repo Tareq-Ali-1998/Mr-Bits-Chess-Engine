@@ -1,0 +1,69 @@
+{
+ "_about": "The per-move telemetry example of plan 03 (section 'telemetry line', copied from plan03-db/work/parsed_examples.json key '03 - Pl#1'). The tests store it the way Engine UCI.exe fills the database: one engine_moves row, a worker_runs row per worker, worker_depths from perDepth and root_candidates from rootScores. Its perDepth list is shortened (depth 8 completed, only depth 2 listed), as the plan says.",
+ "telemetry": {
+  "v": 1,
+  "gameId": "tN252leL",
+  "ply": 23,
+  "receivedAt": 1792371802113,
+  "engineVersion": "kernel-2026-10-23",
+  "go": {
+   "wtime": 118000,
+   "btime": 120000,
+   "winc": 3000,
+   "binc": 3000
+  },
+  "allowedSeconds": 1,
+  "path": "kernel",
+  "legalMoves": 36,
+  "bestMove": "h2h3",
+  "bestScore": -135,
+  "timersMs": {
+   "legal": 0.1,
+   "dispatch": 0.4,
+   "search": 231,
+   "merge": 0.2,
+   "tieCheck": 0.1,
+   "total": 233
+  },
+  "workers": [
+   {
+    "worker": 1,
+    "rootMoves": [
+     "f1e1",
+     "h2h3"
+    ],
+    "status": "ok",
+    "depth": 8,
+    "bestMove": "h2h3",
+    "score": -135,
+    "setupMs": 2,
+    "searchMs": 226,
+    "nodes": 2104019,
+    "leafNodes": 1951300,
+    "pruned": 120884,
+    "perDepth": [
+     {
+      "depth": 2,
+      "nodes": 1300,
+      "pruned": 41,
+      "ms": 1,
+      "bestMove": "h2h3",
+      "score": -20
+     }
+    ],
+    "rootScores": [
+     {
+      "move": "h2h3",
+      "score": -135,
+      "exact": true
+     },
+     {
+      "move": "f1e1",
+      "score": -160,
+      "exact": false
+     }
+    ]
+   }
+  ]
+ }
+}

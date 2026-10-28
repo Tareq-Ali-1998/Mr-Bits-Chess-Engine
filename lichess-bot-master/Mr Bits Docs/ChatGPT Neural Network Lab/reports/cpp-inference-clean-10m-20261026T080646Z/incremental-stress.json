@@ -1,0 +1,38 @@
+{
+  "source": "cpp/incremental_stress.cpp",
+  "training_run": "clean-10m-20261026T080646Z",
+  "compiler": "GCC 14.2.0 MinGW-W64 x86_64-ucrt-posix-seh",
+  "flags": "-std=c++17 -O3 -Wall -Wextra -Wpedantic -Werror -mavx2 -mfma",
+  "processor_identifier": "Intel64 Family 6 Model 183 Stepping 1, GenuineIntel",
+  "test": "256 starting-position to e2e4 and back feature-delta round trips",
+  "rebuild_every_round_trips": 16,
+  "diagnostic_score_drift_limit_pawns": 0.001,
+  "passed": true,
+  "models": {
+    "small": {
+      "weights_sha256": "93e72c41ba0fda1561cbcd3f6bebe32c399388870b2fc8b15135775beb58befd",
+      "workspace_bytes": 2304,
+      "root_score_white_pawns": 0.12638475,
+      "e2e4_score_white_pawns": -0.2542734146,
+      "maximum_score_drift_pawns": 0.000001668930054,
+      "maximum_accumulator_drift": 0.000003695487976,
+      "full_rebuild_restores_accumulator_exactly": true
+    },
+    "large": {
+      "weights_sha256": "d74e83664c27ffeced4fa6f0fa8b14ee3c9cbadf8b2b51895c799f9a5219ced9",
+      "workspace_bytes": 13312,
+      "root_score_white_pawns": 0.2305291891,
+      "e2e4_score_white_pawns": -0.1185393408,
+      "maximum_score_drift_pawns": 0.000001564621925,
+      "maximum_accumulator_drift": 0.000007629394531,
+      "full_rebuild_restores_accumulator_exactly": true
+    }
+  },
+  "kernel_encoding_observation": {
+    "starting_board_iterations": 200000,
+    "mean_nanoseconds": 94.7785,
+    "checksum": 75521341,
+    "note": "Single local observation supporting retention of the fixed-size sort; not a hardware-independent performance claim."
+  },
+  "limitations": "A bounded numerical bookkeeping check for these fixtures and weights; not a universal error bound, chess-strength test, or top-k retention measurement."
+}

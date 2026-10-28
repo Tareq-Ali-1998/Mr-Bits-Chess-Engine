@@ -1,0 +1,273 @@
+{
+  "schema": "chesslab.cpp-fp32.v1",
+  "model_spec": {
+    "name": "large",
+    "kind": "residual",
+    "input_dim": 782,
+    "width": 1024,
+    "blocks": 8,
+    "head": 256,
+    "activation": "relu"
+  },
+  "format": "64-byte versioned header + little-endian IEEE754 float32 payload",
+  "feature_contract": {
+    "version": "board782_v1",
+    "input_size": 782,
+    "packed_size": 78,
+    "packed_piece_codes": [
+      "empty",
+      "P",
+      "N",
+      "B",
+      "R",
+      "Q",
+      "K",
+      "p",
+      "n",
+      "b",
+      "r",
+      "q",
+      "k"
+    ],
+    "plane_order": [
+      "P",
+      "N",
+      "B",
+      "R",
+      "Q",
+      "K",
+      "p",
+      "n",
+      "b",
+      "r",
+      "q",
+      "k"
+    ],
+    "square_order": "a8,b8,...,h8,a7,...,h1",
+    "turn": "feature 768: 1 White, 0 Black",
+    "castling": "features 769..772: White K,Q; Black k,q; retained rights",
+    "en_passant": "773 none; 774..781 file a..h; preserve recorded FEN target",
+    "history": "halfmove clock and repetition history unavailable; engine handles draws"
+  },
+  "output": {
+    "perspective": "white",
+    "units": "pawns",
+    "activation": "linear, unbounded",
+    "terminal_policy": "caller resolves exact terminals and draws before inference"
+  },
+  "checkpoint": "best.pt",
+  "checkpoint_sha256": "bc3f2580a8cb0261a9de1a8b84cf565e415d6b5df4287b1bb5e159904d390732",
+  "epoch": 20,
+  "step": 87920,
+  "data_fingerprint": "f80ec3878a2d69b866ccfa5347a268c6c481f5b1f918cbba1a7dd6365326b77e",
+  "target": {
+    "perspective": "white",
+    "units": "pawns",
+    "clip_pawns": 15.0
+  },
+  "torch_version": "2.10.0+cpu",
+  "quantized": false,
+  "layout": {
+    "header_bytes": 64,
+    "payload_bytes": 71432196,
+    "payload_crc32": "60e80c09",
+    "layers": [
+      {
+        "name": "projection",
+        "input": 782,
+        "output": 1024,
+        "weight_layout": "input_output",
+        "weight_offset_bytes": 64,
+        "weight_bytes": 3203072,
+        "bias_offset_bytes": 3203136,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.0.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 3207232,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 7401536,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.0.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 7405632,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 11599936,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.1.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 11604032,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 15798336,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.1.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 15802432,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 19996736,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.2.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 20000832,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 24195136,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.2.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 24199232,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 28393536,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.3.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 28397632,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 32591936,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.3.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 32596032,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 36790336,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.4.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 36794432,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 40988736,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.4.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 40992832,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 45187136,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.5.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 45191232,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 49385536,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.5.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 49389632,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 53583936,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.6.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 53588032,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 57782336,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.6.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 57786432,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 61980736,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.7.first",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 61984832,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 66179136,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "blocks.7.second",
+        "input": 1024,
+        "output": 1024,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 66183232,
+        "weight_bytes": 4194304,
+        "bias_offset_bytes": 70377536,
+        "bias_bytes": 4096
+      },
+      {
+        "name": "head",
+        "input": 1024,
+        "output": 256,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 70381632,
+        "weight_bytes": 1048576,
+        "bias_offset_bytes": 71430208,
+        "bias_bytes": 1024
+      },
+      {
+        "name": "output",
+        "input": 256,
+        "output": 1,
+        "weight_layout": "output_input",
+        "weight_offset_bytes": 71431232,
+        "weight_bytes": 1024,
+        "bias_offset_bytes": 71432256,
+        "bias_bytes": 4
+      }
+    ],
+    "parameters": 17858049,
+    "linear_layers": 19,
+    "dense_macs": 17840384,
+    "float32_weight_bytes": 71432196
+  },
+  "verification": "Run scripts/verify_cpp.py to check actual C++ outputs against this checkpoint",
+  "sha256": "d74e83664c27ffeced4fa6f0fa8b14ee3c9cbadf8b2b51895c799f9a5219ced9"
+}

@@ -1,0 +1,905 @@
+{
+ "_about": "Synthetic lichess game JSON (the shape of GET /api/games/user and POST /api/games/export/_ids with pgnInJson, clocks, opening and accuracy) for the edge cases of sync_lichess.py. The bot is mr_bits. Every move list is legal (python-chess); '_expected' holds hand-computed answers (think_ms: plies 1-2 NULL, then 10*clocks[i-3] - 10*clocks[i-1] + inc, without inc when the last move itself ended the game). '_case' and '_expected' are not lichess fields; the sync ignores them.",
+ "games": [
+  {
+   "_case": "casual game (no ratingDiff), Mr. Bits is Black, lost by resignation: the last move still gets the increment",
+   "_expected": {
+    "result": "loss",
+    "our_color": "black",
+    "plies": 6,
+    "by_us": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     18000,
+     18000,
+     17850,
+     17920,
+     17700,
+     17500
+    ],
+    "think_ms": [
+     null,
+     null,
+     3500,
+     2800,
+     3500,
+     6200
+    ]
+   },
+   "id": "syn00001",
+   "rated": false,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793003600000,
+   "lastMoveAt": 1793003900000,
+   "status": "resign",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Some_Human",
+      "id": "some_human"
+     },
+     "rating": 1650
+    },
+    "black": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811
+    }
+   },
+   "winner": "white",
+   "opening": {
+    "eco": "C70",
+    "name": "Ruy Lopez: Morphy Defense",
+    "ply": 6
+   },
+   "moves": "e4 e5 Nf3 Nc6 Bb5 a6",
+   "clocks": [
+    18000,
+    18000,
+    17850,
+    17920,
+    17700,
+    17500
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00001\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Some_Human\"]\n[Black \"Mr_Bits\"]\n[Result \"1-0\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bb5 a6 1-0"
+  },
+  {
+   "_case": "rated bullet win by mate against a BOT: no increment on the mating move",
+   "_expected": {
+    "result": "win",
+    "our_color": "white",
+    "plies": 7,
+    "by_us": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     6000,
+     6000,
+     5950,
+     6020,
+     5890,
+     5990,
+     5800
+    ],
+    "think_ms": [
+     null,
+     null,
+     1500,
+     800,
+     1600,
+     1300,
+     900
+    ]
+   },
+   "id": "syn00002",
+   "rated": true,
+   "variant": "standard",
+   "speed": "bullet",
+   "perf": "bullet",
+   "createdAt": 1793007200000,
+   "lastMoveAt": 1793007500000,
+   "status": "mate",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1800,
+     "ratingDiff": 6
+    },
+    "black": {
+     "user": {
+      "name": "Some_Bot",
+      "title": "BOT",
+      "id": "some_bot"
+     },
+     "rating": 1700,
+     "ratingDiff": -6
+    }
+   },
+   "winner": "white",
+   "opening": {
+    "eco": "C23",
+    "name": "Bishop's Opening",
+    "ply": 3
+   },
+   "moves": "e4 e5 Bc4 Nc6 Qh5 Nf6 Qxf7#",
+   "clocks": [
+    6000,
+    6000,
+    5950,
+    6020,
+    5890,
+    5990,
+    5800
+   ],
+   "clock": {
+    "initial": 60,
+    "increment": 1,
+    "totalTime": 100
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00002\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Some_Bot\"]\n[Result \"1-0\"]\n\n1. e4 e5 2. Bc4 Nc6 3. Qh5 Nf6 4. Qxf7# 1-0"
+  },
+  {
+   "_case": "rated blitz win on time (the GM flagged); clocks has N+1 entries (the flagged player's final 0)",
+   "_expected": {
+    "result": "win",
+    "our_color": "white",
+    "plies": 5,
+    "by_us": [
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     18000,
+     18000,
+     17900,
+     300,
+     17700
+    ],
+    "think_ms": [
+     null,
+     null,
+     3000,
+     179000,
+     4000
+    ]
+   },
+   "id": "syn00003",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793010800000,
+   "lastMoveAt": 1793011100000,
+   "status": "outoftime",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1850,
+     "ratingDiff": 7
+    },
+    "black": {
+     "user": {
+      "name": "Strong_Gm",
+      "id": "strong_gm",
+      "title": "GM"
+     },
+     "rating": 2000,
+     "ratingDiff": -7
+    }
+   },
+   "winner": "white",
+   "moves": "d4 d5 c4 e6 Nc3",
+   "clocks": [
+    18000,
+    18000,
+    17900,
+    300,
+    17700,
+    0
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00003\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Strong_Gm\"]\n[Result \"1-0\"]\n\n1. d4 d5 2. c4 e6 3. Nc3 1-0"
+  },
+  {
+   "_case": "rated bullet loss on time: Mr. Bits (Black) flagged",
+   "_expected": {
+    "result": "loss",
+    "our_color": "black",
+    "plies": 5,
+    "by_us": [
+     0,
+     1,
+     0,
+     1,
+     0
+    ],
+    "clock_cs": [
+     6000,
+     6000,
+     5900,
+     5500,
+     5850
+    ],
+    "think_ms": [
+     null,
+     null,
+     1000,
+     5000,
+     500
+    ]
+   },
+   "id": "syn00004",
+   "rated": true,
+   "variant": "standard",
+   "speed": "bullet",
+   "perf": "bullet",
+   "createdAt": 1793014400000,
+   "lastMoveAt": 1793014700000,
+   "status": "outoftime",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Fast_Bot",
+      "title": "BOT",
+      "id": "fast_bot"
+     },
+     "rating": 1810,
+     "ratingDiff": 8
+    },
+    "black": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1790,
+     "ratingDiff": -8
+    }
+   },
+   "winner": "white",
+   "moves": "e4 c5 Nf3 d6 d4",
+   "clocks": [
+    6000,
+    6000,
+    5900,
+    5500,
+    5850
+   ],
+   "clock": {
+    "initial": 60,
+    "increment": 0,
+    "totalTime": 60
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00004\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Fast_Bot\"]\n[Black \"Mr_Bits\"]\n[Result \"1-0\"]\n\n1. e4 c5 2. Nf3 d6 3. d4 1-0"
+  },
+  {
+   "_case": "outoftime WITHOUT a winner (the opponent could not mate): a draw, not a loss on time",
+   "_expected": {
+    "result": "draw",
+    "our_color": "white",
+    "plies": 4,
+    "by_us": [
+     1,
+     0,
+     1,
+     0
+    ],
+    "clock_cs": [
+     18000,
+     18000,
+     17000,
+     16000
+    ],
+    "think_ms": [
+     null,
+     null,
+     10000,
+     20000
+    ]
+   },
+   "id": "syn00005",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793018000000,
+   "lastMoveAt": 1793018300000,
+   "status": "outoftime",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1820,
+     "ratingDiff": -1
+    },
+    "black": {
+     "user": {
+      "name": "Calm_Human",
+      "id": "calm_human"
+     },
+     "rating": 1600,
+     "ratingDiff": 1
+    }
+   },
+   "moves": "e4 e5 Nf3 Nc6",
+   "clocks": [
+    18000,
+    18000,
+    17000,
+    16000
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 0,
+    "totalTime": 180
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00005\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Calm_Human\"]\n[Result \"1/2-1/2\"]\n\n1. e4 e5 2. Nf3 Nc6 1/2-1/2"
+  },
+  {
+   "_case": "aborted after one move, no winner",
+   "_expected": {
+    "result": "aborted",
+    "our_color": "white",
+    "plies": 1,
+    "by_us": [
+     1
+    ],
+    "clock_cs": [
+     18000
+    ],
+    "think_ms": [
+     null
+    ]
+   },
+   "id": "syn00006",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793021600000,
+   "lastMoveAt": 1793021900000,
+   "status": "aborted",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811
+    },
+    "black": {
+     "user": {
+      "name": "Gone_Human",
+      "id": "gone_human"
+     },
+     "rating": 1500
+    }
+   },
+   "moves": "e4",
+   "clocks": [
+    18000
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00006\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Gone_Human\"]\n[Result \"*\"]\n\n1. e4 *"
+  },
+  {
+   "_case": "noStart without a winner and without any move",
+   "_expected": {
+    "result": "aborted",
+    "our_color": "black",
+    "plies": 0,
+    "by_us": [],
+    "clock_cs": [],
+    "think_ms": []
+   },
+   "id": "syn00007",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793025200000,
+   "lastMoveAt": 1793025500000,
+   "status": "noStart",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Slow_Starter",
+      "id": "slow_starter"
+     },
+     "rating": 1500
+    },
+    "black": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811
+    }
+   },
+   "moves": "",
+   "clocks": [],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00007\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Slow_Starter\"]\n[Black \"Mr_Bits\"]\n[Result \"*\"]\n\n*"
+  },
+  {
+   "_case": "fromPosition with Black to move first (Mr. Bits is White): by_us comes from the side to move; draw agreed, so the last move gets the increment",
+   "_expected": {
+    "result": "draw",
+    "our_color": "white",
+    "plies": 6,
+    "by_us": [
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     18000,
+     18000,
+     17950,
+     17800,
+     17900,
+     17700
+    ],
+    "think_ms": [
+     null,
+     null,
+     2500,
+     4000,
+     2500,
+     3000
+    ],
+    "first_uci": "e8e7"
+   },
+   "id": "syn00008",
+   "rated": false,
+   "variant": "fromPosition",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793028800000,
+   "lastMoveAt": 1793029100000,
+   "status": "draw",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811
+    },
+    "black": {
+     "user": {
+      "name": "Endgame_Fan",
+      "id": "endgame_fan"
+     },
+     "rating": 1700
+    }
+   },
+   "initialFen": "4k3/8/8/8/8/8/4P3/4K3 b - - 0 1",
+   "moves": "Ke7 e4 Ke6 Ke2 Ke5 Kd3",
+   "clocks": [
+    18000,
+    18000,
+    17950,
+    17800,
+    17900,
+    17700
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00008\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Endgame_Fan\"]\n[Result \"1/2-1/2\"]\n[FEN \"4k3/8/8/8/8/8/4P3/4K3 b - - 0 1\"]\n[SetUp \"1\"]\n\n1... Ke7 2. e4 Ke6 3. Ke2 Ke5 4. Kd3 1/2-1/2"
+  },
+  {
+   "_case": "fromPosition: the last move leaves king against king, an automatic draw, so no increment on it",
+   "_expected": {
+    "result": "draw",
+    "our_color": "white",
+    "plies": 3,
+    "by_us": [
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     18000,
+     18000,
+     17880
+    ],
+    "think_ms": [
+     null,
+     null,
+     1200
+    ]
+   },
+   "id": "syn00009",
+   "rated": false,
+   "variant": "fromPosition",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793032400000,
+   "lastMoveAt": 1793032700000,
+   "status": "draw",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811
+    },
+    "black": {
+     "user": {
+      "name": "Knight_Lover",
+      "id": "knight_lover"
+     },
+     "rating": 1600
+    }
+   },
+   "initialFen": "4k3/8/8/8/8/8/2n5/4K3 w - - 0 1",
+   "moves": "Kd2 Kf7 Kxc2",
+   "clocks": [
+    18000,
+    18000,
+    17880
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00009\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Knight_Lover\"]\n[Result \"1/2-1/2\"]\n[FEN \"4k3/8/8/8/8/8/2n5/4K3 w - - 0 1\"]\n[SetUp \"1\"]\n\n1. Kd2 Kf7 2. Kxc2 1/2-1/2"
+  },
+  {
+   "_case": "still running (status started): skipped, nothing stored",
+   "_expected": {
+    "skip": "running"
+   },
+   "id": "syn00010",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793036000000,
+   "lastMoveAt": 1793036300000,
+   "status": "started",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811
+    },
+    "black": {
+     "user": {
+      "name": "Live_Human",
+      "id": "live_human"
+     },
+     "rating": 1600
+    }
+   },
+   "moves": "e4 e5",
+   "clocks": [
+    18000,
+    18000
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   }
+  },
+  {
+   "_case": "a game Mr. Bits did not play: skipped",
+   "_expected": {
+    "skip": "not_ours"
+   },
+   "id": "syn00011",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793039600000,
+   "lastMoveAt": 1793039900000,
+   "status": "resign",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Alice",
+      "id": "alice"
+     },
+     "rating": 1500
+    },
+    "black": {
+     "user": {
+      "name": "Bob",
+      "id": "bob"
+     },
+     "rating": 1500
+    }
+   },
+   "winner": "white",
+   "moves": "e4",
+   "clocks": [
+    18000
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00011\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Alice\"]\n[Black \"Bob\"]\n[Result \"1-0\"]\n\n1. e4 1-0"
+  },
+  {
+   "_case": "clocks do not match the moves (2 clocks for 3 plies): clock_cs and think_ms stay NULL",
+   "_expected": {
+    "result": "loss",
+    "our_color": "white",
+    "plies": 3,
+    "by_us": [
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     null,
+     null,
+     null
+    ],
+    "think_ms": [
+     null,
+     null,
+     null
+    ]
+   },
+   "id": "syn00012",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793043200000,
+   "lastMoveAt": 1793043500000,
+   "status": "resign",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811,
+     "ratingDiff": -6
+    },
+    "black": {
+     "user": {
+      "name": "Lucky_Human",
+      "id": "lucky_human"
+     },
+     "rating": 1700,
+     "ratingDiff": 6
+    }
+   },
+   "winner": "black",
+   "moves": "e4 e5 Nf3",
+   "clocks": [
+    18000,
+    18000
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00012\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Lucky_Human\"]\n[Result \"0-1\"]\n\n1. e4 e5 2. Nf3 0-1"
+  },
+  {
+   "_case": "won by timeout (the opponent left): not a time forfeit, the last move gets the increment",
+   "_expected": {
+    "result": "win",
+    "our_color": "white",
+    "plies": 5,
+    "by_us": [
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     18000,
+     18000,
+     17800,
+     17700,
+     17600
+    ],
+    "think_ms": [
+     null,
+     null,
+     4000,
+     5000,
+     4000
+    ]
+   },
+   "id": "syn00013",
+   "rated": true,
+   "variant": "standard",
+   "speed": "blitz",
+   "perf": "blitz",
+   "createdAt": 1793046800000,
+   "lastMoveAt": 1793047100000,
+   "status": "timeout",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1830,
+     "ratingDiff": 5
+    },
+    "black": {
+     "user": {
+      "name": "Left_Early",
+      "id": "left_early"
+     },
+     "rating": 1555,
+     "ratingDiff": -5
+    }
+   },
+   "winner": "white",
+   "moves": "e4 e5 Nf3 Nc6 Bc4",
+   "clocks": [
+    18000,
+    18000,
+    17800,
+    17700,
+    17600
+   ],
+   "clock": {
+    "initial": 180,
+    "increment": 2,
+    "totalTime": 260
+   },
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00013\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Left_Early\"]\n[Result \"1-0\"]\n\n1. e4 e5 2. Nf3 Nc6 3. Bc4 1-0"
+  },
+  {
+   "_case": "correspondence (no clock at all): clock columns NULL, time control 'corr'",
+   "_expected": {
+    "result": "win",
+    "our_color": "white",
+    "plies": 7,
+    "by_us": [
+     1,
+     0,
+     1,
+     0,
+     1,
+     0,
+     1
+    ],
+    "clock_cs": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ],
+    "think_ms": [
+     null,
+     null,
+     null,
+     null,
+     null,
+     null,
+     null
+    ]
+   },
+   "id": "syn00014",
+   "rated": true,
+   "variant": "standard",
+   "speed": "correspondence",
+   "perf": "correspondence",
+   "createdAt": 1793050400000,
+   "lastMoveAt": 1793050700000,
+   "status": "mate",
+   "source": "friend",
+   "players": {
+    "white": {
+     "user": {
+      "name": "Mr_Bits",
+      "title": "BOT",
+      "id": "mr_bits"
+     },
+     "rating": 1811,
+     "ratingDiff": 3
+    },
+    "black": {
+     "user": {
+      "name": "Postal_Player",
+      "id": "postal_player"
+     },
+     "rating": 1500,
+     "ratingDiff": -3
+    }
+   },
+   "winner": "white",
+   "moves": "e4 e5 Qh5 Nc6 Bc4 Nf6 Qxf7#",
+   "daysPerTurn": 3,
+   "pgn": "[Event \"?\"]\n[Site \"https://lichess.org/syn00014\"]\n[Date \"????.??.??\"]\n[Round \"?\"]\n[White \"Mr_Bits\"]\n[Black \"Postal_Player\"]\n[Result \"1-0\"]\n\n1. e4 e5 2. Qh5 Nc6 3. Bc4 Nf6 4. Qxf7# 1-0"
+  }
+ ]
+}

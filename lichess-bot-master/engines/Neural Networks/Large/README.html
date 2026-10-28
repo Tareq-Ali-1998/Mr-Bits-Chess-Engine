@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-large-the-residual-mr_bits-neural-evaluator">♟️ Large: the residual Mr_Bits neural evaluator</h1>
+<p style="color:#7c3aed"><strong>17,858,049 learned parameters · FP32 weights · one White-perspective pawn score</strong></p>
+<p>This component deploys the <strong>Large best checkpoint, epoch 20</strong>, from <code>clean-10m-20261026T080646Z</code>. It is a standalone C++ evaluator alongside the engine; it does not modify or integrate itself into <code>Kernel.cpp</code>.</p>
+<pre class="hljs"><code><div>782 → Linear(1024) → ReLU
+    → 8 residual blocks at width 1024
+    → Linear(256) → ReLU → Linear(1)
+
+block(h) = ReLU(h + Linear₂(ReLU(Linear₁(h))))
+</div></code></pre>
+<p>Its recorded <strong>FP32 held-out test MAE is 90.8242293011166 cp</strong> across 499,321 positions, compared with Small's <code>117.46930382031158 cp</code> on the same release. That is better agreement with this filtered teacher distribution. It does not establish Elo, best-move recall, or that Large improves search after paying its higher CPU cost. No 95% move-retention claim has been measured.</p>
+<h2 id="use-it">Use it</h2>
+<p>Keep <code>Large.hpp</code> with its matching exported <code>weights.bin</code>. Add the parent <code>Neural Networks</code> folder to your include search path if using this include:</p>
+<pre class="hljs"><code><div><span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&lt;cstdint&gt;</span></span>
+<span class="hljs-meta">#<span class="hljs-keyword">include</span> <span class="hljs-string">&quot;Large/Large.hpp&quot;</span></span>
+
+<span class="hljs-comment">// Once at startup; never reload on every position.</span>
+<span class="hljs-keyword">auto</span> model = mrbits::nn::Large::<span class="hljs-built_in">load</span>(<span class="hljs-string">&quot;Large/weights.bin&quot;</span>);
+
+<span class="hljs-comment">// Keep separate scratch storage for every search thread.</span>
+mrbits::nn::Large::Workspace workspace;
+mrbits::nn::State state{<span class="hljs-literal">true</span>, <span class="hljs-number">15</span>, <span class="hljs-number">-1</span>};
+
+<span class="hljs-comment">// board must be your existing std::int8_t[8][8] in a8..h1 order.</span>
+<span class="hljs-comment">// float white_pawns = model.evaluate(board, state, workspace);</span>
+</div></code></pre>
+<p>The final line is commented because this fragment does not declare your actual board. The <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">full illustrated guide</a> has a complete board example; substitute the Large header/class/weights path there.</p>
+<p>The weights path is resolved relative to your process's working directory, not automatically relative to this header. Use a reliably resolved path in your application.</p>
+<h2 id="exact-interface-contract">Exact interface contract</h2>
+<p><code>State</code> is <code>{white_to_move, castling, ep_file}</code>. Its retained castling bits are <strong>WK = 1, WQ = 2, BK = 4, BQ = 8</strong>. Its EP file is <strong><code>-1</code> none, <code>0..7</code> files a..h</strong>. Obtain both from actual engine state; piece placement alone cannot tell whether a king or rook previously moved.</p>
+<p>The board uses Kernel codes: Black pawn/knight/bishop/rook/queen/king = <strong><code>1,3,4,5,6,7</code></strong>; White adds bit 3, giving <strong><code>9,11,12,13,14,15</code></strong>. Empty is zero. Higher move-related flags do not change piece identity. This interface expects <code>std::int8_t[8][8]</code>, with <code>a8</code> at <code>[0][0]</code>; it does not accept raw compact dataset codes or an <code>int[8][8]</code> byte reinterpretation.</p>
+<p>The output is an FP32 <strong>White-perspective pawn score</strong>, including when Black moves. White prefers larger scores; Black prefers smaller scores. A negamax caller can deliberately convert to side-to-move perspective. Scores are neither probabilities nor mate distances, and the final linear output is not clamped to the training target range.</p>
+<p>The input has 768 piece-square indicators plus 14 state features, with <strong>no clock or repetition history</strong>. Your engine must supply legal moves and exact terminal/draw handling. This is an orthodox-chess model; no opening/middlegame/endgame specialist was trained separately in this run.</p>
+<h2 id="cost-and-threading">Cost and threading</h2>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th style="text-align:right">Large</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Learned FP32 parameters</td>
+<td style="text-align:right">17,858,049</td>
+</tr>
+<tr>
+<td>Parameter payload, without format header</td>
+<td style="text-align:right">71,432,196 bytes, about 68.123 MiB</td>
+</tr>
+<tr>
+<td>Actual <code>weights.bin</code>, including 64-byte header</td>
+<td style="text-align:right">71,432,260 bytes</td>
+</tr>
+<tr>
+<td>Original training <code>best.pt</code></td>
+<td style="text-align:right">214,382,535 bytes</td>
+</tr>
+<tr>
+<td>Dense Linear layers</td>
+<td style="text-align:right">19</td>
+</tr>
+<tr>
+<td>Original dense Linear MACs per position</td>
+<td style="text-align:right">17,840,384</td>
+</tr>
+<tr>
+<td>C++ Workspace</td>
+<td style="text-align:right">13,312 bytes</td>
+</tr>
+</tbody>
+</table>
+<p>The training checkpoint includes optimizer state and metadata, so its file size overstates the deployed parameter payload. Conversely, the payload is not the whole process's resident memory: add Workspace arrays, containers, code and any caller-owned copies.</p>
+<p>The first projection uses active binary features, but the sixteen <code>1024×1024</code> residual Linear layers remain dense. Sparse input handling therefore saves only a modest fraction of Large's total arithmetic. An 82-times-larger parameter count does not translate mechanically into an 82-times-slower timing; hardware and implementation must be measured.</p>
+<p>The local warm serial CPU measurement was <strong>3.598 ms</strong> portable or <strong>2.820 ms</strong> AVX2/FMA with prebuilt active features; adding compact-78 conversion measured <strong>4.010 ms / 2.940 ms</strong> respectively. Python/PyTorch's FP32 call measured <strong>2.520 ms</strong>, so the AVX2/FMA C++ call was about <strong>12% slower</strong> here. It was roughly 3,000 times Small's C++ prebuilt-feature latency. This is a substantial per-node cost, not evidence to replace every search evaluation with Large. The timed compact adapter is not the Kernel-board adapter, and search/weight loading are excluded. Maximum fresh C++/Python FP32 disagreement across both builds and 592 positions was about <strong>0.001192 cp</strong>. <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/reports/cpp-inference-clean-10m-20261026T080646Z/large-verification.json">Exact Large report</a>, <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/reports/cpp-inference-clean-10m-20261026T080646Z/summary.json">benchmark scope</a>.</p>
+<p>A loaded model can be shared through <code>const</code> references across threads; copying the object duplicates all its weights. Every concurrent call requires its <strong>own Workspace</strong>. Keep board/state reads race-free too. Use compiler optimizations appropriate to the actual CPU; avoid <code>-ffast-math</code> when verifying finite checks and numerical parity.</p>
+<p>The optional accumulator interface updates only the first projection. It requires exact changed piece/turn/castling/EP features and does not make the residual blocks incremental. FP32 add/remove cycles can drift. Save/restore a parent raw accumulator (<strong>4,096 bytes per saved Large position</strong>) or rebuild periodically rather than assuming exact reversible arithmetic.</p>
+<h2 id="a-realistic-role">A realistic role</h2>
+<p>Large is a useful quality comparator, possible selective evaluator, and possible teacher for a later smaller student. Those roles remain hypotheses until tested. Measure complete-legal-child ranking and equal-time engine play; a neural-only throughput result does not include child construction, sorting or lost search cutoffs.</p>
+<p>Read the <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.md">full guide</a>, <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/runs/clean-10m-20261026T080646Z/large/test.json">Large FP32 test report</a>, and deployment metadata/verification reports accompanying these files. Training and validation used bfloat16 autocast; exported C++ weights and the held-out test evaluation are FP32.</p>
+
+</body>
+</html>

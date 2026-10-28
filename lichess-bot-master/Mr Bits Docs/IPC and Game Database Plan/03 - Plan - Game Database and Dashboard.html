@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>03 - Plan - Game Database and Dashboard.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-one-database-for-every-game-move-and-worker-built--plus-a-dashboard-planned">🗄️📊 One Database for Every Game, Move and Worker (built ✅), Plus a Dashboard (planned)</h1>
+<p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝 <em>October 23, 2026 · v2, October 25: schema tested on SQLite 3.50.4, 24 review findings applied · <strong>v4, October 27: as built</strong></em></p>
+<div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>✅ As built, in one paragraph:</strong> two writers fill <strong>one SQLite file</strong>, <code>lichess-bot-master\database\mrbits.sqlite</code>:</p>
+<ol>
+<li><strong>Engine UCI itself</strong>, after every move: the <code>go</code> parameters, the time ladder's budget, the path that decided the move, its timings, <strong>every Kernel worker</strong> (root moves, status, depth, nodes, times), each worker's opinion <strong>depth by depth</strong>, <strong>every candidate move's score</strong>, and every problem (<code>events</code>). It writes from its own thread, and only after <code>bestmove</code> is sent;</li>
+<li><strong><code>database\sync_lichess.py</code></strong>, run by you between games: results, ratings, <strong>rating changes</strong>, clocks, think times, openings, accuracy and PGN, for every game from go-live day on (a fresh history ✅);</li>
+<li><em>(optional, not built)</em> a Stockfish analysis of every played position: its table is there, its job isn't.</li>
+</ol>
+<p>A <strong><code>GameId</code></strong> links them. <strong><code>database\queries.py</code></strong>, the dashboard's read API, is ready and tested. The <strong>dashboard itself</strong> (Streamlit + Datasette) is the next thing to design. 🚀</p>
+</div>
+<div style="background:#eff6ff;border-left:6px solid #2563eb;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>🔬 What October 26–27 changed</strong> (built, attacked by reviewers, re-tested):</p>
+<ul>
+<li><strong>Your decision: &quot;no more json files, database only&quot;.</strong> SQLite 3.54.1 is compiled into Engine UCI, and the engine stores every move itself. v2's telemetry file and its importer were never built: §3 shows how the engine handles the risks they were meant to avoid.</li>
+<li><strong>The adversarial review found 4 real problems, 3 of them in the database, all fixed and re-tested:</strong> two engines starting at the same moment broke each other's schema setup (<code>view already exists</code>: a whole game unrecorded, 19 times in 160 in the reviewer's race test; now 0 in 180); a reader could see a view dropped and not re-created yet; and a database locked at the start of a game lost that game (now the writer tries again before every record: a 7 s lock at the start → all 5 moves stored).</li>
+<li><strong><code>v_games</code> got fast:</strong> at 1,000 games, <code>list_games</code> 382 → 23 ms, <code>count_games</code> 666 → 0.7 ms, one game 676 → 0.1 ms (§4).</li>
+<li><strong>130 tests</strong> in <code>database\tests\</code> (never the network, the token, <code>config.yml</code> or your real database). The new ones fail against the unfixed code (a mutation check), and the verifiers' 38 adversarial tests and an oracle run (5 × 400 adversarial games × 1,500 filter trials) pass. The engine test checks every stored row against what python-chess saw: <strong>183 / 183</strong>.</li>
+<li><em>Still true from October 25:</em> <code>engine_moves</code> has no foreign key to <code>games</code> (the engine's rows come first), and the think-time formula matches the wall clock with a median of −8 ms on your real game <code>tN252leL</code>.</li>
+<li>⚠️ <strong>lichess refuses anonymous game exports</strong> (401 &quot;Login required&quot;, Oct 25): every sync needs the bot's token.</li>
+</ul>
+</div>
+<div style="background:#fffbeb;border-left:6px solid #d97706;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
+<p><strong>⚠️ Not proven yet (honestly):</strong></p>
+<ul>
+<li><strong>No live lichess game is in the database yet.</strong> Every check so far used test databases, with python-chess playing lichess-bot's part. The first real games are yours (runbook step 1).</li>
+<li><strong>The first live sync is yours too:</strong> it needs the token. The parsing is tested on lichess's two official examples, your real game <code>tN252leL</code> (rebuilt from lichess-bot's log: real moves and clocks, but not a lichess export, so no rating change, opening or accuracy) and synthetic games, but the two API passes have only run against a fake session, so no real export of your games has been parsed yet.</li>
+<li><strong>The size per game is still an estimate</strong> (§6).</li>
+<li><strong>A lock held longer than 5 s</strong> (DB Browser for SQLite with unsaved edits, during a game) costs the records that waited for it (§3).</li>
+<li><strong>The dashboard doesn't exist yet</strong>, and neither streamlit, datasette, pandas nor plotly is installed (checked October 27, Python 3.14.2).</li>
+</ul>
+</div>
+<hr />
+<h2 id="1--what-the-dashboard-must-answer">1. 🎯 What the dashboard must answer</h2>
+<ul>
+<li><strong>Filters:</strong> wins / losses / draws · rating change (e.g. &quot;games where I lost more than 10 points&quot;) · time control (bullet / blitz / rapid) · date range · opponent (name, bot or human, rating) · color · how the game ended (mate, resignation, time, stalemate…) · opening · engine trouble (a stalemate override, a move with no Kernel answer, worker timeouts or failures) · engine version.</li>
+<li><strong>Per game:</strong> the board with a move slider, both clocks, the eval graph, think time per move, depth per move, and where the game turned.</li>
+<li><strong>Per move:</strong> the time ladder's budget vs. the time actually used · which path played it (<code>kernel</code>, <code>stockfish_opening</code>, <code>stockfish_endgame</code>, <code>stalemate_override</code>, <code>only_move</code>, <code>no_kernel_answer</code>, <code>no_legal_move</code>) · <strong>all the workers</strong>: their root moves, depth reached, nodes, time, best move and score · how each worker's opinion changed depth by depth · the candidate moves and their scores · Stockfish's opinion of the move (optional) · any errors (timeouts, dead workers, restarts).</li>
+<li><strong>Trends:</strong> rating over time · win rate by opponent rating · time forfeits (the overhead problem!) · nodes per second and depth per engine version.</li>
+</ul>
+<p>✅ <strong>All of it has its data in the database now</strong>, except Stockfish's opinion of a move, the eval graph and &quot;where the game turned&quot;: those need the optional analysis (§8, D4). A rough eval graph from the Kernel's own scores is possible already.</p>
+<blockquote>
+<p>💡 <strong>A taste of what it will show you:</strong> October 25, from the clocks of your 2+3 game <code>tN252leL</code>: plies 5 and 7 took <strong>29.1 s and 54.0 s</strong>. The time ladder allows 50 + winc/3000 = <strong>51 s per move</strong> when 60–120 s are left (and 66 s for White, 61 s for Black, with ≥ 120 s left), and the 5% rule only stops <em>starting</em> new depths. In a 2-minute game that's dangerous. Now every move stores <code>allowed_seconds</code> next to <code>t_total_ms</code>, and <code>v_games.max_move_ms</code> puts the slowest move of every game in one column.</p>
+</blockquote>
+<hr />
+<h2 id="2--where-each-piece-of-data-lives">2. 🧭 Where each piece of data lives</h2>
+<p>Everything lives in <strong><code>lichess-bot-master\database\</code></strong>: <code>schema.sql</code>, <code>mrbits.sqlite</code>, <code>db.py</code>, <code>queries.py</code>, <code>sync_lichess.py</code> and <code>tests\</code>. (v2 planned <code>data\</code> and <code>tools\mrbits_db\</code>: neither exists.)</p>
+<table>
+<thead>
+<tr>
+<th>Data</th>
+<th>Source → table</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Result, how the game ended, both ratings <strong>and rating changes</strong>, accuracy, PGN</td>
+<td><strong>lichess API</strong> → <code>games</code> (<code>sync_lichess.py</code>)</td>
+<td><code>ratingDiff</code> only exists in <strong>rated</strong> games: casual ones get NULL. Accuracy only once lichess has analysed the game</td>
+</tr>
+<tr>
+<td>Every ply of both sides, both clocks, think times, opening, time control</td>
+<td><strong>lichess API</strong> → <code>moves</code>, <code>games</code></td>
+<td><code>clocks=true</code> gives centiseconds. lichess's <code>moves</code> is <strong>SAN</strong>: the sync replays it into UCI with python-chess</td>
+</tr>
+<tr>
+<td>Games from go-live day on</td>
+<td><strong>lichess API</strong>, with the bot's token</td>
+<td><code>--since</code> your go-live date the first time. Anonymous export returns 401</td>
+</tr>
+<tr>
+<td>Your engine's side of every move: the <code>go</code> parameters as sent, the time budget, the path, legal moves, Stockfish's depth, four timings, the build</td>
+<td><strong>Engine UCI</strong> → <code>engine_games</code>, <code>engine_moves</code></td>
+<td>Written by the engine itself, after <code>bestmove</code>, from the first move of its first game on</td>
+</tr>
+<tr>
+<td>Every Kernel worker: root moves, status, depth, nodes, pruning, times, its opinion depth by depth, every searched root move's score (and the ones it skipped)</td>
+<td><strong>Engine UCI</strong> → <code>worker_runs</code>, <code>worker_depths</code>, <code>root_candidates</code></td>
+<td>Worker numbers are fixed (1–28), so you can follow one worker from move to move</td>
+</tr>
+<tr>
+<td>Problems: workers with no usable answer, moves with no Kernel answer, restarts, startup failures</td>
+<td><strong>Engine UCI</strong> → <code>events</code></td>
+<td>A normal game has none. The two fatal ones (Stockfish can't start, a <code>go</code> that fails) have no ply (NULL), and the first one has no game either when it comes before any GameId or <code>go</code> (lichess-bot's startup check)</td>
+</tr>
+<tr>
+<td>The opponent at the start of the game: title, rating, bot or human, name</td>
+<td><strong>Engine UCI</strong> (<code>UCI_Opponent</code>, from python-chess) → <code>engine_games</code></td>
+<td>So a game shows its opponent even before the sync. Once synced, lichess's data wins</td>
+</tr>
+<tr>
+<td>Stockfish's verdict on every position</td>
+<td><em>(optional analysis job, not built)</em> → <code>position_analysis</code></td>
+<td>The table exists, empty</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why lichess and not the engine for results?</strong> I checked your installed python-chess 1.10.0 on October 25: for UCI engines, <code>send_game_result</code> is literally <code>pass</code>. <strong>The engine is never told who won.</strong> lichess knows, so we ask lichess. (Who the opponent is, the engine does learn: python-chess sends <code>UCI_Opponent</code> right after every <code>ucinewgame</code>.)</p>
+<p><strong>Until the sync runs, the database knows only your engine's half of a game:</strong> its own moves and the work behind them, not the opponent's moves (the engine doesn't store the move list). A game played without a <code>GameId</code> (by hand, a GUI, a test) is stored as <code>local-&lt;unix ms&gt;</code> and is never synced, so its opponent's moves are never stored.</p>
+<p><strong>What about the old data? A fresh start ✅ (your decision).</strong> Nothing is migrated. The old JSON files (<code>input\</code>) and per-move reports (<code>history\</code>) are deleted. The first sync starts at your go-live date. lichess-bot's own PGN files (<code>pgn_directory</code> in <code>config.yml</code>) aren't needed either: every synced game's PGN is in <code>games.pgn</code>.</p>
+<hr />
+<h2 id="3-️-the-architecture">3. 🏗️ The architecture</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    subgraph EXE["⚙️ Engine UCI.exe"]
+        direction TB
+        MAIN["UCI thread&lt;br/&gt;go → think → bestmove, flushed"]:::eng --&gt;|"then the move record"| WR["writer thread&lt;br/&gt;Game Database.hpp"]:::eng
+    end
+    LB["♟️ lichess-bot"]:::src &lt;--&gt;|"UCI over pipes"| MAIN
+    WR --&gt;|"one transaction per move"| DB[("🗄️ database/mrbits.sqlite")]:::db
+    API["🌐 lichess API&lt;br/&gt;games, ratings, clocks"]:::src --&gt; SYNC["🐍 sync_lichess.py&lt;br/&gt;by you, between games"]:::job
+    SYNC --&gt; DB
+    DBPY["🐍 db.py&lt;br/&gt;init, backup, check, recent"]:::job --- DB
+    SF["🐟 Stockfish"]:::later -.-&gt; ANA["🐍 analysis job&lt;br/&gt;optional, not built"]:::later
+    ANA -.-&gt; DB
+    DB --&gt; Q["🐍 queries.py&lt;br/&gt;ready, tested"]:::job
+    Q --&gt; DASH["📊 Streamlit dashboard&lt;br/&gt;to design"]:::ui
+    DB --&gt; DS["🔎 Datasette&lt;br/&gt;raw browsing"]:::ui
+    classDef src fill:#fef3c7,stroke:#d97706,color:#78350f
+    classDef eng fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef job fill:#e0e7ff,stroke:#4f46e5,color:#312e81
+    classDef db fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
+    classDef ui fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef later fill:#f1f5f9,stroke:#64748b,color:#0f172a
+</div></code></pre>
+<h3 id="why-sqlite-is-inside-engine-uci-after-all">Why SQLite <em>is</em> inside Engine UCI after all</h3>
+<p>On October 25 I recommended <strong>A</strong>: the engine appends JSON lines to a &quot;flight recorder&quot; file, and a Python job imports them, so that nothing about a database could ever touch your clock. <strong>You chose B: &quot;no more json files, database only&quot;.</strong> It's a fair call: one file format fewer to keep, read and back up, and the data is there the moment the move is played. But it meant the engine itself had to answer every worry that made me pick A. This is how the built one does it:</p>
+<table>
+<thead>
+<tr>
+<th>The worry (October 25)</th>
+<th>How the built engine handles it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>⏱️ <strong>Your clock:</strong> a locked database or a slow disk could stall a move</td>
+<td>The writer is <strong>its own thread</strong>, and it gets the move record <strong>only after <code>bestmove</code> is printed and flushed</strong>. The UCI thread never waits for SQLite (it only hands the record over), so no write is ever on your clock</td>
+</tr>
+<tr>
+<td>🔒 <strong>Another program writing at the same moment</strong> (the sync, DB Browser)</td>
+<td><strong>WAL</strong>, stored in the file: readers never block the engine, and the engine never blocks readers. Plus a <strong>5 s <code>busy_timeout</code></strong>: a second writer waits its turn instead of failing</td>
+</tr>
+<tr>
+<td>🧩 <strong>A half-written move</strong></td>
+<td><strong>One transaction per move</strong> (<code>BEGIN IMMEDIATE</code> … <code>COMMIT</code>): the game's row, the move, its workers, depths and candidates land together or not at all. A <strong>replayed ply</strong> (the engine restarted mid-game) <strong>replaces</strong> its old rows: delete + insert, and the foreign keys cascade to its old workers, depths and candidates</td>
+</tr>
+<tr>
+<td>🏁 <strong>Two engines starting together</strong></td>
+<td><code>schema.sql</code> runs in <strong>ONE transaction</strong> (the two PRAGMAs first, because <code>journal_mode</code> can't change inside a transaction, then <code>BEGIN IMMEDIATE</code> … <code>COMMIT</code>). The second engine waits for the first instead of failing halfway (before: <code>view already exists</code>, a whole game unrecorded, 19 times in 160; now 0 in 180), and a reader never sees a view dropped and not re-created yet</td>
+</tr>
+<tr>
+<td>🔐 <strong>A database locked when the engine starts</strong> (DB Browser with unsaved edits)</td>
+<td>The writer rolls back, closes, and <strong>tries again before every record</strong>: a 7 s lock at the start → all 5 moves stored</td>
+</tr>
+<tr>
+<td>💥 <strong>A database that can't be opened at all</strong> (<code>schema.sql</code> missing, a broken file)</td>
+<td><strong>The engine keeps playing.</strong> Only the log says so (<code>!! database not ready: …</code>), and the writer tries again before the next record</td>
+</tr>
+<tr>
+<td>🚪 <strong>A late writer at exit</strong></td>
+<td>On <code>quit</code>, the writer gets <strong>at most 3 s</strong> for what's left. The <code>GameDatabase</code> object is <strong>never destroyed</strong> (a deliberately leaked singleton), so a writer thread that <code>close()</code> stopped waiting for can never touch a destroyed object while the process ends. And when Engine UCI is killed hard, every move before the kill is stored (<code>kernel_workers_test.py</code>)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What A had that B doesn't (still true, so know it):</strong></p>
+<ul>
+<li><strong>There's no raw log to re-import from.</strong> The database is the only copy of the workers' internals: the text log (<code>engines\logs\uci_&lt;date&gt;-&lt;time&gt;_pid&lt;pid&gt;.log</code>) has the UCI conversation and every problem (<code>!!</code> lines), not the workers' numbers. If the engine ever stores a wrong value, it stays wrong, which is exactly why the engine test checks every row against python-chess. And it's why backups matter now (§9).</li>
+<li><strong>A lock that outlasts the 5 s wait costs the records that waited for it.</strong> Each one is dropped with a <code>!!</code> line in the log and never retried; the records that come after the lock is gone are stored normally. So save or revert DB Browser's edits before a game, and run the sync between games.</li>
+<li><strong>Changing the schema:</strong> <code>schema.sql</code> is applied at <strong>every engine start</strong> and by <code>db.py --init</code>, so new tables, indexes and views appear on their own. <strong>A new column in an existing table doesn't:</strong> <code>CREATE TABLE IF NOT EXISTS</code> skips a table that exists, so it needs an <code>ALTER TABLE</code>. A new field from the engine also needs <code>Game Database.hpp</code> and a rebuild.</li>
+</ul>
+<hr />
+<h2 id="4--the-schema">4. 🧬 The schema</h2>
+<p><strong>The single source of truth is <code>lichess-bot-master\database\schema.sql</code>:</strong> 10 tables, 14 indexes and 3 views, with comments next to its columns. This section explains it instead of copying it, so it can't go stale. Two programs apply it: Engine UCI at every start, and <code>python database\db.py --init</code>. Every statement can run again safely (<code>IF NOT EXISTS</code>, and the views are dropped and re-created).</p>
+<pre><code class="language-mermaid"><div class="mermaid">erDiagram
+    GAMES ||--o{ MOVES : "every ply, FK"
+    GAMES |o..o| ENGINE_GAMES : "same game_id, no FK"
+    ENGINE_GAMES ||..o{ ENGINE_MOVES : "same game_id, no FK"
+    ENGINE_MOVES ||--o{ WORKER_RUNS : "one per worker asked"
+    WORKER_RUNS ||--o{ WORKER_DEPTHS : "one per depth"
+    ENGINE_MOVES ||--o{ ROOT_CANDIDATES : "every searched root move"
+    ENGINE_GAMES |o..o{ EVENTS : "game_id and ply, no FK"
+    GAMES |o..o{ POSITION_ANALYSIS : "optional, no job yet"
+    GAMES {
+        text game_id PK
+        int created_at
+        text result
+        text status
+        int our_rating_diff
+    }
+    MOVES {
+        text game_id PK, FK
+        int ply PK
+        text uci
+        int clock_cs
+        int think_ms
+    }
+    ENGINE_GAMES {
+        text game_id PK
+        text opponent_name
+        int first_move_at
+        text engine_version
+    }
+    ENGINE_MOVES {
+        text game_id PK
+        int ply PK
+        text path
+        int allowed_seconds
+        real t_total_ms
+    }
+    WORKER_RUNS {
+        text game_id PK, FK
+        int ply PK, FK
+        int worker PK
+        text status
+        int depth
+        int total_nodes
+    }
+    WORKER_DEPTHS {
+        int worker PK, FK
+        int depth PK
+        int completed
+        int score
+    }
+    ROOT_CANDIDATES {
+        int worker PK
+        text move PK
+        int score
+        int exact
+    }
+    EVENTS {
+        int event_id PK
+        int at
+        text level
+        text message
+    }
+    POSITION_ANALYSIS {
+        text game_id PK
+        int ply PK
+        int sf_cp
+    }
+    SYNC_STATE {
+        text source PK
+        text cursor
+    }
+</div></code></pre>
+<p><em>(A few columns per table; the file has them all.)</em></p>
+<h3 id="the-10-tables">The 10 tables</h3>
+<table>
+<thead>
+<tr>
+<th>Table</th>
+<th>One row per</th>
+<th>Written by</th>
+<th>Key (and foreign key)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>games</code></td>
+<td>lichess game: result, status, ratings and rating changes, clock, opponent, opening, accuracy, PGN</td>
+<td>the sync</td>
+<td><code>game_id</code> (lichess's 8-character id)</td>
+</tr>
+<tr>
+<td><code>moves</code></td>
+<td>ply of both sides: SAN, UCI, <code>by_us</code>, the mover's clock, think time</td>
+<td>the sync</td>
+<td><code>(game_id, ply)</code> → <code>games</code>, cascade</td>
+</tr>
+<tr>
+<td><code>engine_games</code></td>
+<td>game the engine played: its color, the opponent from <code>UCI_Opponent</code>, its first and last move time, the build</td>
+<td>the engine</td>
+<td><code>game_id</code></td>
+</tr>
+<tr>
+<td><code>engine_moves</code></td>
+<td>move Mr. Bits decided: the <code>go</code> parameters, <code>allowed_seconds</code>, <code>path</code>, legal moves, workers asked, best move and score, Stockfish's depth, <code>t_legal_ms</code>, <code>t_kernel_ms</code>, <code>t_tie_check_ms</code>, <code>t_total_ms</code>, the build</td>
+<td>the engine</td>
+<td><code>(game_id, ply)</code>, <strong>no foreign key</strong></td>
+</tr>
+<tr>
+<td><code>worker_runs</code></td>
+<td>Kernel worker per engine move: root moves (JSON), <code>status</code>, depth, best move and score, setup and search time, nodes, leaf nodes, pruned, total nodes, unsearched root moves, error</td>
+<td>the engine</td>
+<td><code>(game_id, ply, worker)</code> → <code>engine_moves</code>, cascade</td>
+</tr>
+<tr>
+<td><code>worker_depths</code></td>
+<td>worker per depth: completed or cut by the clock, ms, nodes, leaf nodes, pruned, best move, score</td>
+<td>the engine</td>
+<td><code>(game_id, ply, worker, depth)</code> → <code>worker_runs</code>, cascade</td>
+</tr>
+<tr>
+<td><code>root_candidates</code></td>
+<td>searched root move: its score, <code>exact</code>, the worker's last completed depth</td>
+<td>the engine</td>
+<td><code>(game_id, ply, worker, move)</code> → <code>engine_moves</code>, cascade</td>
+</tr>
+<tr>
+<td><code>events</code></td>
+<td>problem: workers without a usable answer, fallbacks, restarts, startup failures</td>
+<td>the engine</td>
+<td><code>event_id</code></td>
+</tr>
+<tr>
+<td><code>position_analysis</code></td>
+<td>position after ply N: Stockfish's depth, cp, mate, best move (White's point of view)</td>
+<td>the optional job (not built)</td>
+<td><code>(game_id, ply)</code></td>
+</tr>
+<tr>
+<td><code>sync_state</code></td>
+<td>importer: where it stopped</td>
+<td>the sync</td>
+<td><code>source</code></td>
+</tr>
+</tbody>
+</table>
+<p>The paths a move can take, and what a worker's run can end as:</p>
+<pre><code class="language-sql">  path             TEXT NOT NULL CHECK (path IN ('kernel', 'stockfish_opening', 'stockfish_endgame',
+                                                 'stalemate_override', 'only_move', 'no_kernel_answer',
+                                                 'no_legal_move')),
+</code></pre>
+<pre><code class="language-sql">  status                 TEXT NOT NULL CHECK (status IN ('ok', 'timeout', 'dead', 'error', 'no_moves',
+                                                         'no_completed_depth', 'rejected')),
+</code></pre>
+<p><code>ok</code> is a usable answer; <code>timeout</code>: silent at the deadline (allowed time + 2 s), killed, restarted after <code>bestmove</code>; <code>dead</code>: it died during the search (only its moves are lost, for that move); <code>error</code>: it answered with an error message; <code>no_moves</code> and <code>no_completed_depth</code> are the worker's own answers (nothing to search / not even the first depth finished); <code>rejected</code>: its move isn't one of its own root moves, or its score isn't an integer. A worker that died <em>before</em> the move gets no moves and no row: the living workers search its share.</p>
+<h3 id="the-14-indexes">The 14 indexes</h3>
+<ul>
+<li><strong><code>games</code></strong>, for the filters: <code>idx_games_created</code> (<code>created_at</code>), <code>idx_games_filters</code> (<code>result, speed, our_color</code>), <code>idx_games_status</code>, <code>idx_games_opponent</code> (<code>opponent_id</code>), <code>idx_games_rating_diff</code> (<code>our_rating_diff</code>);</li>
+<li><strong><code>engine_games</code></strong>: <code>idx_engine_games_first</code> (<code>first_move_at</code>);</li>
+<li><strong><code>engine_moves</code></strong>: <code>idx_engine_moves_path</code>, <code>idx_engine_moves_time</code> (<code>received_at</code>);</li>
+<li><strong><code>worker_runs</code></strong>: <code>idx_worker_runs_status</code>;</li>
+<li><strong><code>events</code></strong>: <code>idx_events_game</code> (<code>game_id, ply</code>), <code>idx_events_at</code>;</li>
+<li>and the three that keep <code>v_games</code> fast:</li>
+</ul>
+<pre><code class="language-sql">-- v_games reads every game's engine figures through these three, one game at a time (never a scan).
+CREATE INDEX IF NOT EXISTS idx_worker_runs_game_depth  ON worker_runs(game_id, depth);
+CREATE INDEX IF NOT EXISTS idx_worker_runs_game_status ON worker_runs(game_id, status);
+CREATE INDEX IF NOT EXISTS idx_engine_moves_game_path  ON engine_moves(game_id, path);
+</code></pre>
+<h3 id="the-3-views">The 3 views</h3>
+<p>They hold no data, so <code>schema.sql</code> drops and re-creates them every time (inside its one transaction).</p>
+<p><strong><code>v_games</code>: one row per game, from either side.</strong> Every <code>game_id</code> in <code>games</code> <strong>or</strong> <code>engine_games</code> has its row, so a game the sync hasn't fetched yet, or a <code>local-…</code> game, is there too. lichess's data wins when it's there, and the engine's fills in otherwise (start time, color, opponent). It computes <code>started_at</code>, <strong><code>local_date</code></strong> (your local date), <code>lost_on_time</code>, the <code>time_control</code> label (<code>'3+2'</code>, <code>'0.5+0'</code>, <code>'corr'</code>), <code>opponent_kind</code> (<code>'bot'</code>, <code>'human'</code>, or NULL when nobody knows), <code>synced</code>, and the engine's figures for the game: <code>engine_moves</code>, <code>kernel_moves</code>, <code>stockfish_moves</code>, <code>had_stalemate_override</code>, <code>had_no_kernel_answer</code>, <code>avg_move_ms</code>, <code>max_move_ms</code>, <code>max_depth</code>, <code>worker_timeouts</code>, <code>worker_failures</code> (<code>dead</code> or <code>error</code>) and <code>engine_version</code>. A game without engine moves gets NULL counts, 0 flags and 0 timeouts / failures.</p>
+<p><strong><code>v_engine_moves</code>: one row per engine move</strong>, with its workers summed up: <code>workers_ok</code>, <code>workers_failed</code>, <code>max_depth</code>, <code>total_nodes</code>, <code>slowest_search_ms</code> and <strong><code>overhead_ms</code></strong>, the move's time minus its slowest worker's search, which is what the engine itself cost:</p>
+<pre><code class="language-sql">       MAX(w.search_ms)                                                          AS slowest_search_ms,
+       em.t_total_ms - MAX(w.search_ms)                                          AS overhead_ms
+</code></pre>
+<p><strong><code>overhead_ms</code> is NULL when no worker searched</strong> (Stockfish's moves, <code>only_move</code>, <code>no_legal_move</code>, every worker timed out). It used to give the whole move there, Stockfish's thinking included; <code>queries.py</code> guards against that too.</p>
+<p><strong><code>v_moves</code>: every ply from lichess</strong>, with the engine's side (<code>path</code>, <code>best_score</code>, <code>allowed_seconds</code>, <code>t_total_ms</code>) on the plies Mr. Bits played.</p>
+<p><strong>Why <code>v_games</code> asks one game at a time (and why it matters):</strong> its first version joined per-game totals that SQLite built by grouping <strong>every</strong> engine move and <strong>every</strong> worker of <strong>every</strong> game, so even reading one game summed up the whole database. Now each engine figure is a subquery on <strong>one</strong> game, through those three <code>(game_id, …)</code> indexes, and it only runs for the rows a call actually returns:</p>
+<pre><code class="language-sql">       (SELECT NULLIF(COUNT(*), 0) FROM engine_moves em WHERE em.game_id = a.game_id)       AS engine_moves,
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>At 1,000 games</th>
+<th>before</th>
+<th>now</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>list_games</code> (a page of games)</td>
+<td>382 ms</td>
+<td>23 ms</td>
+</tr>
+<tr>
+<td><code>count_games</code></td>
+<td>666 ms</td>
+<td>0.7 ms</td>
+</tr>
+<tr>
+<td>one game</td>
+<td>676 ms</td>
+<td>0.1 ms</td>
+</tr>
+</tbody>
+</table>
+<p>At 3,000 games it was 1.5–2 s per call, and it's 0.04–38 ms now. <strong><code>tests\test_schema.py</code> keeps it that way:</strong> it runs every statement of every <code>queries.py</code> call through <code>EXPLAIN QUERY PLAN</code> and fails if one ever scans <code>engine_moves</code> or <code>worker_runs</code>.</p>
+<h3 id="the-rules-that-go-with-it">The rules that go with it</h3>
+<p><strong>Two engines, one transaction.</strong> The file starts like this, and its last line is <code>COMMIT;</code>:</p>
+<pre><code class="language-sql">PRAGMA journal_mode = WAL;     -- stored in the file: readers (the dashboard) never block the engine
+PRAGMA foreign_keys = ON;      -- per connection only: every program turns it on again when it connects
+
+BEGIN IMMEDIATE;
+</code></pre>
+<ul>
+<li><strong>Foreign keys are per connection.</strong> Only WAL is stored in the file, so without <code>PRAGMA foreign_keys = ON</code> orphans are accepted silently and <code>ON DELETE CASCADE</code> does nothing. Python connects through <strong><code>db.connect()</code></strong>: it turns them on, sets the same 5 s busy timeout as the engine, gives rows that work like dicts, finds the file <strong>next to <code>db.py</code></strong> (never relative to the working folder, where a plain <code>sqlite3.connect()</code> would silently create a new, empty database), and <strong>refuses a missing database</strong> instead of creating one (&quot;run <code>python database/db.py --init</code>&quot;). The engine's own SQLite is built with foreign keys on by default, and turns them on again anyway.</li>
+<li><strong><code>engine_moves</code> has no foreign key to <code>games</code>:</strong> the engine's rows exist long before the sync, and a <code>local-…</code> game is never synced.</li>
+<li><strong><code>result</code></strong> comes from lichess's <code>winner</code> and <code>status</code>: <code>'win'</code> / <code>'loss'</code> when there's a winner; <code>'aborted'</code> for <code>aborted</code> or <code>noStart</code> without one; otherwise <code>'draw'</code>. Games still <code>created</code> or <code>started</code> aren't stored: the next sync gets them.</li>
+<li><strong><code>moves.uci</code></strong>: lichess's SAN, replayed with python-chess from the game's start (its <code>initialFen</code>, with its variant's rules). <strong><code>by_us</code> comes from the side to move</strong>, not from the ply number: a game from a position can start with Black. Castling comes out as <code>e1g1</code>, like Engine UCI.</li>
+<li><strong><code>moves.think_ms</code></strong> is the time <strong>lichess charged</strong>, network and lag included. Plies 1 and 2 → NULL (lichess doesn't run the clock for each side's first move). From ply 3: the mover's clock after their previous move minus their clock now, <strong>plus the increment</strong>, except that the move that <strong>ended the game</strong> itself (mate, stalemate, a variant's end, an automatic draw) gets <strong>no</strong> increment, and neither does a side that <strong>berserked</strong>. On <code>tN252leL</code>: a median of −8 ms against the wall clock over 68 moves. Your engine's own time is <code>engine_moves.t_total_ms</code>, and the difference is your overhead. If lichess's clock list doesn't have one value per ply (or one more: the flagged player's final clock), the game is stored without clocks, with a warning.</li>
+<li><strong>Points of view:</strong> <code>engine_moves.best_score</code> is the Kernel's score from <strong>Mr. Bits' point of view</strong> (NULL when Stockfish chose the move), and <code>position_analysis</code> is from <strong>White's</strong>, like lichess's analysis. Flip <code>best_score</code> when Mr. Bits is Black before drawing both on one graph.</li>
+<li><strong><code>root_candidates.exact = 0</code> is an upper bound</strong> (&quot;at most this&quot;, alpha-beta at the root), not a real score: don't show it as one. <strong><code>worker_runs.unsearched_root_moves</code></strong> lists the root moves a worker didn't search at its last completed depth (from depth 6 on, the root keeps only its 4 best moves).</li>
+<li><strong>The engine version is the build stamp</strong> (<code>Build Engines.bat</code> uses the date and time; <code>dev</code> without it): in <code>engine_games.engine_version</code> and on every <code>engine_moves</code> row. ⚠️ Every rebuild gets a new stamp, even a rebuild of the same code after a Smart App Control block, so when you compare versions, group the stamps that are really the same code.</li>
+<li><strong>Everything can be written twice:</strong> the sync upserts <code>games</code> (a re-import without accuracy, opening, plies or PGN keeps the stored ones), replaces a game's <code>moves</code> (keeping the stored clocks of the same moves when an export has none), and the engine replaces a replayed ply. <code>events</code> is a log: each event is written once, when it happens.</li>
+<li>⚠️ <strong>After editing <code>schema.sql</code>, run <code>Build Engines.bat test</code> too, not only <code>db.py --init</code>.</strong> The engine's SQLite is stricter than Python's (<code>SQLITE_DQS=0</code>: <code>&quot;text&quot;</code> in double quotes is a column name, never a string; Python's SQLite accepts it, checked October 27), and if <code>schema.sql</code> fails inside the engine, the engine stores nothing at all (it keeps playing). And after <strong>adding an index</strong> to a database with many games, run <code>db.py --init</code> once between games, so the index is built there and not at the next engine start (~10 s at 3,000 games).</li>
+</ul>
+<hr />
+<h2 id="5--how-one-game-flows-into-the-database">5. 🔄 How one game flows into the database</h2>
+<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+    participant LB as lichess-bot
+    participant UCI as Engine UCI
+    participant WR as its writer thread
+    participant DB as mrbits.sqlite
+    participant SY as sync_lichess.py
+    participant API as lichess API
+    WR-&gt;&gt;DB: at start: open, busy_timeout 5 s, schema.sql in one transaction
+    LB-&gt;&gt;UCI: uci
+    UCI--&gt;&gt;LB: id, option GameId, option UCI_Opponent, uciok
+    LB-&gt;&gt;UCI: setoption name GameId value tN252leL
+    LB-&gt;&gt;UCI: ucinewgame
+    Note over UCI: the 28 Kernel workers start in the background
+    LB-&gt;&gt;UCI: setoption name UCI_Opponent value BOT 1692 computer Demolito_L4
+    LB-&gt;&gt;UCI: isready
+    UCI--&gt;&gt;LB: readyok, once Stockfish is up
+    LB-&gt;&gt;UCI: position startpos / go movetime 10000
+    UCI--&gt;&gt;LB: bestmove e2e4, printed and flushed first
+    UCI-&gt;&gt;WR: the move record, then any events
+    WR-&gt;&gt;DB: BEGIN IMMEDIATE, the game row and the move rows, COMMIT
+    loop every later engine move
+        LB-&gt;&gt;UCI: position startpos moves ... / go wtime W btime B winc I binc I
+        UCI--&gt;&gt;LB: bestmove h2h3, flushed
+        UCI-&gt;&gt;WR: the move record
+        WR-&gt;&gt;DB: one transaction
+    end
+    LB-&gt;&gt;UCI: quit
+    WR-&gt;&gt;DB: what is left, 3 s at most, then close
+    Note over LB,API: the game ends on lichess, and no result is sent to the engine
+    SY-&gt;&gt;API: pass 1, GET /api/games/user/name since the cursor
+    API--&gt;&gt;SY: NDJSON, oldest first
+    SY-&gt;&gt;DB: one transaction per game: upsert games, replace moves
+    SY-&gt;&gt;API: pass 2, POST /api/games/export/_ids for the engine games still missing
+    API--&gt;&gt;SY: NDJSON
+    SY-&gt;&gt;DB: the same upserts, then the cursor
+</div></code></pre>
+<h3 id="who-writes-what-and-when">Who writes what, and when</h3>
+<table>
+<thead>
+<tr>
+<th>Program</th>
+<th>Writes</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Engine UCI.exe</strong> (<code>Game Database.hpp</code>)</td>
+<td><code>engine_games</code>, <code>engine_moves</code>, <code>worker_runs</code>, <code>worker_depths</code>, <code>root_candidates</code>, <code>events</code></td>
+<td>By itself, after every move. It applies <code>schema.sql</code> at every start, so its very first start (already <code>Build Engines.bat</code>'s launch check) creates the database</td>
+</tr>
+<tr>
+<td><strong><code>sync_lichess.py</code></strong></td>
+<td><code>games</code>, <code>moves</code>, and its cursor in <code>sync_state</code></td>
+<td>By you, <strong>between games</strong>: it shares the bot's token and IP with lichess-bot, and lichess rate-limits both</td>
+</tr>
+<tr>
+<td><strong><code>db.py</code></strong></td>
+<td>only the schema (<code>--init</code>) and backups</td>
+<td>By you</td>
+</tr>
+<tr>
+<td><strong><code>queries.py</code></strong></td>
+<td>nothing: it only reads</td>
+<td>The dashboard</td>
+</tr>
+<tr>
+<td><em>the analysis job (optional)</em></td>
+<td><code>position_analysis</code></td>
+<td>Not written yet</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engine-uci-per-move-all-of-it-after-bestmove">Engine UCI, per move (all of it after <code>bestmove</code>)</h3>
+<ol>
+<li><code>bestmove X</code> is printed <strong>and flushed</strong>. The game id is the <code>GameId</code> lichess-bot sent before <code>ucinewgame</code> (the one line in <code>extra_game_handlers.py</code>), or <code>local-&lt;unix ms&gt;</code> when nobody sent one.</li>
+<li>The move record goes into the writer's queue: the <code>go</code> parameters <strong>exactly as sent</strong> (on each side's first move lichess-bot sends <code>go movetime 10000</code>, stored as <code>movetime_ms</code>, never as made-up clocks), <code>allowed_seconds</code>, the path, the legal moves, the workers asked, the best move and score, Stockfish's depth, the four timings (<code>t_total_ms</code> = <code>go</code> received → <code>bestmove</code> sent), the build, the opponent from <code>UCI_Opponent</code>, and every worker's whole answer.</li>
+<li>If something went wrong, the events follow (a normal game has none; the list is below).</li>
+<li>The writer thread stores the move in <strong>one transaction</strong> (the <code>engine_games</code> upsert, then the move's rows) while your engine already waits for the opponent. Each event is its own small insert.</li>
+</ol>
+<p><strong>The events Engine UCI can record:</strong></p>
+<table>
+<thead>
+<tr>
+<th>level</th>
+<th>source</th>
+<th>message</th>
+<th>ply</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>warning</td>
+<td><code>kernel workers</code></td>
+<td><code>N of M gave no usable answer</code></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>error</td>
+<td><code>kernel workers</code></td>
+<td><code>no usable answer at all: Stockfish played the move</code></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>info</td>
+<td><code>kernel workers</code></td>
+<td><code>restarted N worker(s)</code></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>warning</td>
+<td><code>kernel workers</code></td>
+<td><code>tried to restart N worker(s): …</code></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>warning</td>
+<td><code>stockfish</code></td>
+<td><code>Stockfish was restarted (N time(s) in this game)</code></td>
+<td>✓</td>
+</tr>
+<tr>
+<td>error</td>
+<td><code>stockfish</code></td>
+<td><code>could not start: … -&gt; exiting without readyok</code></td>
+<td>NULL</td>
+</tr>
+<tr>
+<td>error</td>
+<td><code>engine</code></td>
+<td><code>go failed: … -&gt; exiting</code></td>
+<td>NULL</td>
+</tr>
+</tbody>
+</table>
+<p>Which worker failed, and why, is in <code>worker_runs.status</code> and <code>worker_runs.error</code>: the events only count them.</p>
+<h3 id="sync_lichesspy-after-the-games"><code>sync_lichess.py</code>, after the games</h3>
+<p>From <code>lichess-bot-master\</code>:</p>
+<pre><code class="language-powershell">python database\sync_lichess.py --since YYYY-MM-DD    # the first time: your go-live date (a LOCAL date)
+python database\sync_lichess.py                       # every later time: from where the last sync stopped
+python database\sync_lichess.py --dry-run             # fetch and check everything, write nothing
+python database\sync_lichess.py --from-file games.ndjson   # offline: lichess NDJSON from a file (tests, re-imports)
+</code></pre>
+<p><code>--from-file</code> finds the bot as the one player in every game of the file; when that isn't clear (one game alone has two candidates), add <code>--user &lt;the bot's lichess id&gt;</code>. <code>--user</code> only goes with <code>--from-file</code>, and <code>--since</code> only with the API. Without <code>--since</code>, a run starts at the last sync's cursor; with no cursor yet, at the engine's first game minus a day; with no engine game either, 7 days ago.</p>
+<p><strong>The two passes:</strong></p>
+<ol>
+<li><code>GET /api/account</code> (whose token is this?), then <strong>the bot's games since the cursor</strong>: <code>GET /api/games/user/&lt;name&gt;</code> with <code>since</code>, <code>pgnInJson</code>, <code>clocks</code>, <code>opening</code>, <code>accuracy</code> and <code>sort=dateAsc</code> (NDJSON, oldest first). Then the cursor moves to <strong>the newest game's <code>createdAt</code> minus one day</strong> (the overlap is harmless: every write is an upsert).</li>
+<li><strong>By id, every game the engine played that still has no lichess data</strong> (an <code>engine_games</code> row without a <code>games</code> row, real 8-character lichess ids only, never <code>local-…</code>): <code>POST /api/games/export/_ids</code>, <strong>300 ids per request</strong>. This also repairs any gap the cursor might leave.</li>
+</ol>
+<p><strong>Safe by design:</strong></p>
+<ul>
+<li>Games still running are skipped (lichess even holds back their last 3 moves): the next run gets them. Games the bot didn't play and games that can't be read are skipped and counted; one bad game never stops the others.</li>
+<li><strong>One transaction per game</strong>, and running it again is harmless.</li>
+<li>Every request has a timeout (10 s to connect, 60 s of silence). <strong>HTTP 429 → it waits 60 s and tries once more</strong>, then stops (&quot;try again later&quot;). Any other HTTP error stops the sync, and the cursor stays where the last complete pass left it.</li>
+<li>It ends with one line: <code>lichess sync: N games inserted, N updated, N moves written; skipped: N still running, N not played by the bot, N with errors</code>.</li>
+</ul>
+<h3 id="dbpy-by-hand"><code>db.py</code>, by hand</h3>
+<pre><code class="language-powershell">python database\db.py --init        # create the database, or bring an existing one up to schema.sql (data is never deleted)
+python database\db.py --backup      # SQLite's online backup into database\backup\mrbits-YYYY-MM-DD_HH-MM.sqlite (safe while a game runs)
+python database\db.py --check       # integrity check, foreign keys, journal mode, rows per table (exit code 1 if unhealthy)
+python database\db.py --recent 20   # the newest 20 engine moves and events (12 without a number): a quick look
+</code></pre>
+<p>One action per call. <code>sync_lichess.py</code> and <code>queries.py</code> need the database to exist; the engine creates it by itself.</p>
+<hr />
+<h2 id="6--how-big-does-it-get--an-estimate">6. 📏 How big does it get? 🟡 (an estimate)</h2>
+<p><strong>Not measured on the built schema yet.</strong> This is the October 25 estimate, made with a generator on the v2 schema (28 workers × 6 depths, 35 candidates):</p>
+<table>
+<thead>
+<tr>
+<th>Per engine move</th>
+<th>Approximate size (October 25)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>engine_moves</code> row</td>
+<td>~0.2 KB</td>
+</tr>
+<tr>
+<td>28 <code>worker_runs</code> rows</td>
+<td>~2.5 KB</td>
+</tr>
+<tr>
+<td>~6 <code>worker_depths</code> rows per worker</td>
+<td>~11 KB</td>
+</tr>
+<tr>
+<td>~35 <code>root_candidates</code> rows</td>
+<td>~2 KB</td>
+</tr>
+<tr>
+<td><strong>Total</strong></td>
+<td><strong>≈ 16 KB per move → ≈ 0.9 MB per game (your 13 logged games averaged ≈ 56 engine moves, median 44) → ≈ 0.9 GB per 1,000 games</strong></td>
+</tr>
+</tbody>
+</table>
+<p>What changed since: the raw <code>request_json</code> / <code>response_json</code> columns (+≈ 30–40 KB per move in v2) <strong>don't exist</strong> in the built schema, so that cost is gone. A worker row has a few more columns now (<code>total_nodes</code>, <code>unsearched_root_moves</code>, <code>error</code>; a depth row has <code>completed</code> and <code>leaf_nodes</code>), while a worker at today's speed probably completes fewer than 6 depths (the equivalence test reached depth 6 or 8 in 1 s). So the real number can land on either side of 16 KB.</p>
+<p><strong>Measure it after your first real games</strong> (2 minutes): <code>python database\db.py --backup</code> (the backup is one self-contained file, so its size is the database's real size), then divide it by the <code>engine_moves</code> count that <code>db.py --check</code> prints.</p>
+<p>SQLite handles this size easily, and the dashboard's reads were measured on generated data: 0.04–38 ms per call at 3,000 games (§4).</p>
+<hr />
+<h2 id="7--the-dashboard-still-a-plan-but-its-data-layer-is-ready">7. 📊 The dashboard (still a plan, but its data layer is ready)</h2>
+<p><strong>Tools (recommended, unchanged):</strong> <strong>Streamlit</strong>, a Python dashboard framework where a page is a Python script, so it's quick to build without being a web developer. It's paired with <code>pandas</code>, <code>plotly</code> for charts, and <code>python-chess</code> (already installed: lichess-bot uses it) to draw the board as an SVG (<code>chess.svg.board()</code>, checked October 25). <strong>Datasette</strong> sits next to it for raw browsing: <code>datasette database\mrbits.sqlite</code> gives you every table and view with filters and facets in the browser, with zero code. Open it normally, never with <code>--immutable</code>: that mode assumes nobody writes the file, and your engine does.</p>
+<p>⚠️ <strong>None of streamlit, datasette, pandas or plotly is installed</strong> (checked October 27, Python 3.14.2). Use a virtual environment: <code>python -m venv .venv-dash</code> (git already ignores <code>.venv-*/</code>), then <code>pip install streamlit pandas plotly datasette</code>. If pip finds no wheels for Python 3.14, use 3.12 or 3.13 for the dashboard only. Streamlit serves on port 8501, Datasette on 8001.</p>
+<pre><code class="language-mermaid"><div class="mermaid">mindmap
+  root((📊 Mr. Bits dashboard))
+    Overview
+      Rating over time per speed
+      Wins draws losses per day
+      Results by opponent rating
+      Time forfeits
+    Games explorer
+      Filters
+      Sortable game table with paging
+      Click to open a game
+    Game viewer
+      Board with move slider
+      Clocks and think time
+      Eval graph
+      Depth per move
+    Move inspector
+      Path and time budget
+      All workers table
+      Depth by depth progress
+      Candidate moves
+    Engine health
+      Overhead per move
+      Timeouts and crashes
+      Nodes per second by version
+</div></code></pre>
+<h3 id="-the-data-layer-databasequeriespy">✅ The data layer: <code>database\queries.py</code></h3>
+<p>Plain functions that return lists of dicts, one dict per row. Every value reaches SQLite as a <strong>bound parameter</strong>, and the only name put into the SQL text, the <code>ORDER BY</code> column, must be in a whitelist (every column of <code>v_games</code>). Each function takes an optional <code>con=</code> to share one connection; without it, it opens and closes its own, which also works from Streamlit's threads (a SQLite connection belongs to the thread that opened it).</p>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th><code>queries.py</code> gives it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overview</td>
+<td><code>results_by_day</code> (wins, draws, losses, aborted and not synced yet per local date, with a score %), <code>rating_history</code> (game by game, one speed or all), <code>results_by_opponent_rating</code> (100-point buckets by default)</td>
+</tr>
+<tr>
+<td>Games explorer</td>
+<td><code>list_games</code> (one page, sorted, with every filter below), <code>count_games</code> (the same filters, for paging), <code>filter_choices</code> (the values present, for the drop-downs, plus the first and last date)</td>
+</tr>
+<tr>
+<td>Game viewer</td>
+<td><code>game_overview</code> (the <code>v_games</code> row), <code>game_moves</code> (every ply with SAN, clock, think time and the engine's side), <code>engine_moves</code>, <code>game_events</code> (the ones without a ply included)</td>
+</tr>
+<tr>
+<td>Move inspector</td>
+<td><code>move_detail(game_id, ply)</code>: the engine's move and lichess's side of that ply, every worker with its depths and its candidates, every candidate best first, and that ply's events</td>
+</tr>
+<tr>
+<td>Engine health</td>
+<td><code>engine_health</code> (the last 50 games by default: moves, Kernel moves, average and slowest move, average and largest overhead, timeouts, failures, deepest depth), <code>recent_events</code> (newest first, by level)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The filters of <code>list_games</code> and <code>count_games</code></strong> (all optional, combined with AND; an unknown filter name is refused):</p>
+<ul>
+<li>a value, or a list meaning &quot;any of these&quot;: <code>result</code>, <code>speed</code>, <code>time_control</code>, <code>our_color</code>, <code>opponent_kind</code>, <code>status</code>, <code>opening_eco</code>, <code>engine_version</code>;</li>
+<li>True / False: <code>rated</code>, <code>lost_on_time</code>, <code>had_stalemate_override</code>, <code>had_no_kernel_answer</code>, <code>had_timeouts</code>, <code>had_worker_failures</code>, <code>synced</code>, <code>local</code>;</li>
+<li>part of a name, any case: <code>opponent</code>, <code>opening</code>;</li>
+<li>number ranges, both ends included: <code>opponent_rating_min</code> / <code>opponent_rating_max</code>, <code>rating_diff_min</code> / <code>rating_diff_max</code>;</li>
+<li>local dates <code>'YYYY-MM-DD'</code>, both included: <code>date_from</code> / <code>date_to</code>;</li>
+<li>plus <code>order_by</code> (games without a value come last), <code>descending</code>, <code>limit</code> (100 by default, <code>None</code> = all) and <code>offset</code>.</li>
+</ul>
+<p><strong>The traps they already avoid</strong> (the obvious SQL gives wrong answers; every one is tested):</p>
+<ul>
+<li><strong>Human or bot:</strong> untitled humans have a NULL title, so <code>title &lt;&gt; 'BOT'</code> would drop them all. <code>opponent_kind</code> comes from <code>v_games</code>, which also uses <code>UCI_Opponent</code>'s computer / human before the sync.</li>
+<li><strong>Lost on time</strong> = status <code>outoftime</code> <strong>and</strong> result <code>loss</code>. <code>outoftime</code> alone also counts your opponents' flags, and a flag against a side with no mating material is a draw. (<code>timeout</code> means the opponent <em>left</em>, not a clock.)</li>
+<li><strong>Dates are local</strong> (<code>v_games.local_date</code>): your laptop is on UTC+4, and UTC dates would move late-evening games to the next day.</li>
+<li><strong>Rating changes only exist in rated games:</strong> <code>rating_diff_min</code> / <code>_max</code> only match those.</li>
+<li><strong>Unsynced games</strong> have no result, speed or rating change, so a filter on those leaves them out; <code>synced=False</code> lists them.</li>
+<li><strong><code>local-…</code> games</strong> (no GameId) are never synced: <code>local=False</code> leaves them out, <code>local=True</code> lists only them. ⚠️ The default (<code>None</code>) keeps them, so <strong>the dashboard must pass <code>local=False</code></strong>, to <code>results_by_day</code> too, or they count as &quot;not synced&quot; forever.</li>
+<li><strong>Numbers from a web form arrive as text:</strong> <code>'1500'</code> becomes 1500 (SQLite would compare text with a number as text, and a minimum would silently match no game), text that isn't a number is refused, and True / False filters refuse text (<code>bool('false')</code> is True in Python).</li>
+<li><strong><code>opponent</code> and <code>opening</code></strong> match any case, and <code>_</code> is just a character, not a wildcard.</li>
+<li><strong>Score %</strong> = (wins + draws / 2) out of the decided-or-drawn games (None when there's none), and on a day without a synced game the counts are 0, not NULL.</li>
+<li><strong><code>engine_health</code></strong> picks its last N games first and only then reads their moves, so it never scans every move of every game.</li>
+<li><strong><code>overhead_ms</code> is <code>None</code></strong> when no worker reported a search time.</li>
+</ul>
+<p><strong>Not handled yet (for the dashboard to do):</strong></p>
+<ul>
+<li>On a <code>stalemate_override</code> move, and on a <code>no_kernel_answer</code> move where a worker still reported its search time, <code>overhead_ms</code> also contains Stockfish's replacement search, and <code>engine_health</code> averages those in. Use <code>path = 'kernel'</code> for a clean overhead chart.</li>
+<li><code>engine_moves.wtime_ms</code> / <code>btime_ms</code> are what lichess-bot sent, not lichess's clocks: your own is lichess's value minus <code>move_overhead</code> (2,000 ms on October 25) minus the time since the game state arrived. The real clocks are <code>moves.clock_cs</code>.</li>
+</ul>
+<p>What the <strong>game viewer + move inspector</strong> page could look like (illustrative numbers):</p>
+<pre><code>┌─────────────────────────────────────────────────────────────────────────────────────┐
+│ Mr. Bits vs BOT Demolito_L4 (1692) · Blitz 2+3 · LOSS −8 · ended by: resign · Italian│
+├───────────────────────────────┬─────────────────────────────────────────────────────┤
+│        ♜ ♞ ♝ ♛ ♚ ♝ · ♜        │ Move 12. h2h3    path: KERNEL   budget 1 s · used 0.23 s│
+│        ♟ ♟ ♟ · · ♟ ♟ ♟        │ legal moves 36 · workers 28 · best score −1.35          │
+│        · · ♞ ♟ · ♞ · ·        │ ┌───────┬────────────┬───────┬────────┬───────┬───────┐ │
+│        · · ♝ · ♟ · · ·        │ │worker │ root moves │ depth │ nodes  │  ms   │ score │ │
+│        · · ♗ · ♙ · · ·        │ │  #1   │ f1e1 h2h3  │   8   │ 2.10 M │  226  │ −1.35 │ │
+│        · · ♙ ♙ · ♘ · ·        │ │  #2   │ c4b5       │   8   │ 1.84 M │  219  │ −1.52 │ │
+│        ♙ ♙ · · · ♙ ♙ ♙        │ │  …    │            │       │        │       │       │ │
+│        ♖ ♘ ♗ ♕ · ♖ ♔ ·        │ └───────┴────────────┴───────┴────────┴───────┴───────┘ │
+│   ◀ ◀◀   move 23 / 61   ▶▶ ▶  │ [depth-by-depth chart]   [candidate moves table]        │
+├───────────────────────────────┴─────────────────────────────────────────────────────┤
+│ eval graph ▁▂▃▅▆▅▃▂▁▁ · think time per move ▂▂▂▃▇▂ · depth per move 8 8 10 8 6 8     │
+└─────────────────────────────────────────────────────────────────────────────────────┘
+</code></pre>
+<hr />
+<h2 id="8-️-the-phases">8. 🛣️ The phases</h2>
+<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
+    D0["D0 · schema.sql + db.py&lt;br/&gt;✅ done"]:::done --&gt; D1["D1 · sync_lichess.py&lt;br/&gt;✅ built, tested offline&lt;br/&gt;⏳ first live run: yours"]:::ready
+    D1 --&gt; D2["D2 · Engine UCI writes&lt;br/&gt;every move&lt;br/&gt;✅ built, tested&lt;br/&gt;⏳ live games: yours"]:::ready
+    D2 --&gt; D3["D3 · the dashboard&lt;br/&gt;queries.py ✅&lt;br/&gt;pages: to design"]:::next
+    D3 -.-&gt; D4["D4 · Stockfish analysis&lt;br/&gt;optional, later"]:::later
+    classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
+    classDef ready fill:#ecfccb,stroke:#65a30d,color:#365314
+    classDef next fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
+    classDef later fill:#f1f5f9,stroke:#64748b,color:#0f172a
+</div></code></pre>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>What</th>
+<th>Status</th>
+<th>Exit criterion</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>D0</strong></td>
+<td><code>database\schema.sql</code> + <code>db.py</code> (<code>--init</code>, <code>--backup</code>, <code>--check</code>, <code>--recent</code>)</td>
+<td>✅ <strong>done</strong> (<code>test_db.py</code>: 22 tests, <code>test_schema.py</code>: 6)</td>
+<td><code>db.py --init</code> creates 10 tables, 14 indexes and 3 views in WAL mode, and <code>--check</code> says ok</td>
+</tr>
+<tr>
+<td><strong>D1</strong></td>
+<td><code>sync_lichess.py</code>: results, ratings, rating changes, clocks, think times, openings</td>
+<td>✅ <strong>built and tested offline</strong> (<code>test_sync_lichess.py</code>: 58 tests) · ⏳ <strong>the first live run is yours</strong>: it needs the token (runbook step 3)</td>
+<td>Every game from go-live day on has its row in <code>games</code> and its plies in <code>moves</code></td>
+</tr>
+<tr>
+<td><strong>D2</strong></td>
+<td>Engine UCI writes every move, worker, depth, candidate and event</td>
+<td>✅ <strong>built and tested</strong> (engine test 183 / 183, workers test 27 / 27) · ⏳ <strong>the first live games are yours</strong> (runbook steps 1–2)</td>
+<td>Every engine move of a live game is in <code>engine_moves</code>, with its workers (runbook step 2)</td>
+</tr>
+<tr>
+<td><strong>D3</strong></td>
+<td>The dashboard: Streamlit pages on top of <code>queries.py</code>, plus Datasette</td>
+<td>📝 <strong>to design.</strong> <code>queries.py</code> is ✅ (<code>test_queries.py</code>: 44 tests)</td>
+<td>&quot;Which games did I lose on time?&quot; in two clicks, and any move shows all its workers, depth by depth</td>
+</tr>
+<tr>
+<td><strong>D4</strong> <em>(optional)</em></td>
+<td>A Stockfish analysis job → <code>position_analysis</code>: blunder markers and the eval graph</td>
+<td>Later</td>
+<td>Every lost game shows the move where it turned</td>
+</tr>
+</tbody>
+</table>
+<p>The database tests run from <code>lichess-bot-master\database\</code> with <code>python -m unittest discover -s tests</code>.</p>
+<p><strong>Effort (part-time 🟡):</strong> the October 25 estimates were 2–3 days for overview + explorer + game viewer, 2–3 days for the telemetry import + move inspector, 1–2 days for engine health, and 1–2 days for D4. The import is gone and the read side of every page is written and tested, so expect less: what's left is mostly page layout. Nothing is lost by starting later: the engine records every move from its first game on, and lichess keeps every game for the sync.</p>
+<hr />
+<h2 id="9--hygiene">9. 🔐 Hygiene</h2>
+<ul>
+<li><strong>The token</strong>, exactly as <code>sync_lichess.py</code> handles it:
+<ul>
+<li>it takes <code>LICHESS_TOKEN</code> if it's set, else <code>LICHESS_BOT_TOKEN</code> (the variable lichess-bot itself reads), else <code>&quot;token&quot;</code> in <code>lichess-bot-master\config.yml</code>;</li>
+<li>it only ever goes into the <code>Authorization: Bearer …</code> header of the sync's session: <strong>never printed, logged or stored</strong> (not in the database, not in <code>sync_state</code>);</li>
+<li>a token that a header can't carry (a space, a line break, a non-ASCII character) is <strong>refused without being shown</strong>: the error names where it came from, never the token. A broken <code>config.yml</code> is reported without its YAML error, because that text could quote the token line;</li>
+<li>its error messages name the URL, never the headers;</li>
+<li><code>--from-file</code> never reads the token and never touches the network;</li>
+<li>the tests never see it: sockets are blocked, <code>config.yml</code> is pointed at a file that doesn't exist, and both variables are removed while they run.</li>
+</ul>
+</li>
+<li><strong>Nobody prints <code>config.yml</code>:</strong> not in a terminal, a chat or a screenshot. It holds the token (and git ignores it).</li>
+<li><strong>Backups: <code>python database\db.py --backup</code>, never a plain file copy while anything is connected.</strong> In WAL mode the newest commits live in <code>mrbits.sqlite-wal</code>, so a copy of <code>mrbits.sqlite</code> alone can miss them, even whole tables (reproduced on October 25). <code>--backup</code> uses SQLite's online backup: it's safe while a game runs, makes one self-contained file in <code>database\backup\</code>, and never overwrites one. <strong>The database is now the only copy of your engine's internals</strong> (there's no telemetry file any more), so copy <code>database\backup\</code> off the laptop now and then if you want it to survive a dead disk.</li>
+<li><strong>Git:</strong> <code>mrbits.sqlite</code> (with its <code>-wal</code> and <code>-shm</code>) and <code>backup\</code> are git-ignored: they're personal data, and they grow. <code>git check-ignore -v &quot;lichess-bot-master/database/mrbits.sqlite-wal&quot;</code>, from the repo's root, shows the rule that catches it. <code>schema.sql</code>, the Python files and <code>tests\</code> belong in git.</li>
+<li><strong>The database never touches lichess-bot's files.</strong> The only lichess-bot change in all of this is the one-line <code>GameId</code> in <code>extra_game_handlers.py</code>.</li>
+<li><strong>More than one game at once:</strong> each game has its own Engine UCI and its own <code>game_id</code>, WAL and the 5 s busy timeout handle two writers, and two engines applying <code>schema.sql</code> together were tested (0 failures in 180). So the database keeps working if you ever raise lichess-bot's <code>concurrency</code>. (The old shared <code>input\</code> files and the &quot;newest history folder&quot; guess, which wouldn't have, are gone.)</li>
+</ul>
+<hr />
+<h2 id="10--decisions">10. ✅ Decisions</h2>
+<p><strong>Decided ✅</strong></p>
+<ol>
+<li><strong>Recorder style: B, SQLite inside the engine.</strong> Your words: &quot;no more json files, database only&quot;. §3 shows how the build answers A's reasons.</li>
+<li><strong>A fresh history:</strong> nothing old is migrated, and the first sync starts at your go-live date.</li>
+<li><strong>The folder:</strong> <code>lichess-bot-master\database\</code>.</li>
+<li><strong>Raw worker messages are not stored:</strong> the built schema has no <code>request_json</code> / <code>response_json</code>. A failing worker's reason is in <code>worker_runs.error</code>, and its stderr goes to <code>engines\logs\kernel_workers_stderr.log</code>. Getting them back would be a schema change plus <code>Game Database.hpp</code>.</li>
+<li><strong>Games without a GameId</strong> are stored as <code>local-&lt;unix ms&gt;</code> and never synced.</li>
+<li><strong>One schema file</strong>, applied at every engine start and by <code>db.py --init</code>.</li>
+</ol>
+<p><strong>Still yours to decide 🤔</strong></p>
+<ol>
+<li><strong>The dashboard:</strong> Streamlit + Datasette (recommended) or something else, and its design: which page comes first, and what's on it.</li>
+<li><strong>When the sync runs:</strong> by hand after a session, Windows Task Scheduler, or a &quot;Sync&quot; button in the dashboard. Whichever you pick, keep it <strong>between games</strong>.</li>
+<li><strong>The Stockfish analysis (D4):</strong> build it, or leave <code>position_analysis</code> empty.</li>
+<li><strong>Backups:</strong> how often, and where the off-laptop copy goes.</li>
+<li><strong>The first new column in an existing table:</strong> when it comes, decide how to migrate (most likely an <code>ALTER TABLE</code> that <code>db.py --init</code> runs before the first game with the new build), since <code>schema.sql</code> alone won't add it.</li>
+</ol>
+<p>— <strong>Claude Opus 5.5</strong> 🤖</p>
+
+</body>
+</html>
