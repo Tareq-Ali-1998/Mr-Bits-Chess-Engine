@@ -39,7 +39,8 @@ def digest(path: Path) -> str:
 
 
 def inputs(source: Path, engines: Path) -> dict[str, str]:
-    headers = [*engines.glob("*.hpp"), *(engines / "Neural Networks").rglob("*.hpp")]
+    headers = [*engines.glob("*.hpp"), *(engines / "Neural Networks").rglob("*.hpp"),
+               *(engines / "Kernels").glob("*.hpp")]
     return {p.relative_to(engines).as_posix(): digest(p) for p in sorted({source, *headers})}
 
 
@@ -164,7 +165,12 @@ def select(version: str, *, engines: Path = ENGINES) -> None:
 
 
 def require_weights(version: str, engines: Path = ENGINES) -> None:
-    models = () if version == "original" else (("Small",) if version == "v4" else ("Small", "Large"))
+    models = {
+        "original": (),
+        "v4": ("Small",), "v5": ("Small",), "v6": ("Small",),
+        "v7": ("Small",), "v8": ("Small",), "v9": ("Large",),
+        "v11": ("Small",),
+    }.get(version, ("Small", "Large"))
     model_root = Path(os.environ.get("MRBITS_NEURAL_WEIGHTS_DIR") or engines / "Neural Networks")
     for model in models:
         if not (model_root / model / "weights.bin").is_file():

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>HOW_V7_WORKS.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-how-v7-thinks">♟️ How V7 thinks</h1>
+
+<p><strong>A friendly tour of the search — from one position to one chosen move.</strong></p>
+<div style="border-left:5px solid #16a34a;background:#f0fdf4;color:#14532d;padding:10px 14px;margin:12px 0;">
+<strong>🟢 The idea:</strong> keep every legal candidate available, search useful moves early, and look beyond the ordinary leaf when an exchange is still happening. Small helps both ordering and evaluation. V7 combines it with your original scoring.
+</div>
+<h2 id="-1--5--the-whole-journey">🟩 1 / 5 · The whole journey</h2>
+<p>V7 started as a copy of your Kernel. It keeps the board, 16-bit moves, occupancy masks, incremental scores, worker protocol, and general engine organization. Its main additions live in <a href="../V7%20Position.hpp">V7 Position.hpp</a> and <a href="../V7%20Search.hpp">V7 Search.hpp</a>.</p>
+<pre class="hljs"><code><div>Worker receives position history + assigned root moves
+                         |
+                Replay and validate
+                         |
+             Try depth 2, then 4, then 6...
+                         |
+        Generate legal moves --&gt; order --&gt; alpha-beta
+                         |
+              Ordinary depth reaches zero
+                         |
+       Short tactical search: exchanges / check evasions
+                         |
+              50% your score + 50% Small
+                         |
+          Return the last completed iteration&#x27;s best
+</div></code></pre>
+<p><strong>A depth is measured in plies:</strong> one move by one side. Depth six means six plies of ordinary search, followed where needed by up to six additional quiescence plies. It does not mean twelve plies for every branch.</p>
+<h3 id="legal-first-clever-second">Legal first, clever second</h3>
+<p>The position helper generates candidate moves, temporarily commits each one, and rejects any move leaving its own king attacked. It covers pins, king adjacency, all four promotion choices, castling, and en passant. Enemy kings are never capturable pieces in this tree.</p>
+<p>Two details matter: an en-passant capture can uncover an attack on the king; queenside castling needs an empty b-file square, but an attack on that square alone does not forbid castling. V7 checks the king's actual path instead.</p>
+<p>Replay history is checked move by move. An invalid history is rejected and its changes rolled back. Supplied root moves must be legal and unique.</p>
+<h3 id="one-worker-is-one-part-of-the-root">One worker is one part of the root</h3>
+<p>The controller can assign different root moves to different workers. If the position has <strong>30 legal root moves</strong> and this worker receives <strong>6</strong>, V7 retains those 6. The other 24 were not deleted by its neural sorter; they are outside this worker's assignment.</p>
+<p>An empty assigned list does not prove stalemate. V7 separately checks the complete legal move pool before reporting checkmate or stalemate. This distinction keeps parallel search results meaningful.</p>
+<div style="page-break-before:always;"></div>
+<h2 id="-2--5--exactly-when-does-it-sort">🟦 2 / 5 · Exactly when does it sort?</h2>
+<p>At the root and ordinary internal nodes, V7 calls <code>OrderMoves(depth, moves)</code>. Here, <code>depth</code> means <strong>remaining ordinary depth at that node</strong>, not distance from the starting position.</p>
+<table>
+<thead>
+<tr>
+<th>Situation</th>
+<th>What happens?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zero or one candidate</td>
+<td>Return immediately; no sorting batch</td>
+</tr>
+<tr>
+<td>Two or more candidates</td>
+<td>Your simple heuristic orders the complete list</td>
+</tr>
+<tr>
+<td>After heuristic ordering</td>
+<td>Captures, en passant, and every promotion form a tactical prefix</td>
+</tr>
+<tr>
+<td>Remaining depth below 3</td>
+<td>Keep the heuristic order within both groups</td>
+</tr>
+<tr>
+<td>Depth at least 3, enough quiet moves/time</td>
+<td>Small reorders only the quiet tail</td>
+</tr>
+<tr>
+<td>Quiescence search</td>
+<td>Cheap heuristic ordering only; no neural sorting batch</td>
+</tr>
+</tbody>
+</table>
+<p>The tactical partition preserves the heuristic order inside each group. Castling belongs to the quiet group for this policy. A checking move that neither captures nor promotes also belongs there; “quiet” here describes move type, not whether it gives check.</p>
+<h3 id="a-concrete-30-move-example">A concrete 30-move example</h3>
+<p>Suppose a node has <strong>30 legal moves: 6 tactical + 24 quiet</strong>.</p>
+<pre class="hljs"><code><div>Before: 30 legal candidates
+   |
+Your heuristic scores and orders all 30
+   |
+Tactical prefix [ 6 ] | quiet tail [ 24 ]
+   |                         |
+Keep cheap order       Small scores 24 child positions
+   |                         |
+   +---------- Final ordered list: 30 moves ----------+
+</div></code></pre>
+<p>At remaining depth 4, Small can order those 24 quiet moves. At remaining depth 2, it orders <strong>zero</strong>; the existing heuristic order remains. Neither case deletes a legal candidate.</p>
+<p>The time gate also requires at least two quiet moves. In timed mode, the remaining budget must be at least:</p>
+<p><strong><code>max(5, ceil(quiet_count / 8))</code> milliseconds.</strong></p>
+<p>For 24 quiet moves, that threshold is <strong>5 ms</strong>. It is an admission heuristic, not a measured prediction that inference will finish in 5 ms. Fixed-depth tests disable the normal clock budget.</p>
+<h3 id="what-does-one-neural-sort-actually-do">What does one neural sort actually do?</h3>
+<p>For each candidate, the sorter commits the move, builds the child's turn/castling/en-passant flags, asks Small for one score, caches it, and restores the parent. It then sorts the cached scores. <strong>The comparator never runs the network.</strong> White moves rank higher White-perspective scores first; Black moves rank lower scores first. Equal scores preserve their incoming order.</p>
+<div style="border-left:5px solid #2563eb;background:#eff6ff;color:#1e3a8a;padding:10px 14px;margin:12px 0;">
+<strong>🔵 How many are discarded?</strong> No fixed “top 5” or “top 7” filter exists in V7's ordinary search. All legal candidates remain eligible. Alpha-beta can stop examining later siblings once the current search bounds prove they cannot change the choice.
+</div>
+<div style="page-break-before:always;"></div>
+<h2 id="-3--5--search-deeper-where-the-position-is-unstable">🟪 3 / 5 · Search deeper where the position is unstable</h2>
+<h3 id="alpha-beta-use-what-the-tree-already-proved">Alpha-beta: use what the tree already proved</h3>
+<p>The engine maximizes its own score; the opponent minimizes it. Suppose one root move already guarantees <strong>+80 cp</strong>. In another root move's continuation, the opponent finds a response limiting the engine to <strong>+20 cp</strong>. That continuation cannot beat +80, so the remaining sibling responses may be skipped.</p>
+<p>This is a search-bound cutoff. It is different from deleting a move because the network ranked it badly. Good ordering helps the useful bound appear sooner, which can save considerable work; it does not guarantee the smallest possible tree.</p>
+<p>V7 uses ordinary alpha-beta. It has <strong>no late-move reduction, fixed top-k filter, transposition table, or neural confidence threshold</strong>. Every retained ordinary continuation begins at its nominal requested depth; alpha-beta may still cut its subtree.</p>
+<h3 id="why-a-normal-leaf-can-mislead-us">Why a normal leaf can mislead us</h3>
+<p>Imagine the last searched move captures a rook, but the capturing piece can immediately be recaptured. Evaluating only that intermediate board can exaggerate the gain. V7's quiescence search continues selected tactical lines after ordinary depth reaches zero.</p>
+<pre class="hljs"><code><div>At a quiescence node:
+  1. Generate legal moves and detect mate/stalemate.
+  2. Extension allowance exhausted? Return static score.
+  3. In check? Search every legal evasion.
+  4. Otherwise, use static score as a stand-pat baseline.
+     Continue captures, en passant, and all promotions.
+  5. Recurse with one fewer extension ply; use alpha-beta.
+</div></code></pre>
+<p>“Stand pat” means using the current evaluation as a search baseline while considering tactical continuations. It is not an actual pass move. V7 does not use that normal baseline cutoff while in check: a quiet king escape or blocking move may be compulsory.</p>
+<p>Outside check, quiet non-promotion moves are omitted from <strong>quiescence only</strong>. A stand-pat bound may also end that node before tactical children are searched. This is selective search, with limitations; it is not a full search of every possible continuation beyond the nominal leaf.</p>
+<h3 id="mate-is-a-rule-result">Mate is a rule result</h3>
+<p>No legal moves <strong>and</strong> king attacked → checkmate. No legal moves <strong>and</strong> king safe → stalemate, score zero. These checks happen before neural inference, including at the extension cap.</p>
+<p>Mate scores start at <strong>±1,000,000</strong>, adjusted by distance: the engine prefers faster wins and delays forced losses. Ordinary evaluations are clamped to <strong>±99,999</strong>, so an ordinary estimate cannot impersonate mate.</p>
+<div style="border-left:5px solid #d97706;background:#fffbeb;color:#78350f;padding:10px 14px;margin:12px 0;">
+<strong>🟠 A deliberate limit:</strong> quiescence has at most six extra plies. At the cap, a nonterminal position is evaluated statically even if still in check. <code>qCheckCapHits</code> counts that approximation. Repetition, fifty-move, and insufficient-material draw adjudication are not implemented in V7.
+</div>
+<div style="page-break-before:always;"></div>
+<h2 id="-4--5--how-does-a-position-become-a-score">🟧 4 / 5 · How does a position become a score?</h2>
+<p>Small receives the current board and a few state flags. It does not receive the whole move sequence. History is replayed to construct the board and retain the necessary state.</p>
+<pre class="hljs"><code><div>8 x 8 board + side to move + retained castling rights + EP file
+                             |
+                    782 logical input features
+                             |
+                    256 ReLU --&gt; 64 ReLU --&gt; 1
+                             |
+                  White-perspective pawn estimate
+</div></code></pre>
+<p>The 782 features are 768 piece-square indicators, one side-to-move flag, four castling flags, and nine en-passant possibilities including “none.” The C++ evaluator uses active features for the first layer rather than multiplying every zero input. See the separate <a href="../../Neural%20Networks/OPERATION_COUNTS.md">operation-count guide</a> for arithmetic details.</p>
+<p>Positive neural output favors White, regardless of the engine's color. V7 converts pawn units to centipawns and then to the engine's perspective:</p>
+<p><strong><code>neural_engine_cp = white_pawns × 100 × (White engine ? +1 : -1)</code></strong></p>
+<p>The handcrafted score already has the engine's perspective:</p>
+<p><strong><code>legacy_engine_cp = engineScore - opponentScore</code></strong></p>
+<p>The static result is their rounded, clamped average:</p>
+<p><strong><code>V7 static = 0.50 × legacy_engine_cp + 0.50 × neural_engine_cp</code></strong></p>
+<p>For a White engine, legacy +80 cp and Small +1.20 pawns produce <strong>+100 cp</strong>. For a Black engine viewing the same board, equivalent inputs produce <strong>−100 cp</strong>. The actual side to move still enters the network separately.</p>
+<p>These are estimated positional advantages, not probabilities of winning. Training made Small approximate searched teacher evaluations; the network alone does not calculate a proof of the position's value. V7's search explores continuations around that estimate. The 50/50 weights are starting choices, not a measured optimum.</p>
+<h3 id="the-part-that-respects-your-original-engineering">The part that respects your original engineering</h3>
+<p>Ordinary recursion uses a scoped <code>UndoMove</code> guard. It saves <strong>2 touched squares</strong> for normal moves/promotions, <strong>3</strong> for en passant, or <strong>4</strong> for castling, plus masks and running scores. Returning from the child restores exactly those values, including when an exception leaves the scope.</p>
+<p>That keeps the make/search/unmake loop incremental. Legal filtering uses the same mechanism. The occupancy masks still locate pieces without a fresh board-wide piece-discovery loop.</p>
+<p>The shared neural sorter has a different rollback implementation: it saves one complete parent snapshot and restores its board/counters after each scored candidate. That is fixed-size work on an 8×8 board, but it is still real copying; the recursive touched-square optimization should not be confused with the sorting helper.</p>
+<p>Independent full-score recomputation also found an inherited Black en-passant update using the wrong color's piece-square tables. V7 fixes that in its own copy. The original and earlier versions remain separate.</p>
+<div style="page-break-before:always;"></div>
+<h2 id="-5--5--time-evidence-and-what-deserves-credit">🟫 5 / 5 · Time, evidence, and what deserves credit</h2>
+<h3 id="finish-something-useful-before-the-clock-expires">Finish something useful before the clock expires</h3>
+<p>V7 searches depths <strong>2, 4, 6, …</strong>. After a completed timed iteration, it estimates the next one's cost using measured iteration growth, adds a <strong>25% safety factor</strong>, and reserves <strong>5 ms</strong>. It stops admitting another iteration once elapsed time reaches <strong>80%</strong> of the allowed budget.</p>
+<p>Growth is clamped between 2× and 64×; after the first iteration it initially assumes 16×. These are conservative starting rules, not predictions that every position will follow.</p>
+<p>The hard deadline is checked throughout search. If a deeper iteration is interrupted, its incomplete result is discarded and the last completed iteration remains available. If none finishes, the worker reports <code>no_completed_depth</code>; the controller's existing fallback remains relevant. Model loading, an inference batch, and a legal-generation batch cannot be interrupted halfway through, so timing is not a hard real-time guarantee.</p>
+<h3 id="the-strongest-parts-of-this-design">The strongest parts of this design</h3>
+<table>
+<thead>
+<tr>
+<th>🟢 Decision</th>
+<th>Why it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Keep every legal ordinary candidate</td>
+<td>Neural ranking mistakes do not permanently remove a hidden tactical resource</td>
+</tr>
+<tr>
+<td>Spend Small ordering on deeper quiet branches</td>
+<td>Avoid paying a neural batch at every near-leaf node</td>
+</tr>
+<tr>
+<td>Check legality and terminal rules explicitly</td>
+<td>Search scores refer to valid continuations, with mate distinct from an estimate</td>
+</tr>
+<tr>
+<td>Extend exchanges and check evasions</td>
+<td>Reduce the risk of stopping halfway through an immediate tactical sequence</td>
+</tr>
+<tr>
+<td>Restore exact touched state</td>
+<td>Preserve your compact representation and incremental recursion</td>
+</tr>
+<tr>
+<td>Report counters and incomplete iterations</td>
+<td>Make behavior observable rather than judging it from one impressive move</td>
+</tr>
+</tbody>
+</table>
+<p>The achievement is their integration into your engine. Alpha-beta, quiescence, and legal make/unmake filtering are established chess-engine techniques; the implementation, policy choices, and compatibility work here are specific to this project.</p>
+<h3 id="what-has-actually-been-checked">What has actually been checked?</h3>
+<p>The recorded V7 verification passed <strong>73,448 checks</strong>, including 136 independently generated positions, legal-move/perft comparisons, state restoration, score/sign checks, quiescence comparisons, mate searches, and actual worker requests. Starting-position perft depth 4 counted <strong>197,281</strong> legal move sequences. Perft checks the move tree; it does not measure playing strength.</p>
+<p>Read the <a href="../../../Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/diagnostics/kernel-v7-20261029/final-summary.json">verification summary</a> when that local diagnostics folder is present. These checks support the tested behavior. Equal-time tactical tests and games must establish any strength gain; no Elo increase or 95% best-move retention has been demonstrated.</p>
+<p>Choose <strong>7 / v7</strong> in <code>Launch Server.bat</code> after stopping the current bot. Small weights are required. The worker JSON exposes regular/quiescence nodes, evaluation counts, ordering batches, cap hits, mates, stalemates, and deadline observations. <code>nodes</code> covers the last completed iteration; <code>totalNodes</code> includes every iteration attempted. The extra <code>searchPolicy</code> counters are not yet stored by the SQLite writer.</p>
+<p><strong>My recommendation:</strong> use V7 as the mixed-evaluation reference when comparing V8's neural-only evaluation. Keep time controls and root assignments comparable, then measure tactical correctness, time, and game results before choosing a default.</p>
+
+</body>
+</html>

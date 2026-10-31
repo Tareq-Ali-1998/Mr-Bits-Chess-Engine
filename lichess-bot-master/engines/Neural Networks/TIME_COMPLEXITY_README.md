@@ -1,5 +1,7 @@
 # ⏱️ Neural evaluation and move sorting: the actual complexity
 
+**For numerical operation totals, layer-by-layer counts, and 20/35/40-move examples, read [OPERATION_COUNTS.md](OPERATION_COUNTS.md).** This shorter guide explains the asymptotic bounds.
+
 <style>
 body{font-family:Segoe UI,Arial,sans-serif;line-height:1.45;max-width:1000px;margin:auto}h1,h2{color:#2456a6}table{border-collapse:collapse;width:100%}th,td{border:1px solid #bbb;padding:.35em .5em;text-align:left}blockquote{border-left:4px solid #16865b;padding:.4em .8em;background:#edf8f1}pre{white-space:pre-wrap;font-size:.9em}@media print{body{font-size:10pt;line-height:1.28}h1{font-size:18pt}h2{font-size:13pt}.page-break{break-before:page;page-break-before:always}pre,table{break-inside:avoid}}@page{size:A4;margin:15mm}
 </style>

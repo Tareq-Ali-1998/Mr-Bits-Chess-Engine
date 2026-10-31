@@ -21,7 +21,7 @@ int main(int argc, char** argv) {
         const fs::path root=argv[1]; fs::create_directories(root);
         std::ofstream(root/"Kernel.exe") << "test placeholder; never executed";
         require(Read(root).version=="original", "Missing config did not default to original");
-        for(const std::string version : {"v1","v2","v3","v4","v12"}) {
+        for(const std::string version : {"v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12"}) {
             const auto folder=root/"Kernels"/version; fs::create_directories(folder);
             const auto executable=folder/("Kernel-"+version+".exe");
             std::ofstream(executable) << "test placeholder; never executed";
@@ -30,7 +30,7 @@ int main(int argc, char** argv) {
             require(selected.version==version && selected.executable==executable,"Wrong variant path");
         }
         for(const auto text : {"{", "[]", "{}", "{\"version\":2}",
-                              "{\"version\":\"v5\"}", "{\"version\":\"v0\"}",
+                              "{\"version\":\"v99\"}", "{\"version\":\"v0\"}",
                               "{\"version\":\"v01\"}", "{\"version\":\"../../escape\"}"}) {
             config(root,text); rejected([&]{Read(root);});
         }

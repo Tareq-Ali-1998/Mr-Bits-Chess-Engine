@@ -32,10 +32,10 @@ class LauncherTests(unittest.TestCase):
         return source
 
     def test_discovery_is_numeric_and_requires_source(self):
-        for name in ("v10", "v2", "v1", "v0", "v01", "bad"):
+        for name in ("v12", "v11", "v10", "v9", "v8", "v7", "v6", "v5", "v2", "v1", "v0", "v01", "bad"):
             self.variant(name)
         (self.root / "Kernels/v3").mkdir()
-        self.assertEqual(tools.versions(self.root), ["original", "v1", "v2", "v10"])
+        self.assertEqual(tools.versions(self.root), ["original", "v1", "v2", "v5", "v6", "v7", "v8", "v9", "v10", "v11", "v12"])
         for value in ("../v1", "v0", "v01", "V2", "v-1"):
             with self.assertRaises(ValueError): tools.paths(value, self.root)
 
@@ -46,6 +46,38 @@ class LauncherTests(unittest.TestCase):
         tools.select("v2", engines=self.root)
         self.assertEqual(json.loads((self.root / "kernel-selection.json").read_text()), {"version": "v2"})
         self.assertFalse(list(self.root.glob("*.tmp")))
+
+    def test_new_variants_use_small_weights_without_large(self):
+        small = self.root / "Neural Networks/Small/weights.bin"
+        small.parent.mkdir(parents=True)
+        small.write_bytes(b"only the presence is checked at startup")
+        with patch.dict(os.environ, {"MRBITS_NEURAL_WEIGHTS_DIR": str(small.parents[1])}):
+            for version in ("original", "v4", "v5", "v6", "v7", "v8", "v11"):
+                tools.require_weights(version, engines=self.root)
+            for version in ("v1", "v2", "v3", "v9", "v10"):
+                with self.assertRaises(FileNotFoundError):
+                    tools.require_weights(version, engines=self.root)
+            small.unlink()
+            for version in ("v5", "v6", "v7", "v8", "v11"):
+                with self.assertRaises(FileNotFoundError):
+                    tools.require_weights(version, engines=self.root)
+
+    def test_v9_needs_only_large_but_v10_needs_both(self):
+        model_root = self.root / "Neural Networks"
+        large = model_root / "Large/weights.bin"
+        large.parent.mkdir(parents=True)
+        large.write_bytes(b"presence-only fixture")
+        with patch.dict(os.environ, {"MRBITS_NEURAL_WEIGHTS_DIR": str(model_root)}):
+            tools.require_weights("v9", engines=self.root)
+            with self.assertRaises(FileNotFoundError):
+                tools.require_weights("v10", engines=self.root)
+            small = model_root / "Small/weights.bin"
+            small.parent.mkdir(parents=True)
+            small.write_bytes(b"presence-only fixture")
+            tools.require_weights("v10", engines=self.root)
+            large.unlink()
+            with self.assertRaises(FileNotFoundError):
+                tools.require_weights("v9", engines=self.root)
 
     def test_build_cache_detects_source_and_binary_changes(self):
         source = self.variant("v2"); binary = source.with_suffix(".exe"); calls=[]
@@ -69,6 +101,24 @@ class LauncherTests(unittest.TestCase):
             with self.assertRaises(subprocess.CalledProcessError): tools.build_kernel("v3", engines=self.root)
         self.assertEqual(binary.read_bytes(), b"old valid executable")
         self.assertFalse(binary.with_suffix(".build.json").exists())
+
+    def test_shared_search_header_change_invalidates_build_cache(self):
+        self.variant("v5")
+        header = self.root / "Kernels/Neural Search.hpp"
+        header.write_text("// search policy revision one")
+        calls = []
+        def compile(command, **kwargs):
+            calls.append(command)
+            Path(command[-1]).write_bytes(b"compiled fixture")
+        with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
+             patch.object(tools.subprocess, "run", side_effect=compile), \
+             contextlib.redirect_stdout(io.StringIO()):
+            tools.build_kernel("v5", engines=self.root)
+            tools.build_kernel("v5", engines=self.root)
+            self.assertEqual(len(calls), 1)
+            header.write_text("// search policy revision two")
+            tools.build_kernel("v5", engines=self.root)
+            self.assertEqual(len(calls), 2)
 
     def test_denied_compiler_start_reports_compiler_and_native_error(self):
         source = self.variant("v1"); binary = source.with_suffix(".exe")
@@ -196,10 +246,111 @@ class LauncherTests(unittest.TestCase):
              patch.object(launcher,"require_weights",side_effect=lambda v:events.append("weights")), \
              patch.object(launcher,"build_kernel",side_effect=lambda *a,**k:events.append("kernel")), \
              patch.object(launcher,"build_controller",side_effect=lambda **k:events.append("controller")), \
+             patch.object(launcher,"probe_kernel_startup") as probe, \
              patch.object(launcher,"select",side_effect=lambda v:events.append("select")), \
              patch.object(launcher.subprocess,"call") as start, contextlib.redirect_stdout(io.StringIO()):
-            self.assertEqual(launcher.main(),0); start.assert_not_called()
+            self.assertEqual(launcher.main(),0); start.assert_not_called(); probe.assert_not_called()
         self.assertEqual(events,["weights","kernel","controller","select"])
+
+    def test_kernel_startup_probe_validates_ready_without_starting_bot(self):
+        binary = self.root / "Kernels/v6/Kernel-v6.exe"
+        env = {"PATH": "compiler directory"}
+        result = subprocess.CompletedProcess([str(binary)], 0,
+                    stdout='{"type":"ready","protocol":1,"engineVersion":"kernel-test"}\n', stderr="")
+        with patch.object(launcher.subprocess, "run", return_value=result) as run, \
+             patch.object(launcher.subprocess, "call") as start:
+            launcher.probe_kernel_startup(binary, env)
+        run.assert_called_once_with([str(binary)], input='{"type":"hello"}\n{"type":"quit"}\n',
+                                    capture_output=True, text=True, timeout=15, env=env, cwd=launcher.ENGINES)
+        start.assert_not_called()
+
+    def test_kernel_startup_probe_rejects_invalid_protocol_responses(self):
+        binary = self.root / "Kernel.exe"
+        for response in ("", "not json\n", "[]\n", '{"type":"ready","protocol":2}\n',
+                         '{"type":"ready","protocol":true}\n', '{"type":"error","protocol":1}\n',
+                         '{"type":"ready","protocol":1}\n{"type":"ready","protocol":1}\n'):
+            with self.subTest(response=response):
+                result = subprocess.CompletedProcess([str(binary)], 0, stdout=response, stderr="")
+                with patch.object(launcher.subprocess, "run", return_value=result):
+                    with self.assertRaisesRegex(RuntimeError, "Invalid Kernel startup response") as caught:
+                        launcher.probe_kernel_startup(binary, {})
+                self.assertIn(str(binary), str(caught.exception))
+
+    def test_kernel_startup_probe_reports_exit_and_timeout(self):
+        binary = self.root / "Kernel.exe"
+        result = subprocess.CompletedProcess([str(binary)], 23, stdout="", stderr="worker startup error")
+        with patch.object(launcher.subprocess, "run", return_value=result):
+            with self.assertRaisesRegex(RuntimeError, "exit code 23: worker startup error"):
+                launcher.probe_kernel_startup(binary, {})
+        timeout = subprocess.TimeoutExpired([str(binary)], 15)
+        with patch.object(launcher.subprocess, "run", side_effect=timeout) as run:
+            with self.assertRaisesRegex(RuntimeError, "timed out after 15 seconds") as caught:
+                launcher.probe_kernel_startup(binary, {})
+        self.assertIs(caught.exception.__cause__, timeout)
+        run.assert_called_once()
+
+    def test_kernel_startup_probe_reports_os_error_without_retry(self):
+        binary = self.root / "Kernel.exe"
+        denied = PermissionError(13, "startup denied", str(binary))
+        with patch.object(launcher.subprocess, "run", side_effect=denied) as run:
+            with self.assertRaisesRegex(RuntimeError, "Could not start Kernel startup check") as caught:
+                launcher.probe_kernel_startup(binary, {})
+        self.assertIn(str(denied), str(caught.exception))
+        self.assertIs(caught.exception.__cause__, denied)
+        run.assert_called_once()
+
+    def test_blocked_kernel_stops_before_saving_selection_or_starting_bot(self):
+        binary = self.root / "Kernels/v6/Kernel-v6.exe"
+        denied = OSError("Application control denied startup")
+        denied.winerror = 4551
+        with patch.object(sys, "argv", ["launcher", "--version", "v6"]), \
+             patch.object(launcher, "versions", return_value=["original", "v6"]), \
+             patch.object(launcher, "require_weights"), \
+             patch.object(launcher, "build_kernel", return_value=binary), \
+             patch.object(launcher, "build_controller"), \
+             patch.object(launcher.subprocess, "run", side_effect=denied) as probe_run, \
+             patch.object(launcher, "select") as select, \
+             patch.object(launcher.subprocess, "call") as start:
+            with self.assertRaisesRegex(RuntimeError, "Windows App Control blocked Kernel startup") as caught:
+                launcher.main()
+        self.assertIn("WinError 4551", str(caught.exception))
+        self.assertIn(str(binary), str(caught.exception))
+        self.assertIs(caught.exception.__cause__, denied)
+        probe_run.assert_called_once(); select.assert_not_called(); start.assert_not_called()
+
+    def test_normal_start_probes_before_saving_selection_and_starting_bot(self):
+        events = []
+        binary = self.root / "Kernel.exe"
+        def build(*args, **kwargs):
+            events.append("kernel"); return binary
+        def probe(path, env):
+            self.assertEqual(path, binary); self.assertIn("PATH", env); events.append("probe")
+        def start(*args, **kwargs):
+            events.append("bot"); return 7
+        with patch.object(sys, "argv", ["launcher", "--version", "original"]), \
+             patch.object(launcher, "versions", return_value=["original"]), \
+             patch.object(launcher, "require_weights", side_effect=lambda v: events.append("weights")), \
+             patch.object(launcher, "build_kernel", side_effect=build), \
+             patch.object(launcher, "build_controller", side_effect=lambda **k: events.append("controller")), \
+             patch.object(launcher, "probe_kernel_startup", side_effect=probe), \
+             patch.object(launcher, "select", side_effect=lambda v: events.append("select")), \
+             patch.object(launcher.subprocess, "call", side_effect=start), \
+             contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(launcher.main(), 7)
+        self.assertEqual(events, ["weights", "kernel", "controller", "probe", "select", "bot"])
+
+    def test_list_does_not_build_probe_select_or_start(self):
+        with patch.object(sys, "argv", ["launcher", "--list"]), \
+             patch.object(launcher, "versions", return_value=["original", "v5", "v6"]), \
+             patch.object(launcher, "require_weights") as weights, \
+             patch.object(launcher, "build_kernel") as kernel, \
+             patch.object(launcher, "build_controller") as controller, \
+             patch.object(launcher, "probe_kernel_startup") as probe, \
+             patch.object(launcher, "select") as select, \
+             patch.object(launcher.subprocess, "call") as start, \
+             contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(launcher.main(), 0)
+        for operation in (weights, kernel, controller, probe, select, start): operation.assert_not_called()
 
     def test_menu_accepts_folder_name_and_number(self):
         with patch.object(launcher,"ENGINES",self.root), patch("builtins.input",side_effect=["wrong","2"]), \

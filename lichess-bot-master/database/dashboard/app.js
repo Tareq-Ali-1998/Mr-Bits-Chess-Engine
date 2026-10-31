@@ -55,7 +55,7 @@ function renderSummary(data) {
   clear($("versions")); $("versions-empty").hidden = data.versions.length > 0;
   data.versions.forEach(v => { const row = element("tr"); cell(row, versionName(v.kernel_variant), "version"); cell(row, number(v.games)); cell(row, `${v.wins} / ${v.draws} / ${v.losses}`); cell(row, v.score_pct == null ? "—" : `${number(v.score_pct)}%`); cell(row, `${v.pending} / ${v.aborted}`); cell(row, duration(v.avg_move_ms)); cell(row, number(v.max_depth)); const builds = cell(row, String(v.builds.length)); builds.title = v.builds.join("\n") || "No build stamp recorded"; $("versions").append(row); });
   const kernelSelect = $("filters").elements.kernel, kernelValue = kernelSelect.value;
-  const variants = new Set(["original", "v1", "v2", "v3", "v4", ...data.kernel_variants, "unknown", "mixed"]);
+  const variants = new Set(["original", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", ...data.kernel_variants, "unknown", "mixed"]);
   kernelSelect.replaceChildren(new Option("All versions", "")); [...variants].forEach(v => kernelSelect.add(new Option(versionName(v), v))); kernelSelect.value = kernelValue;
   const speedValue = $("speed").value; $("speed").replaceChildren(new Option("All speeds", "")); data.speeds.forEach(speed => $("speed").add(new Option(speed, speed))); $("speed").value = speedValue;
   resultChart(data.days);

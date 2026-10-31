@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="-v8--let-small-judge-the-position">🧠 V8 · Let Small judge the position</h1>
+<div style="border-left:5px solid #8b5cf6;background:#f5f3ff;color:#312e81;padding:12px 16px;">
+<strong>The experiment:</strong> keep V7's legal search, tactical extensions, move ordering, and clock policy, but change every ordinary static position score to <strong>100% Small neural evaluation</strong>. This isolates one meaningful choice: does our trained evaluator work better alone or in V7's 50/50 blend?
+</div>
+<p>Read <a href="../v7/HOW_V7_WORKS.md">How V7 works</a> first for the complete search explanation. V8 began as an exact PowerShell copy of V7; its evaluation policy now lives in a separate <a href="../V8%20Search.hpp">V8 Search.hpp</a>. Older versions remain separate experiments.</p>
+<h2 id="-1--2--what-the-network-decides">🟪 1 / 2 · What the network decides</h2>
+<pre class="hljs"><code><div>Board + actual side to move + castling rights + en-passant file
+                             |
+                       782 input features
+                             |
+                  Small: 782 -&gt; 256 -&gt; 64 -&gt; 1
+                             |
+                    White-perspective pawns
+                             |
+                  x 100, then engine-color sign
+                             |
+              round + ordinary-score safety clamp
+                             |
+                    alpha-beta / quiescence
+</div></code></pre>
+<p>The board is your existing <code>int8_t[8][8]</code>; no move-history neural model or GPU is needed. The branch state supplies the flags. Small's output is positive for White, regardless of whose turn it is. Search scores must instead be positive for the engine.</p>
+<p>For example, a network output of <strong>+1.20 pawns</strong> becomes <strong>+120 centipawns for a White engine</strong>, or <strong>−120 for a Black engine</strong>. V8 returns that neural value, rounded to an integer. The handcrafted material/piece-square score contributes <strong>zero</strong> to it. We clamp ordinary scores to ±99,999 so they cannot outrank checkmate scores around ±1,000,000.</p>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>V7</th>
+<th>V8</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ordinary static value</td>
+<td>50% handcrafted + 50% Small</td>
+<td><strong>100% Small</strong></td>
+</tr>
+<tr>
+<td>Quiet-move neural ordering</td>
+<td>Small</td>
+<td>Small</td>
+</tr>
+<tr>
+<td>Tactical ordering</td>
+<td>Cheap existing heuristic</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Normal legal candidates</td>
+<td>Retain all</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Quiescence</td>
+<td>Up to six extra plies</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Terminal mate/stalemate</td>
+<td>Exact rule-based score</td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Large model required</td>
+<td>No</td>
+<td>No</td>
+</tr>
+</tbody>
+</table>
+<p><strong>“100% neural evaluation” describes the static value, not every part of the engine.</strong> Rules still determine legal moves and terminal positions. Alpha-beta still searches. Your cheap heuristic still helps choose the order to inspect moves. Legacy running scores remain maintained by the inherited make/undo code, but the V8 evaluator does not read them. Changing those scores alone cannot change its returned static value.</p>
+<p>A checkmated position therefore never asks the network whether it is good or bad. The legal search recognizes the terminal position first. Stalemate returns zero. This is deliberately more reliable than asking a regression model to recognize those rules numerically.</p>
+<div style="page-break-after:always;"></div>
+<h2 id="-2--2--which-moves-are-searched-and-when">🟦 2 / 2 · Which moves are searched, and when?</h2>
+<pre class="hljs"><code><div>At a regular node
+  -&gt; generate legal moves and handle mate/stalemate
+  -&gt; cheap heuristic order; captures/promotions first
+  -&gt; remaining depth &gt;= 3 and enough time?
+       yes: Small sorts the quiet tail
+       no:  keep its heuristic order
+  -&gt; alpha-beta search; retain every legal candidate
+
+At normal depth zero
+  -&gt; quiescence, up to 6 extra plies
+       in check: every legal evasion
+       otherwise: neural stand-pat + captures/EP/promotions
+  -&gt; terminal rules or pure Small static value
+</div></code></pre>
+<p>There is <strong>no “keep the best five” rule</strong>, no new late-move reduction, and no neural threshold deleting regular candidates. If a regular node has 30 legal moves, all 30 remain eligible. Alpha-beta can stop searching siblings when its bounds prove they cannot improve the result in that search window. A deadline can interrupt an iteration. Those are different from assuming a low neural rank makes a move worthless.</p>
+<p>At the root, each worker receives a subset from the controller. V8 retains every legal move in its assigned subset; it cannot restore candidates that the controller did not send. Every supplied root candidate is considered in a completed iteration, while internal alpha-beta cutoffs still reduce continuation work.</p>
+<p>Small sorting applies only to <strong>at least two quiet moves</strong>, at remaining depth three or more, with at least <code>max(5, ceil(quiet_count / 8))</code> milliseconds left. Captures, en passant, and promotions stay in the tactical prefix. Quiescence uses cheap ordering rather than neural sorting batches; its static evaluations still call Small. At the six-ply extension cap, a nonterminal position is evaluated even if still checked; <code>qCheckCapHits</code> makes that approximation visible.</p>
+<h3 id="️-cost-use-and-the-useful-comparison">⏱️ Cost, use, and the useful comparison</h3>
+<p>Small's architecture has <strong>216,961 parameters</strong>. Its actual first layer adds active binary-feature columns rather than multiplying every one of the 782 inputs. Later layers remain dense. A position call is independent of search depth, but many positions or move-ordering batches multiply that cost. See <a href="../../Neural%20Networks/OPERATION_COUNTS.md">exact Small/Large operation counts and m-move sorting formulas</a>; those arithmetic counts are not measured CPU instructions or latency.</p>
+<p>Launch <code>Launch Server.bat</code> and choose <strong>8 / v8</strong> after stopping an existing bot. Only <code>Neural Networks/Small/weights.bin</code> is required. The launcher performs its offline worker startup check before starting the bot. Use <code>Launch Dashboard.bat</code> for existing completed-move history. Additional <code>searchPolicy</code> counters remain in worker JSON; the SQLite writer does not yet preserve those extra fields.</p>
+<p>Compare V7 and V8 with the same positions, Small weights, worker count, hardware, and time controls. Measure tactical accuracy, completed depth, actual time, and game results. The pure evaluator may change move ordering indirectly through search results, node counts, and cutoffs. <strong>Neither version is an established strength winner yet.</strong> V8 is the cleaner experiment for learning whether the trained value model helps by itself.</p>
+<p>The inherited limits still matter: no repetition/fifty-move/insufficient-material adjudication here, a bounded quiescence horizon, and clock estimates that cannot interrupt a model load, legal-generation batch, or individual inference batch. There is no new transposition table in this version.</p>
+<div style="border-left:5px solid #0891b2;background:#ecfeff;color:#164e63;padding:12px 16px;">
+<strong>What I like about this version:</strong> it gives your network a clear responsibility while keeping the search protections. V7 asks whether a blend helps; V8 asks whether the network can carry the ordinary position score alone. The comparison can teach us something concrete, even if V7 ultimately wins.
+</div>
+<p><strong>Offline verification, 31 October 2026:</strong> 73,688 checks passed against the independent legal-move/quiescence oracle, including sign/unit conversion and deliberately altered handcrafted scores that leave V8's value unchanged. The managed executable also passed the launcher startup probe and seven actual worker searches, including complete assigned root lists, Black en passant, mate, and timed/expired requests. These are correctness checks, not a strength rating. Repeat the oracle from <code>lichess-bot-master</code> with <code>python engines/tests/run_kernel_v8_tests.py</code>; local reports are under the lab's <code>diagnostics/kernel-v8-20261031/</code>.</p>
+
+</body>
+</html>

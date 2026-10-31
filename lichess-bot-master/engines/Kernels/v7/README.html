@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>README.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<h1 id="️-v7--give-the-search-a-stronger-tactical-foundation">♟️ v7 — give the search a stronger tactical foundation</h1>
+<p><strong>New: read <a href="HOW_V7_WORKS.md">How V7 works</a> for the illustrated five-part explanation</strong>, including exactly when moves are sorted, what stays eligible, quiescence, evaluation, and clock decisions. This file remains the short reference.</p>
+<p><strong>My choice for the next experiment:</strong> legal continuations, correct mate/stalemate recognition, and a short tactical search beyond the ordinary leaf. V7 began as a copy of your original Kernel; the original and v1–v6 remain separate.</p>
+<h2 id="-1--3--what-changes">🟩 1 / 3 · What changes</h2>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>V7 decision</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Move generation</td>
+<td>Independent generator using your compact moves and occupancy masks; reject moves leaving the king attacked</td>
+</tr>
+<tr>
+<td>Root</td>
+<td>Validate every supplied move; retain the worker's complete assigned subset</td>
+</tr>
+<tr>
+<td>Regular ordering</td>
+<td>Captures/promotions first with your heuristic; Small orders only the quiet tail from depth 3</td>
+</tr>
+<tr>
+<td>Leaf</td>
+<td>Quiescence: continue tactical exchanges and check evasions, up to six extra plies</td>
+</tr>
+<tr>
+<td>Static evaluation</td>
+<td>50% handcrafted score + 50% Small, in engine-perspective centipawns</td>
+</tr>
+<tr>
+<td>Pruning</td>
+<td>Ordinary alpha-beta; no fixed top-k deletion or late-move reductions</td>
+</tr>
+<tr>
+<td>Terminal positions</td>
+<td>Legal checkmate or stalemate, recognized before neural evaluation</td>
+</tr>
+</tbody>
+</table>
+<p>The new generator explicitly handles pins, king adjacency, all four promotion types, castling through attacked squares, and en passant that exposes the king. It requires a genuine preceding opposing pawn double push for en passant. Castling requires the correct home king and same-color rook; queenside b-file emptiness matters, but an attack on that square does not forbid castling.</p>
+<p>Replay history is checked move by move. An illegal history is rejected and rolled back. The worker's root list is a subset, so an empty assigned list alone is never called stalemate.</p>
+<p>Independent score recomputation also caught an inherited Black en-passant update using the wrong color's piece-square tables. V7 corrects that incremental update for both engine colors; the earlier versions remain unchanged.</p>
+<h2 id="-2--3--avoid-evaluating-halfway-through-an-exchange">🟪 2 / 3 · Avoid evaluating halfway through an exchange</h2>
+<pre class="hljs"><code><div>Normal depth reaches zero
+           ↓
+Generate legal moves; recognize mate/stalemate
+           ↓
+In check? Search every legal evasion
+Otherwise: static score + captures/EP/promotions
+           ↓
+Repeat up to six extra plies; return the score
+</div></code></pre>
+<p>A normal static cutoff is allowed only outside check. Quiet promotions remain tactical moves. Quiescence uses cheap ordering, with no neural move-sorting batches.</p>
+<p>At the hard extension cap, v7 still recognizes mate/stalemate first. A remaining nonterminal position is evaluated statically, <strong>including a position still in check</strong>. That bounded approximation is counted as <code>qCheckCapHits</code>; the extension is not proof that every exchange was fully settled.</p>
+<p>Checkmate scores start at ±1,000,000 with ply distance favoring faster wins and slower losses. Ordinary blended scores are clamped to ±99,999. Small's White-pawn output is multiplied by 100 and signed for the engine's color; its turn/castling/en-passant flags follow the actual branch.</p>
+<p>Search undo restores only touched squares, counters, masks, and running scores, including on exceptions. Worst-case work can grow to <code>O(b^(d+6))</code>; the extra tactical work must justify its cost. There is no new quiescence delta pruning or transposition table. Repetition, the fifty-move rule, and insufficient-material adjudication are <strong>not implemented here</strong>.</p>
+<h2 id="-3--3--clock-use-and-measurements">🟦 3 / 3 · Clock, use, and measurements</h2>
+<p>Choose <strong><code>7</code> / <code>v7</code></strong> in <code>Launch Server.bat</code>. Only Small weights are required. The launcher checks the worker offline before starting the bot. Stop an existing bot before changing versions.</p>
+<p>Small quiet ordering requires at least <code>max(5, ceil(quiet_count / 8))</code> milliseconds remaining. Otherwise the same quiet moves retain heuristic ordering. The leaf evaluator stays consistent.</p>
+<p>Online iterative deepening now estimates the next iteration from measured growth, with a 25% safety factor and 5 ms reserve. It stops admitting new iterations after 80% of the budget is consumed. The hard deadline still discards unfinished iterations. These checks cannot interrupt an individual model load, inference batch, or legal-generation batch; this is not a hard real-time guarantee. Fixed-depth tests keep the existing even-depth sequence.</p>
+<p>Offline checks:</p>
+<pre class="hljs"><code><div><span class="hljs-comment"># From lichess-bot-master:</span>
+python engines/tests/run_kernel_v7_tests.py
+</div></code></pre>
+<p>Reports belong under the lab's <code>diagnostics/kernel-v7-20261029/</code>. Read the reported compile/run status; Windows policy can block startup independently of compilation.</p>
+<p>Local verification passed <strong>73,448 checks</strong>, including 136 independent positions, starting-position perft depth 4 (<strong>197,281</strong>), Kiwipete depth 3 (<strong>97,862</strong>), quiescence comparisons and mate-in-one searches for both engine colors. The compiled worker also passed JSON-protocol, quiet-neural-ordering, Black en-passant replay, and one-second-budget checks. These establish tested behavior, not a strength rating. Move-rule references: <a href="https://handbook.fide.com/chapter/E012023">FIDE Articles 3.7–3.9</a>; independent oracle: <a href="https://python-chess.readthedocs.io/en/latest/core.html#chess.Board.legal_moves">python-chess</a>.</p>
+<p>Worker JSON records regular/Q nodes, static evaluations, quiet-ordering calls, cap hits, mates, stalemates, and deadline observations. <code>nodes</code> describes the last completed iteration; <code>totalNodes</code> sums all iterations, including an interrupted attempt. Extra <code>searchPolicy</code> counters are not yet persisted by the SQLite writer.</p>
+<p>Compare tactical fixtures and equal-time games against v5 before judging strength. Legal/Q node counts differ from the older pseudo-legal trees; timing and tactical accuracy give the useful comparison. The 50/50 blend and six-ply cap are starting parameters, not measured optimal settings. Code: <a href="../V7%20Position.hpp">position/undo</a> · <a href="../V7%20Search.hpp">search/constants</a>.</p>
+
+</body>
+</html>

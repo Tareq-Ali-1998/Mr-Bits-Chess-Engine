@@ -185,8 +185,22 @@ For an already configured Python environment, **`Launch Server.bat`** and **`Lau
 | `v2` | Large near the root, Small internally; retain every candidate |
 | `v3` | Gentler root filtering: eight quiet moves plus captures/promotions; retain everything while in check |
 | `v4` | Small-network ordinary leaf scoring, initially 0% handcrafted / 100% neural; Small ordering from depth six |
+| `v5` | Small ordering and a 50/50 handcrafted/neural leaf blend; keep all candidates |
+| `v6` | v5's foundation with guarded one-ply reductions of late quiet internal moves and full-depth re-search on improvement |
+| `v7` | Legal continuations, mate/stalemate recognition, bounded quiescence, Small quiet ordering, and estimated iteration timing |
+| `v8` | V7's legal/tactical search with 100% Small neural static evaluation |
+| `v9` | Large-ranked top-three beam with original static evaluation |
+| `v10` | The same top-three beam with a 50/50 original/Small static value |
+| `v11` | Small-only evaluation, PVS re-search, and bounded exact-position value caching; all legal ordinary candidates retained |
 
 The menu discovers version folders so new ideas can be added without replacing the original source. Root cutoffs apply to each worker's assigned subset. These are experiments to measure, not a ranking of strongest to weakest. [Policies, build commands, and tests](lichess-bot-master/engines/Kernels/README.md).
+
+The short [v5/v6 guide](lichess-bot-master/engines/Kernels/V5_V6_README.md) explains the ordering/reduction pair in three reading sections.
+The [v7 guide](lichess-bot-master/engines/Kernels/v7/README.md) explains the next experiment: a stronger tactical foundation before more selective pruning.
+
+For a visual walkthrough, read [How V7 works](lichess-bot-master/engines/Kernels/v7/HOW_V7_WORKS.md), then [V8's neural-only evaluation experiment](lichess-bot-master/engines/Kernels/v8/README.md). [Operation counts](lichess-bot-master/engines/Neural%20Networks/OPERATION_COUNTS.md) show the actual arithmetic for both networks and sorting a move list.
+
+The newer [V9](lichess-bot-master/engines/Kernels/v9/README.md) and [V10](lichess-bot-master/engines/Kernels/v10/README.md) deliberately retain only Large's top three candidates at each expansion. [V11](lichess-bot-master/engines/Kernels/v11/README.md) instead tests narrower search windows with re-search and repeated-position evaluation reuse. Greater nominal depth in a narrow tree is not a strength result.
 
 ## Where to start reading
 

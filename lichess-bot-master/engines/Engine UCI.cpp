@@ -204,7 +204,7 @@ string getBestMoveFromEngine(string position, int wtime, int btime, int winc, in
     bool engineColor = !(currentChessState.previousMoves.size() & 1);
     currentChessState.setEngineColor(engineColor);
 
-    currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(2);
+    currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(8);
     currentChessState.setNumberOfThreads(NUMBER_OF_KERNEL_WORKERS);
 
     // I have to manipulate the engine's timing system a lot, which is partially represented
