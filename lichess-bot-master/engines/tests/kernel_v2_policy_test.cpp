@@ -1,6 +1,6 @@
 // Isolated policy checks: never call the renamed worker main or launch helpers.
 #define main mrbits_v2_worker_main_not_called_by_this_test
-#include "../Kernels/v2/Kernel-v2.cpp"
+#include "../Kernels/v1.1/Kernel-v1.1.cpp"
 #undef main
 
 namespace {
@@ -151,7 +151,8 @@ void ActualModelChecks(const vector<int16_t>& input) {
 } // namespace
 
 int main(int argc, char** argv) {
-    Json report = {{"test", "kernel_v2_policy"}, {"engine_processes_started", 0}};
+    Json report = {{"test", "kernel_v2_policy"}, {"variant", "v1.1"},
+                   {"legacy_variant", "v2"}, {"engine_processes_started", 0}};
     if (argc > 2) report["v2_source_sha256"] = argv[2];
     int result = 0;
     try {

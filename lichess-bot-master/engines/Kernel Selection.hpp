@@ -15,8 +15,15 @@ struct Selection {
 };
 
 inline bool VersionFolderName(const std::string& version) {
-    return version.size() >= 2 && version[0] == 'v' && version[1] >= '1' && version[1] <= '9' &&
-        std::all_of(version.begin() + 2, version.end(), [](char ch) { return ch >= '0' && ch <= '9'; });
+    if (version.size() < 2 || version[0] != 'v' || version[1] < '1' || version[1] > '9') return false;
+    const auto digit = [](char ch) { return ch >= '0' && ch <= '9'; };
+    const auto dot = version.find('.');
+    const auto majorEnd = dot == std::string::npos ? version.size() : dot;
+    if (!std::all_of(version.begin() + 2, version.begin() + majorEnd, digit)) return false;
+    if (dot == std::string::npos) return true; // Historical integer version labels remain valid syntax.
+    if (dot + 1 == version.size()) return false;
+    if (version[dot + 1] == '0' && dot + 2 != version.size()) return false;
+    return std::all_of(version.begin() + dot + 1, version.end(), digit);
 }
 
 inline Selection Read(const std::filesystem::path& engines_directory) {
@@ -39,7 +46,8 @@ inline Selection Read(const std::filesystem::path& engines_directory) {
     else if (VersionFolderName(version)) {
         executable = engines_directory / "Kernels" / version / ("Kernel-" + version + ".exe");
     } else {
-        throw std::runtime_error("Unknown Kernel version '" + version + "'; choose original or a folder named v1, v2, ...");
+        throw std::runtime_error("Unknown Kernel version '" + version +
+            "'; choose original or a folder such as v1.0 or v3.2");
     }
     if (!std::filesystem::is_regular_file(executable)) {
         throw std::runtime_error("Selected Kernel executable is missing: " + executable.string() +

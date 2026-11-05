@@ -1,4 +1,4 @@
-"""Compile and verify v7 or v8 against python-chess; never start the online bot.
+"""Verify family v3.0/v3.1 against python-chess; never start the online bot.
 
 From lichess-bot-master: python engines/tests/run_kernel_v7_tests.py
 An explicit Windows policy block stops the run; it is never retried or bypassed.
@@ -20,8 +20,10 @@ import time
 
 import chess
 
+from kernel_family_versions import canonical_version, legacy_version, kernel_source
+
 ENGINES = Path(__file__).resolve().parents[1]
-REPORTS = ENGINES.parent / "Mr Bits Docs/ChatGPT Neural Network Lab/diagnostics/kernel-v7-20261029"
+REPORTS = ENGINES.parent / "Mr Bits Docs/ChatGPT Neural Network Lab/diagnostics/kernel-family-v3.0"
 
 
 def sha256(path: Path) -> str:
@@ -142,15 +144,16 @@ def reference_q(board, depth, engine_white, static_scores, ply=0):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--version", choices=("v7", "v8"), default="v7")
+    parser.add_argument("--version", choices=("v3.0", "v3.1", "v7", "v8"), default="v3.0")
     parser.add_argument("--cxx", default=shutil.which("g++"))
     parser.add_argument("--report-dir", type=Path)
     parser.add_argument("--weights-dir", type=Path, default=ENGINES / "Neural Networks")
     parser.add_argument("--timeout", type=int, default=180)
     args = parser.parse_args(argv)
-    version = args.version
-    args.report_dir = args.report_dir or (REPORTS if version == "v7" else
-        ENGINES.parent / "Mr Bits Docs/ChatGPT Neural Network Lab/diagnostics/kernel-v8-20261031")
+    legacy = legacy_version(args.version)
+    version = canonical_version(args.version)
+    args.report_dir = args.report_dir or (ENGINES.parent /
+        f"Mr Bits Docs/ChatGPT Neural Network Lab/diagnostics/kernel-family-{version}")
     if not args.cxx or args.timeout <= 0:
         parser.error("g++ and a positive timeout are required")
     weights = args.weights_dir.resolve() / "Small/weights.bin"
@@ -159,11 +162,13 @@ def main(argv=None):
     compiler = shutil.which(args.cxx) or str(Path(args.cxx).resolve())
     environment = dict(os.environ)
     environment["PATH"] = str(Path(compiler).parent) + os.pathsep + environment.get("PATH", "")
-    sources = [Path(__file__), ENGINES / "tests/kernel_v7_test.cpp", ENGINES / f"Kernels/{version}/Kernel-{version}.cpp",
-               ENGINES / "Kernels/V7 Position.hpp", ENGINES / f"Kernels/{version.upper()} Search.hpp",
+    sources = [Path(__file__), ENGINES / "tests/kernel_family_versions.py", ENGINES / "Kernels/kernel_tools.py",
+               ENGINES / "tests/kernel_v7_test.cpp", kernel_source(ENGINES, version),
+               ENGINES / "Kernels/V7 Position.hpp", ENGINES / ("Kernels/V7 Search.hpp" if legacy == "v7"
+                   else "Kernels/V3 Evaluation Search.hpp"),
                ENGINES / "Chess State.hpp", ENGINES / "Neural Networks/Move Ordering.hpp",
                ENGINES / "Neural Networks/common.hpp", ENGINES / "Neural Networks/Small/Small.hpp"]
-    report = {"schema": f"mrbits.{version}-diagnostics.v1", "status": "failed", "version": version,
+    report = {"schema": f"mrbits.{legacy}-diagnostics.v1", "status": "failed", "version": version, "legacy_version": legacy,
               "started_utc": datetime.now(timezone.utc).isoformat(), "python_chess": chess.__version__,
               "source_sha256": {str(path.relative_to(ENGINES)): sha256(path) for path in sources},
               "small_weights_sha256": sha256(weights), "phases": [],
@@ -200,7 +205,7 @@ def main(argv=None):
             executable = Path(temporary) / f"kernel_{version}_test.exe"
             command = [compiler, "-std=c++17", "-O2", "-I", str(ENGINES),
                        str(ENGINES / "tests/kernel_v7_test.cpp"), "-o", str(executable)]
-            if version == "v8":
+            if legacy == "v8":
                 command.insert(1, "-DMRBITS_TEST_V8")
             compiled = subprocess.run(command, capture_output=True, text=True, env=environment, timeout=args.timeout)
             report["compile"] = {"command": command, "exit_code": compiled.returncode,
@@ -260,7 +265,7 @@ def main(argv=None):
             for case, reply in zip(evaluation_cases, evaluations):
                 assert reply["ok"] and reply["restored"], reply
                 static_scores[(case["fen"], case["engineWhite"])] = reply["staticScore"]
-                if version == "v8":
+                if legacy == "v8":
                     raw = reply["nnWhitePawns"] * 100 * (1 if case["engineWhite"] else -1)
                     raw = min(99999, max(-99999, raw))
                     # std::lround rounds halfway away from zero, unlike Python round.
@@ -336,7 +341,7 @@ def main(argv=None):
                     if expected_status == "ok":
                         assert answer["bestMove"] in request["roots"] and len(answer["rootScores"]) == len(request["roots"]), reply
                         assert answer["searchPolicy"]["name"] == version, reply
-                        if version == "v8":
+                        if legacy == "v8":
                             assert answer["searchPolicy"]["legacyWeight"] == 0, reply
                             assert answer["searchPolicy"]["smallWeight"] == 100, reply
                     if request["id"] == "empty_subset":

@@ -1,12 +1,12 @@
-# ♟️ v5 & v6 — two ways to spend the search budget
+# ♟️ v2.1 & v2.2 — two ways to spend the search budget
 
-**Read this first.** Three short sections, with print page breaks. Start with **v5**, then compare **v6** under the same clock and worker count.
+**Read this first.** Three short sections, with print page breaks. Start with **v2.1**, then compare **v2.2** under the same clock and worker count.
 
 ## 🟩 1 / 3 · The foundation: keep your engine, add Small
 
-Both began as copies of your original `Kernel.cpp`, keeping its move representation, generator, incremental state, and worker protocol. The original and v1–v4 remain separate.
+Both began as copies of your original `Kernel.cpp`, keeping its move representation, generator, incremental state, and worker protocol. The original, the v1.x ordering family, and the Small-only v2.0 experiment remain separate.
 
-| Decision | v5 | v6 |
+| Decision | v2.1 | v2.2 |
 |---|---|---|
 | Ordinary leaf score | 50% handcrafted + 50% Small | Same |
 | Ordering at depth 1–2 | Your simple heuristic | Same |
@@ -32,11 +32,11 @@ Worst-case search remains `O(b^d)` for branching factor `b` and depth `d`. Small
 
 <div style="page-break-after: always;"></div>
 
-## 🟪 2 / 3 · v6 asks a cheaper question first
+## 🟪 2 / 3 · v2.2 asks a cheaper question first
 
-V5 uses ordinary alpha-beta at the requested depth. It provides the comparison for the new evaluator and ordering policy.
+V2.1 uses ordinary alpha-beta at the requested depth. It provides the comparison for the new evaluator and ordering policy.
 
-V6 adds **late-move reductions (LMR)** inside the tree. After promising moves have been searched, a later quiet move receives a one-ply-shorter search first.
+V2.2 adds **late-move reductions (LMR)** inside the tree. After promising moves have been searched, a later quiet move receives a one-ply-shorter search first.
 
 ```text
 Late quiet internal move
@@ -69,9 +69,9 @@ LMR is an established idea; the [official Stockfish search implementation](https
 
 ## 🟦 3 / 3 · Run, inspect, and compare
 
-In `lichess-bot-master`, open **`Launch Server.bat`**, then choose **`5` / `v5`** or **`6` / `v6`**. Both require `engines/Neural Networks/Small/weights.bin`; Large weights are unnecessary. The launcher builds as needed and checks the worker offline before starting the bot. Stop the existing bot before switching versions.
+In `lichess-bot-master`, open **`Launch Server.bat`**, then choose **`v2.1`** or **`v2.2`**. Both require `engines/Neural Networks/Small/weights.bin`; Large weights are unnecessary. The launcher builds as needed and checks the worker offline before starting the bot. Stop the existing bot before switching versions.
 
-**Local status:** v6 passed earlier tests, but Application Control blocked the latest rebuilt binary before startup: `WinError 4551`, confirmed by Code Integrity event 3077. Its latest execution check is **blocked**. Start with v5; resolve v6's signing/trust policy first. No security settings changed. Microsoft's [Smart App Control guidance](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions) explains trusted signing if that control is responsible.
+**Historical machine status, before family renaming:** the former v6 passed earlier tests, but a later rebuilt binary was blocked before startup: `WinError 4551`, confirmed by Code Integrity event 3077. That earlier execution check was **blocked**. It does not establish the startup result of a newly named build; use the launcher's actual startup check. No security settings changed. Microsoft's [Smart App Control guidance](https://support.microsoft.com/en-us/windows/security/threat-malware-protection/smart-app-control-frequently-asked-questions) explains trusted signing if that control is responsible.
 
 Small ordering requires **`max(5, ceil(move_count / 8))` milliseconds** remaining; otherwise your heuristic orders the same candidates. This reserve cannot interrupt model loading or an admitted batch. Leaf evaluation stays consistent as time runs down.
 
@@ -85,17 +85,17 @@ python engines/tests/run_kernel_v56_tests.py
 
 Reports go to the lab's `diagnostics/kernel-v5-v6-20261029/`. Worker JSON counts neural ordering, neural leaves, reductions, and re-searches. **SQLite does not preserve these extra counters yet.** The dashboard retains its existing version, depth, node, timing, outcome, and candidate views.
 
-**Earlier offline verification:** 752 policy checks passed for each version. The earlier verified worker builds also reached depth six with two assigned root candidates:
+**Earlier offline verification, under the former v5/v6 labels:** 752 policy checks passed for each version. The earlier verified worker builds also reached depth six with two assigned root candidates:
 
-| Starting position / side | v5 nodes / choice | v6 nodes / choice |
+| Starting position / side | v2.1 nodes / choice | v2.2 nodes / choice |
 |---|---|---|
 | Initial board / White | 84,762 / `b1c3` | 55,971 / `b1c3` |
 | After `e2e4` / Black | 100,319 / `e7e5` | 39,487 / `c7c5` |
 
 These are node counts summed across all iterations from single workers, not full-engine throughput or playing strength. The changed Black choice makes the selectivity tradeoff visible. Full replies, timings, build hashes, and requests are saved in the diagnostic folder.
 
-Compare equal clocks, positions, opponents, and worker counts. V6's reported depth and exact-score labels describe its selective policy, not uniform-depth minimax.
+Compare equal clocks, positions, opponents, and worker counts. V2.2's reported depth and exact-score labels describe its selective policy, not uniform-depth minimax.
 
 Original legality/draw limitations and lack of quiescence remain. Measure tactical misses and equal-time games before tuning; no strength gain is established.
 
-Details: [v5](v5/README.md) · [v6](v6/README.md) · [shared constants and search](Neural%20Search.hpp).
+Details: [v2.1](v2.1/README.md) · [v2.2](v2.2/README.md) · [shared constants and search](Neural%20Search.hpp).

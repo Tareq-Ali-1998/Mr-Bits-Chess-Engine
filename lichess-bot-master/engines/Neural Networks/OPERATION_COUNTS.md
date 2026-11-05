@@ -169,6 +169,6 @@ More generally, the dense terms are `WH+H` for Small and `2BW²+WH+H` for Large.
 
 First use adds `O(N)` file loading, CRC and finite-value checks for `N` parameters; cached immutable weights are then reused **per process**. Multiple worker processes have separate model instances. An empty move list returns immediately without loading; a one-move public sorting call still evaluates that move. These counts describe **one forward pass or one sorter call**, not a complete search tree.
 
-**V7/V8 connection:** their quiet-tail ordering uses this same Small sorter, so replace `m` with the number of quiet moves actually sent to it. Tactical moves receive cheap heuristic ordering. The number of whole-search forward passes depends on the visited nodes, quiescence, clock, and ordering decisions.
+**V3.0/V3.1 connection (formerly V7/V8):** their quiet-tail ordering uses this same Small sorter, so replace `m` with the number of quiet moves actually sent to it. Tactical moves receive cheap heuristic ordering. The number of whole-search forward passes depends on the visited nodes, quiescence, clock, and ordering decisions.
 
 Source: [Small.hpp](Small/Small.hpp), [Large.hpp](Large/Large.hpp), [common.hpp](common.hpp), [Move Ordering.hpp](Move%20Ordering.hpp). For the shorter complexity guide, see [TIME_COMPLEXITY_README.md](TIME_COMPLEXITY_README.md).

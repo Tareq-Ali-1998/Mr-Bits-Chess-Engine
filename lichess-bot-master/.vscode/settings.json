@@ -1,0 +1,9 @@
+{
+  "markdown-pdf.type": ["html"],
+  "markdown-pdf.convertOnSave": true,
+  "markdown-pdf.convertOnSaveExclude": [
+    "^(AGENTS|HANDOFF|CLAUDE|GEMINI|SKILL|MEMORY|COPILOT)\\.md$"
+  ],
+  "markdown-pdf.outputDirectory": "",
+  "markdown-pdf.sanitize": "gfm-allow-style"
+}

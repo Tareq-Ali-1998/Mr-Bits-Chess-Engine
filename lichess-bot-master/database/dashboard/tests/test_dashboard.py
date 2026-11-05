@@ -163,6 +163,42 @@ class DataTests(Fixture):
         for build in ("kernel=v0", "kernel=v04", "kernel=v4.exe", "kernel=v4;kernel=v5", "Kernel-v4.exe"):
             self.assertEqual(server.recorded_kernel(build), "unknown")
 
+    def test_family_version_grammar_and_filter_validation(self):
+        for version in ("original", "v7", "v40", "v1.0", "v2.2", "v3.2", "v3.10", "v40.0"):
+            with self.subTest(version=version):
+                self.assertEqual(server.recorded_kernel(f"uci=fixture;kernel={version};worker=build"), version)
+                self.assertEqual(server.filters({"kernel": [version]})[1], [version])
+        for version in ("v0.0", "v03.2", "v3.02", "v3.", "v3.-1", "v3.2.1",
+                        "v3..2", "v3.2.exe", "../v3.2", "v3.2/", "v3.2e0"):
+            with self.subTest(version=version):
+                self.assertEqual(server.recorded_kernel(f"kernel={version}"), "unknown")
+                with self.assertRaises(ValueError):
+                    server.filters({"kernel": [version]})
+        self.assertEqual(server.recorded_kernel("kernel=v3.2;kernel=v9"), "unknown")
+
+    def test_family_filters_preserve_historical_labels_and_numeric_minor_order(self):
+        with closing(sqlite3.connect(self.path)) as con:
+            for game, build in (("family2", "kernel=v3.2"), ("family10", "kernel=v3.10"),
+                                ("legacy9", "kernel=v9"), ("compat7", "kernel=v7"),
+                                ("renamedMix", "kernel=v7")):
+                con.execute("INSERT INTO engine_games(game_id,first_move_at,engine_version) VALUES(?,1,?)",
+                            (game, build))
+            con.execute("INSERT INTO engine_moves(game_id,ply,received_at,path,engine_version) "
+                        "VALUES('renamedMix',1,1,'kernel','kernel=v3.0')")
+            con.commit()
+        before = sha256(self.path.read_bytes()).hexdigest()
+        with server.read_connection(self.path) as con:
+            self.assertEqual(server.list_games(con, {"kernel": ["v3.2"]})["games"][0]["game_id"], "family2")
+            self.assertEqual(server.list_games(con, {"kernel": ["v9"]})["games"][0]["game_id"], "legacy9")
+            rows = {row["game_id"]: row for row in server.list_games(con, {})["games"]}
+            self.assertEqual(rows["compat7"]["kernel_variant"], "v7")
+            self.assertEqual(rows["renamedMix"]["kernel_variant"], "mixed")
+            summary = server.summary(con, {})
+            expected = ["v3.2", "v3.10", "v7", "v9", "mixed"]
+            self.assertEqual(summary["kernel_variants"], expected)
+            self.assertEqual([row["kernel_variant"] for row in summary["versions"]], expected)
+        self.assertEqual(sha256(self.path.read_bytes()).hexdigest(), before)
+
     def test_replay_missing_optional_dependency_and_invalid_history(self):
         from unittest.mock import patch
         record = {"variant": "standard", "initial_fen": None, "pgn": None}
@@ -173,8 +209,39 @@ class DataTests(Fixture):
             self.assertEqual(len(data["frames"]), 1)
             self.assertIn("incomplete", data["message"])
 
+    def test_reused_family_label_is_preserved_with_its_actual_builds(self):
+        with closing(sqlite3.connect(self.path)) as con:
+            for game, build in (("old32", "kernel=v3.2;worker=old-large-policy"),
+                                ("new32", "kernel=v3.2;worker=new-handcrafted-policy"),
+                                ("shifted36", "kernel=v3.6;worker=shifted-large-policy")):
+                con.execute("INSERT INTO engine_games(game_id,first_move_at,engine_version) VALUES(?,1,?)",
+                            (game, build))
+            con.commit()
+        before = sha256(self.path.read_bytes()).hexdigest()
+        with server.read_connection(self.path) as con:
+            retained = server.list_games(con, {"kernel": ["v3.2"]})
+            self.assertEqual({row["game_id"] for row in retained["games"]}, {"old32", "new32"})
+            self.assertTrue(all(row["kernel_variant"] == "v3.2" for row in retained["games"]))
+            shifted = server.list_games(con, {"kernel": ["v3.6"]})
+            self.assertEqual([row["game_id"] for row in shifted["games"]], ["shifted36"])
+            group = server.summary(con, {"kernel": ["v3.2"]})["versions"][0]
+            self.assertEqual(group["kernel_variant"], "v3.2")
+            self.assertEqual(len(group["builds"]), 2)
+        self.assertEqual(sha256(self.path.read_bytes()).hexdigest(), before)
+
 
 class HttpTests(Fixture):
+    def test_dotted_kernel_filters_are_supported_over_http(self):
+        with closing(sqlite3.connect(self.path)) as con:
+            con.execute("INSERT INTO engine_games(game_id,first_move_at,engine_version) "
+                        "VALUES('family32',1,'uci=fixture;kernel=v3.2')")
+            con.commit()
+        self.start_http()
+        status, _, body = self.request("/api/games?kernel=v3.2")
+        self.assertEqual(status, 200)
+        self.assertEqual(json.loads(body)["games"][0]["kernel_variant"], "v3.2")
+        self.assertEqual(self.request("/api/summary?kernel=v3.02")[0], 400)
+
     def test_static_routes_and_empty_api(self):
         self.start_http()
         for path, content_type in [("/", "text/html"), ("/app.js", "text/javascript"), ("/style.css", "text/css"), ("/favicon.svg", "image/svg+xml")]:

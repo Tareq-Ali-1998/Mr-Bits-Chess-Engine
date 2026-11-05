@@ -1,371 +1,104 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:75f0211852b7babb87b224965601969a6f5d0af854da240f0acdd39d136441e5">
 <title>03 - Plan - Game Database and Dashboard.md</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-
 <style>
-/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
 
-body {
-	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
-	font-size: var(--vscode-markdown-font-size, 14px);
-	padding: 0 26px;
-	line-height: var(--vscode-markdown-line-height, 22px);
-	word-wrap: break-word;
-}
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
 
-#code-csp-warning {
-	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
-	margin: 16px;
-	text-align: center;
-	font-size: 12px;
-	font-family: sans-serif;
-	background-color:#444444;
-	cursor: pointer;
-	padding: 6px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
-}
-
-#code-csp-warning:hover {
-	text-decoration: none;
-	background-color:#007acc;
-	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
-}
-
-body.scrollBeyondLastLine {
-	margin-bottom: calc(100vh - 22px);
-}
-
-body.showEditorSelection .code-line {
-	position: relative;
-}
-
-body.showEditorSelection .code-active-line:before,
-body.showEditorSelection .code-line:hover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -12px;
-	height: 100%;
-}
-
-body.showEditorSelection li.code-active-line:before,
-body.showEditorSelection li.code-line:hover:before {
-	left: -30px;
-}
-
-.vscode-light.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.15);
-}
-
-.vscode-light.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.40);
-}
-
-.vscode-light.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-dark.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.4);
-}
-
-.vscode-dark.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.60);
-}
-
-.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-high-contrast.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 160, 0, 0.7);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 160, 0, 1);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
-	outline: 1px solid -webkit-focus-ring-color;
-	outline-offset: -1px;
-}
-
-hr {
-	border: 0;
-	height: 2px;
-	border-bottom: 2px solid;
-}
-
-h1 {
-	padding-bottom: 0.3em;
-	line-height: 1.2;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
-h1, h2, h3 {
-	font-weight: normal;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table > thead > tr > th {
-	text-align: left;
-	border-bottom: 1px solid;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td {
-	padding: 5px 10px;
-}
-
-table > tbody > tr + tr > td {
-	border-top: 1px solid;
-}
-
-blockquote {
-	margin: 0 7px 0 5px;
-	padding: 0 16px 0 10px;
-	border-left-width: 5px;
-	border-left-style: solid;
-}
-
-code {
-	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
-	font-size: 1em;
-	line-height: 1.357em;
-}
-
-body.wordWrap pre {
-	white-space: pre-wrap;
-}
-
-pre:not(.hljs),
-pre.hljs code > div {
-	padding: 16px;
-	border-radius: 3px;
-	overflow: auto;
-}
-
-pre code {
-	color: var(--vscode-editor-foreground);
-	tab-size: 4;
-}
-
-/** Theming */
-
-.vscode-light pre {
-	background-color: rgba(220, 220, 220, 0.4);
-}
-
-.vscode-dark pre {
-	background-color: rgba(10, 10, 10, 0.4);
-}
-
-.vscode-high-contrast pre {
-	background-color: rgb(0, 0, 0);
-}
-
-.vscode-high-contrast h1 {
-	border-color: rgb(0, 0, 0);
-}
-
-.vscode-light table > thead > tr > th {
-	border-color: rgba(0, 0, 0, 0.69);
-}
-
-.vscode-dark table > thead > tr > th {
-	border-color: rgba(255, 255, 255, 0.69);
-}
-
-.vscode-light h1,
-.vscode-light hr,
-.vscode-light table > tbody > tr + tr > td {
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-.vscode-dark h1,
-.vscode-dark hr,
-.vscode-dark table > tbody > tr + tr > td {
-	border-color: rgba(255, 255, 255, 0.18);
-}
-
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
 </style>
-
-<style>
-/* Tomorrow Theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-
-/* Tomorrow Comment */
-.hljs-comment,
-.hljs-quote {
-	color: #8e908c;
-}
-
-/* Tomorrow Red */
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-regexp,
-.hljs-deletion {
-	color: #c82829;
-}
-
-/* Tomorrow Orange */
-.hljs-number,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-literal,
-.hljs-type,
-.hljs-params,
-.hljs-meta,
-.hljs-link {
-	color: #f5871f;
-}
-
-/* Tomorrow Yellow */
-.hljs-attribute {
-	color: #eab700;
-}
-
-/* Tomorrow Green */
-.hljs-string,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition {
-	color: #718c00;
-}
-
-/* Tomorrow Blue */
-.hljs-title,
-.hljs-section {
-	color: #4271ae;
-}
-
-/* Tomorrow Purple */
-.hljs-keyword,
-.hljs-selector-tag {
-	color: #8959a8;
-}
-
-.hljs {
-	display: block;
-	overflow-x: auto;
-	color: #4d4d4c;
-	padding: 0.5em;
-}
-
-.hljs-emphasis {
-	font-style: italic;
-}
-
-.hljs-strong {
-	font-weight: bold;
-}
-</style>
-
-<style>
-/*
- * Markdown PDF CSS
- */
-
- body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
-	padding: 0 12px;
-}
-
-pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
-	border-radius: 3px;
-	overflow-x: auto;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-}
-
-pre:not(.hljs) {
-	padding: 23px;
-	line-height: 19px;
-}
-
-blockquote {
-	background: rgba(127, 127, 127, 0.1);
-	border-color: rgba(0, 122, 204, 0.5);
-}
-
-.emoji {
-	height: 1.4em;
-}
-
-code {
-	font-size: 14px;
-	line-height: 19px;
-}
-
-/* for inline code */
-:not(pre):not(.hljs) > code {
-	color: #C9AE75; /* Change the old color so it seems less like an error */
-	font-size: inherit;
-}
-
-/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
--------------------------------------------------------- */
-.page {
-	page-break-after: always;
-}
-
-</style>
-
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-          ? 'dark'
-          : 'default'
-    });
-  </script>
-<h1 id="️-one-database-for-every-game-move-and-worker-built--plus-a-dashboard-planned">🗄️📊 One Database for Every Game, Move and Worker (built ✅), Plus a Dashboard (planned)</h1>
+<h1 id="-one-database-for-every-game-move-and-worker-built--plus-a-dashboard-planned">🗄️📊 One Database for Every Game, Move and Worker (built ✅), Plus a Dashboard (planned)</h1>
 <p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝 <em>October 23, 2026 · v2, October 25: schema tested on SQLite 3.50.4, 24 review findings applied · <strong>v4, October 27: as built</strong></em></p>
 <div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
 <p><strong>✅ As built, in one paragraph:</strong> two writers fill <strong>one SQLite file</strong>, <code>lichess-bot-master\database\mrbits.sqlite</code>:</p>
@@ -467,29 +200,29 @@ code {
 <p><strong>Until the sync runs, the database knows only your engine's half of a game:</strong> its own moves and the work behind them, not the opponent's moves (the engine doesn't store the move list). A game played without a <code>GameId</code> (by hand, a GUI, a test) is stored as <code>local-&lt;unix ms&gt;</code> and is never synced, so its opponent's moves are never stored.</p>
 <p><strong>What about the old data? A fresh start ✅ (your decision).</strong> Nothing is migrated. The old JSON files (<code>input\</code>) and per-move reports (<code>history\</code>) are deleted. The first sync starts at your go-live date. lichess-bot's own PGN files (<code>pgn_directory</code> in <code>config.yml</code>) aren't needed either: every synced game's PGN is in <code>games.pgn</code>.</p>
 <hr />
-<h2 id="3-️-the-architecture">3. 🏗️ The architecture</h2>
-<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
-    subgraph EXE["⚙️ Engine UCI.exe"]
+<h2 id="3--the-architecture">3. 🏗️ The architecture</h2>
+<pre class="mermaid">flowchart LR
+    subgraph EXE[&quot;⚙️ Engine UCI.exe&quot;]
         direction TB
-        MAIN["UCI thread&lt;br/&gt;go → think → bestmove, flushed"]:::eng --&gt;|"then the move record"| WR["writer thread&lt;br/&gt;Game Database.hpp"]:::eng
+        MAIN[&quot;UCI thread&lt;br/&gt;go → think → bestmove, flushed&quot;]:::eng --&gt;|&quot;then the move record&quot;| WR[&quot;writer thread&lt;br/&gt;Game Database.hpp&quot;]:::eng
     end
-    LB["♟️ lichess-bot"]:::src &lt;--&gt;|"UCI over pipes"| MAIN
-    WR --&gt;|"one transaction per move"| DB[("🗄️ database/mrbits.sqlite")]:::db
-    API["🌐 lichess API&lt;br/&gt;games, ratings, clocks"]:::src --&gt; SYNC["🐍 sync_lichess.py&lt;br/&gt;by you, between games"]:::job
+    LB[&quot;♟️ lichess-bot&quot;]:::src &lt;--&gt;|&quot;UCI over pipes&quot;| MAIN
+    WR --&gt;|&quot;one transaction per move&quot;| DB[(&quot;🗄️ database/mrbits.sqlite&quot;)]:::db
+    API[&quot;🌐 lichess API&lt;br/&gt;games, ratings, clocks&quot;]:::src --&gt; SYNC[&quot;🐍 sync_lichess.py&lt;br/&gt;by you, between games&quot;]:::job
     SYNC --&gt; DB
-    DBPY["🐍 db.py&lt;br/&gt;init, backup, check, recent"]:::job --- DB
-    SF["🐟 Stockfish"]:::later -.-&gt; ANA["🐍 analysis job&lt;br/&gt;optional, not built"]:::later
+    DBPY[&quot;🐍 db.py&lt;br/&gt;init, backup, check, recent&quot;]:::job --- DB
+    SF[&quot;🐟 Stockfish&quot;]:::later -.-&gt; ANA[&quot;🐍 analysis job&lt;br/&gt;optional, not built&quot;]:::later
     ANA -.-&gt; DB
-    DB --&gt; Q["🐍 queries.py&lt;br/&gt;ready, tested"]:::job
-    Q --&gt; DASH["📊 Streamlit dashboard&lt;br/&gt;to design"]:::ui
-    DB --&gt; DS["🔎 Datasette&lt;br/&gt;raw browsing"]:::ui
+    DB --&gt; Q[&quot;🐍 queries.py&lt;br/&gt;ready, tested&quot;]:::job
+    Q --&gt; DASH[&quot;📊 Streamlit dashboard&lt;br/&gt;to design&quot;]:::ui
+    DB --&gt; DS[&quot;🔎 Datasette&lt;br/&gt;raw browsing&quot;]:::ui
     classDef src fill:#fef3c7,stroke:#d97706,color:#78350f
     classDef eng fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
     classDef job fill:#e0e7ff,stroke:#4f46e5,color:#312e81
     classDef db fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
     classDef ui fill:#dcfce7,stroke:#16a34a,color:#14532d
     classDef later fill:#f1f5f9,stroke:#64748b,color:#0f172a
-</div></code></pre>
+</pre>
 <h3 id="why-sqlite-is-inside-engine-uci-after-all">Why SQLite <em>is</em> inside Engine UCI after all</h3>
 <p>On October 25 I recommended <strong>A</strong>: the engine appends JSON lines to a &quot;flight recorder&quot; file, and a Python job imports them, so that nothing about a database could ever touch your clock. <strong>You chose B: &quot;no more json files, database only&quot;.</strong> It's a fair call: one file format fewer to keep, read and back up, and the data is there the moment the move is played. But it meant the engine itself had to answer every worry that made me pick A. This is how the built one does it:</p>
 <table>
@@ -539,15 +272,15 @@ code {
 <hr />
 <h2 id="4--the-schema">4. 🧬 The schema</h2>
 <p><strong>The single source of truth is <code>lichess-bot-master\database\schema.sql</code>:</strong> 10 tables, 14 indexes and 3 views, with comments next to its columns. This section explains it instead of copying it, so it can't go stale. Two programs apply it: Engine UCI at every start, and <code>python database\db.py --init</code>. Every statement can run again safely (<code>IF NOT EXISTS</code>, and the views are dropped and re-created).</p>
-<pre><code class="language-mermaid"><div class="mermaid">erDiagram
-    GAMES ||--o{ MOVES : "every ply, FK"
-    GAMES |o..o| ENGINE_GAMES : "same game_id, no FK"
-    ENGINE_GAMES ||..o{ ENGINE_MOVES : "same game_id, no FK"
-    ENGINE_MOVES ||--o{ WORKER_RUNS : "one per worker asked"
-    WORKER_RUNS ||--o{ WORKER_DEPTHS : "one per depth"
-    ENGINE_MOVES ||--o{ ROOT_CANDIDATES : "every searched root move"
-    ENGINE_GAMES |o..o{ EVENTS : "game_id and ply, no FK"
-    GAMES |o..o{ POSITION_ANALYSIS : "optional, no job yet"
+<pre class="mermaid">erDiagram
+    GAMES ||--o{ MOVES : &quot;every ply, FK&quot;
+    GAMES |o..o| ENGINE_GAMES : &quot;same game_id, no FK&quot;
+    ENGINE_GAMES ||..o{ ENGINE_MOVES : &quot;same game_id, no FK&quot;
+    ENGINE_MOVES ||--o{ WORKER_RUNS : &quot;one per worker asked&quot;
+    WORKER_RUNS ||--o{ WORKER_DEPTHS : &quot;one per depth&quot;
+    ENGINE_MOVES ||--o{ ROOT_CANDIDATES : &quot;every searched root move&quot;
+    ENGINE_GAMES |o..o{ EVENTS : &quot;game_id and ply, no FK&quot;
+    GAMES |o..o{ POSITION_ANALYSIS : &quot;optional, no job yet&quot;
     GAMES {
         text game_id PK
         int created_at
@@ -610,7 +343,7 @@ code {
         text source PK
         text cursor
     }
-</div></code></pre>
+</pre>
 <p><em>(A few columns per table; the file has them all.)</em></p>
 <h3 id="the-10-tables">The 10 tables</h3>
 <table>
@@ -686,12 +419,12 @@ code {
 </tbody>
 </table>
 <p>The paths a move can take, and what a worker's run can end as:</p>
-<pre><code class="language-sql">  path             TEXT NOT NULL CHECK (path IN ('kernel', 'stockfish_opening', 'stockfish_endgame',
-                                                 'stalemate_override', 'only_move', 'no_kernel_answer',
-                                                 'no_legal_move')),
+<pre><code class="language-sql"><span class="w">  </span><span class="n">path</span><span class="w">             </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">path</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;kernel&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stockfish_opening&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;stockfish_endgame&#39;</span><span class="p">,</span>
+<span class="w">                                                 </span><span class="s1">&#39;stalemate_override&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;only_move&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;no_kernel_answer&#39;</span><span class="p">,</span>
+<span class="w">                                                 </span><span class="s1">&#39;no_legal_move&#39;</span><span class="p">)),</span>
 </code></pre>
-<pre><code class="language-sql">  status                 TEXT NOT NULL CHECK (status IN ('ok', 'timeout', 'dead', 'error', 'no_moves',
-                                                         'no_completed_depth', 'rejected')),
+<pre><code class="language-sql"><span class="w">  </span><span class="n">status</span><span class="w">                 </span><span class="nb">TEXT</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">NULL</span><span class="w"> </span><span class="k">CHECK</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="k">IN</span><span class="w"> </span><span class="p">(</span><span class="s1">&#39;ok&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;timeout&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;dead&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;error&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;no_moves&#39;</span><span class="p">,</span>
+<span class="w">                                                         </span><span class="s1">&#39;no_completed_depth&#39;</span><span class="p">,</span><span class="w"> </span><span class="s1">&#39;rejected&#39;</span><span class="p">)),</span>
 </code></pre>
 <p><code>ok</code> is a usable answer; <code>timeout</code>: silent at the deadline (allowed time + 2 s), killed, restarted after <code>bestmove</code>; <code>dead</code>: it died during the search (only its moves are lost, for that move); <code>error</code>: it answered with an error message; <code>no_moves</code> and <code>no_completed_depth</code> are the worker's own answers (nothing to search / not even the first depth finished); <code>rejected</code>: its move isn't one of its own root moves, or its score isn't an integer. A worker that died <em>before</em> the move gets no moves and no row: the living workers search its share.</p>
 <h3 id="the-14-indexes">The 14 indexes</h3>
@@ -703,22 +436,22 @@ code {
 <li><strong><code>events</code></strong>: <code>idx_events_game</code> (<code>game_id, ply</code>), <code>idx_events_at</code>;</li>
 <li>and the three that keep <code>v_games</code> fast:</li>
 </ul>
-<pre><code class="language-sql">-- v_games reads every game's engine figures through these three, one game at a time (never a scan).
-CREATE INDEX IF NOT EXISTS idx_worker_runs_game_depth  ON worker_runs(game_id, depth);
-CREATE INDEX IF NOT EXISTS idx_worker_runs_game_status ON worker_runs(game_id, status);
-CREATE INDEX IF NOT EXISTS idx_engine_moves_game_path  ON engine_moves(game_id, path);
+<pre><code class="language-sql"><span class="c1">-- v_games reads every game&#39;s engine figures through these three, one game at a time (never a scan).</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">idx_worker_runs_game_depth</span><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">worker_runs</span><span class="p">(</span><span class="n">game_id</span><span class="p">,</span><span class="w"> </span><span class="n">depth</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">idx_worker_runs_game_status</span><span class="w"> </span><span class="k">ON</span><span class="w"> </span><span class="n">worker_runs</span><span class="p">(</span><span class="n">game_id</span><span class="p">,</span><span class="w"> </span><span class="n">status</span><span class="p">);</span>
+<span class="k">CREATE</span><span class="w"> </span><span class="k">INDEX</span><span class="w"> </span><span class="k">IF</span><span class="w"> </span><span class="k">NOT</span><span class="w"> </span><span class="k">EXISTS</span><span class="w"> </span><span class="n">idx_engine_moves_game_path</span><span class="w">  </span><span class="k">ON</span><span class="w"> </span><span class="n">engine_moves</span><span class="p">(</span><span class="n">game_id</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="p">);</span>
 </code></pre>
 <h3 id="the-3-views">The 3 views</h3>
 <p>They hold no data, so <code>schema.sql</code> drops and re-creates them every time (inside its one transaction).</p>
 <p><strong><code>v_games</code>: one row per game, from either side.</strong> Every <code>game_id</code> in <code>games</code> <strong>or</strong> <code>engine_games</code> has its row, so a game the sync hasn't fetched yet, or a <code>local-…</code> game, is there too. lichess's data wins when it's there, and the engine's fills in otherwise (start time, color, opponent). It computes <code>started_at</code>, <strong><code>local_date</code></strong> (your local date), <code>lost_on_time</code>, the <code>time_control</code> label (<code>'3+2'</code>, <code>'0.5+0'</code>, <code>'corr'</code>), <code>opponent_kind</code> (<code>'bot'</code>, <code>'human'</code>, or NULL when nobody knows), <code>synced</code>, and the engine's figures for the game: <code>engine_moves</code>, <code>kernel_moves</code>, <code>stockfish_moves</code>, <code>had_stalemate_override</code>, <code>had_no_kernel_answer</code>, <code>avg_move_ms</code>, <code>max_move_ms</code>, <code>max_depth</code>, <code>worker_timeouts</code>, <code>worker_failures</code> (<code>dead</code> or <code>error</code>) and <code>engine_version</code>. A game without engine moves gets NULL counts, 0 flags and 0 timeouts / failures.</p>
 <p><strong><code>v_engine_moves</code>: one row per engine move</strong>, with its workers summed up: <code>workers_ok</code>, <code>workers_failed</code>, <code>max_depth</code>, <code>total_nodes</code>, <code>slowest_search_ms</code> and <strong><code>overhead_ms</code></strong>, the move's time minus its slowest worker's search, which is what the engine itself cost:</p>
-<pre><code class="language-sql">       MAX(w.search_ms)                                                          AS slowest_search_ms,
-       em.t_total_ms - MAX(w.search_ms)                                          AS overhead_ms
+<pre><code class="language-sql"><span class="w">       </span><span class="k">MAX</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">search_ms</span><span class="p">)</span><span class="w">                                                          </span><span class="k">AS</span><span class="w"> </span><span class="n">slowest_search_ms</span><span class="p">,</span>
+<span class="w">       </span><span class="n">em</span><span class="p">.</span><span class="n">t_total_ms</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="k">MAX</span><span class="p">(</span><span class="n">w</span><span class="p">.</span><span class="n">search_ms</span><span class="p">)</span><span class="w">                                          </span><span class="k">AS</span><span class="w"> </span><span class="n">overhead_ms</span>
 </code></pre>
 <p><strong><code>overhead_ms</code> is NULL when no worker searched</strong> (Stockfish's moves, <code>only_move</code>, <code>no_legal_move</code>, every worker timed out). It used to give the whole move there, Stockfish's thinking included; <code>queries.py</code> guards against that too.</p>
 <p><strong><code>v_moves</code>: every ply from lichess</strong>, with the engine's side (<code>path</code>, <code>best_score</code>, <code>allowed_seconds</code>, <code>t_total_ms</code>) on the plies Mr. Bits played.</p>
 <p><strong>Why <code>v_games</code> asks one game at a time (and why it matters):</strong> its first version joined per-game totals that SQLite built by grouping <strong>every</strong> engine move and <strong>every</strong> worker of <strong>every</strong> game, so even reading one game summed up the whole database. Now each engine figure is a subquery on <strong>one</strong> game, through those three <code>(game_id, …)</code> indexes, and it only runs for the rows a call actually returns:</p>
-<pre><code class="language-sql">       (SELECT NULLIF(COUNT(*), 0) FROM engine_moves em WHERE em.game_id = a.game_id)       AS engine_moves,
+<pre><code class="language-sql"><span class="w">       </span><span class="p">(</span><span class="k">SELECT</span><span class="w"> </span><span class="k">NULLIF</span><span class="p">(</span><span class="k">COUNT</span><span class="p">(</span><span class="o">*</span><span class="p">),</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="n">engine_moves</span><span class="w"> </span><span class="n">em</span><span class="w"> </span><span class="k">WHERE</span><span class="w"> </span><span class="n">em</span><span class="p">.</span><span class="n">game_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">a</span><span class="p">.</span><span class="n">game_id</span><span class="p">)</span><span class="w">       </span><span class="k">AS</span><span class="w"> </span><span class="n">engine_moves</span><span class="p">,</span>
 </code></pre>
 <table>
 <thead>
@@ -749,10 +482,10 @@ CREATE INDEX IF NOT EXISTS idx_engine_moves_game_path  ON engine_moves(game_id, 
 <p>At 3,000 games it was 1.5–2 s per call, and it's 0.04–38 ms now. <strong><code>tests\test_schema.py</code> keeps it that way:</strong> it runs every statement of every <code>queries.py</code> call through <code>EXPLAIN QUERY PLAN</code> and fails if one ever scans <code>engine_moves</code> or <code>worker_runs</code>.</p>
 <h3 id="the-rules-that-go-with-it">The rules that go with it</h3>
 <p><strong>Two engines, one transaction.</strong> The file starts like this, and its last line is <code>COMMIT;</code>:</p>
-<pre><code class="language-sql">PRAGMA journal_mode = WAL;     -- stored in the file: readers (the dashboard) never block the engine
-PRAGMA foreign_keys = ON;      -- per connection only: every program turns it on again when it connects
+<pre><code class="language-sql"><span class="n">PRAGMA</span><span class="w"> </span><span class="n">journal_mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">WAL</span><span class="p">;</span><span class="w">     </span><span class="c1">-- stored in the file: readers (the dashboard) never block the engine</span>
+<span class="n">PRAGMA</span><span class="w"> </span><span class="n">foreign_keys</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">ON</span><span class="p">;</span><span class="w">      </span><span class="c1">-- per connection only: every program turns it on again when it connects</span>
 
-BEGIN IMMEDIATE;
+<span class="k">BEGIN</span><span class="w"> </span><span class="k">IMMEDIATE</span><span class="p">;</span>
 </code></pre>
 <ul>
 <li><strong>Foreign keys are per connection.</strong> Only WAL is stored in the file, so without <code>PRAGMA foreign_keys = ON</code> orphans are accepted silently and <code>ON DELETE CASCADE</code> does nothing. Python connects through <strong><code>db.connect()</code></strong>: it turns them on, sets the same 5 s busy timeout as the engine, gives rows that work like dicts, finds the file <strong>next to <code>db.py</code></strong> (never relative to the working folder, where a plain <code>sqlite3.connect()</code> would silently create a new, empty database), and <strong>refuses a missing database</strong> instead of creating one (&quot;run <code>python database/db.py --init</code>&quot;). The engine's own SQLite is built with foreign keys on by default, and turns them on again anyway.</li>
@@ -768,7 +501,7 @@ BEGIN IMMEDIATE;
 </ul>
 <hr />
 <h2 id="5--how-one-game-flows-into-the-database">5. 🔄 How one game flows into the database</h2>
-<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+<pre class="mermaid">sequenceDiagram
     participant LB as lichess-bot
     participant UCI as Engine UCI
     participant WR as its writer thread
@@ -803,7 +536,7 @@ BEGIN IMMEDIATE;
     SY-&gt;&gt;API: pass 2, POST /api/games/export/_ids for the engine games still missing
     API--&gt;&gt;SY: NDJSON
     SY-&gt;&gt;DB: the same upserts, then the cursor
-</div></code></pre>
+</pre>
 <h3 id="who-writes-what-and-when">Who writes what, and when</h3>
 <table>
 <thead>
@@ -906,10 +639,10 @@ BEGIN IMMEDIATE;
 <p>Which worker failed, and why, is in <code>worker_runs.status</code> and <code>worker_runs.error</code>: the events only count them.</p>
 <h3 id="sync_lichesspy-after-the-games"><code>sync_lichess.py</code>, after the games</h3>
 <p>From <code>lichess-bot-master\</code>:</p>
-<pre><code class="language-powershell">python database\sync_lichess.py --since YYYY-MM-DD    # the first time: your go-live date (a LOCAL date)
-python database\sync_lichess.py                       # every later time: from where the last sync stopped
-python database\sync_lichess.py --dry-run             # fetch and check everything, write nothing
-python database\sync_lichess.py --from-file games.ndjson   # offline: lichess NDJSON from a file (tests, re-imports)
+<pre><code class="language-powershell"><span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">sync_lichess</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-since</span> <span class="n">YYYY-MM-DD</span>    <span class="c"># the first time: your go-live date (a LOCAL date)</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">sync_lichess</span><span class="p">.</span><span class="n">py</span>                       <span class="c"># every later time: from where the last sync stopped</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">sync_lichess</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-dry-run</span>             <span class="c"># fetch and check everything, write nothing</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">sync_lichess</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-from</span><span class="o">-file</span> <span class="n">games</span><span class="p">.</span><span class="n">ndjson</span>   <span class="c"># offline: lichess NDJSON from a file (tests, re-imports)</span>
 </code></pre>
 <p><code>--from-file</code> finds the bot as the one player in every game of the file; when that isn't clear (one game alone has two candidates), add <code>--user &lt;the bot's lichess id&gt;</code>. <code>--user</code> only goes with <code>--from-file</code>, and <code>--since</code> only with the API. Without <code>--since</code>, a run starts at the last sync's cursor; with no cursor yet, at the engine's first game minus a day; with no engine game either, 7 days ago.</p>
 <p><strong>The two passes:</strong></p>
@@ -925,10 +658,10 @@ python database\sync_lichess.py --from-file games.ndjson   # offline: lichess ND
 <li>It ends with one line: <code>lichess sync: N games inserted, N updated, N moves written; skipped: N still running, N not played by the bot, N with errors</code>.</li>
 </ul>
 <h3 id="dbpy-by-hand"><code>db.py</code>, by hand</h3>
-<pre><code class="language-powershell">python database\db.py --init        # create the database, or bring an existing one up to schema.sql (data is never deleted)
-python database\db.py --backup      # SQLite's online backup into database\backup\mrbits-YYYY-MM-DD_HH-MM.sqlite (safe while a game runs)
-python database\db.py --check       # integrity check, foreign keys, journal mode, rows per table (exit code 1 if unhealthy)
-python database\db.py --recent 20   # the newest 20 engine moves and events (12 without a number): a quick look
+<pre><code class="language-powershell"><span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-init</span>        <span class="c"># create the database, or bring an existing one up to schema.sql (data is never deleted)</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-backup</span>      <span class="c"># SQLite&#39;s online backup into database\backup\mrbits-YYYY-MM-DD_HH-MM.sqlite (safe while a game runs)</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-check</span>       <span class="c"># integrity check, foreign keys, journal mode, rows per table (exit code 1 if unhealthy)</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-recent</span> <span class="n">20</span>   <span class="c"># the newest 20 engine moves and events (12 without a number): a quick look</span>
 </code></pre>
 <p>One action per call. <code>sync_lichess.py</code> and <code>queries.py</code> need the database to exist; the engine creates it by itself.</p>
 <hr />
@@ -971,7 +704,7 @@ python database\db.py --recent 20   # the newest 20 engine moves and events (12 
 <h2 id="7--the-dashboard-still-a-plan-but-its-data-layer-is-ready">7. 📊 The dashboard (still a plan, but its data layer is ready)</h2>
 <p><strong>Tools (recommended, unchanged):</strong> <strong>Streamlit</strong>, a Python dashboard framework where a page is a Python script, so it's quick to build without being a web developer. It's paired with <code>pandas</code>, <code>plotly</code> for charts, and <code>python-chess</code> (already installed: lichess-bot uses it) to draw the board as an SVG (<code>chess.svg.board()</code>, checked October 25). <strong>Datasette</strong> sits next to it for raw browsing: <code>datasette database\mrbits.sqlite</code> gives you every table and view with filters and facets in the browser, with zero code. Open it normally, never with <code>--immutable</code>: that mode assumes nobody writes the file, and your engine does.</p>
 <p>⚠️ <strong>None of streamlit, datasette, pandas or plotly is installed</strong> (checked October 27, Python 3.14.2). Use a virtual environment: <code>python -m venv .venv-dash</code> (git already ignores <code>.venv-*/</code>), then <code>pip install streamlit pandas plotly datasette</code>. If pip finds no wheels for Python 3.14, use 3.12 or 3.13 for the dashboard only. Streamlit serves on port 8501, Datasette on 8001.</p>
-<pre><code class="language-mermaid"><div class="mermaid">mindmap
+<pre class="mermaid">mindmap
   root((📊 Mr. Bits dashboard))
     Overview
       Rating over time per speed
@@ -996,7 +729,7 @@ python database\db.py --recent 20   # the newest 20 engine moves and events (12 
       Overhead per move
       Timeouts and crashes
       Nodes per second by version
-</div></code></pre>
+</pre>
 <h3 id="-the-data-layer-databasequeriespy">✅ The data layer: <code>database\queries.py</code></h3>
 <p>Plain functions that return lists of dicts, one dict per row. Every value reaches SQLite as a <strong>bound parameter</strong>, and the only name put into the SQL text, the <code>ORDER BY</code> column, must be in a whitelist (every column of <code>v_games</code>). Each function takes an optional <code>con=</code> to share one connection; without it, it opens and closes its own, which also works from Streamlit's threads (a SQLite connection belongs to the thread that opened it).</p>
 <table>
@@ -1075,17 +808,17 @@ python database\db.py --recent 20   # the newest 20 engine moves and events (12 
 └─────────────────────────────────────────────────────────────────────────────────────┘
 </code></pre>
 <hr />
-<h2 id="8-️-the-phases">8. 🛣️ The phases</h2>
-<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
-    D0["D0 · schema.sql + db.py&lt;br/&gt;✅ done"]:::done --&gt; D1["D1 · sync_lichess.py&lt;br/&gt;✅ built, tested offline&lt;br/&gt;⏳ first live run: yours"]:::ready
-    D1 --&gt; D2["D2 · Engine UCI writes&lt;br/&gt;every move&lt;br/&gt;✅ built, tested&lt;br/&gt;⏳ live games: yours"]:::ready
-    D2 --&gt; D3["D3 · the dashboard&lt;br/&gt;queries.py ✅&lt;br/&gt;pages: to design"]:::next
-    D3 -.-&gt; D4["D4 · Stockfish analysis&lt;br/&gt;optional, later"]:::later
+<h2 id="8--the-phases">8. 🛣️ The phases</h2>
+<pre class="mermaid">flowchart LR
+    D0[&quot;D0 · schema.sql + db.py&lt;br/&gt;✅ done&quot;]:::done --&gt; D1[&quot;D1 · sync_lichess.py&lt;br/&gt;✅ built, tested offline&lt;br/&gt;⏳ first live run: yours&quot;]:::ready
+    D1 --&gt; D2[&quot;D2 · Engine UCI writes&lt;br/&gt;every move&lt;br/&gt;✅ built, tested&lt;br/&gt;⏳ live games: yours&quot;]:::ready
+    D2 --&gt; D3[&quot;D3 · the dashboard&lt;br/&gt;queries.py ✅&lt;br/&gt;pages: to design&quot;]:::next
+    D3 -.-&gt; D4[&quot;D4 · Stockfish analysis&lt;br/&gt;optional, later&quot;]:::later
     classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
     classDef ready fill:#ecfccb,stroke:#65a30d,color:#365314
     classDef next fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
     classDef later fill:#f1f5f9,stroke:#64748b,color:#0f172a
-</div></code></pre>
+</pre>
 <table>
 <thead>
 <tr>
@@ -1169,6 +902,7 @@ python database\db.py --recent 20   # the newest 20 engine moves and events (12 
 <li><strong>The first new column in an existing table:</strong> when it comes, decide how to migrate (most likely an <code>ALTER TABLE</code> that <code>db.py --init</code> runs before the first game with the new build), since <code>schema.sql</code> alone won't add it.</li>
 </ol>
 <p>— <strong>Claude Opus 5.5</strong> 🤖</p>
-
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,securityLevel:"strict"});</script>
 </body>
 </html>

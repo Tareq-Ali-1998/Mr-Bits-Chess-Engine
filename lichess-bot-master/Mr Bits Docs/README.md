@@ -10,13 +10,19 @@
 
 The exported C++ evaluators live in [`../engines/Neural Networks/`](../engines/Neural%20Networks/README.md).
 The short [neural evaluation and sorting complexity guide](../engines/Neural%20Networks/TIME_COMPLEXITY_README.md) explains the exact bounds for Small and Large.
-The [Kernel experiment versions](../engines/Kernels/README.md) now include v1 through v11 with distinct ordering, pruning and leaf-evaluation policies. Read the [short v5/v6 guide](../engines/Kernels/V5_V6_README.md) for the full-width and late-move-reduction pair.
+The [Kernel families](../engines/Kernels/README.md) organize the experiments into legacy handcrafted leaves (v1.0.x), legacy neural leaves (v1.1.x), and legal/quiescence search (v1.2.x). The [version map](../engines/Kernels/VERSION_FAMILIES.md) records every previous label and its current name. Read the [short v2.1/v2.2 guide](../engines/Kernels/V5_V6_README.md) for the full-width and late-move-reduction pair.
 
-The newer [v7 guide](../engines/Kernels/v7/README.md) covers independent legal generation, mate/stalemate, bounded quiescence, and improved iteration admission. Its original-copy source remains separate from all earlier versions.
+The newer [v3.0 guide](../engines/Kernels/v3.0/README.md) covers independent legal generation, mate/stalemate, bounded quiescence, and improved iteration admission. Its original-copy source remains separate from all earlier versions.
 
-Read the new guides in this order: [How V7 works — five illustrated parts](../engines/Kernels/v7/HOW_V7_WORKS.md), [Small/Large operation counts and sorting cost](../engines/Neural%20Networks/OPERATION_COUNTS.md), then [V8 — pure Small static evaluation](../engines/Kernels/v8/README.md).
+Read the new guides in this order: [How V3.0 works — five illustrated parts](../engines/Kernels/v3.0/HOW_V3_0_WORKS.md), [Small/Large operation counts and sorting cost](../engines/Neural%20Networks/OPERATION_COUNTS.md), then [V3.1 — pure Small static evaluation](../engines/Kernels/v3.1/README.md).
 
-Next experiments: [V9 — Large top-three with original scoring](../engines/Kernels/v9/README.md), [V10 — Large top-three with blended scoring](../engines/Kernels/v10/README.md), and [V11 — PVS plus exact static-value caching](../engines/Kernels/v11/README.md). Their short illustrated guides explain the policy, costs, and limitations.
+Start the scoring comparison with [v3.1: 100% Small](../engines/Kernels/v3.1/README.md), [v3.2: 100% handcrafted](../engines/Kernels/v3.2/README.md), [v3.3: 80% Small / 20% handcrafted](../engines/Kernels/v3.3/README.md), and [v3.4: 20% Small / 80% handcrafted](../engines/Kernels/v3.4/README.md). All retain v3.0's search behavior. The pure-Small v3.1 was reused, so v3.5 is intentionally absent.
+
+Next experiments: [V3.6 — Large top-three with original scoring](../engines/Kernels/v3.6/README.md), [V3.7 — Large top-three with blended scoring](../engines/Kernels/v3.7/README.md), and [V3.8 — PVS plus exact static-value caching](../engines/Kernels/v3.8/README.md). Their short illustrated guides explain the policy, costs, and limitations.
+
+[V3.9 — Small top-ten above depth two](../engines/Kernels/v3.9/README.md) keeps V3.0's scoring and legal/tactical foundation while testing a narrower ordinary tree. At depth two or less, including quiescence, it performs no move sorting. The temporary old v7 folder has been retired; select v3.0 for that same baseline. The proposed search-table design, previously called V13, waits for a worker-memory discussion before implementation.
+
+The [V13 memory proposal](V13_MEMORY_PLAN.md) accounts for all 28 workers together and distinguishes fixed allocations from an estimated RAM allowance. V13 remains a design to discuss, not an implemented kernel.
 
 ## Inspect the game database
 

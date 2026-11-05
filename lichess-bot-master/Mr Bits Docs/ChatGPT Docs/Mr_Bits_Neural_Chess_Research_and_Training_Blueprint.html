@@ -1,374 +1,127 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:adfa9508705add9b72c8c1553d3c02a7111796795a9d7232c0288c22372dc18a">
 <title>Mr_Bits_Neural_Chess_Research_and_Training_Blueprint.md</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-
 <style>
-/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
 
-body {
-	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
-	font-size: var(--vscode-markdown-font-size, 14px);
-	padding: 0 26px;
-	line-height: var(--vscode-markdown-line-height, 22px);
-	word-wrap: break-word;
-}
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
 
-#code-csp-warning {
-	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
-	margin: 16px;
-	text-align: center;
-	font-size: 12px;
-	font-family: sans-serif;
-	background-color:#444444;
-	cursor: pointer;
-	padding: 6px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
-}
-
-#code-csp-warning:hover {
-	text-decoration: none;
-	background-color:#007acc;
-	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
-}
-
-body.scrollBeyondLastLine {
-	margin-bottom: calc(100vh - 22px);
-}
-
-body.showEditorSelection .code-line {
-	position: relative;
-}
-
-body.showEditorSelection .code-active-line:before,
-body.showEditorSelection .code-line:hover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -12px;
-	height: 100%;
-}
-
-body.showEditorSelection li.code-active-line:before,
-body.showEditorSelection li.code-line:hover:before {
-	left: -30px;
-}
-
-.vscode-light.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.15);
-}
-
-.vscode-light.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.40);
-}
-
-.vscode-light.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-dark.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.4);
-}
-
-.vscode-dark.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.60);
-}
-
-.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-high-contrast.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 160, 0, 0.7);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 160, 0, 1);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
-	outline: 1px solid -webkit-focus-ring-color;
-	outline-offset: -1px;
-}
-
-hr {
-	border: 0;
-	height: 2px;
-	border-bottom: 2px solid;
-}
-
-h1 {
-	padding-bottom: 0.3em;
-	line-height: 1.2;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
-h1, h2, h3 {
-	font-weight: normal;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table > thead > tr > th {
-	text-align: left;
-	border-bottom: 1px solid;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td {
-	padding: 5px 10px;
-}
-
-table > tbody > tr + tr > td {
-	border-top: 1px solid;
-}
-
-blockquote {
-	margin: 0 7px 0 5px;
-	padding: 0 16px 0 10px;
-	border-left-width: 5px;
-	border-left-style: solid;
-}
-
-code {
-	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
-	font-size: 1em;
-	line-height: 1.357em;
-}
-
-body.wordWrap pre {
-	white-space: pre-wrap;
-}
-
-pre:not(.hljs),
-pre.hljs code > div {
-	padding: 16px;
-	border-radius: 3px;
-	overflow: auto;
-}
-
-pre code {
-	color: var(--vscode-editor-foreground);
-	tab-size: 4;
-}
-
-/** Theming */
-
-.vscode-light pre {
-	background-color: rgba(220, 220, 220, 0.4);
-}
-
-.vscode-dark pre {
-	background-color: rgba(10, 10, 10, 0.4);
-}
-
-.vscode-high-contrast pre {
-	background-color: rgb(0, 0, 0);
-}
-
-.vscode-high-contrast h1 {
-	border-color: rgb(0, 0, 0);
-}
-
-.vscode-light table > thead > tr > th {
-	border-color: rgba(0, 0, 0, 0.69);
-}
-
-.vscode-dark table > thead > tr > th {
-	border-color: rgba(255, 255, 255, 0.69);
-}
-
-.vscode-light h1,
-.vscode-light hr,
-.vscode-light table > tbody > tr + tr > td {
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-.vscode-dark h1,
-.vscode-dark hr,
-.vscode-dark table > tbody > tr + tr > td {
-	border-color: rgba(255, 255, 255, 0.18);
-}
-
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
 </style>
-
-<style>
-/* Tomorrow Theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-
-/* Tomorrow Comment */
-.hljs-comment,
-.hljs-quote {
-	color: #8e908c;
-}
-
-/* Tomorrow Red */
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-regexp,
-.hljs-deletion {
-	color: #c82829;
-}
-
-/* Tomorrow Orange */
-.hljs-number,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-literal,
-.hljs-type,
-.hljs-params,
-.hljs-meta,
-.hljs-link {
-	color: #f5871f;
-}
-
-/* Tomorrow Yellow */
-.hljs-attribute {
-	color: #eab700;
-}
-
-/* Tomorrow Green */
-.hljs-string,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition {
-	color: #718c00;
-}
-
-/* Tomorrow Blue */
-.hljs-title,
-.hljs-section {
-	color: #4271ae;
-}
-
-/* Tomorrow Purple */
-.hljs-keyword,
-.hljs-selector-tag {
-	color: #8959a8;
-}
-
-.hljs {
-	display: block;
-	overflow-x: auto;
-	color: #4d4d4c;
-	padding: 0.5em;
-}
-
-.hljs-emphasis {
-	font-style: italic;
-}
-
-.hljs-strong {
-	font-weight: bold;
-}
-</style>
-
-<style>
-/*
- * Markdown PDF CSS
- */
-
- body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
-	padding: 0 12px;
-}
-
-pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
-	border-radius: 3px;
-	overflow-x: auto;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-}
-
-pre:not(.hljs) {
-	padding: 23px;
-	line-height: 19px;
-}
-
-blockquote {
-	background: rgba(127, 127, 127, 0.1);
-	border-color: rgba(0, 122, 204, 0.5);
-}
-
-.emoji {
-	height: 1.4em;
-}
-
-code {
-	font-size: 14px;
-	line-height: 19px;
-}
-
-/* for inline code */
-:not(pre):not(.hljs) > code {
-	color: #C9AE75; /* Change the old color so it seems less like an error */
-	font-size: inherit;
-}
-
-/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
--------------------------------------------------------- */
-.page {
-	page-break-after: always;
-}
-
-</style>
-
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-          ? 'dark'
-          : 'default'
-    });
-  </script>
-
-<h1 id="️-mr-bits-neural-chess-lab">♟️🧠 Mr. Bits Neural Chess Lab</h1>
+<style>
+:root { color-scheme:light dark; --ink-blue:#2563eb; --ink-green:#15803d; --ink-gold:#a16207; --ink-red:#b91c1c; }
+body { max-width:1100px; margin:3rem auto; padding:0 1.4rem; font-family:Inter,Segoe UI,Arial,sans-serif; line-height:1.78; }
+h1,h2,h3 { line-height:1.25; letter-spacing:-.02em; }
+h1 { color:var(--ink-blue); font-size:2.6rem; }
+h2 { border-bottom:2px solid #64748b55; padding-bottom:.55rem; margin-top:3rem; }
+h3 { margin-top:2rem; }
+table { border-collapse:collapse; width:100%; margin:1.2rem 0; font-size:.94em; }
+th,td { border:1px solid #64748b55; padding:.65rem .8rem; text-align:left; vertical-align:top; }
+th { background:#64748b18; }
+blockquote { border-left:5px solid var(--ink-blue); background:#2563eb0d; padding:.8rem 1.2rem; margin:1.5rem 0; }
+pre { overflow:auto; border:1px solid #64748b44; border-radius:9px; padding:1rem; background:#64748b0d; line-height:1.45; }
+code { font-family:Cascadia Code,Consolas,monospace; font-size:.91em; }
+a { color:var(--ink-blue); }
+.good { color:var(--ink-green); font-weight:700; }
+.watch { color:var(--ink-gold); font-weight:700; }
+.critical { color:var(--ink-red); font-weight:700; }
+.note { color:var(--ink-blue); font-weight:700; }
+@media (prefers-color-scheme:dark) { :root { --ink-blue:#93c5fd; --ink-green:#86efac; --ink-gold:#fde68a; --ink-red:#fca5a5; } }
+@media print { body { max-width:none; margin:0; font-size:10.5pt; } h2,h3 { break-after:avoid; } pre,blockquote { break-inside:avoid; } }
+</style>
+<h1 id="-mr-bits-neural-chess-lab">♟️🧠 Mr. Bits Neural Chess Lab</h1>
 <h2 id="from-a-board-to-a-scoreand-from-a-score-to-better-search">From a board to a score—and from a score to better search</h2>
-<p><strong>A research paper and practical training blueprint for Tareq Ali</strong><br>
+<p><strong>A research paper and practical training blueprint for Tareq Ali</strong><br />
 <strong>Research checked:</strong> 22 October 2026 · <strong>Prepared by:</strong> ChatGPT / Codex</p>
 <p><span class="good">🟢 Ready-made labels exist</span> · <span class="note">🔵 Scalar evaluation is a valid goal</span> · <span class="watch">🟡 Strong play must be measured</span> · <span class="critical">🔴 Top-five pruning can miss the only good move</span></p>
 <blockquote>
@@ -379,7 +132,7 @@ code {
 <p>This paper proposes a study; <strong>it does not report a trained model, new Elo result, measured training throughput, or guaranteed improvement</strong>. Published facts have nearby source links. Architecture sizes, sampling policies, thresholds, budgets, and rollout stages marked as proposals are our experimental choices.</p>
 <p>Your engine source and the earlier review remain unchanged. No data purchase, bulk download, cloud provisioning, or training run was performed for this paper. <code>Claude Docs</code> was not read.</p>
 <p>The diagrams use plain text and render in ordinary Markdown-to-HTML converters. CSS adds optional colors; the text and emoji remain readable without it.</p>
-<hr>
+<hr />
 <h2 id="-reading-map">🧭 Reading map</h2>
 <ol>
 <li><a href="#first-model">What we should build first</a></li>
@@ -455,7 +208,7 @@ code {
 </table>
 <p>This first model is a <strong>baseline</strong>, meaning a reference experiment we can understand and compare against. It is not a promise that a small dense network is the final strongest architecture.</p>
 <h3 id="your-proposed-loop-is-a-valid-interface">Your proposed loop is a valid interface</h3>
-<pre class="hljs"><code><div>                      current legal position
+<pre><code class="language-text">                      current legal position
                                │
                     generate all legal moves
                                │
@@ -471,7 +224,7 @@ code {
            └───────────────────┼───────────────────┘
                                ▼
                   prioritize work in the search
-</div></code></pre>
+</code></pre>
 <p>The network does not have to output a move. The search can compare scalar scores. DeepMind's ChessBench study explicitly includes a state-value approach that evaluates legal successor positions, alongside action-value and move-prediction approaches. That is direct precedent for the interface you described. Its results establish possibility at its studied scale, not the strength our first model will achieve. <a href="https://arxiv.org/html/2402.04494v2">ChessBench paper, Section 2.3</a></p>
 <h3 id="what-i-would-change-in-your-hypothesis">What I would change in your hypothesis</h3>
 <p>“We keep only the best five and therefore become stronger” contains two separate claims:</p>
@@ -480,11 +233,11 @@ code {
 <li>The branches we removed do not contain a move or defense that matters.</li>
 </ol>
 <p>The first can be true while the second fails. Once a necessary move is removed, extra depth cannot recover it. The experiment should therefore optimize <strong>useful strength per second</strong>, measuring both saved work and missed opportunities.</p>
-<p>The earlier <a href="Mr_Bits_Independent_Engineering_Review.md">engineering review</a> explains the rules and timing repairs that should precede serious strength comparisons. We can research and prepare the model in parallel with those repairs, as you suggested.</p>
+<p>The earlier <a href="Mr_Bits_Independent_Engineering_Review.html">engineering review</a> explains the rules and timing repairs that should precede serious strength comparisons. We can research and prepare the model in parallel with those repairs, as you suggested.</p>
 <p><a id="primer"></a></p>
 <h2 id="2--the-deep-learning-concepts-you-actually-need">2. 🧩 The deep-learning concepts you actually need</h2>
 <p>Imagine showing a student many chess diagrams, each with a teacher's score. The student learns a function that approximately reproduces those judgments on new diagrams.</p>
-<pre class="hljs"><code><div>             one training example
+<pre><code class="language-text">             one training example
 
   x: board + state       y: teacher evaluation
            │                    │
@@ -499,7 +252,7 @@ code {
                                   │
                                   ▼
                          adjust network weights
-</div></code></pre>
+</code></pre>
 <table>
 <thead>
 <tr>
@@ -565,19 +318,19 @@ code {
 <p>For example, if the teacher says <code>+0.80</code> and the model predicts <code>+0.20</code>, the error is <code>−0.60</code> pawn-like units. Training changes many weights so similar examples may improve. It does not insert a precise chess rule saying “this bishop is worth 0.60 more.”</p>
 <p>The labels do not have to be perfect to be useful. They do need consistent meanings, sensible quality, and sufficient coverage of positions the model will see during play.</p>
 <h3 id="teacher-student-and-distillation">Teacher, student, and distillation</h3>
-<p><strong>Teacher:</strong> a strong engine performing search.<br>
-<strong>Student:</strong> our much cheaper neural evaluator.<br>
+<p><strong>Teacher:</strong> a strong engine performing search.<br />
+<strong>Student:</strong> our much cheaper neural evaluator.<br />
 <strong>Distillation:</strong> training the student to approximate the teacher's results.</p>
-<pre class="hljs"><code><div>OFFLINE, before play                       ONLINE, during play
+<pre><code class="language-text">OFFLINE, before play                       ONLINE, during play
 
 positions → teacher search → saved scores  position → student → approximate score
                     │                                     │
                     └────── training data ─► weights ──────┘
-</div></code></pre>
+</code></pre>
 <p>The teacher's search happens while generating the dataset. Our student later makes a direct prediction without repeating that search. This is how a network can learn from expensive computations without incurring their full cost on every runtime call.</p>
 <p>It is a compression of knowledge, not a guarantee that every long tactical sequence has been memorized or understood.</p>
 <p><a id="inputs"></a></p>
-<h2 id="3-️-what-the-network-must-know-about-a-position">3. 🗺️ What the network must know about a position</h2>
+<h2 id="3--what-the-network-must-know-about-a-position">3. 🗺️ What the network must know about a position</h2>
 <p>Your “board plus a few flags” idea is close. A few details are essential.</p>
 <h3 id="a-proposed-basic-encoding-782-values">A proposed basic encoding: 782 values</h3>
 <table>
@@ -624,7 +377,7 @@ positions → teacher search → saved scores  position → student → approxim
 <p>A full position record can include a halfmove clock, relevant to draw rules. For sources that provide it, we can add a normalized clock and a “known” flag—<strong>784 inputs</strong> in that extended design. If another feature such as material phase is added, increment the input definition and version accordingly.</p>
 <p>The Lichess evaluation export lacks the last two FEN counters. Do not invent a real halfmove clock of zero merely because a parser needs a placeholder. Record it as unknown. Our first 782-input model makes a position-value approximation without that missing information; the engine handles exact terminal/draw state separately.</p>
 <p>Repetition requires game/search history. FEN by itself does not contain that history, and one repetition counter is not a complete replacement. The same visible board can therefore have different rule-relevant contexts. <a href="https://python-chess.readthedocs.io/en/latest/core.html#chess.Board.fen">python-chess position/FEN documentation</a></p>
-<pre class="hljs"><code><div>            ENGINE owns the complete legal state
+<pre><code class="language-text">            ENGINE owns the complete legal state
 
  board + turn + rights + EP + clocks + repetition history
                  │                         │
@@ -634,20 +387,20 @@ positions → teacher search → saved scores  position → student → approxim
                  │
                  ▼
           approximate evaluation
-</div></code></pre>
+</code></pre>
 <p>The network must not be responsible for deciding whether a king can be captured, whether a draw claim exists, or whether a castle is legal. Those remain engine rules.</p>
 <h3 id="a-useful-augmentation-used-carefully">A useful augmentation, used carefully</h3>
 <p>One experiment is to flip ranks and swap piece colors, swap the side to move and castling rights, transform the en-passant square, and negate the White-perspective score. This creates a color-reversed version of a sample.</p>
 <p>Test that transformation against a legal chess library. Do not casually apply image-style rotations or horizontal flips: pawn direction and standard castling geometry make arbitrary image augmentation invalid. Keep transformed relatives in the same data split to avoid leakage.</p>
 <p><a id="labels"></a></p>
-<h2 id="4-️-what-an-evaluation-label-means">4. 🏷️ What an evaluation label means</h2>
+<h2 id="4--what-an-evaluation-label-means">4. 🏷️ What an evaluation label means</h2>
 <h3 id="your-desired-output-is-feasible">Your desired output is feasible</h3>
 <p>We can define our public interface as:</p>
-<pre class="hljs"><code><div>V_white(position) → pawn-like score
+<pre><code class="language-text">V_white(position) → pawn-like score
 
 positive: predicted advantage for White
 negative: predicted advantage for Black
-</div></code></pre>
+</code></pre>
 <p>If a source provides White-perspective centipawns, the display conversion is simply <code>pawns = cp / 100</code>. Thus <code>125 cp</code> becomes <code>+1.25</code>.</p>
 <p>However, <code>+9</code> should mean “a very large predicted White advantage on the chosen teacher's scale,” not necessarily “exactly one extra queen.” Modern Stockfish's displayed scale is normalized and is not a literal material ledger. Teacher versions and score conventions must be recorded. <a href="https://official-stockfish.github.io/docs/stockfish-wiki/Stockfish-FAQ.html#interpretation-of-the-stockfish-evaluation">Stockfish score interpretation</a></p>
 <h3 id="static-evaluation-and-searched-evaluation-are-different-targets">Static evaluation and searched evaluation are different targets</h3>
@@ -689,11 +442,11 @@ negative: predicted advantage for Black
 <p>There is also a project-specific confounder: your <code>Stockfish Handler.hpp:65–79</code> substitutes a magnitude-100,000 score when static evaluation reports a check position, and <code>202–214</code> counts spaces to determine move-order direction. Those can distort an experiment independently of the network. I would retest using a correct direct interface before drawing conclusions about NNUE quality. This identifies a possible confounder; it does not prove what happened in every earlier test you ran.</p>
 <h3 id="perspective-must-be-explicit">Perspective must be explicit</h3>
 <p>Some scores favor White; others favor the side to move. Conversion is straightforward once the convention is known:</p>
-<pre class="hljs"><code><div>teacher score is side-to-move centipawns:
+<pre><code class="language-text">teacher score is side-to-move centipawns:
 
 cp_white = cp_stm             if White is to move
 cp_white = -cp_stm            if Black is to move
-</div></code></pre>
+</code></pre>
 <p>With our White-perspective model, White selects larger child scores and Black selects smaller child scores. With a side-to-move model, the child's player is the opponent, so a parent-facing value requires sign reversal for signed scores. Use <code>1 − p</code> for expected game score or a symmetric transformed-score target; for full WDL, swap win and loss while retaining draw. A win probability alone cannot simply be complemented because draws exist.</p>
 <table>
 <thead>
@@ -729,7 +482,7 @@ cp_white = -cp_stm            if Black is to move
 <p>The official Hugging Face card describes the same <strong>416,442,401 positions</strong> flattened into <strong>1,003,347,246 rows</strong>, updated <strong>7 October 2026</strong>. The row schema is <code>fen</code>, <code>line</code>, <code>depth</code>, <code>knodes</code>, nullable <code>cp</code>, and nullable <code>mate</code>. The dataset identifies CC0 licensing. Use the actual repository identifier <strong><code>Lichess/chess-position-evaluations</code></strong>; the card's example currently contains a different, stale-looking identifier. <a href="https://huggingface.co/datasets/Lichess/chess-position-evaluations/raw/main/README.md">Dataset card</a></p>
 <p><strong>A billion rows does not mean a billion independent board values.</strong> Different rows can be different candidate moves from the same parent position. The viewer demonstrates repeated FENs with different lines and scores. <a href="https://huggingface.co/datasets/Lichess/chess-position-evaluations">Official dataset viewer</a></p>
 <p>Here is the conceptual issue, using invented numbers:</p>
-<pre class="hljs"><code><div>Same parent board S, White to move
+<pre><code class="language-text">Same parent board S, White to move
 
 row 1: S, candidate A, score +0.50
 row 2: S, candidate B, score -3.00
@@ -741,7 +494,7 @@ Wrong scalar training:
 Correct interpretations:
     V(S) ≈ best backed-up score: +0.50
     Q(S, A) ≈ +0.50; Q(S, B) ≈ -3.00; Q(S, C) ≈ +0.10
-</div></code></pre>
+</code></pre>
 <p><code>V(S)</code> is a <strong>state value</strong>. <code>Q(S, move)</code> is a <strong>move-conditioned action value</strong>. Both are scalar learning problems. An action-value model does not have to output the best move either.</p>
 <p>For Black to move with White-perspective scores, mover-optimal selection is the minimum. For a beginner pipeline, the nested raw export is easier to interpret correctly because it retains analysis grouping and PV order. A flattened importer needs a tested reconstruction policy; simply keeping the first encountered row or averaging every row is not that policy.</p>
 <p>A useful later alternative is to apply a labeled candidate's first move and train on the resulting child position. That target is then a searched estimate conditional on the move, with the appropriate perspective conversion. Validate the PV notation, legality, and search-horizon interpretation first. Never give the future PV itself to a runtime board-only model as an input feature.</p>
@@ -794,7 +547,7 @@ Correct interpretations:
 <h2 id="6--turning-downloaded-data-into-trustworthy-samples">6. 🧼 Turning downloaded data into trustworthy samples</h2>
 <p>The important deliverable is not “a billion rows on disk.” It is a smaller, versioned dataset whose inputs and labels mean what we think they mean.</p>
 <h3 id="the-proposed-preparation-pipeline">The proposed preparation pipeline</h3>
-<pre class="hljs"><code><div>public source + pinned snapshot
+<pre><code class="language-text">public source + pinned snapshot
               │
               ▼
 stream records / read selected complete shards
@@ -819,7 +572,7 @@ stratify / build compact training shards
               │
               ▼
 audit sample, freeze manifest, train pilot
-</div></code></pre>
+</code></pre>
 <h3 id="step-1--freeze-provenance-before-transforming-anything">Step 1 · Freeze provenance before transforming anything</h3>
 <p>Record the source URL, repository revision or dated release, downloaded-file checksum, parser version, and selection policy. For labels with known teachers, record the engine build, network, score transform, search budget, and thread/hash settings. Use <code>unknown</code> when a source does not provide something; do not retroactively label every Lichess record “Stockfish 16.”</p>
 <p>This allows us to explain later why a particular target exists and to reproduce a training subset.</p>
@@ -840,14 +593,14 @@ audit sample, freeze manifest, train pilot
 <p>A pilot might compare an unfiltered baseline against a proposed quality filter such as <code>depth ≥ 18</code> and <code>knodes ≥ 100</code>—the latter means 100,000 searched nodes. These thresholds are <strong>experimental choices</strong>, not a scientific boundary between good and bad labels. Report how many positions survive and which phases disappear.</p>
 <h3 id="step-4--normalize-once-then-verify-the-sign">Step 4 · Normalize once, then verify the sign</h3>
 <p>Use an explicit internal label contract such as:</p>
-<pre class="hljs"><code><div>position features: supported board state
+<pre><code class="language-text">position features: supported board state
 target_kind:       cp_white
 target_cp:         signed numeric value
 mate:              separate field / separate table
 halfmove_known:    true or false
 source:            named, versioned dataset
 quality:           depth, nodes, and any known teacher details
-</div></code></pre>
+</code></pre>
 <p>Before training, manually inspect a few material-imbalanced, quiet positions with both sides to move. Then compare imported labels with a controlled teacher on a small audit set. Opening positions alone do not catch a sign flip.</p>
 <p>Do not feed <code>line</code>, teacher-selected move, search depth, or future game result as a feature to a board-only runtime model. Depth/nodes can be used for filtering or experimental sample weights; they are not secret runtime information the model should depend on.</p>
 <h3 id="step-5--deduplicate-without-hiding-conflicts">Step 5 · Deduplicate without hiding conflicts</h3>
@@ -899,27 +652,27 @@ quality:           depth, nodes, and any known teacher details
 <p>Run persistent teacher processes through a correct interface. Benchmark independent single-thread workers against fewer multithreaded workers; record hash behavior and clear or control cross-position reuse according to the labeling protocol. Fixed node budgets can make work definitions clearer than an undocumented “depth 22,” but neither makes labels exact.</p>
 <p>This targeted loop is a form of <strong>active data collection</strong>: spend new computation on mistakes and missing coverage rather than duplicating what the public data already supplies.</p>
 <p><a id="architecture"></a></p>
-<h2 id="7-️-choosing-a-network-architecture">7. 🏗️ Choosing a network architecture</h2>
+<h2 id="7--choosing-a-network-architecture">7. 🏗️ Choosing a network architecture</h2>
 <h3 id="model-a--a-small-dense-baseline-we-can-understand">Model A · A small dense baseline we can understand</h3>
 <p><strong>Proposal:</strong></p>
-<pre class="hljs"><code><div>782 inputs → 256 hidden units → 64 hidden units → 1 scalar
+<pre><code class="language-text">782 inputs → 256 hidden units → 64 hidden units → 1 scalar
                ReLU               ReLU          linear output
-</div></code></pre>
+</code></pre>
 <p>A hidden unit combines inputs through learned weights and a nonlinear activation. ReLU retains positive values and replaces negative values with zero; the final output stays linear so both positive and negative scores are possible.</p>
 <p>Including biases, this proposed core has <strong>216,961 parameters</strong>. Float32 parameter storage is about <strong>0.87 MB decimal</strong>, excluding optimizer state, activations, and implementation overhead. Changing the input feature count changes these numbers.</p>
 <p>This model is intentionally small enough to debug and export. It might be insufficiently expressive for the strongest evaluator we want; that is something the learning curves and chess tests will tell us.</p>
 <h3 id="model-b--a-sparse-incrementally-updated-evaluator">Model B · A sparse, incrementally updated evaluator</h3>
 <p>Most piece-square inputs are zero. Instead of multiplying every one of the first layer's weights by zero, sum the learned columns corresponding to active features. Then maintain that first-layer sum as pieces move.</p>
-<pre class="hljs"><code><div>first-layer accumulator:
+<pre><code class="language-text">first-layer accumulator:
 
-move a piece:  subtract old square&#x27;s feature column
-               add new square&#x27;s feature column
+move a piece:  subtract old square&#39;s feature column
+               add new square&#39;s feature column
 
-capture:       subtract captured piece&#x27;s column
+capture:       subtract captured piece&#39;s column
 promotion:     replace pawn feature with promoted piece feature
 castling:      update king and rook features
 turn/rights/EP: update changed auxiliary features
-</div></code></pre>
+</code></pre>
 <p>That is closely related to the incremental score maintenance you already implemented. NNUE designs exploit sparse, slightly changing inputs and efficient low-precision inference. <a href="https://official-stockfish.github.io/docs/nnue-pytorch-wiki/docs/nnue.html#what-is-nnue">NNUE architecture principles</a></p>
 <p>A first educational incremental model can use simple piece-square features; more expressive king-relative features can be studied later. Start with correct full refresh, compare sparse evaluation against it, then add incremental updates. Do not begin by debugging data, quantization, SIMD, and incremental undo simultaneously.</p>
 <p><strong>Important:</strong> training our own model does not remove the fundamental limitations of a one-pass evaluator. Existing NNUE systems also learn from large amounts of searched data. The opportunity is a well-measured learned component that fits <em>your</em> engine, not a guarantee that a new network automatically beats those evaluators.</p>
@@ -965,26 +718,26 @@ turn/rights/EP: update changed auxiliary features
 <p><strong>Residual evaluation:</strong> let a network learn a correction to an existing, correctly calibrated material/PST evaluation. This is an optional experiment, not necessarily better than learning the full target. The base terms must be correct first.</p>
 <p><strong>Scalar action value:</strong> use <code>(position, candidate move)</code> as input and output a score, preserving your preference against a best-move output. A shared board representation may reduce repeated work across candidates. We should compare it with the simpler child-position evaluator rather than assume it is better.</p>
 <p><a id="training"></a></p>
-<h2 id="8-️-training-objectives-and-practical-settings">8. 🏋️ Training objectives and practical settings</h2>
+<h2 id="8--training-objectives-and-practical-settings">8. 🏋️ Training objectives and practical settings</h2>
 <h3 id="first-objective-approximate-consistent-teacher-scores">First objective: approximate consistent teacher scores</h3>
 <p>For the centipawn dataset:</p>
-<pre class="hljs"><code><div>target_pawns = cp_white / 100
+<pre><code class="language-text">target_pawns = cp_white / 100
 prediction   = model(board_features)
 error        = prediction - target_pawns
-</div></code></pre>
+</code></pre>
 <p>A proposed first loss is <strong>Huber regression</strong>. Near the target it penalizes squared error; for large errors it grows more gently, reducing the influence of a few enormous labels.</p>
 <p>We can compare unclipped targets with a documented range such as <strong>±15 pawns</strong> for ordinary-score regression. That cutoff is a tunable proposal. Clipping deliberately loses information about the ordering of very large advantages, so do not present a clipped model as measuring arbitrary winning margins accurately.</p>
 <p>Mate remains separately typed. Exact terminal results override approximate predictions in the engine.</p>
 <h3 id="lower-average-error-is-not-the-entire-objective">Lower average error is not the entire objective</h3>
 <p>Suppose a model is excellent on easy winning positions but frequently reverses the best two defenses in a difficult middlegame. Its average loss can look good while the engine loses more games.</p>
 <p>Later, add <strong>sibling ranking</strong>: learn the relative order of legal children from the same parent. Turn White-perspective scores into mover-utility scores:</p>
-<pre class="hljs"><code><div>U(parent, move) = V_white(child)     for a White parent
+<pre><code class="language-text">U(parent, move) = V_white(child)     for a White parent
 U(parent, move) = -V_white(child)    for a Black parent
-</div></code></pre>
+</code></pre>
 <p>If a teacher reliably prefers candidate A over B, penalize the student for ranking B higher. A pairwise logistic ranking loss is one option. Ignore or down-weight near ties and teacher disagreements; there is little value in learning a noisy 0.01-pawn order with great confidence.</p>
 <p>Our experimental objective could become:</p>
-<pre class="hljs"><code><div>total loss = value loss + λ × sibling-ranking loss
-</div></code></pre>
+<pre><code class="language-text">total loss = value loss + λ × sibling-ranking loss
+</code></pre>
 <p>Start with value loss alone, then sweep a few ranking weights. The “right λ” is not known in advance, and a lower combined training loss is not proof of stronger play.</p>
 <h3 id="probability-and-outcome-heads-are-optional">Probability and outcome heads are optional</h3>
 <p>A second head can predict a documented score transform or WDL. That may stabilize very large advantage targets or allow game outcomes to contribute. Keep each target's semantics separate and record how losses are mixed.</p>
@@ -1056,12 +809,12 @@ U(parent, move) = -V_white(child)    for a Black parent
 <p>Save weights, optimizer state, preprocessing version, dataset manifest, split definition, seed, training step, loss configuration, and validation metrics. Store the board orientation and output convention with the model. “model_final_v7.bin” without those details is not a reproducible result.</p>
 <p>Inspect validation loss by score bucket, phase, tactical status, and side to move. If training loss improves while unseen-position behavior degrades, investigate overfitting, duplicate leakage, label conflicts, or distribution shift before adding more GPU hours.</p>
 <h3 id="scale-only-after-a-useful-pilot">Scale only after a useful pilot</h3>
-<pre class="hljs"><code><div>hundreds/thousands of records  → prove parsing, labels, signs, and one training step
+<pre><code class="language-text">hundreds/thousands of records  → prove parsing, labels, signs, and one training step
 around 100,000 clean records   → debug learning and Python/C++ parity
 1–5 million records           → establish a general baseline
 20–50 million records         → test a scaling hypothesis
 100 million and beyond        → only if held-out results justify the cost
-</div></code></pre>
+</code></pre>
 <p>The stages are proposals. Data diversity and label quality can matter more than another order of magnitude of highly repetitive positions.</p>
 <p><a id="specialists"></a></p>
 <h2 id="9--one-network-or-four-phase-specialists">9. 🧠🧠🧠 One network or four phase specialists?</h2>
@@ -1093,7 +846,7 @@ around 100,000 clean records   → debug learning and Python/C++ parity
 </tr>
 </tbody>
 </table>
-<pre class="hljs"><code><div>                               ┌── general score head
+<pre><code class="language-text">                               ┌── general score head
 board + state → shared features ├── opening score head
                                ├── middlegame score head
                                └── endgame score head
@@ -1102,7 +855,7 @@ board + state → shared features ├── opening score head
                                           │
                                           ▼
                                  one comparable score
-</div></code></pre>
+</code></pre>
 <p>Stockfish's documented use of shared feature processing with piece-count-selected subnetworks provides a precedent for specialization without four fully independent networks. Our four-head design and its gate are proposals, not a copy of that exact architecture. <a href="https://official-stockfish.github.io/docs/nnue-pytorch-wiki/docs/nnue.html#multiple-subnetworks">NNUE multiple subnetworks</a></p>
 <h3 id="opening-and-endgame-need-better-definitions-than-move-numbers">“Opening” and “endgame” need better definitions than move numbers</h3>
 <p>A proposed material phase uses weight 4 per queen, 2 per rook, and 1 per bishop or knight across both colors. Initial total: 24. A normalized, clipped material fraction can describe how much non-pawn material remains.</p>
@@ -1196,7 +949,7 @@ board + state → shared features ├── opening score head
 </table>
 <p>With an otherwise correct complete fixed-depth alpha–beta baseline, ordering alone preserves the minimax result for that evaluated tree. Under a time limit, ordering can change which iteration completes and which result is returned. That is precisely where practical benefit must be measured.</p>
 <h3 id="the-integration-progression-i-recommend">The integration progression I recommend</h3>
-<pre class="hljs"><code><div>0. SHADOW             record scores; search decision logic unchanged
+<pre><code class="language-text">0. SHADOW             record scores; search decision logic unchanged
        │
 1. ORDER              prioritize candidates; retain legal alternatives
        │
@@ -1206,7 +959,7 @@ board + state → shared features ├── opening score head
        │                 └── re-search if they improve the relevant bound
        │
 4. EXPERIMENTAL PRUNE only after error, latency, and match evidence
-</div></code></pre>
+</code></pre>
 <p>Shadow mode helps detect score-sign bugs and disagreement cases before the scores influence search decisions. Collecting these predictions through offline replay is useful: live prediction/logging overhead can change completed depth and results under a clock, even when decision logic is unchanged. Account for that overhead explicitly. Ordering measures whether the scores produce earlier useful cutoffs. Learned leaf evaluation is a separate ablation: it changes evaluation quality even if ordering is unchanged.</p>
 <p>Verified reductions are a later search experiment. Modern Stockfish performs quiescence at the normal depth boundary and re-searches promising reduced moves; its source provides a useful design precedent. Its tuned rules and constants should not be copied into this engine without understanding their assumptions. <a href="https://github.com/official-stockfish/Stockfish/blob/master/src/search.cpp">Stockfish search implementation</a></p>
 <h3 id="first-guardrails-for-selective-experiments">First guardrails for selective experiments</h3>
@@ -1222,7 +975,7 @@ board + state → shared features ├── opening score head
 <p>One practical experiment is to use a richer ranker only near the root or at larger remaining depth, with a cheaper ordering mechanism deeper down. Another is to cache evaluations by position. Both need measured hit rates, correct rule context, and bounded memory.</p>
 <p>Do not label a depth increase as a strength increase until tactics and equal-time games support that conclusion.</p>
 <p><a id="trust"></a></p>
-<h2 id="11-️-building-a-measurable-trust-factor">11. 🎚️ Building a measurable “trust factor”</h2>
+<h2 id="11--building-a-measurable-trust-factor">11. 🎚️ Building a measurable “trust factor”</h2>
 <p>Your intuition is useful: the search should not rely on a model equally in every situation. We need to turn that intuition into something testable.</p>
 <h3 id="three-different-things-people-call-confidence">Three different things people call confidence</h3>
 <table>
@@ -1262,7 +1015,7 @@ board + state → shared features ├── opening score head
 <li>Agreement of independently trained models, if that experiment is affordable.</li>
 </ul>
 <p>For each bucket record best/near-best move retention, value regret, and serious tactical misses. Use that evidence to select an ordering or reduction policy. Leave a separate test split untouched while choosing the policy.</p>
-<pre class="hljs"><code><div>predicted scores + position context
+<pre><code class="language-text">predicted scores + position context
                  │
                  ▼
        measured reliability bucket
@@ -1273,7 +1026,7 @@ board + state → shared features ├── opening score head
         │        │         │
    retain more  order      consider a verified reduction
                 normally  with protected alternatives
-</div></code></pre>
+</code></pre>
 <p>Do not call the right-hand branch “safe pruning.” Its evidence can weaken when the engine starts visiting a different distribution of positions.</p>
 <h3 id="why-very-high-recall-is-still-not-a-guarantee">Why very high recall is still not a guarantee</h3>
 <p>Suppose, only as an illustration, that a necessary move survives a filter with probability 0.99 at each of 20 relevant decisions, independently. Joint survival would be <code>0.99^20 ≈ 81.8%</code>. Real chess errors are correlated, so this is not a performance forecast. It demonstrates why an attractive single-step average can conceal sequence-level risk.</p>
@@ -1286,7 +1039,7 @@ board + state → shared features ├── opening score head
 <p><a id="deployment"></a></p>
 <h2 id="12--training-on-the-gpu-playing-inside-c">12. 🔧 Training on the GPU, playing inside C++</h2>
 <h3 id="two-workloads-two-different-machines-if-we-want">Two workloads, two different machines if we want</h3>
-<pre class="hljs"><code><div>TRAINING LAB                                PLAYING ENGINE
+<pre><code class="language-text">TRAINING LAB                                PLAYING ENGINE
 
 compact dataset shards                      board + legal state
          │                                         │
@@ -1300,7 +1053,7 @@ trained checkpoint                                 ▼
          │                                  one evaluation score
          ▼                                         │
 validate + export ─────── weights + metadata ───────► search
-</div></code></pre>
+</code></pre>
 <p>Training on an NVIDIA GPU does not require running every chess evaluation on a GPU afterward. Stockfish itself uses CPU evaluation and GPU-based network training; its normal search is not accelerated merely by renting a GPU. <a href="https://official-stockfish.github.io/docs/stockfish-wiki/Stockfish-FAQ.html#can-stockfish-use-my-gpu">Stockfish CPU/GPU explanation</a></p>
 <p>For your current style of CPU alpha–beta search, load weights once and evaluate in the same C++ process. A Python launch, temporary file exchange, or remote request per node would be an expensive boundary.</p>
 <h3 id="gpu-inference-is-a-different-search-experiment">GPU inference is a different search experiment</h3>
@@ -1373,11 +1126,11 @@ validate + export ─────── weights + metadata ───────
 <h3 id="published-pricing-snapshot">Published pricing snapshot</h3>
 <p>As checked on <strong>22 October 2026</strong>, Nebius lists RTX PRO 6000 at <strong>$1.80 per GPU-hour on demand</strong> and dynamic preemptible pricing <strong>from $0.79</strong>. The minimum spot price is not guaranteed during a run. Prices exclude applicable tax; stopped VMs stop compute charges, while persistent storage remains chargeable. Use your actual selected configuration's total quoted rate when planning. <a href="https://docs.nebius.com/compute/resources/pricing">Nebius pricing</a></p>
 <h3 id="training-time-arithmetic-measure-the-missing-variable">Training-time arithmetic: measure the missing variable</h3>
-<pre class="hljs"><code><div>training examples processed = selected positions × passes
+<pre><code class="language-text">training examples processed = selected positions × passes
 
 training hours ≈ examples processed / measured examples per second / 3600
 compute dollars ≈ measured hours × actual hourly rate
-</div></code></pre>
+</code></pre>
 <p>Suppose we select 50 million positions and train for five passes: <strong>250 million examples processed</strong>.</p>
 <table>
 <thead>
@@ -1403,9 +1156,9 @@ compute dollars ≈ measured hours × actual hourly rate
 <p><strong>These are sensitivity examples, not speed predictions for the RTX PRO 6000.</strong> Actual time includes preprocessing, validation, checkpointing, compilation, and I/O. The number of passes required is also an experimental outcome.</p>
 <p>A small model can be input-bound. Measure end-to-end throughput with real batches from the intended data format; a synthetic all-in-GPU benchmark can conceal the real bottleneck.</p>
 <h3 id="teacher-labeling-is-a-separate-cpu-workload">Teacher labeling is a separate CPU workload</h3>
-<pre class="hljs"><code><div>labeling hours ≈ labels needed × measured seconds per label
+<pre><code class="language-text">labeling hours ≈ labels needed × measured seconds per label
                  / effective concurrent workers / 3600
-</div></code></pre>
+</code></pre>
 <p>Illustration: one million labels at 0.2 seconds each, spread effectively across 16 independent workers, is about <strong>3.47 hours</strong> before overhead. At two seconds each it is <strong>34.72 hours</strong>. Neither figure is a promised Stockfish throughput.</p>
 <p>If “one million examples” means one million <em>parents with 35 children each</em>, that is 35 million labels. The first example becomes about <strong>121.5 hours</strong>. This is why complete sibling labeling should start with a focused benchmark and why existing action-value data is valuable.</p>
 <p>A GPU does not automatically speed up normal Stockfish search. Use the GPU for training and select a sensible CPU resource for new Stockfish labels. Benchmark 1,000–10,000 representative positions before extrapolating, including difficult middlegames and endgames.</p>
@@ -1644,7 +1397,7 @@ compute dollars ≈ measured hours × actual hourly rate
 <p>Using published teacher labels does not make your feature encoding, model comparisons, inference implementation, search integration, or experiments less meaningful. Credit dataset creators and tools, retain the applicable notices, and describe assistance honestly.</p>
 <p>The strongest portfolio artifact would be a reproducible investigation: what you tried, how the scores were defined, where the model failed, how inference cost changed the search, and what the engine matches actually showed.</p>
 <p>You do not need to imitate a huge research lab's full training scale to make this valuable. A compact, understandable model that measurably improves your engine would be an excellent result. If a model fails, explaining <em>why</em> and testing a better hypothesis is also substantive engineering.</p>
-<h3 id="my-answer-to-the-biggest-questions-bro-️">My answer to the biggest questions, bro ❤️</h3>
+<h3 id="my-answer-to-the-biggest-questions-bro-">My answer to the biggest questions, bro ❤️</h3>
 <p><strong>Where does <code>y</code> come from?</strong> From already searched public evaluations—primarily Lichess and ChessBench—or from targeted new teacher analysis where coverage is missing.</p>
 <p><strong>Can the output be a score rather than a move?</strong> Yes. That is exactly the state-value design proposed here.</p>
 <p><strong>Will it match a strong engine's deep search everywhere?</strong> No. We are approximating that judgment, and tactics remain a reason to keep search.</p>
@@ -1791,8 +1544,7 @@ compute dollars ≈ measured hours × actual hourly rate
 </tbody>
 </table>
 <p>Counts, prices, file sizes, and repository details are a <strong>22 October 2026 research snapshot</strong> and can change. The model architecture, preparation rules, training settings, trust policy, budgets, and rollout are proposals to test. No pretrained result is being claimed for Mr. Bits by this paper.</p>
-<hr>
+<hr />
 <p>♟️ <strong>The next concrete milestone:</strong> a small dataset whose labels we trust, one compact baseline we understand, and a complete path from Python training to a verified C++ score. That foundation gives the ambitious experiments somewhere solid to grow.</p>
-
 </body>
 </html>

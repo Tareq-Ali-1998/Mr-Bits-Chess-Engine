@@ -2,7 +2,7 @@
 setlocal
 cd /d "%~dp0"
 if "%~1"=="" (
-  python build_version.py v1
+  python build_version.py v1.0
 ) else (
   python build_version.py %*
 )

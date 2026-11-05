@@ -55,6 +55,11 @@ double MillisecondsSince(const TimePoint& startTime) {
 
 class ChessState {
 
+  private:
+    // Completed half-moves (plies), not full White+Black move pairs.
+    // The default effectively disables the deliberate endgame handoff.
+    int stockfishEndgameStartPly = 1000000;
+
   public:
 
     StockfishHandler stockfishHandler;
@@ -111,6 +116,22 @@ class ChessState {
 
     int getTheNumberOfOpeningMovesToGetFromStockfish() {
         return this->theNumberOfOpeningMovesToGetFromStockfish;
+    }
+
+    void setStockfishEndgameStartPly(int startPly) {
+        if (startPly < 0) {
+            throw invalid_argument("Stockfish endgame start ply cannot be negative");
+        }
+        this->stockfishEndgameStartPly = startPly;
+    }
+
+    int getStockfishEndgameStartPly() const {
+        return this->stockfishEndgameStartPly;
+    }
+
+    bool isStockfishEndgame() const {
+        // Preserve the strict boundary: the handoff starts only after the threshold.
+        return this->previousMoves.size() > static_cast<size_t>(this->stockfishEndgameStartPly);
     }
 
     void setBestMove(const string& bestMove) {
@@ -222,8 +243,7 @@ class ChessState {
     }
 
     string getStockfishBestMoveByDepth(const int& depth) {
-        // After ply 80 Stockfish plays the end game on purpose; before that, it's the opening.
-        this->decisionPath = (this->previousMoves.size() > 80) ? "stockfish_endgame" : "stockfish_opening";
+        this->decisionPath = this->isStockfishEndgame() ? "stockfish_endgame" : "stockfish_opening";
         this->stockfishDepthUsed = depth;
         return this->stockfishHandler.getBestMoveByDepth(this->getMovesStringFromPreviousMoves(), depth);
     }
@@ -251,18 +271,20 @@ class ChessState {
 
         // I should modify all the following function according to each game maybe, it's easy to
         // manipulate with and super important in many other sides.
-        if (this->previousMoves.size() < (this->theNumberOfOpeningMovesToGetFromStockfish * 2)) {
+        const bool useStockfishForEndgame = this->isStockfishEndgame();
+        if (useStockfishForEndgame ||
+            this->previousMoves.size() < (this->theNumberOfOpeningMovesToGetFromStockfish * 2)) {
 
-            if ((this->allowedEngineTimeInSeconds >= 60) && (this->previousMoves.size() > 80)) {
+            if ((this->allowedEngineTimeInSeconds >= 60) && useStockfishForEndgame) {
                 return this->getStockfishBestMoveByDepth(26);
             }
-            if ((this->allowedEngineTimeInSeconds >= 30) && (this->previousMoves.size() > 80)) {
+            if ((this->allowedEngineTimeInSeconds >= 30) && useStockfishForEndgame) {
                 return this->getStockfishBestMoveByDepth(24);
             }
-            else if ((this->allowedEngineTimeInSeconds >= 20) && (this->previousMoves.size() > 80)) {
+            else if ((this->allowedEngineTimeInSeconds >= 20) && useStockfishForEndgame) {
                 return this->getStockfishBestMoveByDepth(22);
             }
-            else if ((this->allowedEngineTimeInSeconds >= 10) && (this->previousMoves.size() > 80)) {
+            else if ((this->allowedEngineTimeInSeconds >= 10) && useStockfishForEndgame) {
                 return this->getStockfishBestMoveByDepth(18);
             }
 
@@ -276,7 +298,7 @@ class ChessState {
 
             // seed the random number generator with current time.
             srand(time(0));
-            vector<int> possibleDepths = {14, 16, 18, 20};
+            vector<int> possibleDepths = {18, 20, 22, 24};
             int8_t randomChosenDepth = possibleDepths[rand() % 4];
             return this->getStockfishBestMoveByDepth(randomChosenDepth);
 

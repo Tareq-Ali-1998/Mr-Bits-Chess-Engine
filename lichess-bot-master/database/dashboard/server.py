@@ -30,13 +30,34 @@ except ImportError:
 
 # Kernel identity comes ONLY from explicit recorded kernel= tokens. A timestamp
 # or current selector file is not evidence about the executable used in an old game.
+VERSION_PATTERN = re.compile(r"v([1-9][0-9]*)(?:\.(0|[1-9][0-9]*))?")
+
+
+def version_name(value):
+    """Accept family versions and historical whole-number labels verbatim."""
+    return value == "original" or VERSION_PATTERN.fullmatch(value) is not None
+
+
+def version_sort_key(value):
+    if value == "original":
+        return (0,)
+    match = VERSION_PATTERN.fullmatch(value)
+    if match:
+        major, minor = match.groups()
+        # Length/lexical number keys avoid fixed integer-size limits. Families
+        # precede historical labels; old rows never merge into a new family.
+        return (1 if minor is not None else 2, len(major), major,
+                len(minor or ""), minor or "")
+    return (3, value)
+
+
 def recorded_kernel(build):
     tokens = [part.strip().lower()[7:] for part in (build or "").split(";")
               if part.strip().lower().startswith("kernel=")]
     if len(tokens) != 1:
         return "unknown"
     value = tokens[0]
-    return value if value == "original" or re.fullmatch(r"v[1-9][0-9]*", value) else "unknown"
+    return value if version_name(value) else "unknown"
 
 
 GAMES_CTE = """
@@ -99,7 +120,7 @@ def filters(params):
             raise ValueError("Filter is too long")
         if key == "result" and value not in ("win", "loss", "draw", "aborted", "pending"):
             raise ValueError("Unknown result")
-        if key == "kernel" and value not in ("original", "unknown", "mixed") and not re.fullmatch(r"v[1-9][0-9]*", value):
+        if key == "kernel" and value not in ("unknown", "mixed") and not version_name(value):
             raise ValueError("Unknown Kernel variant")
         if key.startswith("date_"):
             date.fromisoformat(value)
@@ -180,11 +201,12 @@ def summary(con, params):
             "decided": decided,
             "score_pct": 100 * (outcomes["win"] + outcomes["draw"] / 2) / decided if decided else None,
             "avg_move_ms": sum(r["total_move_ms"] or 0 for r in telemetry) / timed if timed else None,
-            "versions": sorted(groups.values(), key=lambda r: r["kernel_variant"]),
+            "versions": sorted(groups.values(), key=lambda r: version_sort_key(r["kernel_variant"])),
             "days": [{"date": day, **{r: values[r] for r in ("win", "draw", "loss", "aborted", "pending")}}
                      for day, values in sorted(days.items())],
             "speeds": [r[0] for r in con.execute("SELECT DISTINCT speed FROM games WHERE speed IS NOT NULL ORDER BY speed")],
-            "kernel_variants": [r[0] for r in con.execute(GAMES_CTE + "SELECT DISTINCT kernel_variant FROM tagged ORDER BY kernel_variant")],
+            "kernel_variants": sorted((r[0] for r in con.execute(GAMES_CTE + "SELECT DISTINCT kernel_variant FROM tagged")),
+                                      key=version_sort_key),
             "replay_available": chess is not None,
             "version_note": "Configured Kernel comes only from recorded kernel= tokens. Unknown history stays unknown. "
                             "A configured variant does not mean every move used that Kernel or a neural network.",

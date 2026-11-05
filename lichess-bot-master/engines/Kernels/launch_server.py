@@ -7,7 +7,7 @@ from pathlib import Path
 import shutil
 import subprocess
 import sys
-from kernel_tools import ENGINES, build_controller, build_kernel, require_weights, select, versions
+from kernel_tools import ENGINES, LEGACY_TO_FAMILY, build_controller, build_kernel, require_weights, select, versions
 
 DESCRIPTIONS = {"original": "original search", "v1": "your Large/top-four experiment",
                 "v2": "ordering only; retain every candidate", "v3": "eight quiet root moves plus captures/promotions",
@@ -18,7 +18,18 @@ DESCRIPTIONS = {"original": "original search", "v1": "your Large/top-four experi
                 "v8": "v7 legal/tactical search + 100% Small position evaluation",
                 "v9": "Large top-three beam + handcrafted static evaluation",
                 "v10": "Large top-three beam + 50/50 handcrafted/Small value",
-                "v11": "Small-only value + PVS re-search + exact-position value cache"}
+                "v11": "Small-only value + PVS re-search + exact-position value cache",
+                "v12": "V7 blend; Small top-ten above depth two; no ordering below"}
+DESCRIPTIONS.update({family: DESCRIPTIONS[legacy] for legacy, family in LEGACY_TO_FAMILY.items()})
+DESCRIPTIONS["v2.2"] = "v2.1 foundation + guarded late quiet move reductions"
+DESCRIPTIONS["v3.0"] = "legal/Q baseline; 50% Small / 50% handcrafted leaf score"
+DESCRIPTIONS["v3.1"] = "same baseline; 100% Small / 0% handcrafted leaf score"
+DESCRIPTIONS["v3.2"] = "same baseline; 0% Small / 100% handcrafted leaf score"
+DESCRIPTIONS["v3.3"] = "same baseline; 80% Small / 20% handcrafted leaf score"
+DESCRIPTIONS["v3.4"] = "same baseline; 20% Small / 80% handcrafted leaf score"
+DESCRIPTIONS["v3.9"] = "legal/Q blend; Small top-ten above depth two; no ordering below"
+# v7 remains a historical alias in LEGACY_TO_FAMILY, not a current menu choice.
+DESCRIPTIONS.pop("v7", None)
 
 
 def choose(available: list[str]) -> str:

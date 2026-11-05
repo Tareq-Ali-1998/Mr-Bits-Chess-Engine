@@ -1,8 +1,15 @@
 "use strict";
 const $ = id => document.getElementById(id);
 const state = {params: new URLSearchParams(), offset: 0, total: 0, game: null, frame: 0, flipped: false, sequence: 0, detailSequence: 0, moveSequence: 0, loading: false, pending: false, inspectedPly: null};
-const names = {original: "Original", v1: "V1 · Small NN", v2: "V2 · Large NN", v3: "V3 · two-stage", v4: "V4 · Small at leaves", unknown: "Unknown", mixed: "Mixed / incomplete"};
-const versionName = value => names[value] || (/^v[1-9][0-9]*$/.test(value || "") ? value.toUpperCase() : "Unknown");
+const familyVersions = ["v1.0", "v1.1", "v1.2", "v2.0", "v2.1", "v2.2", "v3.0", "v3.1", "v3.2", "v3.3", "v3.4", "v3.6", "v3.7", "v3.8", "v3.9"];
+const legacyFamilies = {"v1": "v1.0", "v2": "v1.1", "v3": "v1.2", "v4": "v2.0", "v5": "v2.1", "v6": "v2.2", "v7": "v3.0", "v8": "v3.1", "v9": "v3.6", "v10": "v3.7", "v11": "v3.8", "v12": "v3.9"};
+const names = {"original": "Original", "v1.0": "V1.0 · legacy Large/top-four", "v1.1": "V1.1 · legacy ordering only", "v1.2": "V1.2 · legacy root cutoff", "v2.0": "V2.0 · Small leaves", "v2.1": "V2.1 · blended leaves", "v2.2": "V2.2 · guarded reductions", "v3.0": "V3.0 · 50% Small / 50% handcrafted leaves", "v3.1": "V3.1 · 100% Small / 0% handcrafted leaves", "v3.2": "V3.2 · 0% Small / 100% handcrafted leaves", "v3.3": "V3.3 · 80% Small / 20% handcrafted leaves", "v3.4": "V3.4 · 20% Small / 80% handcrafted leaves", "v3.6": "V3.6 · Large top-three", "v3.7": "V3.7 · Large top-three blend", "v3.8": "V3.8 · PVS/static cache", "v3.9": "V3.9 · Small top-ten", "unknown": "Unknown", "mixed": "Mixed / incomplete"};
+// Labels v3.2-v3.5 were reused; recorded rows need their actual build identities.
+const reusedVersionLabels = new Set(["v3.2", "v3.3", "v3.4", "v3.5"]);
+const versionName = value => reusedVersionLabels.has(value) ? `${value.toUpperCase()} \u00b7 build identifies policy` : names[value] || (/^v[1-9][0-9]*\.(0|[1-9][0-9]*)$/.test(value || "") ? value.toUpperCase() : /^v[1-9][0-9]*$/.test(value || "") ? `Legacy ${value.toUpperCase()}${legacyFamilies[value] ? ` · ${legacyFamilies[value].toUpperCase()} family` : ""}` : "Unknown");
+const optionVersionName = value => names[value] || versionName(value);
+const versionGroup = value => value === "original" ? 0 : /^v[1-9][0-9]*\.(0|[1-9][0-9]*)$/.test(value) ? 1 : /^v[1-9][0-9]*$/.test(value) ? 2 : 3;
+const compareVersions = (a, b) => versionGroup(a) - versionGroup(b) || a.localeCompare(b, "en", {numeric: true});
 const number = value => value == null ? "—" : Number(value).toLocaleString(undefined, {maximumFractionDigits: 1});
 const duration = value => value == null ? "—" : value >= 1000 ? `${number(value / 1000)} s` : `${number(value)} ms`;
 const dateText = value => value == null ? "Date unavailable" : new Intl.DateTimeFormat("en-GB", {timeZone: "Asia/Dubai", dateStyle: "medium", timeStyle: "short"}).format(new Date(value));
@@ -55,8 +62,8 @@ function renderSummary(data) {
   clear($("versions")); $("versions-empty").hidden = data.versions.length > 0;
   data.versions.forEach(v => { const row = element("tr"); cell(row, versionName(v.kernel_variant), "version"); cell(row, number(v.games)); cell(row, `${v.wins} / ${v.draws} / ${v.losses}`); cell(row, v.score_pct == null ? "—" : `${number(v.score_pct)}%`); cell(row, `${v.pending} / ${v.aborted}`); cell(row, duration(v.avg_move_ms)); cell(row, number(v.max_depth)); const builds = cell(row, String(v.builds.length)); builds.title = v.builds.join("\n") || "No build stamp recorded"; $("versions").append(row); });
   const kernelSelect = $("filters").elements.kernel, kernelValue = kernelSelect.value;
-  const variants = new Set(["original", "v1", "v2", "v3", "v4", "v5", "v6", "v7", "v8", "v9", "v10", "v11", ...data.kernel_variants, "unknown", "mixed"]);
-  kernelSelect.replaceChildren(new Option("All versions", "")); [...variants].forEach(v => kernelSelect.add(new Option(versionName(v), v))); kernelSelect.value = kernelValue;
+  const variants = new Set(["original", ...familyVersions, ...data.kernel_variants, "unknown", "mixed"]);
+  kernelSelect.replaceChildren(new Option("All versions", "")); [...variants].sort(compareVersions).forEach(v => kernelSelect.add(new Option(optionVersionName(v), v))); kernelSelect.value = kernelValue;
   const speedValue = $("speed").value; $("speed").replaceChildren(new Option("All speeds", "")); data.speeds.forEach(speed => $("speed").add(new Option(speed, speed))); $("speed").value = speedValue;
   resultChart(data.days);
 }

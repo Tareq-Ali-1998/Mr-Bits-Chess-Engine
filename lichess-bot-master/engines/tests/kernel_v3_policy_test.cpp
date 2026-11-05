@@ -4,7 +4,7 @@
 #error These diagnostic tests require assertions; compile without -DNDEBUG.
 #endif
 #define main mrbits_v3_worker_main_not_called_by_this_test
-#include "../Kernels/v3/Kernel-v3.cpp"
+#include "../Kernels/v1.2/Kernel-v1.2.cpp"
 #undef main
 
 int main() {

@@ -1,11 +1,11 @@
 // Offline JSONL diagnostics. Never invoke the renamed worker main or Stockfish.
 #define main mrbits_worker_main_not_called_by_this_test
 #if MRBITS_TEST_VERSION == 9
-#include "../Kernels/v9/Kernel-v9.cpp"
+#include "../Kernels/v3.6/Kernel-v3.6.cpp"
 #elif MRBITS_TEST_VERSION == 10
-#include "../Kernels/v10/Kernel-v10.cpp"
+#include "../Kernels/v3.7/Kernel-v3.7.cpp"
 #elif MRBITS_TEST_VERSION == 11
-#include "../Kernels/v11/Kernel-v11.cpp"
+#include "../Kernels/v3.8/Kernel-v3.8.cpp"
 #else
 #error Choose MRBITS_TEST_VERSION 9, 10, or 11
 #endif

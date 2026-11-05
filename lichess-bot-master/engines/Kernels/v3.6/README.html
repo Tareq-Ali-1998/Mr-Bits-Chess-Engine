@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:bc51f85fa1f80b64ed9c9657f0354c4ed6db60369e9e807aec46c4dc5bf4c75c">
+<title>README.md</title>
+<style>
+
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
+
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+<h1 id="-v36--large-chooses-three-your-evaluator-judges-the-leaves">🔥 V3.6 · Large chooses three; your evaluator judges the leaves</h1>
+<div style="border-left:5px solid #7c3aed;background:#f5f3ff;color:#312e81;padding:10px 14px"><strong>STATIC SCORING: 0% Small neural network + 100% main-Kernel handcrafted scoring.</strong></div>
+<p><strong>5 November 2026 revision:</strong> this unchanged search experiment moved from <code>v3.2</code> to <strong><code>v3.6</code></strong> to make room for the scoring controls. Historical records/build stamps keep their original names.</p>
+<p><strong>Version identity:</strong> <code>v3.6</code> was previously called <code>v9</code>. Historical verification counts, build stamps and diagnostic paths below retain that earlier identity; they are not fresh execution results for renamed binaries. <a href="../VERSION_FAMILIES.html">Family map</a>.</p>
+<style>
+body{font-family:Segoe UI,Arial,sans-serif;line-height:1.4;color:#223047}h1,h2{color:#2354a5}table{border-collapse:collapse;width:100%}th,td{border:1px solid #cbd5e1;padding:.3em .45em}th{background:#edf3fc}pre{white-space:pre-wrap;font-size:.86em}@media print{body{font-size:10pt;line-height:1.25}h1{font-size:18pt}h2{font-size:14pt}table,pre{break-inside:avoid}}@page{size:A4;margin:15mm}
+</style>
+<div style="border-left:5px solid #ea580c;background:#fff7ed;color:#7c2d12;padding:10px 14px;">
+<strong>Your aggressive experiment:</strong> ask Large to rank every eligible move, retain only its first three, and search that smaller tree. Ordinary position values come entirely from your original material/piece-square scoring. Large chooses the shortlist; it does not replace the leaf evaluator.
+</div>
+<h2 id="-1--2--exactly-what-v36-does">🟧 1 / 2 · Exactly what V3.6 does</h2>
+<p>V3.6 began as an exact PowerShell copy of V3.1. It retains the newer legal move generation, exact make/undo, mate/stalemate handling, alpha-beta, bounded quiescence, worker protocol, and clock admission. Its policy is in <a href="../V9%20V10%20Search.hpp">V9 V10 Search.hpp</a>; read <a href="../v3.0/HOW_V3_0_WORKS.html">the V3.0 walkthrough</a> for that shared foundation.</p>
+<pre><code class="language-text">Regular node or worker root
+    |
+Validate/generate legal candidates and recognize terminals
+    |
+Large evaluates EVERY candidate&#39;s child position once
+    |
+Sort best to worst for the side making the move
+    |
+Keep min(3, candidate_count); discard the rest
+    |
+Alpha-beta search of those retained continuations
+    |
+Leaf / tactical-search static value: your original score
+</code></pre>
+<p>If there are <strong>30 candidates</strong>, Large evaluates all 30, then V3.6 retains <strong>3</strong> and discards <strong>27</strong>. For two candidates it evaluates both and keeps both. Even one candidate receives a Large evaluation; an empty list returns immediately. Ranking uses the moving side: White prefers a higher White-perspective score; Black prefers a lower one. Ties preserve incoming order.</p>
+<p>There is <strong>no depth threshold, cheap-ordering fallback, or protected capture/check-evasion exception</strong>. Captures, promotions, quiet checks, and necessary-looking defensive moves compete for the same three places. At an in-check node with seven legal evasions, only Large's three highest-ranked evasions continue. This is the intentionally aggressive policy you asked to test.</p>
+<h3 id="which-evaluator-is-used">Which evaluator is used?</h3>
+<pre><code class="language-text">ordinary value = engineScore - opponentScore
+</code></pre>
+<p>Those are your incrementally maintained material and piece-square scores, in engine-perspective centipawns. V3.6 does not call Small for static evaluation. Nonterminal values retain the inherited ±99,999 clamp; rule-based mate scores remain around ±1,000,000 and stalemate remains zero.</p>
+<p>At ordinary depth zero, V3.6 retains the bounded six-ply tactical extension. Outside check, it first tries its static stand-pat bound, then considers captures, en passant, and promotions. If that candidate list needs searching, <strong>Large ranks it and the same top-three limit applies</strong>. While in check, the eligible list starts with every legal evasion before the limit. At the extension cap, the static evaluator is used after terminal recognition. Thus “always Large” describes each eligible list that reaches move expansion; a terminal, cap, deadline, or stand-pat cutoff can return before sorting.</p>
+<div style="page-break-before:always;"></div>
+<h2 id="-2--2--why-try-it-and-what-can-go-wrong">🟥 2 / 2 · Why try it, and what can go wrong?</h2>
+<p>The attraction is the narrow tree: ordinary branching is at most three, suggesting a <code>3^depth</code> shape before alpha-beta and tactical extensions. That can permit greater nominal depth. <strong>It does not prove a better move.</strong> A winning sacrifice or the opponent's strongest defense can be ranked fourth and disappear permanently. Alpha-beta then solves the retained tree, not the full legal tree.</p>
+<p>Large still scores every candidate <strong>before</strong> the narrowing. At the 38-active-feature bound, each position uses about <strong>34,126,336 useful arithmetic operations</strong> under the documented MAC convention. Ranking 30 moves can therefore cost up to <strong>1,023,790,080</strong> such operations, before encoding, activations, and sorting overhead. Keeping three does not reduce that initial cost to three evaluations. See <a href="../../Neural%20Networks/OPERATION_COUNTS.html">operation counts</a>.</p>
+<p>The search-only branching bound also omits legal-generation work and Large's per-node ranking work. With up to <code>b</code> candidates available for ranking, a coarse bound is <code>O(b × C_large × 3^(d+6))</code>, plus legality and comparison costs. Quiescence and alpha-beta usually make the actual tree different. This is a cost model, not a runtime prediction.</p>
+<h3 id="a-workers-three-is-not-the-whole-engines-three">A worker's three is not the whole engine's three</h3>
+<p>The controller supplies a root subset to each worker. If four workers each receive eight moves, each worker can retain its own best three: up to <strong>12 root candidates across those four subsets</strong>, not one global best-three shortlist. Deeper internal nodes independently apply the same policy to their own legal continuations.</p>
+<table>
+<thead>
+<tr>
+<th>Worker field / counter</th>
+<th>What it tells you</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>rootScores</code></td>
+<td>Up to three retained root candidates from the last completed iteration</td>
+</tr>
+<tr>
+<td><code>unsearchedRootMoves</code></td>
+<td>Assigned root candidates omitted from that iteration's search</td>
+</tr>
+<tr>
+<td><code>rootCandidatesBefore/Retained/Discarded</code></td>
+<td>The root beam decision</td>
+</tr>
+<tr>
+<td><code>largeOrderingCalls</code>, <code>largeRankedMoves</code></td>
+<td>Started ranking batches and successfully scored candidates</td>
+</tr>
+<tr>
+<td><code>beamOrderingBatches</code>, <code>beamTruncations</code>, <code>beamDiscardedMoves</code></td>
+<td>Completed batches and deliberate omissions</td>
+</tr>
+<tr>
+<td><code>scoreScope: beam_restricted_tree</code></td>
+<td>Score/bound claims concern the retained tree</td>
+</tr>
+</tbody>
+</table>
+<p>The existing <code>pruned</code> count continues to describe alpha-beta cutoffs; it does not silently absorb beam omissions. Extra policy counters are returned in worker JSON but are not yet persisted by the SQLite writer. Root <code>exact</code> flags mean exact versus a bound <strong>within this restricted search</strong>, not a proof over discarded alternatives.</p>
+<h3 id="run-and-compare">Run and compare</h3>
+<p>Stop the current bot, open <code>Launch Server.bat</code>, and choose <strong>v3.6</strong>. Only <strong>Large</strong> weights are required. The first load reads and validates the model once per worker process. Ranking batches are not interruptible; a deadline after a batch discards an unfinished iteration rather than substituting a different ranking policy.</p>
+<p>The inherited timing and draw limits still apply: no repetition/fifty-move/insufficient-material adjudication, and a hard quiescence cap that can statically evaluate a nonterminal checked position. Compare equal-time results, tactical misses, and deadline failures against V3.0/V3.1. Greater displayed depth alone cannot establish strength, Elo, or 95% best-move retention.</p>
+<p><strong>Verified offline, 31 October 2026:</strong> 61,810 checks passed, including 136 independent legality/perft fixtures, direct Large-ranking parity and a Python-combined beam/quiescence oracle. The compiled worker also passed startup plus seven actual search requests. Repeat with <code>python engines/tests/run_kernel_v9_v11_tests.py --versions v3.6</code> from <code>lichess-bot-master</code>; local receipts are in the lab's <code>diagnostics/kernel-v9-v11-20261031/v9/</code>.</p>
+</body>
+</html>

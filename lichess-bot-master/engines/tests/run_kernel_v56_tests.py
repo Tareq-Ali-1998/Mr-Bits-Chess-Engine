@@ -1,4 +1,4 @@
-"""Build and run isolated v5/v6 policy diagnostics; never launch a bot or game.
+"""Verify family v2.1/v2.2 using the historical v5/v6 policy diagnostics.
 
 From engines: python tests/run_kernel_v56_tests.py
 Reports include real compiler/run results, source hashes, model hash, and counters.
@@ -17,8 +17,10 @@ import subprocess
 import tempfile
 import time
 
+from kernel_family_versions import canonical_version, legacy_version, kernel_source
+
 ENGINES = Path(__file__).resolve().parents[1]
-REPORTS = ENGINES.parent / "Mr Bits Docs" / "ChatGPT Neural Network Lab" / "diagnostics" / "kernel-v5-v6-20261029"
+REPORTS = ENGINES.parent / "Mr Bits Docs" / "ChatGPT Neural Network Lab" / "diagnostics" / "kernel-family-v2.1-v2.2"
 
 
 def sha256(path: Path) -> str:
@@ -57,12 +59,13 @@ def aggregate_status(reports: list[dict]) -> str:
 
 def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--only", choices=("v5", "v6", "both"), default="both")
+    parser.add_argument("--only", choices=("v2.1", "v2.2", "v5", "v6", "both"), default="both")
     parser.add_argument("--cxx", default=shutil.which("g++"))
     parser.add_argument("--weights-dir", type=Path, default=ENGINES / "Neural Networks")
     parser.add_argument("--report-dir", type=Path, default=REPORTS)
     parser.add_argument("--timeout", type=int, default=120, help="Seconds allowed for each compilation and run")
     args = parser.parse_args(argv)
+    args.only = legacy_version(args.only)
     if not args.cxx:
         parser.error("g++ was not found; supply --cxx PATH_TO_G++")
     if args.timeout <= 0:
@@ -78,13 +81,15 @@ def main(argv=None) -> int:
     args.report_dir.mkdir(parents=True, exist_ok=True)
     reports = []
     for variant in (("v5", "v6") if args.only == "both" else (args.only,)):
+        family = canonical_version(variant)
         started = time.perf_counter()
-        sources = [Path(__file__), ENGINES / "tests/kernel_v56_policy_test.cpp",
-                   ENGINES / f"Kernels/{variant}/Kernel-{variant}.cpp",
+        sources = [Path(__file__), ENGINES / "tests/kernel_family_versions.py", ENGINES / "Kernels/kernel_tools.py",
+                   ENGINES / "tests/kernel_v56_policy_test.cpp",
+                   kernel_source(ENGINES, variant),
                    ENGINES / "Kernels/Neural Search.hpp", ENGINES / "Chess State.hpp",
                    ENGINES / "Neural Networks/Move Ordering.hpp", ENGINES / "Neural Networks/common.hpp",
                    ENGINES / "Neural Networks/Small/Small.hpp", ENGINES / "Neural Networks/Large/Large.hpp"]
-        receipt = {"schema": "mrbits.v56-policy-diagnostics.v1", "variant": variant,
+        receipt = {"schema": "mrbits.v56-policy-diagnostics.v1", "variant": family, "legacy_variant": variant,
                    "started_utc": datetime.now(timezone.utc).isoformat(), "status": "failed",
                    "python": platform.python_version(), "compiler": compiler, "compiler_version": compiler_version,
                    "source_sha256": {str(path.relative_to(ENGINES)): sha256(path) for path in sources},
@@ -128,12 +133,12 @@ def main(argv=None) -> int:
                                        "filename": error.filename, "message": str(error)}
         receipt["seconds"] = time.perf_counter() - started
         receipt["completed_utc"] = datetime.now(timezone.utc).isoformat()
-        save(args.report_dir / f"kernel_{variant}_policy_test.json", receipt)
+        save(args.report_dir / f"kernel_{family}_policy_test.json", receipt)
         reports.append(receipt)
         check_count = receipt.get("result", {}).get("checks")
         checks_text = (f"{check_count} checks" if check_count is not None else
                        "check results unavailable" if receipt.get("run", {}).get("started") else "checks not executed")
-        print(f"{variant}: {receipt['status']} ({checks_text}; {receipt['seconds']:.2f}s)", flush=True)
+        print(f"{family}: {receipt['status']} ({checks_text}; {receipt['seconds']:.2f}s)", flush=True)
     summary = {"schema": "mrbits.v56-policy-summary.v1", "completed_utc": datetime.now(timezone.utc).isoformat(),
                "status": aggregate_status(reports),
                "reports": [{"variant": r["variant"], "status": r["status"],

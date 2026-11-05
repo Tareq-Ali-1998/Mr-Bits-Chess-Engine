@@ -1,9 +1,8 @@
 @echo off
 rem Builds Mr. Bits with plain g++, like always: Engine UCI.exe (with SQLite inside it) and Kernel.exe.
 rem
-rem Every build gets a new stamp (its date and time), so every .exe gets a new hash. That matters on this PC:
-rem Windows Smart App Control judges every new .exe on its first launch, and when it blocks one, running this
-rem file again is enough (a new hash gets a new verdict).
+rem Every build gets a timestamp for provenance. Windows application trust must be resolved separately.
+rem If Windows blocks startup, review Code Integrity events before another startup attempt.
 rem
 rem   Build Engines.bat          builds both, then checks that Windows lets them run
 rem   Build Engines.bat test     the same, then runs tests\engine_test.py (about a minute)
@@ -23,7 +22,7 @@ g++ -DMRBITS_BUILD_STAMP=\"%STAMP%\" "Engine UCI.cpp" "sqlite\sqlite3.o" -o "Eng
 echo Building Kernel.exe (build %STAMP%)...
 g++ -DMRBITS_BUILD_STAMP=\"%STAMP%\" "Kernel.cpp" -o "Kernel.exe" || goto failed
 
-rem The first launch of a new .exe is where Smart App Control decides (both exit at the end of their input).
+rem Check startup only after compilation; both programs exit at the end of their input.
 ".\Engine UCI.exe" <nul >nul || goto blocked
 ".\Kernel.exe" <nul >nul || goto blocked
 echo Both of them run. Build %STAMP% is ready.
@@ -32,7 +31,8 @@ if /i "%~1"=="test" python -B tests\engine_test.py
 exit /b %errorlevel%
 
 :blocked
-echo Windows blocked the new build (Smart App Control). Run Build Engines.bat again: a new build gets a new verdict.
+echo A startup check failed. Review the error and Windows Code Integrity events.
+echo Resolve application trust before trying startup again.
 exit /b 1
 
 :failed

@@ -1,389 +1,122 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:ab44713d3d7e6de43d06e99976f3ef2721130b5ec6cafa602eede76725af8110">
 <title>DATA_PIPELINE.md</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-
 <style>
-/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
 
-body {
-	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
-	font-size: var(--vscode-markdown-font-size, 14px);
-	padding: 0 26px;
-	line-height: var(--vscode-markdown-line-height, 22px);
-	word-wrap: break-word;
-}
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
 
-#code-csp-warning {
-	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
-	margin: 16px;
-	text-align: center;
-	font-size: 12px;
-	font-family: sans-serif;
-	background-color:#444444;
-	cursor: pointer;
-	padding: 6px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
-}
-
-#code-csp-warning:hover {
-	text-decoration: none;
-	background-color:#007acc;
-	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
-}
-
-body.scrollBeyondLastLine {
-	margin-bottom: calc(100vh - 22px);
-}
-
-body.showEditorSelection .code-line {
-	position: relative;
-}
-
-body.showEditorSelection .code-active-line:before,
-body.showEditorSelection .code-line:hover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -12px;
-	height: 100%;
-}
-
-body.showEditorSelection li.code-active-line:before,
-body.showEditorSelection li.code-line:hover:before {
-	left: -30px;
-}
-
-.vscode-light.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.15);
-}
-
-.vscode-light.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.40);
-}
-
-.vscode-light.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-dark.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.4);
-}
-
-.vscode-dark.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.60);
-}
-
-.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-high-contrast.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 160, 0, 0.7);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 160, 0, 1);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
-	outline: 1px solid -webkit-focus-ring-color;
-	outline-offset: -1px;
-}
-
-hr {
-	border: 0;
-	height: 2px;
-	border-bottom: 2px solid;
-}
-
-h1 {
-	padding-bottom: 0.3em;
-	line-height: 1.2;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
-h1, h2, h3 {
-	font-weight: normal;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table > thead > tr > th {
-	text-align: left;
-	border-bottom: 1px solid;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td {
-	padding: 5px 10px;
-}
-
-table > tbody > tr + tr > td {
-	border-top: 1px solid;
-}
-
-blockquote {
-	margin: 0 7px 0 5px;
-	padding: 0 16px 0 10px;
-	border-left-width: 5px;
-	border-left-style: solid;
-}
-
-code {
-	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
-	font-size: 1em;
-	line-height: 1.357em;
-}
-
-body.wordWrap pre {
-	white-space: pre-wrap;
-}
-
-pre:not(.hljs),
-pre.hljs code > div {
-	padding: 16px;
-	border-radius: 3px;
-	overflow: auto;
-}
-
-pre code {
-	color: var(--vscode-editor-foreground);
-	tab-size: 4;
-}
-
-/** Theming */
-
-.vscode-light pre {
-	background-color: rgba(220, 220, 220, 0.4);
-}
-
-.vscode-dark pre {
-	background-color: rgba(10, 10, 10, 0.4);
-}
-
-.vscode-high-contrast pre {
-	background-color: rgb(0, 0, 0);
-}
-
-.vscode-high-contrast h1 {
-	border-color: rgb(0, 0, 0);
-}
-
-.vscode-light table > thead > tr > th {
-	border-color: rgba(0, 0, 0, 0.69);
-}
-
-.vscode-dark table > thead > tr > th {
-	border-color: rgba(255, 255, 255, 0.69);
-}
-
-.vscode-light h1,
-.vscode-light hr,
-.vscode-light table > tbody > tr + tr > td {
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-.vscode-dark h1,
-.vscode-dark hr,
-.vscode-dark table > tbody > tr + tr > td {
-	border-color: rgba(255, 255, 255, 0.18);
-}
-
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
 </style>
-
-<style>
-/* Tomorrow Theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-
-/* Tomorrow Comment */
-.hljs-comment,
-.hljs-quote {
-	color: #8e908c;
-}
-
-/* Tomorrow Red */
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-regexp,
-.hljs-deletion {
-	color: #c82829;
-}
-
-/* Tomorrow Orange */
-.hljs-number,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-literal,
-.hljs-type,
-.hljs-params,
-.hljs-meta,
-.hljs-link {
-	color: #f5871f;
-}
-
-/* Tomorrow Yellow */
-.hljs-attribute {
-	color: #eab700;
-}
-
-/* Tomorrow Green */
-.hljs-string,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition {
-	color: #718c00;
-}
-
-/* Tomorrow Blue */
-.hljs-title,
-.hljs-section {
-	color: #4271ae;
-}
-
-/* Tomorrow Purple */
-.hljs-keyword,
-.hljs-selector-tag {
-	color: #8959a8;
-}
-
-.hljs {
-	display: block;
-	overflow-x: auto;
-	color: #4d4d4c;
-	padding: 0.5em;
-}
-
-.hljs-emphasis {
-	font-style: italic;
-}
-
-.hljs-strong {
-	font-weight: bold;
-}
-</style>
-
-<style>
-/*
- * Markdown PDF CSS
- */
-
- body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
-	padding: 0 12px;
-}
-
-pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
-	border-radius: 3px;
-	overflow-x: auto;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-}
-
-pre:not(.hljs) {
-	padding: 23px;
-	line-height: 19px;
-}
-
-blockquote {
-	background: rgba(127, 127, 127, 0.1);
-	border-color: rgba(0, 122, 204, 0.5);
-}
-
-.emoji {
-	height: 1.4em;
-}
-
-code {
-	font-size: 14px;
-	line-height: 19px;
-}
-
-/* for inline code */
-:not(pre):not(.hljs) > code {
-	color: #C9AE75; /* Change the old color so it seems less like an error */
-	font-size: inherit;
-}
-
-/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
--------------------------------------------------------- */
-.page {
-	page-break-after: always;
-}
-
-</style>
-
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-          ? 'dark'
-          : 'default'
-    });
-  </script>
 <h1 id="-from-lichess-json-to-a-trustworthy-training-release">📦 From Lichess JSON to a trustworthy training release</h1>
 <p><strong>23 October 2026 · implemented behavior, not just a proposed pipeline</strong></p>
 <h2 id="one-raw-line-is-not-one-already-clean-target">One raw line is not one already-clean target</h2>
 <p>The archive is Zstandard-compressed JSONL. Decompression produces one JSON object per line. Each object contains a FEN and several saved analyses; an analysis can contain several principal variations, or PVs. A PV is a candidate continuation. The official format uses <code>knodes</code> for thousands of searched nodes and UCI_Chess960 move notation. <a href="https://database.lichess.org/#evals">Publisher's format</a></p>
-<pre class="hljs"><code><div><span class="hljs-punctuation">{</span>
-  <span class="hljs-attr">&quot;fen&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;7r/1p3k2/p1bPR3/5p2/2B2P1p/8/PP4P1/3K4 b - -&quot;</span><span class="hljs-punctuation">,</span>
-  <span class="hljs-attr">&quot;evals&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span>
-    <span class="hljs-punctuation">{</span>
-      <span class="hljs-attr">&quot;depth&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">46</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">&quot;knodes&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">4189972</span><span class="hljs-punctuation">,</span>
-      <span class="hljs-attr">&quot;pvs&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-punctuation">[</span><span class="hljs-punctuation">{</span><span class="hljs-attr">&quot;cp&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-number">69</span><span class="hljs-punctuation">,</span> <span class="hljs-attr">&quot;line&quot;</span><span class="hljs-punctuation">:</span> <span class="hljs-string">&quot;f7g7 ...&quot;</span><span class="hljs-punctuation">}</span><span class="hljs-punctuation">]</span>
-    <span class="hljs-punctuation">}</span>
-  <span class="hljs-punctuation">]</span>
-<span class="hljs-punctuation">}</span>
-</div></code></pre>
+<pre><code class="language-json"><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;fen&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;7r/1p3k2/p1bPR3/5p2/2B2P1p/8/PP4P1/3K4 b - -&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;evals&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">&quot;depth&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">46</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;knodes&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">4189972</span><span class="p">,</span>
+<span class="w">      </span><span class="nt">&quot;pvs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[{</span><span class="nt">&quot;cp&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">69</span><span class="p">,</span><span class="w"> </span><span class="nt">&quot;line&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;f7g7 ...&quot;</span><span class="p">}]</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre>
 <p>The example is abbreviated: <code>...</code> is not a legal move token and is not accepted by the parser. We never train on the future line as input. We replay it only to check that the saved continuation is legal.</p>
 <p>The score is <strong>White's perspective</strong>. This example becomes <code>y = +0.69</code> pawns even though Black is to move. The first PV is the teacher's preferred candidate for that side; do not maximize White scores blindly when selecting a Black move. <a href="https://raw.githubusercontent.com/lichess-org/api/master/doc/specs/schemas/CloudEval.yaml">Lichess score convention</a></p>
 <h2 id="the-implemented-path">The implemented path</h2>
-<pre class="hljs"><code><div>compressed bytes
+<pre><code class="language-text">compressed bytes
       │  streamed decompression; no giant unpacked file
       ▼
 bounded chunks of JSON lines
@@ -401,7 +134,7 @@ approximately 90/5/5 independent position-hash split
       ├── validation.npy
       ├── test.npy
       └── manifest.json + preparation_progress.json
-</div></code></pre>
+</code></pre>
 <p>The original file is opened read-only. The output directory must be empty/new; the tool refuses to overwrite another dataset. On interruption/failure it writes <code>failure.json</code> with counts. A partial output is not a release. Preparation currently restarts into a new directory; it does not resume a compressed scan halfway through.</p>
 <h2 id="selection-and-rejection-in-order">Selection and rejection, in order</h2>
 <ol>
@@ -481,14 +214,13 @@ approximately 90/5/5 independent position-hash split
 <h2 id="reproducibility-and-integrity">Reproducibility and integrity</h2>
 <p>The manifest records quality thresholds, feature schema, split seed, source size/name, scanned-content digest, audit counts, split coverage, file sizes and SHA-256 checksums, and a release fingerprint. Creation time and measured runtime are excluded from the stable fingerprint.</p>
 <p>The fingerprint identifies the prepared release; it does not prove an external teacher is infallible. Ordinary dataset loading recomputes the metadata fingerprint and checks schema/dtype/count. To verify all data file checksums explicitly:</p>
-<pre class="hljs"><code><div>.venv/bin/python -c <span class="hljs-string">&quot;from chesslab.data import verify_dataset; print(verify_dataset(&#x27;data/local-100k&#x27;)[&#x27;fingerprint&#x27;])&quot;</span>
-</div></code></pre>
+<pre><code class="language-bash">.venv/bin/python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;from chesslab.data import verify_dataset; print(verify_dataset(&#39;data/local-100k&#39;)[&#39;fingerprint&#39;])&quot;</span>
+</code></pre>
 <p>The trainer saves the manifest and fingerprint in its run. Resume and ordinary held-out evaluation reject a mismatched data release. Save the configuration, data fingerprint, checkpoint, and evaluation report together.</p>
 <h2 id="where-should-we-prepare-data">Where should we prepare data?</h2>
 <p>Use the CPU machine that already has the archive and enough local storage. The existing bundled pilot took a short bounded local scan, so the first GPU session can start from prepared files.</p>
 <p>For millions of positions, a CPU server near the storage can be convenient. Renting a GPU does not accelerate Python chess legality checks by itself. If you do prepare on the GPU host, include that idle-GPU interval in the bill.</p>
 <p>The temporary SQLite index contains <strong>all accepted unique positions in the scanned pool</strong>, not just the selected final sample. Its disk footprint can be much larger than the final 108-byte records. Preparation deletes its own index after a successful release unless <code>--keep-index</code> is set. It never recursively deletes a source folder.</p>
 <p>Inspect coverage after every preparation run. Aggressive filters can improve apparent cleanliness while removing difficult tactics or important endgames. This first release deliberately excludes mates and decisive cp tails; its metrics therefore describe that supported finite-cp distribution, not all of chess.</p>
-
 </body>
 </html>

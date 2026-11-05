@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:702d60a2e5d1616895c848584757fb7b50029997be744b6a4bb6ca8a93086d76">
+<title>README.md</title>
+<style>
+
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
+
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+<h1 id="-mr-bits">♟️ Mr. Bits</h1>
+<p><strong>A personal C++ chess engine that started with a friend's challenge.</strong></p>
+<p>🟦 C++17 · 🟩 Classical search · 🟨 Bit manipulation · 🟪 Parallel workers · ♟️ Lichess</p>
+<p><a href="#the-story">The story</a> · <a href="#inside-the-kernel">Inside the Kernel</a> · <a href="#run-it-locally">Run it</a> · <a href="#where-to-start-reading">Reading guide</a></p>
+<p><a id="the-story"></a></p>
+<h2 id="-can-you-code-a-chess-engine">🟨 “Can you code a chess engine?”</h2>
+<p>Around <strong>2022–2023</strong>, one of my friends started playing chess. I was usually sitting next to him doing competitive programming. One day, he asked me:</p>
+<blockquote>
+<p>Can you code a chess engine?</p>
+</blockquote>
+<p>That question stayed in my head. I started working on it, and I barely slept for the next three or four days. I wanted to see my own code look at a position, explore its possibilities, and choose a move.</p>
+<p>I remember the first working launch reaching <strong>depth 6</strong>, and later reaching <strong>depth 8 in a complicated position</strong>. Seeing the search go further after changing a representation or removing repeated work kept pulling me back.</p>
+<p>After that first intense start, I returned to the engine every once in a while. I would learn another algorithm, rethink part of the recursion, rewrite something, or try an optimization that had been sitting in my head. Some ideas came from competitive programming; others came from staring at this particular problem until I found a better way to handle it.</p>
+<p>Mr. Bits became one of my favorite personal projects. <strong>The part I am proudest of is the flow inside <code>Kernel.cpp</code>: committing a move, searching what follows, and returning everything to exactly where it was.</strong></p>
+<p><a id="inside-the-kernel"></a></p>
+<h2 id="-inside-the-kernel">🟦 Inside the Kernel</h2>
+<p>My main focus was the cost of searching a position. Work repeated at every node adds up quickly, so I spent a lot of time on representation, precomputation, and the details of making and undoing moves.</p>
+<h3 id="a-move-fits-in-16-bits">A move fits in 16 bits</h3>
+<p>I chose to pack a move into an <code>int16_t</code>. Each row or column needs three bits; four coordinates use twelve bits, leaving four for a move-type tag, including special moves.</p>
+<pre><code class="language-text">           A single 16-bit move
+┌───────────┬────────┬────────┬──────────┬──────────┐
+│ move type │ to col │ to row │ from col │ from row │
+│  4 bits   │ 3 bits │ 3 bits │  3 bits  │  3 bits  │
+└───────────┴────────┴────────┴──────────┴──────────┘
+ high bits                                  low bits
+</code></pre>
+<p>That representation carries through move generation, ordering, and recursion: compact move lists, with coordinates extracted through shifts and masks.</p>
+<h3 id="finding-pieces-through-two-integers">Finding pieces through two integers</h3>
+<p>I maintain two 64-bit <code>long long</code> masks: <code>whitePieces</code> and <code>blackPieces</code>. Each set bit identifies an occupied square for that color. The search takes the <strong>most significant set bit</strong>, clears it from a local copy, and uses lookup tables to recover the piece's row and column.</p>
+<p>This lets it visit the pieces directly without scanning all 64 board squares just to find them. The traversal follows occupied bits; the board supplies the actual pieces. Saving that discovery work at every node was exactly the kind of optimization I enjoyed.</p>
+<h3 id="make-the-move-search-put-it-back">Make the move. Search. Put it back.</h3>
+<p>The original recursive search changes the current board in place. It saves the captured-piece information, occupancy masks, and running scores, then restores the state after exploring the child.</p>
+<pre><code class="language-text">Save changed-state information
+             ↓
+       MakeChanges(move)
+             ↓
+     Search the child position
+             ↓
+   Restore masks and scores
+             ↓
+      ReturnChanges(move, …)
+             ↓
+      Explore the next move
+</code></pre>
+<p>Getting this right took real attention. Captures, counters, castling, promotions, and en passant all have to survive that round trip. The recursive path avoids copying a full board for every child, while material and piece-square contributions are updated incrementally. Precomputed move and square tables remove more repeated work.</p>
+<p>This is the part of the source I would most like another programmer to read.</p>
+<h3 id="making-search-order-count">Making search order count</h3>
+<p>I worked on handcrafted move ordering, iterative deepening, alpha-beta pruning, and selective search. My simple heuristic uses capture values and piece-square changes to put promising moves earlier. Other ordering paths use shallow search results.</p>
+<p>Learning how much the <strong>order of exploration</strong> changes alpha-beta's work was a big part of this project. I cared about each node's cost and how much useful search I could finish before the clock ran out. I want to compare that work with other engines on the same positions, hardware, and time budget, accounting for different pruning policies.</p>
+<h2 id="-learning-to-run-the-search-in-parallel">🟪 Learning to run the search in parallel</h2>
+<p>I also spent a lot of time on the threading side. The original controller split root moves across threads, launched separate Kernel executables, waited for their answers, and combined the results. Working through that taught me about distributing work, isolating search state, coordinating results, and respecting time limits.</p>
+<p>The current controller keeps Kernel worker processes alive, exchanges requests through stdin/stdout pipes, and handles deadlines, shutdown, and worker replacement. This is a later evolution of the original process-and-file approach.</p>
+<h2 id="-taking-it-onto-lichess">🟩 Taking it onto Lichess</h2>
+<p>Connecting through <strong>lichess-bot</strong> meant I could watch my engine play other bots under a real clock. The upstream bridge handles Lichess communication; my C++ UCI controller connects it to the search workers and Stockfish support.</p>
+<pre><code class="language-text">Lichess ↔ lichess-bot (Python) ↔ Engine UCI (C++)
+                                  ├─ Kernel workers: selected search version
+                                  ├─ Stockfish support
+                                  └─ SQLite → local game dashboard
+</code></pre>
+<p>Stockfish supplies legal root candidates and supports configured opening, endgame, and fallback paths. Mr. Bits has its own search and evaluation; the dashboard records which decision path produced a move.</p>
+<p>There is now also a <strong>local SQLite database and browser dashboard</strong> for replaying recorded moves, inspecting worker depths and timings, and comparing labeled engine versions.</p>
+<h2 id="-the-next-chapter-neural-experiments">🧠 The next chapter: neural experiments</h2>
+<p>Neural networks came later, after the classical engine and its optimizations. Separate Kernel versions now let me experiment with learned evaluation and ordering while keeping the original baseline.</p>
+<p>Small has <strong>216,961 parameters</strong>; Large has <strong>17,858,049</strong>. Both use native C++ inference with a sparse first projection. The <a href="lichess-bot-master/engines/Neural%20Networks/TIME_COMPLEXITY_README.html">complexity guide</a> and <a href="lichess-bot-master/Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/docs/TRAINED_NETWORKS_AND_CPP_GUIDE.html">training/inference report</a> explain their costs. Playing strength and best-move retention still need tactical and equal-time game testing.</p>
+<p><strong>I wrote the original engine myself.</strong> Later refactoring, neural experiment infrastructure, tooling, and documentation include AI assistance. The recent Git history reflects publishing and organizing a project that began years earlier. The Lichess bridge, Stockfish, and supporting libraries belong to their respective authors; my from-scratch work is the custom engine.</p>
+<h2 id="run-it-locally">Run it locally</h2>
+<h3 id="requirements">Requirements</h3>
+<p>The integrated engine currently targets <strong>Windows x64</strong>, using Win32 process and pipe APIs. The training lab has a separate Linux/GPU workflow.</p>
+<ul>
+<li><strong>Python 3.11 or later</strong>; the commands below use <strong>Python 3.12</strong> with the pinned bot dependencies.</li>
+<li><strong>MinGW-w64 GCC and G++</strong>, supporting C++17, with <code>gcc</code> and <code>g++</code> on <code>PATH</code>.</li>
+<li>An <strong>AVX2-capable CPU</strong> for the bundled Stockfish executable. Other CPUs require a compatible Stockfish build and a corresponding path adjustment in <code>Stockfish Handler.hpp</code>.</li>
+<li>A Lichess BOT account and an OAuth token with <code>bot:play</code>. Follow the upstream <a href="https://github.com/lichess-bot-devs/lichess-bot/wiki/How-to-create-a-Lichess-OAuth-token">account/token setup</a> and <a href="https://github.com/lichess-bot-devs/lichess-bot/wiki/How-to-Upgrade-to-a-BOT-account">BOT upgrade instructions</a>.</li>
+</ul>
+<p>The normal C++ engine does <strong>not</strong> require PyTorch or a GPU. SQLite's C source is bundled for the local build.</p>
+<h3 id="1-prepare-python-and-configuration">1. Prepare Python and configuration</h3>
+<p>Clone or download this repository. From <strong>PowerShell at the repository root</strong>:</p>
+<pre><code class="language-powershell"><span class="n">py</span> <span class="p">-</span><span class="n">3</span><span class="p">.</span><span class="n">12</span> <span class="n">-m</span> <span class="n">venv</span> <span class="p">.</span><span class="n">venv</span>
+<span class="p">.\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">-m</span> <span class="n">pip</span> <span class="n">install</span> <span class="n">-r</span> <span class="p">.\</span><span class="n">lichess-bot-master</span><span class="p">\</span><span class="n">requirements</span><span class="p">.</span><span class="n">txt</span>
+<span class="nb">Copy-Item</span> <span class="p">.\</span><span class="n">lichess-bot-master</span><span class="p">\</span><span class="n">config</span><span class="p">.</span><span class="n">yml</span><span class="p">.</span><span class="k">default</span> <span class="p">.\</span><span class="n">lichess-bot-master</span><span class="p">\</span><span class="n">config</span><span class="p">.</span><span class="n">yml</span>
+</code></pre>
+<p>On a new checkout, edit <code>lichess-bot-master/config.yml</code>. Keep the rest of the copied template and update these existing values; replace the template's entire <code>engine.uci_options</code> mapping with <code>{}</code>:</p>
+<pre><code class="language-yaml"><span class="nt">token</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;YOUR_LICHESS_BOT_TOKEN&quot;</span>
+
+<span class="nt">engine</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">dir</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;./engines/&quot;</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Engine</span><span class="nv"> </span><span class="s">UCI.exe&quot;</span>
+<span class="w">  </span><span class="nt">protocol</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;uci&quot;</span>
+<span class="w">  </span><span class="nt">ponder</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">uci_options</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</code></pre>
+<p>This is an excerpt, not a replacement for the full configuration. Review the challenge and matchmaking settings before starting online play. Your real configuration and token stay outside Git.</p>
+<h3 id="2-initialize-the-database-and-start-the-original-engine">2. Initialize the database and start the original engine</h3>
+<p>In the same PowerShell window:</p>
+<pre><code class="language-powershell"><span class="nb">Set-Location</span> <span class="p">.\</span><span class="n">lichess-bot-master</span>
+<span class="p">..\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-init</span>
+<span class="p">..\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">engines</span><span class="p">\</span><span class="n">Kernels</span><span class="p">\</span><span class="n">launch_server</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-version</span> <span class="n">original</span>
+</code></pre>
+<p>The launcher builds or reuses the selected Kernel and UCI controller, then starts the bot. Omit <code>--version original</code> to open the version menu. Add <code>--prepare-only</code> to build/select without starting online play.</p>
+<p><strong><code>original</code> works without neural weights.</strong> Raw datasets, training runs, and trained <code>weights.bin</code> files are excluded from Git. Neural versions require the appropriate local exports under <code>engines/Neural Networks/Small/</code> and <code>Large/</code>; choose <code>original</code> if you do not have them. See the <a href="lichess-bot-master/engines/Neural%20Networks/README.html">neural deployment guide</a> for their format and export steps.</p>
+<h3 id="3-open-the-dashboard">3. Open the dashboard</h3>
+<p>In another PowerShell window, from <code>lichess-bot-master</code>:</p>
+<pre><code class="language-powershell"><span class="p">..\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">database</span><span class="p">\</span><span class="n">dashboard</span><span class="p">\</span><span class="n">server</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-open</span>
+</code></pre>
+<p>The viewer opens at <strong>http://127.0.0.1:8765/</strong> and refreshes newly recorded moves every five seconds. Full two-sided replay and completed results use the existing synchronization step:</p>
+<pre><code class="language-powershell"><span class="p">..\.</span><span class="n">venv</span><span class="p">\</span><span class="n">Scripts</span><span class="p">\</span><span class="n">python</span><span class="p">.</span><span class="n">exe</span> <span class="n">database</span><span class="p">\</span><span class="n">sync_lichess</span><span class="p">.</span><span class="n">py</span>
+</code></pre>
+<p>The dashboard reads local data; the explicit sync command contacts Lichess. Empty or incomplete records stay visibly empty or incomplete.</p>
+<p>For an already configured Python environment, <strong><code>Launch Server.bat</code></strong> and <strong><code>Launch Dashboard.bat</code></strong> provide the same entry points. They use plain <code>python</code>, so launch them from an activated environment or ensure your default Python has the dependencies above. Stop the existing application before changing versions.</p>
+<h2 id="the-kernel-families">The Kernel families</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Main idea</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>original</code></td>
+<td>The existing classical search baseline</td>
+</tr>
+<tr>
+<td><code>v1.0</code></td>
+<td>My Large-network ordering and aggressive top-four experiment</td>
+</tr>
+<tr>
+<td><code>v1.1</code></td>
+<td>Large near the root, Small internally; retain every candidate</td>
+</tr>
+<tr>
+<td><code>v1.2</code></td>
+<td>Gentler root filtering: eight quiet moves plus captures/promotions; retain everything while in check</td>
+</tr>
+<tr>
+<td><code>v2.0</code></td>
+<td>Small-network ordinary leaf scoring, initially 0% handcrafted / 100% neural; Small ordering from depth six</td>
+</tr>
+<tr>
+<td><code>v2.1</code></td>
+<td>Small ordering and a 50/50 handcrafted/neural leaf blend; keep all candidates</td>
+</tr>
+<tr>
+<td><code>v2.2</code></td>
+<td>v2.1's foundation with guarded one-ply reductions of late quiet internal moves and full-depth re-search on improvement</td>
+</tr>
+<tr>
+<td><code>v3.0</code></td>
+<td>Legal continuations, mate/stalemate recognition, bounded quiescence, Small quiet ordering, and estimated iteration timing</td>
+</tr>
+<tr>
+<td><code>v3.1</code></td>
+<td>V3.0's legal/tactical search with 100% Small neural static evaluation</td>
+</tr>
+<tr>
+<td><code>v3.2</code></td>
+<td>The same v3.0 search with 0% Small / 100% handcrafted static scoring</td>
+</tr>
+<tr>
+<td><code>v3.3</code></td>
+<td>The same v3.0 search with 80% Small / 20% handcrafted static scoring</td>
+</tr>
+<tr>
+<td><code>v3.4</code></td>
+<td>The same v3.0 search with 20% Small / 80% handcrafted static scoring</td>
+</tr>
+<tr>
+<td><code>v3.6</code></td>
+<td>Large-ranked top-three beam with original static evaluation</td>
+</tr>
+<tr>
+<td><code>v3.7</code></td>
+<td>The same top-three beam with a 50/50 original/Small static value</td>
+</tr>
+<tr>
+<td><code>v3.8</code></td>
+<td>Small-only evaluation, PVS re-search, and bounded exact-position value caching; all legal ordinary candidates retained</td>
+</tr>
+<tr>
+<td><code>v3.9</code></td>
+<td>V3.0's 50/50 evaluation; Small sorts and keeps ten at remaining depth 3+, with generation order and no move sorting at depth 2 or less</td>
+</tr>
+</tbody>
+</table>
+<p>The menu now uses three design families: <strong>v1.x</strong> keeps the legacy handcrafted leaf score, <strong>v2.x</strong> experiments with neural leaves on the legacy search, and <strong>v3.x</strong> shares the legal-move/quiescence foundation. Enter the full name, such as <strong><code>v3.6</code></strong>. These labels describe designs, not playing-strength rankings. Root cutoffs still apply per worker. <a href="lichess-bot-master/engines/Kernels/VERSION_FAMILIES.html">Old-to-new mapping</a> | <a href="lichess-bot-master/engines/Kernels/README.html">Policies, builds and tests</a>.</p>
+<p>The short <a href="lichess-bot-master/engines/Kernels/V5_V6_README.html">v2.1/v2.2 guide</a> explains the ordering/reduction pair in three reading sections.
+<strong>The scoring controls are v3.0-v3.4:</strong> 50/50, 100/0, 0/100, 80/20 and 20/80 respectively, with <strong>Small first, handcrafted second</strong>. Their legal generation, ordering, candidate retention, quiescence and time policy match v3.0; only static scoring changes. A 0% component is skipped in that evaluator. V3.2 still uses Small for the unchanged quiet-move ordering. V3.5 is intentionally unassigned because the existing pure-Small v3.1 already covers that duplicate.</p>
+<p>The <a href="lichess-bot-master/engines/Kernels/v3.0/README.html">v3.0 guide</a> explains the next experiment: a stronger tactical foundation before more selective pruning.</p>
+<p>For a visual walkthrough, read <a href="lichess-bot-master/engines/Kernels/v3.0/HOW_V3_0_WORKS.html">How V3.0 works</a>, then <a href="lichess-bot-master/engines/Kernels/v3.1/README.html">V3.1's neural-only evaluation experiment</a>. <a href="lichess-bot-master/engines/Neural%20Networks/OPERATION_COUNTS.html">Operation counts</a> show the actual arithmetic for both networks and sorting a move list.</p>
+<p>The newer <a href="lichess-bot-master/engines/Kernels/v3.6/README.html">V3.6</a> and <a href="lichess-bot-master/engines/Kernels/v3.7/README.html">V3.7</a> deliberately retain only Large's top three candidates at each expansion. <a href="lichess-bot-master/engines/Kernels/v3.8/README.html">V3.8</a> instead tests narrower search windows with re-search and repeated-position evaluation reuse. Greater nominal depth in a narrow tree is not a strength result.</p>
+<p><a href="lichess-bot-master/engines/Kernels/v3.9/README.html">V3.9</a> is a focused V3.0 derivative: Small ranks the complete candidate list and keeps ten only when more than two ordinary plies remain. The last two levels and quiescence preserve generation order. The previous whole-number labels <code>v1</code> through <code>v12</code> now use these families. The temporary <strong><code>v7</code></strong> folder has been retired; use <strong><code>v3.0</code></strong> for that same legal/quiescence baseline. V3.0 is the selected replacement. Stop an existing application before choosing another strategy; the normal launcher prepares matching builds when needed.</p>
+<h2 id="where-to-start-reading">Where to start reading</h2>
+<p>For the engine itself, start with <a href="lichess-bot-master/engines/Kernel.cpp">Kernel.cpp</a>, then <a href="lichess-bot-master/engines/Engine%20UCI.cpp">Engine UCI.cpp</a> and <a href="lichess-bot-master/engines/Stockfish%20Handler.hpp">Stockfish Handler.hpp</a>. These are the main custom-engine entry points.</p>
+<table>
+<thead>
+<tr>
+<th>Guide</th>
+<th>What it explains</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="lichess-bot-master/Mr%20Bits%20Docs/START_HERE_KERNELS_AND_DASHBOARD.html">Start here</a></td>
+<td>Version selection, launching, and viewing games</td>
+</tr>
+<tr>
+<td><a href="lichess-bot-master/Mr%20Bits%20Docs/README.html">Documentation index</a></td>
+<td>Reviews, design notes, and the project's reading map</td>
+</tr>
+<tr>
+<td><a href="lichess-bot-master/Mr%20Bits%20Docs/ChatGPT%20Neural%20Network%20Lab/README.html">Neural training lab</a></td>
+<td>Data preparation, training, evaluation, and reproducible experiments</td>
+</tr>
+<tr>
+<td><a href="lichess-bot-master/database/dashboard/README.html">Dashboard</a></td>
+<td>Recorded metrics, replay, live-refresh behavior, and interpretation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="what-comes-next">What comes next</h2>
+<p>I will keep improving the organization and explanations as the engine develops. My priorities are stronger correctness/tactical tests, fair version comparisons, better training coverage, efficient evaluation, and clearer release artifacts for the neural models. Every change should earn its place through correctness, measured speed, memory use, or a clearer understanding of the tradeoff.</p>
+<p>I would like this repository to show both the engine and how I think through engineering problems. Questions, reproducible positions, benchmark results, and thoughtful criticism are welcome. This is a personal project I care about, and I intend to keep learning from it.</p>
+<h2 id="credits-and-licenses">Credits and licenses</h2>
+<p>Thank you to <a href="https://lichess.org/">Lichess</a>, <a href="https://github.com/lichess-bot-devs/lichess-bot">lichess-bot</a>, <a href="https://github.com/official-stockfish/Stockfish">Stockfish</a>, <a href="https://github.com/niklasf/python-chess">python-chess</a>, and <a href="https://github.com/nlohmann/json">nlohmann/json</a>.</p>
+<p>The upstream <a href="lichess-bot-master/README.html">lichess-bot README</a> remains available. Existing license notices are retained, including <a href="lichess-bot-master/LICENSE">lichess-bot's AGPLv3 license</a> and <a href="lichess-bot-master/engines/stockfish/Copying.txt">Stockfish's GPLv3 license</a>. These components retain their own authorship and licensing.</p>
+</body>
+</html>

@@ -1,370 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:62e9e6034819472a7cb7c9459d472b4e84c3d65004686b18eeef7946447b07a9">
 <title>02 - Plan - Engine UCI and Kernel Communication.md</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-
 <style>
-/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
 
-body {
-	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
-	font-size: var(--vscode-markdown-font-size, 14px);
-	padding: 0 26px;
-	line-height: var(--vscode-markdown-line-height, 22px);
-	word-wrap: break-word;
-}
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
 
-#code-csp-warning {
-	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
-	margin: 16px;
-	text-align: center;
-	font-size: 12px;
-	font-family: sans-serif;
-	background-color:#444444;
-	cursor: pointer;
-	padding: 6px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
-}
-
-#code-csp-warning:hover {
-	text-decoration: none;
-	background-color:#007acc;
-	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
-}
-
-body.scrollBeyondLastLine {
-	margin-bottom: calc(100vh - 22px);
-}
-
-body.showEditorSelection .code-line {
-	position: relative;
-}
-
-body.showEditorSelection .code-active-line:before,
-body.showEditorSelection .code-line:hover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -12px;
-	height: 100%;
-}
-
-body.showEditorSelection li.code-active-line:before,
-body.showEditorSelection li.code-line:hover:before {
-	left: -30px;
-}
-
-.vscode-light.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.15);
-}
-
-.vscode-light.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.40);
-}
-
-.vscode-light.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-dark.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.4);
-}
-
-.vscode-dark.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.60);
-}
-
-.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-high-contrast.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 160, 0, 0.7);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 160, 0, 1);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
-	outline: 1px solid -webkit-focus-ring-color;
-	outline-offset: -1px;
-}
-
-hr {
-	border: 0;
-	height: 2px;
-	border-bottom: 2px solid;
-}
-
-h1 {
-	padding-bottom: 0.3em;
-	line-height: 1.2;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
-h1, h2, h3 {
-	font-weight: normal;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table > thead > tr > th {
-	text-align: left;
-	border-bottom: 1px solid;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td {
-	padding: 5px 10px;
-}
-
-table > tbody > tr + tr > td {
-	border-top: 1px solid;
-}
-
-blockquote {
-	margin: 0 7px 0 5px;
-	padding: 0 16px 0 10px;
-	border-left-width: 5px;
-	border-left-style: solid;
-}
-
-code {
-	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
-	font-size: 1em;
-	line-height: 1.357em;
-}
-
-body.wordWrap pre {
-	white-space: pre-wrap;
-}
-
-pre:not(.hljs),
-pre.hljs code > div {
-	padding: 16px;
-	border-radius: 3px;
-	overflow: auto;
-}
-
-pre code {
-	color: var(--vscode-editor-foreground);
-	tab-size: 4;
-}
-
-/** Theming */
-
-.vscode-light pre {
-	background-color: rgba(220, 220, 220, 0.4);
-}
-
-.vscode-dark pre {
-	background-color: rgba(10, 10, 10, 0.4);
-}
-
-.vscode-high-contrast pre {
-	background-color: rgb(0, 0, 0);
-}
-
-.vscode-high-contrast h1 {
-	border-color: rgb(0, 0, 0);
-}
-
-.vscode-light table > thead > tr > th {
-	border-color: rgba(0, 0, 0, 0.69);
-}
-
-.vscode-dark table > thead > tr > th {
-	border-color: rgba(255, 255, 255, 0.69);
-}
-
-.vscode-light h1,
-.vscode-light hr,
-.vscode-light table > tbody > tr + tr > td {
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-.vscode-dark h1,
-.vscode-dark hr,
-.vscode-dark table > tbody > tr + tr > td {
-	border-color: rgba(255, 255, 255, 0.18);
-}
-
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
 </style>
-
-<style>
-/* Tomorrow Theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-
-/* Tomorrow Comment */
-.hljs-comment,
-.hljs-quote {
-	color: #8e908c;
-}
-
-/* Tomorrow Red */
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-regexp,
-.hljs-deletion {
-	color: #c82829;
-}
-
-/* Tomorrow Orange */
-.hljs-number,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-literal,
-.hljs-type,
-.hljs-params,
-.hljs-meta,
-.hljs-link {
-	color: #f5871f;
-}
-
-/* Tomorrow Yellow */
-.hljs-attribute {
-	color: #eab700;
-}
-
-/* Tomorrow Green */
-.hljs-string,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition {
-	color: #718c00;
-}
-
-/* Tomorrow Blue */
-.hljs-title,
-.hljs-section {
-	color: #4271ae;
-}
-
-/* Tomorrow Purple */
-.hljs-keyword,
-.hljs-selector-tag {
-	color: #8959a8;
-}
-
-.hljs {
-	display: block;
-	overflow-x: auto;
-	color: #4d4d4c;
-	padding: 0.5em;
-}
-
-.hljs-emphasis {
-	font-style: italic;
-}
-
-.hljs-strong {
-	font-weight: bold;
-}
-</style>
-
-<style>
-/*
- * Markdown PDF CSS
- */
-
- body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
-	padding: 0 12px;
-}
-
-pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
-	border-radius: 3px;
-	overflow-x: auto;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-}
-
-pre:not(.hljs) {
-	padding: 23px;
-	line-height: 19px;
-}
-
-blockquote {
-	background: rgba(127, 127, 127, 0.1);
-	border-color: rgba(0, 122, 204, 0.5);
-}
-
-.emoji {
-	height: 1.4em;
-}
-
-code {
-	font-size: 14px;
-	line-height: 19px;
-}
-
-/* for inline code */
-:not(pre):not(.hljs) > code {
-	color: #C9AE75; /* Change the old color so it seems less like an error */
-	font-size: inherit;
-}
-
-/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
--------------------------------------------------------- */
-.page {
-	page-break-after: always;
-}
-
-</style>
-
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-          ? 'dark'
-          : 'default'
-    });
-  </script>
 <h1 id="-plan--fast-communication-between-engine-uci-the-kernel-and-stockfish">🔌 Plan — Fast Communication Between Engine UCI, the Kernel and Stockfish</h1>
 <p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝 <em>October 23, 2026 · v2, October 25: every phase reviewed and prototyped on copies · v3, October 25 evening: Phase 1 + GameId are in your code, built and tested · <strong>v4, October 27: as built</strong> · what's left for you is in <code>04 - Runbook for Tonight.md</code></em></p>
 <div style="background:#ecfdf5;border-left:6px solid #059669;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
@@ -381,19 +114,19 @@ code {
 </div>
 <hr />
 <h2 id="1--the-architecture-as-built">1. 🎯 The architecture, as built</h2>
-<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
-    LB["🐍 lichess-bot&lt;br/&gt;one Engine UCI per game"]:::py &lt;--&gt;|"UCI over pipes&lt;br/&gt;(unchanged)"| UCI["⚙️ Engine UCI.exe&lt;br/&gt;the orchestrator"]:::uci
-    UCI &lt;--&gt;|"UCI over pipes&lt;br/&gt;started at isready"| SF["🐟 one Stockfish&lt;br/&gt;alive all game"]:::sf
-    subgraph POOL["🧠 28 Kernel workers, started at ucinewgame"]
+<pre class="mermaid">flowchart LR
+    LB[&quot;🐍 lichess-bot&lt;br/&gt;one Engine UCI per game&quot;]:::py &lt;--&gt;|&quot;UCI over pipes&lt;br/&gt;(unchanged)&quot;| UCI[&quot;⚙️ Engine UCI.exe&lt;br/&gt;the orchestrator&quot;]:::uci
+    UCI &lt;--&gt;|&quot;UCI over pipes&lt;br/&gt;started at isready&quot;| SF[&quot;🐟 one Stockfish&lt;br/&gt;alive all game&quot;]:::sf
+    subgraph POOL[&quot;🧠 28 Kernel workers, started at ucinewgame&quot;]
         direction TB
-        W1["Kernel.exe #1"]:::k
-        W2["Kernel.exe #2"]:::k
-        WN["… Kernel.exe #28"]:::k
+        W1[&quot;Kernel.exe #1&quot;]:::k
+        W2[&quot;Kernel.exe #2&quot;]:::k
+        WN[&quot;… Kernel.exe #28&quot;]:::k
     end
-    UCI &lt;--&gt;|"JSON Lines over pipes&lt;br/&gt;one line each way per move"| POOL
-    UCI --&gt;|"after bestmove,&lt;br/&gt;in its own thread"| DB["🗄️ database/mrbits.sqlite&lt;br/&gt;(plan 03)"]:::db
-    UCI -.-&gt;|"text log"| LOG["📝 engines/logs/uci_*.log"]:::log
-    POOL -.-&gt;|"stderr, normally empty"| ERR["📝 engines/logs/&lt;br/&gt;kernel_workers_stderr.log"]:::log
+    UCI &lt;--&gt;|&quot;JSON Lines over pipes&lt;br/&gt;one line each way per move&quot;| POOL
+    UCI --&gt;|&quot;after bestmove,&lt;br/&gt;in its own thread&quot;| DB[&quot;🗄️ database/mrbits.sqlite&lt;br/&gt;(plan 03)&quot;]:::db
+    UCI -.-&gt;|&quot;text log&quot;| LOG[&quot;📝 engines/logs/uci_*.log&quot;]:::log
+    POOL -.-&gt;|&quot;stderr, normally empty&quot;| ERR[&quot;📝 engines/logs/&lt;br/&gt;kernel_workers_stderr.log&quot;]:::log
     style POOL fill:#f0fdf4,stroke:#16a34a,color:#14532d
     classDef py fill:#fef3c7,stroke:#d97706,color:#78350f
     classDef uci fill:#dbeafe,stroke:#2563eb,color:#1e3a8a
@@ -401,7 +134,7 @@ code {
     classDef k fill:#dcfce7,stroke:#16a34a,color:#14532d
     classDef db fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
     classDef log fill:#f1f5f9,stroke:#64748b,color:#0f172a
-</div></code></pre>
+</pre>
 <p>lichess-bot starts <strong>one Engine UCI process per game</strong> (<code>play_game</code> → <code>engine_wrapper.create_engine</code>), so &quot;alive for the whole game&quot; comes for free: Engine UCI starts its helpers once, and at <code>quit</code> they all go (the workers get <code>{&quot;type&quot;:&quot;quit&quot;}</code> and half a second to exit, whatever is left is killed, and the Job Objects take care of the rest, even after a <code>taskkill /F</code>). ⚠️ It also starts Engine UCI <strong>once at bot startup</strong>, only to check it (<code>lichess-bot.py</code> 1131–1133: handshake, <code>isready</code>, <code>quit</code>). That check opens the log and the database, starts and stops Stockfish once, and starts <strong>no Kernel worker</strong>: they start at <code>ucinewgame</code>, which the check never sends (0.4–1.2 s in 4 test runs). And no Stockfish means no <code>readyok</code>, so a missing or blocked Stockfish stops lichess-bot right at startup instead of killing the first game. (A missing or blocked <code>Kernel.exe</code> does <strong>not</strong> stop it: see §5.)</p>
 <h3 id="design-rules-all-eight-hold-in-the-built-code">Design rules (all eight hold in the built code)</h3>
 <ol>
@@ -515,20 +248,20 @@ code {
 <h2 id="3--the-protocol-engine-uci--kernel-worker-as-built">3. 📜 The protocol (Engine UCI ⇄ Kernel worker), as built</h2>
 <p>Every message is <strong>one line of compact JSON</strong> ending in a bare <code>\n</code>: requests on the worker's stdin, answers on its stdout. This section is exactly what the code does: <code>RunWorkerMode</code> and <code>AnswerSearchRequest</code> in <code>Kernel.cpp</code>, <code>serializeObject</code> and <code>getEngineMoveWithThreading</code> in <code>Chess State.hpp</code>, <code>askAllWorkers</code> in <code>Kernel Workers.hpp</code>. The examples are <strong>real</strong>: the handshake comes from the final equivalence run, and the request and the answer are worker 3 at ply 11 of the engine test's game <code>tN252leL</code> (October 27; the test borrows the id of your real lichess game), rebuilt from that game's moves and the rows it left in the test database. They're shown pretty here only for reading. On the wire, each one is a single line with its keys in alphabetical order (that's how nlohmann's <code>json</code> writes an object).</p>
 <p><strong>The handshake</strong>, once per worker start:</p>
-<pre><code class="language-json">{&quot;type&quot;:&quot;hello&quot;}
-{&quot;engineVersion&quot;:&quot;kernel-2026-10-27_02-36-51&quot;,&quot;initMs&quot;:0.441,&quot;pid&quot;:77144,&quot;protocol&quot;:1,&quot;type&quot;:&quot;ready&quot;}
+<pre><code class="language-json"><span class="p">{</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;hello&quot;</span><span class="p">}</span>
+<span class="p">{</span><span class="nt">&quot;engineVersion&quot;</span><span class="p">:</span><span class="s2">&quot;kernel-2026-10-27_02-36-51&quot;</span><span class="p">,</span><span class="nt">&quot;initMs&quot;</span><span class="p">:</span><span class="mf">0.441</span><span class="p">,</span><span class="nt">&quot;pid&quot;</span><span class="p">:</span><span class="mi">77144</span><span class="p">,</span><span class="nt">&quot;protocol&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;ready&quot;</span><span class="p">}</span>
 </code></pre>
 <p><code>engineVersion</code> is <code>kernel-</code> + the build stamp, and <code>initMs</code> is the move tables, built once per process. A worker gets no request before its <code>ready</code>.</p>
 <p><strong>A search request</strong>, once per worker per Kernel move:</p>
-<pre><code class="language-json">{&quot;allowedEngineTimeInSeconds&quot;:5,
- &quot;bestMove&quot;:&quot;It should be a default value like the previous line but I want to maintain more time&quot;,
- &quot;bestMoveScore&quot;:0,
- &quot;engineColor&quot;:true,
- &quot;id&quot;:86,
- &quot;movesForThisThread&quot;:[&quot;f3e5&quot;,&quot;f3g5&quot;],
- &quot;previousMoves&quot;:[&quot;e2e4&quot;,&quot;e7e5&quot;,&quot;g1f3&quot;,&quot;b8c6&quot;,&quot;b1c3&quot;,&quot;g8f6&quot;,&quot;f1d3&quot;,&quot;f8c5&quot;,&quot;d3b5&quot;,&quot;d7d6&quot;],
- &quot;report&quot;:&quot;&quot;,
- &quot;type&quot;:&quot;search&quot;}
+<pre><code class="language-json"><span class="p">{</span><span class="nt">&quot;allowedEngineTimeInSeconds&quot;</span><span class="p">:</span><span class="mi">5</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;bestMove&quot;</span><span class="p">:</span><span class="s2">&quot;It should be a default value like the previous line but I want to maintain more time&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;bestMoveScore&quot;</span><span class="p">:</span><span class="mi">0</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;engineColor&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">86</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;movesForThisThread&quot;</span><span class="p">:[</span><span class="s2">&quot;f3e5&quot;</span><span class="p">,</span><span class="s2">&quot;f3g5&quot;</span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;previousMoves&quot;</span><span class="p">:[</span><span class="s2">&quot;e2e4&quot;</span><span class="p">,</span><span class="s2">&quot;e7e5&quot;</span><span class="p">,</span><span class="s2">&quot;g1f3&quot;</span><span class="p">,</span><span class="s2">&quot;b8c6&quot;</span><span class="p">,</span><span class="s2">&quot;b1c3&quot;</span><span class="p">,</span><span class="s2">&quot;g8f6&quot;</span><span class="p">,</span><span class="s2">&quot;f1d3&quot;</span><span class="p">,</span><span class="s2">&quot;f8c5&quot;</span><span class="p">,</span><span class="s2">&quot;d3b5&quot;</span><span class="p">,</span><span class="s2">&quot;d7d6&quot;</span><span class="p">],</span>
+<span class="w"> </span><span class="nt">&quot;report&quot;</span><span class="p">:</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;search&quot;</span><span class="p">}</span>
 </code></pre>
 <p>It's <code>ChessState::serializeObject()</code>: the 7 fields your JSON file used to hold, with <code>movesForThisThread</code> = this worker's bucket, plus <code>&quot;type&quot;:&quot;search&quot;</code> and an <code>&quot;id&quot;</code>. Nothing else: no <code>gameId</code>, no <code>ply</code>, no <code>timeMs</code> (the October 25 draft had them; the worker doesn't need them, and the database gets them from Engine UCI).</p>
 <ul>
@@ -539,14 +272,14 @@ code {
 <li><strong><code>maxDepth</code></strong> (optional, <strong>tests only</strong>: Engine UCI never sends it): 0 or absent means &quot;use the allowed time&quot;. A depth up to 30 switches the clock off (an <code>INT_MAX</code> budget), skips the 5% rule and stops after that depth. Only even depths are searched, so 5 means 4. Anything outside 0…30 is an error. (On October 25 this caught a real trap: with the clock still on, <code>maxDepth</code> 8 under a 300 ms budget silently returned the depth-6 answer.)</li>
 </ul>
 <p><strong>The answer:</strong></p>
-<pre><code class="language-json">{&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;depth&quot;:6,&quot;id&quot;:86,&quot;leafNodes&quot;:126634,&quot;nodes&quot;:138244,
- &quot;perDepth&quot;:[{&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;completed&quot;:true,&quot;depth&quot;:2,&quot;leafNodes&quot;:51,&quot;ms&quot;:0.038,&quot;nodes&quot;:53,&quot;pruned&quot;:1,&quot;score&quot;:-160},
-             {&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;completed&quot;:true,&quot;depth&quot;:4,&quot;leafNodes&quot;:4087,&quot;ms&quot;:5.657,&quot;nodes&quot;:4408,&quot;pruned&quot;:254,&quot;score&quot;:-195},
-             {&quot;bestMove&quot;:&quot;f3g5&quot;,&quot;completed&quot;:true,&quot;depth&quot;:6,&quot;leafNodes&quot;:126634,&quot;ms&quot;:382.625,&quot;nodes&quot;:138244,&quot;pruned&quot;:8821,&quot;score&quot;:-125}],
- &quot;pruned&quot;:8821,
- &quot;rootScores&quot;:[{&quot;exact&quot;:true,&quot;move&quot;:&quot;f3g5&quot;,&quot;score&quot;:-125},{&quot;exact&quot;:false,&quot;move&quot;:&quot;f3e5&quot;,&quot;score&quot;:-130}],
- &quot;score&quot;:-125,&quot;searchMs&quot;:388.323,&quot;setupMs&quot;:0.03,&quot;status&quot;:&quot;ok&quot;,&quot;totalNodes&quot;:142705,&quot;type&quot;:&quot;result&quot;,
- &quot;unsearchedRootMoves&quot;:[]}
+<pre><code class="language-json"><span class="p">{</span><span class="nt">&quot;bestMove&quot;</span><span class="p">:</span><span class="s2">&quot;f3g5&quot;</span><span class="p">,</span><span class="nt">&quot;depth&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="mi">86</span><span class="p">,</span><span class="nt">&quot;leafNodes&quot;</span><span class="p">:</span><span class="mi">126634</span><span class="p">,</span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="mi">138244</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;perDepth&quot;</span><span class="p">:[{</span><span class="nt">&quot;bestMove&quot;</span><span class="p">:</span><span class="s2">&quot;f3g5&quot;</span><span class="p">,</span><span class="nt">&quot;completed&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;depth&quot;</span><span class="p">:</span><span class="mi">2</span><span class="p">,</span><span class="nt">&quot;leafNodes&quot;</span><span class="p">:</span><span class="mi">51</span><span class="p">,</span><span class="nt">&quot;ms&quot;</span><span class="p">:</span><span class="mf">0.038</span><span class="p">,</span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="mi">53</span><span class="p">,</span><span class="nt">&quot;pruned&quot;</span><span class="p">:</span><span class="mi">1</span><span class="p">,</span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="mi">-160</span><span class="p">},</span>
+<span class="w">             </span><span class="p">{</span><span class="nt">&quot;bestMove&quot;</span><span class="p">:</span><span class="s2">&quot;f3g5&quot;</span><span class="p">,</span><span class="nt">&quot;completed&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;depth&quot;</span><span class="p">:</span><span class="mi">4</span><span class="p">,</span><span class="nt">&quot;leafNodes&quot;</span><span class="p">:</span><span class="mi">4087</span><span class="p">,</span><span class="nt">&quot;ms&quot;</span><span class="p">:</span><span class="mf">5.657</span><span class="p">,</span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="mi">4408</span><span class="p">,</span><span class="nt">&quot;pruned&quot;</span><span class="p">:</span><span class="mi">254</span><span class="p">,</span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="mi">-195</span><span class="p">},</span>
+<span class="w">             </span><span class="p">{</span><span class="nt">&quot;bestMove&quot;</span><span class="p">:</span><span class="s2">&quot;f3g5&quot;</span><span class="p">,</span><span class="nt">&quot;completed&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;depth&quot;</span><span class="p">:</span><span class="mi">6</span><span class="p">,</span><span class="nt">&quot;leafNodes&quot;</span><span class="p">:</span><span class="mi">126634</span><span class="p">,</span><span class="nt">&quot;ms&quot;</span><span class="p">:</span><span class="mf">382.625</span><span class="p">,</span><span class="nt">&quot;nodes&quot;</span><span class="p">:</span><span class="mi">138244</span><span class="p">,</span><span class="nt">&quot;pruned&quot;</span><span class="p">:</span><span class="mi">8821</span><span class="p">,</span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="mi">-125</span><span class="p">}],</span>
+<span class="w"> </span><span class="nt">&quot;pruned&quot;</span><span class="p">:</span><span class="mi">8821</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;rootScores&quot;</span><span class="p">:[{</span><span class="nt">&quot;exact&quot;</span><span class="p">:</span><span class="kc">true</span><span class="p">,</span><span class="nt">&quot;move&quot;</span><span class="p">:</span><span class="s2">&quot;f3g5&quot;</span><span class="p">,</span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="mi">-125</span><span class="p">},{</span><span class="nt">&quot;exact&quot;</span><span class="p">:</span><span class="kc">false</span><span class="p">,</span><span class="nt">&quot;move&quot;</span><span class="p">:</span><span class="s2">&quot;f3e5&quot;</span><span class="p">,</span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="mi">-130</span><span class="p">}],</span>
+<span class="w"> </span><span class="nt">&quot;score&quot;</span><span class="p">:</span><span class="mi">-125</span><span class="p">,</span><span class="nt">&quot;searchMs&quot;</span><span class="p">:</span><span class="mf">388.323</span><span class="p">,</span><span class="nt">&quot;setupMs&quot;</span><span class="p">:</span><span class="mf">0.03</span><span class="p">,</span><span class="nt">&quot;status&quot;</span><span class="p">:</span><span class="s2">&quot;ok&quot;</span><span class="p">,</span><span class="nt">&quot;totalNodes&quot;</span><span class="p">:</span><span class="mi">142705</span><span class="p">,</span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="s2">&quot;result&quot;</span><span class="p">,</span>
+<span class="w"> </span><span class="nt">&quot;unsearchedRootMoves&quot;</span><span class="p">:[]}</span>
 </code></pre>
 <p>What the fields are for:</p>
 <ul>
@@ -566,7 +299,7 @@ code {
 <li><strong><code>Kernel.exe</code> started with an argument</strong> (the old <code>Kernel.exe &lt;file.json&gt;</code>): one line on stderr, <code>Kernel.exe doesn't read JSON files any more: Engine UCI starts it as a worker, with no arguments.</code>, and exit code 1.</li>
 </ul>
 <p><strong>One Kernel move, end to end:</strong></p>
-<pre><code class="language-mermaid"><div class="mermaid">sequenceDiagram
+<pre class="mermaid">sequenceDiagram
     participant LB as 🐍 lichess-bot
     participant U as ⚙️ Engine UCI
     participant SF as 🐟 Stockfish
@@ -578,12 +311,12 @@ code {
     Note over U: shuffle, deal round-robin into min(28, usable workers, legal moves) buckets
     U-&gt;&gt;W: one search line per worker, back to back
     W--&gt;&gt;U: one result line each, until the deadline (allowed time + 2 s)
-    Note over U: keep the ok answers from each worker's own bucket, the best (score, move) wins
+    Note over U: keep the ok answers from each worker&#x27;s own bucket, the best (score, move) wins
     U-&gt;&gt;SF: the stalemate check on that move
     U-&gt;&gt;LB: bestmove, flushed at once
     U-)DB: the move, its workers, depths and candidates
     Note over U,W: off the clock, a dead or late worker is replaced
-</div></code></pre>
+</pre>
 <p><strong>How Engine UCI uses the answers</strong> (<code>getEngineMoveWithThreading</code>: your logic, new plumbing):</p>
 <ol>
 <li><strong>The legal moves</strong> come from Stockfish (<code>go perft 1</code>). None → <code>bestmove 0000</code> (<code>no_legal_move</code>; before, the report text was sent as the move). One → played at once (<code>only_move</code>).</li>
@@ -598,17 +331,17 @@ code {
 <p><strong>⚠️ Unchanged on purpose, and now visible in the database: the pick compares different depths.</strong> Every worker stops on its own clock (the 5% rule). In the test game <code>tN252leL</code> at ply 5 (a 3 s budget), 22 of the 27 workers reached depth 8 and 5 stopped at depth 6 (their depth 6 ended after the 150 ms mark). The move came from one of those 5: <code>b1c3</code> at −40 (depth 6), while the best depth-8 answer was <code>f1d3</code> at −115. Your file mode did exactly the same, so it's not a regression. But it means the move depends on CPU timing as well as on the position. <code>worker_runs.depth</code> shows it for every move; comparing at one common depth is a Phase 5 idea.</p>
 </div>
 <hr />
-<h2 id="4-️-the-phases">4. 🛣️ The phases</h2>
-<pre><code class="language-mermaid"><div class="mermaid">flowchart LR
-    P0["0 · Baseline timers&lt;br/&gt;→ folded into 4"]:::later --&gt; P1["1 · One Stockfish,&lt;br/&gt;one place, kept alive&lt;br/&gt;✅ October 25"]:::done
-    P1 --&gt; P2["2 · Kernel.exe&lt;br/&gt;is a worker&lt;br/&gt;✅ October 27"]:::done
-    P2 --&gt; P3["3 · The worker pool&lt;br/&gt;in Engine UCI&lt;br/&gt;✅ October 27"]:::done
-    P3 --&gt; P4["4 · GameId + the database&lt;br/&gt;✅ October 27"]:::db
-    P4 --&gt; P5["5 · Unlocks, later:&lt;br/&gt;stop, ponder, TT…"]:::later
+<h2 id="4--the-phases">4. 🛣️ The phases</h2>
+<pre class="mermaid">flowchart LR
+    P0[&quot;0 · Baseline timers&lt;br/&gt;→ folded into 4&quot;]:::later --&gt; P1[&quot;1 · One Stockfish,&lt;br/&gt;one place, kept alive&lt;br/&gt;✅ October 25&quot;]:::done
+    P1 --&gt; P2[&quot;2 · Kernel.exe&lt;br/&gt;is a worker&lt;br/&gt;✅ October 27&quot;]:::done
+    P2 --&gt; P3[&quot;3 · The worker pool&lt;br/&gt;in Engine UCI&lt;br/&gt;✅ October 27&quot;]:::done
+    P3 --&gt; P4[&quot;4 · GameId + the database&lt;br/&gt;✅ October 27&quot;]:::db
+    P4 --&gt; P5[&quot;5 · Unlocks, later:&lt;br/&gt;stop, ponder, TT…&quot;]:::later
     classDef done fill:#dcfce7,stroke:#16a34a,color:#14532d
     classDef db fill:#f5f3ff,stroke:#7c3aed,color:#3b0764
     classDef later fill:#f1f5f9,stroke:#64748b,color:#0f172a
-</div></code></pre>
+</pre>
 <h3 id="phase-0--baseline-timers--folded-into-phase-4-">Phase 0 — Baseline timers → folded into Phase 4 ✅</h3>
 <p>The per-stage stopwatch became database columns in <code>engine_moves</code>: <code>t_legal_ms</code> and <code>t_kernel_ms</code> (timed inside <code>getEngineMoveWithThreading</code> and added with <code>+=</code>, because the stalemate override calls it a second time), <code>t_tie_check_ms</code> (in <code>getBestMoveFromEngine</code>) and <code>t_total_ms</code>; <code>setup_ms</code> and <code>search_ms</code> per worker; <code>ms</code> per depth; and <code>overhead_ms</code> in the <code>v_engine_moves</code> view. The text log still says <code>go -&gt; bestmove took N ms (path, game '…')</code> for every move.</p>
 <h3 id="phase-1--stockfish-one-copy-in-one-place-kept-alive--the-biggest-win">Phase 1 — Stockfish: one copy, in one place, kept alive ⭐ the biggest win</h3>
@@ -727,7 +460,7 @@ code {
 </tbody>
 </table>
 <hr />
-<h2 id="5-️-risks-whats-handled-whats-still-open">5. ⚠️ Risks: what's handled, what's still open</h2>
+<h2 id="5--risks-whats-handled-whats-still-open">5. ⚠️ Risks: what's handled, what's still open</h2>
 <table>
 <thead>
 <tr>
@@ -815,7 +548,7 @@ code {
 </tbody>
 </table>
 <hr />
-<h2 id="6-️-status-and-whats-left">6. ⏱️ Status and what's left</h2>
+<h2 id="6--status-and-whats-left">6. ⏱️ Status and what's left</h2>
 <table>
 <thead>
 <tr>
@@ -871,6 +604,7 @@ code {
 </tbody>
 </table>
 <p>— <strong>Claude Opus 5.5</strong> 🤖</p>
-
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,securityLevel:"strict"});</script>
 </body>
 </html>

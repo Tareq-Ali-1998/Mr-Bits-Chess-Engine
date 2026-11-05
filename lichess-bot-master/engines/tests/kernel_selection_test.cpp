@@ -21,7 +21,8 @@ int main(int argc, char** argv) {
         const fs::path root=argv[1]; fs::create_directories(root);
         std::ofstream(root/"Kernel.exe") << "test placeholder; never executed";
         require(Read(root).version=="original", "Missing config did not default to original");
-        for(const std::string version : {"v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12"}) {
+        for(const std::string version : {"v1","v2","v3","v4","v5","v6","v7","v8","v9","v10","v11","v12",
+                "v1.0","v1.1","v1.2","v2.0","v2.1","v2.2","v3.0","v3.1","v3.2","v3.3","v3.4","v3.5","v3.10"}) {
             const auto folder=root/"Kernels"/version; fs::create_directories(folder);
             const auto executable=folder/("Kernel-"+version+".exe");
             std::ofstream(executable) << "test placeholder; never executed";
@@ -31,7 +32,11 @@ int main(int argc, char** argv) {
         }
         for(const auto text : {"{", "[]", "{}", "{\"version\":2}",
                               "{\"version\":\"v99\"}", "{\"version\":\"v0\"}",
-                              "{\"version\":\"v01\"}", "{\"version\":\"../../escape\"}"}) {
+                              "{\"version\":\"v01\"}", "{\"version\":\"../../escape\"}",
+                              "{\"version\":\"v0.1\"}", "{\"version\":\"v03.1\"}",
+                              "{\"version\":\"v3.01\"}", "{\"version\":\"v3.\"}",
+                              "{\"version\":\"v3.1.2\"}", "{\"version\":\"v3.-1\"}",
+                              "{\"version\":\"v3.2.exe\"}", "{\"version\":\"v3.2/../../escape\"}"}) {
             config(root,text); rejected([&]{Read(root);});
         }
         config(root,"{\"version\":\"v3\"}");
@@ -47,6 +52,8 @@ int main(int argc, char** argv) {
             })}});
         require(label=="uci=stamp;kernel=original;worker=kernel-v2-B;worker=kernel-v3-A", "Telemetry label incorrect");
         require(TelemetryLabel(selected,"stamp",nlohmann::json::object())=="uci=stamp;kernel=original","Empty-worker label incorrect");
+        require(TelemetryLabel({"v3.2",root/"Kernels/v3.2/Kernel-v3.2.exe"},"stamp",nlohmann::json::object())==
+            "uci=stamp;kernel=v3.2","Dotted-version telemetry label incorrect");
         std::cout<<"PASS: selection defaults, version folders, invalid config, missing executable and version telemetry\n";
     } catch(const std::exception& error) { std::cerr<<error.what()<<'\n'; return 1; }
 }

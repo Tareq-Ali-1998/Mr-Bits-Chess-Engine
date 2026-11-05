@@ -4,9 +4,9 @@
 #endif
 #define main mrbits_v56_worker_main_not_called_by_this_test
 #ifdef MRBITS_TEST_V6
-#include "../Kernels/v6/Kernel-v6.cpp"
+#include "../Kernels/v2.2/Kernel-v2.2.cpp"
 #else
-#include "../Kernels/v5/Kernel-v5.cpp"
+#include "../Kernels/v2.1/Kernel-v2.1.cpp"
 #endif
 #undef main
 
@@ -381,9 +381,9 @@ void RealSearchChecks(Json& report) {
 int main(int argc, char** argv) {
     Json report={{"scope","offline renamed-main diagnostics; no bot, worker main, Stockfish or network"}};
 #ifdef MRBITS_TEST_V6
-    report["variant"]="v6";
+    report["variant"]="v2.2";
 #else
-    report["variant"]="v5";
+    report["variant"]="v2.1";
 #endif
     int exitCode=0;
     try {

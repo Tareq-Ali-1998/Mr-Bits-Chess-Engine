@@ -1,370 +1,103 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:67d360c3f81b336889a9908dc41690e01f2b65f6eb76d85f2d4fa81b0c0166df">
 <title>04 - Runbook for Tonight.md</title>
-<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
-
 <style>
-/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
-/*---------------------------------------------------------------------------------------------
- *  Copyright (c) Microsoft Corporation. All rights reserved.
- *  Licensed under the MIT License. See License.txt in the project root for license information.
- *--------------------------------------------------------------------------------------------*/
 
-body {
-	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
-	font-size: var(--vscode-markdown-font-size, 14px);
-	padding: 0 26px;
-	line-height: var(--vscode-markdown-line-height, 22px);
-	word-wrap: break-word;
-}
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
 
-#code-csp-warning {
-	position: fixed;
-	top: 0;
-	right: 0;
-	color: white;
-	margin: 16px;
-	text-align: center;
-	font-size: 12px;
-	font-family: sans-serif;
-	background-color:#444444;
-	cursor: pointer;
-	padding: 6px;
-	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
-}
-
-#code-csp-warning:hover {
-	text-decoration: none;
-	background-color:#007acc;
-	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
-}
-
-body.scrollBeyondLastLine {
-	margin-bottom: calc(100vh - 22px);
-}
-
-body.showEditorSelection .code-line {
-	position: relative;
-}
-
-body.showEditorSelection .code-active-line:before,
-body.showEditorSelection .code-line:hover:before {
-	content: "";
-	display: block;
-	position: absolute;
-	top: 0;
-	left: -12px;
-	height: 100%;
-}
-
-body.showEditorSelection li.code-active-line:before,
-body.showEditorSelection li.code-line:hover:before {
-	left: -30px;
-}
-
-.vscode-light.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.15);
-}
-
-.vscode-light.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(0, 0, 0, 0.40);
-}
-
-.vscode-light.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-dark.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.4);
-}
-
-.vscode-dark.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 255, 255, 0.60);
-}
-
-.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-.vscode-high-contrast.showEditorSelection .code-active-line:before {
-	border-left: 3px solid rgba(255, 160, 0, 0.7);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line:hover:before {
-	border-left: 3px solid rgba(255, 160, 0, 1);
-}
-
-.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
-	border-left: none;
-}
-
-img {
-	max-width: 100%;
-	max-height: 100%;
-}
-
-a {
-	text-decoration: none;
-}
-
-a:hover {
-	text-decoration: underline;
-}
-
-a:focus,
-input:focus,
-select:focus,
-textarea:focus {
-	outline: 1px solid -webkit-focus-ring-color;
-	outline-offset: -1px;
-}
-
-hr {
-	border: 0;
-	height: 2px;
-	border-bottom: 2px solid;
-}
-
-h1 {
-	padding-bottom: 0.3em;
-	line-height: 1.2;
-	border-bottom-width: 1px;
-	border-bottom-style: solid;
-}
-
-h1, h2, h3 {
-	font-weight: normal;
-}
-
-table {
-	border-collapse: collapse;
-}
-
-table > thead > tr > th {
-	text-align: left;
-	border-bottom: 1px solid;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td {
-	padding: 5px 10px;
-}
-
-table > tbody > tr + tr > td {
-	border-top: 1px solid;
-}
-
-blockquote {
-	margin: 0 7px 0 5px;
-	padding: 0 16px 0 10px;
-	border-left-width: 5px;
-	border-left-style: solid;
-}
-
-code {
-	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
-	font-size: 1em;
-	line-height: 1.357em;
-}
-
-body.wordWrap pre {
-	white-space: pre-wrap;
-}
-
-pre:not(.hljs),
-pre.hljs code > div {
-	padding: 16px;
-	border-radius: 3px;
-	overflow: auto;
-}
-
-pre code {
-	color: var(--vscode-editor-foreground);
-	tab-size: 4;
-}
-
-/** Theming */
-
-.vscode-light pre {
-	background-color: rgba(220, 220, 220, 0.4);
-}
-
-.vscode-dark pre {
-	background-color: rgba(10, 10, 10, 0.4);
-}
-
-.vscode-high-contrast pre {
-	background-color: rgb(0, 0, 0);
-}
-
-.vscode-high-contrast h1 {
-	border-color: rgb(0, 0, 0);
-}
-
-.vscode-light table > thead > tr > th {
-	border-color: rgba(0, 0, 0, 0.69);
-}
-
-.vscode-dark table > thead > tr > th {
-	border-color: rgba(255, 255, 255, 0.69);
-}
-
-.vscode-light h1,
-.vscode-light hr,
-.vscode-light table > tbody > tr + tr > td {
-	border-color: rgba(0, 0, 0, 0.18);
-}
-
-.vscode-dark h1,
-.vscode-dark hr,
-.vscode-dark table > tbody > tr + tr > td {
-	border-color: rgba(255, 255, 255, 0.18);
-}
-
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
 </style>
-
-<style>
-/* Tomorrow Theme */
-/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
-/* Original theme - https://github.com/chriskempson/tomorrow-theme */
-
-/* Tomorrow Comment */
-.hljs-comment,
-.hljs-quote {
-	color: #8e908c;
-}
-
-/* Tomorrow Red */
-.hljs-variable,
-.hljs-template-variable,
-.hljs-tag,
-.hljs-name,
-.hljs-selector-id,
-.hljs-selector-class,
-.hljs-regexp,
-.hljs-deletion {
-	color: #c82829;
-}
-
-/* Tomorrow Orange */
-.hljs-number,
-.hljs-built_in,
-.hljs-builtin-name,
-.hljs-literal,
-.hljs-type,
-.hljs-params,
-.hljs-meta,
-.hljs-link {
-	color: #f5871f;
-}
-
-/* Tomorrow Yellow */
-.hljs-attribute {
-	color: #eab700;
-}
-
-/* Tomorrow Green */
-.hljs-string,
-.hljs-symbol,
-.hljs-bullet,
-.hljs-addition {
-	color: #718c00;
-}
-
-/* Tomorrow Blue */
-.hljs-title,
-.hljs-section {
-	color: #4271ae;
-}
-
-/* Tomorrow Purple */
-.hljs-keyword,
-.hljs-selector-tag {
-	color: #8959a8;
-}
-
-.hljs {
-	display: block;
-	overflow-x: auto;
-	color: #4d4d4c;
-	padding: 0.5em;
-}
-
-.hljs-emphasis {
-	font-style: italic;
-}
-
-.hljs-strong {
-	font-weight: bold;
-}
-</style>
-
-<style>
-/*
- * Markdown PDF CSS
- */
-
- body {
-	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
-	padding: 0 12px;
-}
-
-pre {
-	background-color: #f8f8f8;
-	border: 1px solid #cccccc;
-	border-radius: 3px;
-	overflow-x: auto;
-	white-space: pre-wrap;
-	overflow-wrap: break-word;
-}
-
-pre:not(.hljs) {
-	padding: 23px;
-	line-height: 19px;
-}
-
-blockquote {
-	background: rgba(127, 127, 127, 0.1);
-	border-color: rgba(0, 122, 204, 0.5);
-}
-
-.emoji {
-	height: 1.4em;
-}
-
-code {
-	font-size: 14px;
-	line-height: 19px;
-}
-
-/* for inline code */
-:not(pre):not(.hljs) > code {
-	color: #C9AE75; /* Change the old color so it seems less like an error */
-	font-size: inherit;
-}
-
-/* Page Break : use <div class="page"/> or <div class="page"></div> to insert page break
--------------------------------------------------------- */
-.page {
-	page-break-after: always;
-}
-
-</style>
-
-<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
 </head>
 <body>
-  <script>
-    mermaid.initialize({
-      startOnLoad: true,
-      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
-          ? 'dark'
-          : 'default'
-    });
-  </script>
 <h1 id="-tonights-runbook--whats-done-and-whats-left-for-you">🌙 Tonight's Runbook — What's Done, and What's Left for You</h1>
 <p><strong>Written by Claude Opus 5.5, for Tareq.</strong> 🤝 <em>v1, October 25: Phase 1 (one Stockfish) · <strong>v2, October 27: the Kernel worker pool, the game database, one <code>ChessState</code> and the clean folders are in your folder, built and tested there</strong></em></p>
 <div style="background:linear-gradient(90deg,#0f766e,#1d4ed8);color:#ffffff;border-radius:14px;padding:16px 22px;margin:16px 0;">
@@ -417,8 +150,8 @@ code {
 </ol>
 </div>
 <p><strong>Paste this first in every new PowerShell window:</strong></p>
-<pre><code class="language-powershell">$repo = &quot;C:\Users\tareq\Desktop\Mr_Bits&quot;
-$lb   = &quot;$repo\lichess-bot-master&quot;
+<pre><code class="language-powershell"><span class="nv">$repo</span> <span class="p">=</span> <span class="s2">&quot;C:\Users\tareq\Desktop\Mr_Bits&quot;</span>
+<span class="nv">$lb</span>   <span class="p">=</span> <span class="s2">&quot;$repo\lichess-bot-master&quot;</span>
 </code></pre>
 <hr />
 <h2 id="step-1--three-live-games-yours-4560-min">Step 1 · Three live games (yours, 45–60 min)</h2>
@@ -428,11 +161,11 @@ $lb   = &quot;$repo\lichess-bot-master&quot;
 <li><strong>Play 3 games</strong> (challenge the bot, or let matchmaking run). Try for one longer game (more than 80 plies, i.e. past move 41: the Stockfish endgame path).</li>
 <li><strong>While a game runs</strong>, in a second PowerShell (paste the 2 variables first):</li>
 </ol>
-<pre><code class="language-powershell">Get-Process Kernel, stockfish* -ErrorAction SilentlyContinue | Where-Object { $_.Path -like &quot;$lb\*&quot; } | Group-Object ProcessName | Select-Object Name, Count
-#   expect: Kernel 28 and stockfish... 1, per game that's running
-$log = Get-ChildItem &quot;$lb\engines\logs\uci_*.log&quot; | Sort-Object LastWriteTime | Select-Object -Last 1
-Get-Content $log.FullName -Tail 15            # live: &gt;&gt; commands, &lt;&lt; answers, &quot;go -&gt; bestmove took N ms (kernel, game '...')&quot;
-Select-String -Path $log.FullName -Pattern '!!'   # must stay empty
+<pre><code class="language-powershell"><span class="nb">Get-Process</span> <span class="n">Kernel</span><span class="p">,</span> <span class="n">stockfish</span><span class="p">*</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span> <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Path</span> <span class="o">-like</span> <span class="s2">&quot;$lb\*&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Group-Object</span> <span class="n">ProcessName</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">Name</span><span class="p">,</span> <span class="n">Count</span>
+<span class="c">#   expect: Kernel 28 and stockfish... 1, per game that&#39;s running</span>
+<span class="nv">$log</span> <span class="p">=</span> <span class="nb">Get-ChildItem</span> <span class="s2">&quot;$lb\engines\logs\uci_*.log&quot;</span> <span class="p">|</span> <span class="nb">Sort-Object</span> <span class="n">LastWriteTime</span> <span class="p">|</span> <span class="nb">Select-Object</span> <span class="n">-Last</span> <span class="n">1</span>
+<span class="nb">Get-Content</span> <span class="nv">$log</span><span class="p">.</span><span class="n">FullName</span> <span class="n">-Tail</span> <span class="n">15</span>            <span class="c"># live: &gt;&gt; commands, &lt;&lt; answers, &quot;go -&gt; bestmove took N ms (kernel, game &#39;...&#39;)&quot;</span>
+<span class="nb">Select-String</span> <span class="n">-Path</span> <span class="nv">$log</span><span class="p">.</span><span class="n">FullName</span> <span class="n">-Pattern</span> <span class="s1">&#39;!!&#39;</span>   <span class="c"># must stay empty</span>
 </code></pre>
 <ol start="4">
 <li><strong>After each game:</strong> no <code>Kernel</code> and no <code>stockfish</code> process is left from <code>$lb</code>.</li>
@@ -446,10 +179,10 @@ Select-String -Path $log.FullName -Pattern '!!'   # must stay empty
 </ul>
 <hr />
 <h2 id="step-2--look-at-the-database-5-min">Step 2 · Look at the database (5 min)</h2>
-<pre><code class="language-powershell">cd $lb
-python database\db.py --check                 # integrity check, foreign keys + the number of rows in every table
-python database\db.py --recent                # the newest 12 moves (what decided each one, how long it took) and events
-python database\db.py --recent 40             # ... or the newest 40
+<pre><code class="language-powershell"><span class="nb">cd </span><span class="nv">$lb</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-check</span>                 <span class="c"># integrity check, foreign keys + the number of rows in every table</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-recent</span>                <span class="c"># the newest 12 moves (what decided each one, how long it took) and events</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-recent</span> <span class="n">40</span>             <span class="c"># ... or the newest 40</span>
 </code></pre>
 <p>The moves look like this (two lines from the fault test, where every worker was killed before ply 13, so Stockfish played it; a Kernel move shows its score and how many workers searched it):</p>
 <pre><code class="language-text">  2026-10-27 03:10:43  pOoLtEsT  ply  15  kernel             e1g1   score -110  28 workers, allowed 5 s, took 1902 ms
@@ -459,37 +192,37 @@ python database\db.py --recent 40             # ... or the newest 40
 <hr />
 <h2 id="step-3--the-first-lichess-sync-after-the-games-2-min">Step 3 · The first lichess sync (after the games, 2 min)</h2>
 <p>The engine stores its own side of every move. The <strong>results, ratings, rating changes, clocks and openings</strong> come from lichess, through the bot's token:</p>
-<pre><code class="language-powershell">cd $lb
-python database\sync_lichess.py --since 2026-10-27        # the go-live date (a local date): games from that day on
-python database\db.py --check                                   # games and moves have rows now
+<pre><code class="language-powershell"><span class="nb">cd </span><span class="nv">$lb</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">sync_lichess</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-since</span> <span class="n">2026</span><span class="p">-</span><span class="n">10</span><span class="p">-</span><span class="n">27</span>        <span class="c"># the go-live date (a local date): games from that day on</span>
+<span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-check</span>                                   <span class="c"># games and moves have rows now</span>
 </code></pre>
 <p>Run it <strong>between games</strong> (it uses the bot's token and IP). Later runs need no <code>--since</code>: it continues from where it stopped.</p>
 <h2 id="step-4--a-backup-any-time">Step 4 · A backup (any time)</h2>
-<pre><code class="language-powershell">python database\db.py --backup                # a consistent copy in database\backup\ (safe while a game runs)
+<pre><code class="language-powershell"><span class="n">python</span> <span class="n">database</span><span class="p">\</span><span class="n">db</span><span class="p">.</span><span class="n">py</span> <span class="p">-</span><span class="n">-backup</span>                <span class="c"># a consistent copy in database\backup\ (safe while a game runs)</span>
 </code></pre>
 <hr />
 <div style="background:#fef2f2;border-left:6px solid #dc2626;border-radius:10px;padding:12px 18px;margin:16px 0;color:#1e293b;">
 <p><strong>🔙 Rollback, any time</strong> (an illegal move, a crash, a real hang, anything odd).</p>
 <p>⚠️ <strong>A rollback overwrites the new engine files</strong>, and tonight's work isn't committed yet. Best: <strong>commit before the live games</strong> (the message is in the Git notes below); then going forward again is one <code>git restore --source=HEAD</code>. If you haven't committed, copy them aside first (git ignores <code>engines\backup-*\</code>):</p>
-<pre><code class="language-powershell">New-Item -ItemType Directory &quot;$lb\engines\backup-v4&quot; | Out-Null
-Copy-Item &quot;$lb\engines\Engine UCI.cpp&quot;, &quot;$lb\engines\Engine UCI.exe&quot;, &quot;$lb\engines\Kernel.cpp&quot;, &quot;$lb\engines\Kernel.exe&quot;, &quot;$lb\engines\Stockfish Handler.hpp&quot;, &quot;$lb\extra_game_handlers.py&quot; &quot;$lb\engines\backup-v4\&quot;
+<pre><code class="language-powershell"><span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="s2">&quot;$lb\engines\backup-v4&quot;</span> <span class="p">|</span> <span class="nb">Out-Null</span>
+<span class="nb">Copy-Item</span> <span class="s2">&quot;$lb\engines\Engine UCI.cpp&quot;</span><span class="p">,</span> <span class="s2">&quot;$lb\engines\Engine UCI.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;$lb\engines\Kernel.cpp&quot;</span><span class="p">,</span> <span class="s2">&quot;$lb\engines\Kernel.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;$lb\engines\Stockfish Handler.hpp&quot;</span><span class="p">,</span> <span class="s2">&quot;$lb\extra_game_handlers.py&quot;</span> <span class="s2">&quot;$lb\engines\backup-v4\&quot;</span>
 </code></pre>
 <p>Press Ctrl+C in the bot's window, then stop whatever is left (Windows won't let anything replace a running <code>.exe</code>):</p>
-<pre><code class="language-powershell">Get-Process -Name &quot;Engine UCI&quot;, Kernel, stockfish* -ErrorAction SilentlyContinue |
-    Where-Object { $_.Path -like &quot;$lb\*&quot; } | Stop-Process -Force
+<pre><code class="language-powershell"><span class="nb">Get-Process</span> <span class="n">-Name</span> <span class="s2">&quot;Engine UCI&quot;</span><span class="p">,</span> <span class="n">Kernel</span><span class="p">,</span> <span class="n">stockfish</span><span class="p">*</span> <span class="n">-ErrorAction</span> <span class="n">SilentlyContinue</span> <span class="p">|</span>
+    <span class="nb">Where-Object</span> <span class="p">{</span> <span class="nv">$_</span><span class="p">.</span><span class="n">Path</span> <span class="o">-like</span> <span class="s2">&quot;$lb\*&quot;</span> <span class="p">}</span> <span class="p">|</span> <span class="nb">Stop-Process</span> <span class="n">-Force</span>
 </code></pre>
 <p><strong>A · Back to Phase 1</strong> (one Stockfish, but the old 28 threads + JSON files). Phase 1 was never committed, so its files are in <code>engines\backup-phase1\</code>:</p>
-<pre><code class="language-powershell">cd &quot;$lb\engines&quot;
-Copy-Item &quot;backup-phase1\Engine UCI.exe&quot;, &quot;backup-phase1\Engine UCI.cpp&quot;, &quot;backup-phase1\Stockfish Handler.hpp&quot; . -Force
-git -C $repo restore --source=46151b4 -- &quot;lichess-bot-master/engines/Kernel.cpp&quot; &quot;lichess-bot-master/engines/Kernel.exe&quot;
+<pre><code class="language-powershell"><span class="nb">cd </span><span class="s2">&quot;$lb\engines&quot;</span>
+<span class="nb">Copy-Item</span> <span class="s2">&quot;backup-phase1\Engine UCI.exe&quot;</span><span class="p">,</span> <span class="s2">&quot;backup-phase1\Engine UCI.cpp&quot;</span><span class="p">,</span> <span class="s2">&quot;backup-phase1\Stockfish Handler.hpp&quot;</span> <span class="p">.</span> <span class="n">-Force</span>
+<span class="n">git</span> <span class="n">-C</span> <span class="nv">$repo</span> <span class="n">restore</span> <span class="p">-</span><span class="n">-source</span><span class="p">=</span><span class="n">46151b4</span> <span class="p">--</span> <span class="s2">&quot;lichess-bot-master/engines/Kernel.cpp&quot;</span> <span class="s2">&quot;lichess-bot-master/engines/Kernel.exe&quot;</span>
 </code></pre>
 <p>Phase 1's engine creates <code>input\</code>, <code>history\</code> and <code>logs\</code> (in <code>lichess-bot-master\</code>) by itself.</p>
 <p><strong>B · Back to the version from before any AI change</strong> (your initial commit):</p>
-<pre><code class="language-powershell">cd $repo
-git restore --source=46151b4 -- &quot;lichess-bot-master/engines/Engine UCI.cpp&quot; &quot;lichess-bot-master/engines/Engine UCI.exe&quot; &quot;lichess-bot-master/engines/Kernel.cpp&quot; &quot;lichess-bot-master/engines/Kernel.exe&quot; &quot;lichess-bot-master/engines/Stockfish Handler.hpp&quot; lichess-bot-master/extra_game_handlers.py
-cd $lb
-Copy-Item -Recurse engines\stockfish stockfish      # that engine looks for Stockfish in its working folder
-New-Item -ItemType Directory input | Out-Null       # it writes its JSON files there, and never creates the folder
+<pre><code class="language-powershell"><span class="nb">cd </span><span class="nv">$repo</span>
+<span class="n">git</span> <span class="n">restore</span> <span class="p">-</span><span class="n">-source</span><span class="p">=</span><span class="n">46151b4</span> <span class="p">--</span> <span class="s2">&quot;lichess-bot-master/engines/Engine UCI.cpp&quot;</span> <span class="s2">&quot;lichess-bot-master/engines/Engine UCI.exe&quot;</span> <span class="s2">&quot;lichess-bot-master/engines/Kernel.cpp&quot;</span> <span class="s2">&quot;lichess-bot-master/engines/Kernel.exe&quot;</span> <span class="s2">&quot;lichess-bot-master/engines/Stockfish Handler.hpp&quot;</span> <span class="n">lichess-bot-master</span><span class="p">/</span><span class="n">extra_game_handlers</span><span class="p">.</span><span class="n">py</span>
+<span class="nb">cd </span><span class="nv">$lb</span>
+<span class="nb">Copy-Item</span> <span class="n">-Recurse</span> <span class="n">engines</span><span class="p">\</span><span class="n">stockfish</span> <span class="n">stockfish</span>      <span class="c"># that engine looks for Stockfish in its working folder</span>
+<span class="nb">New-Item</span> <span class="n">-ItemType</span> <span class="n">Directory</span> <span class="n">input</span> <span class="p">|</span> <span class="nb">Out-Null</span>       <span class="c"># it writes its JSON files there, and never creates the folder</span>
 </code></pre>
 <p>⚠️ In B, <code>extra_game_handlers.py</code> <strong>must</strong> come back too: the old engine doesn't declare <code>GameId</code>, so python-chess would refuse every game.</p>
 <p>Restart the bot: it runs exactly like before. The new files (headers, <code>tests\</code>, <code>database\</code>) can stay: the old engines never look at them. To go forward again: <code>git restore --source=HEAD -- &lt;the same files&gt;</code> (if v4 is committed), or copy the files back from <code>engines\backup-v4\</code>; then delete <code>lichess-bot-master\stockfish\</code> and <code>input\</code> again.</p>
@@ -600,6 +333,5 @@ New-Item -ItemType Directory input | Out-Null       # it writes its JSON files t
 </table>
 <p>The engine tests never touch the real database (they point <code>MRBITS_DATABASE_FILE</code> at a temporary one) and play from an empty temporary folder.</p>
 <p>— <strong>Claude Opus 5.5</strong> 🤖</p>
-
 </body>
 </html>

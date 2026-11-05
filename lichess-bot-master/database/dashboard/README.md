@@ -32,12 +32,30 @@ The engine writes its telemetry during games. The existing `database/sync_liches
 New build records may contain:
 
 ```text
-uci=<recorded build>;kernel=<original|v1|v2|v3|v4>;worker=<reported worker build>
+uci=<recorded build>;kernel=<original|v1.0|v2.1|v3.0|v3.6|...>;worker=<reported worker build>
 ```
 
-The portal groups **only explicit `kernel=` tokens** from the versions recorded with games/moves. It accepts `original` and generic `vN` labels with a positive whole number, so future recorded variants such as `v40` automatically join the filter and comparison. A filename containing `v4` is not evidence of a recorded selection. Old timestamp-only stamps remain **Unknown**. Conflicting variants or a mixture of labeled and unlabeled move builds becomes **Mixed / incomplete**. It never applies today's selector setting to yesterday's games.
+The portal groups **only explicit `kernel=` tokens** from the versions recorded with games/moves. It accepts `original`, canonical family names such as **`v3.6`**, and historical whole-number labels such as `v7` or `v40`. A family has a positive major number and a nonnegative minor number, without leading zeros: `v3.0` and `v3.10` are valid; `v03.2` and `v3.02` are rejected. Minor versions sort numerically, so `v3.6` precedes `v3.10`.
 
-V1 uses your Large/top-four policy; V2 orders without dropping moves; V3 uses a root-only quiet-move cutoff with captures/promotions protected. V4 uses Small at the search leaves, with neural ordering from threshold 6; it adds no Large calls or neural hard pruning. A configured variant does not prove that a particular move invoked the network: `stockfish_opening`, `stockfish_endgame`, fallbacks and other paths remain distinct. Inspect the recorded per-move decision path. New controller builds preserve actual worker hello build IDs inside the recorded game/move build labels. There is no separate worker-build column; old rows without that metadata remain unknown.
+The family organization is:
+
+Read the [family mapping and strategy-selection guide](../../engines/Kernels/VERSION_FAMILIES.md) for the complete rename table and launch instructions.
+
+| Family choices | Existing designs |
+|---|---|
+| `v1.0`, `v1.1`, `v1.2` | Former V1, V2, V3: legacy search with neural ordering/cutoff experiments |
+| `v2.0`, `v2.1`, `v2.2` | Former V4, V5, V6: legacy search with neural leaf evaluation and optional reductions |
+| `v3.0`-`v3.4`, `v3.6`-`v3.9` | Legal/Q foundation: five scoring controls, followed by the retained beam/PVS experiments; no duplicate v3.5 |
+
+`original` remains the original search. The temporary **`v7`** strategy has been retired; **`v3.0`** is its selected replacement. The filter offers current family choices and historical labels found in recorded data. A historical v7 filter can still appear when recorded games actually contain that label; it is not a current launcher strategy.
+
+**5 November scoring reorganization:** the early family labels v3.2-v3.5 were reused or moved. Older `kernel=v3.2` records describe the then-existing Large/top-three experiment (now v3.6); new v3.2 is the handcrafted-scoring control. The dashboard keeps those recorded strings unchanged. Use the recorded controller/worker build IDs and time alongside the [revision map](../../engines/Kernels/VERSION_FAMILIES.md) to distinguish generations; a version label alone is insufficient.
+
+**Historical records keep their recorded names.** For example, an old `kernel=v9` game remains a **Legacy V9 · V3.6 family** entry; it does not silently merge with newly recorded `kernel=v3.6` games. The family note is a naming reference, not proof that two historical builds are identical. A game containing both `v7` and `v3.0` records remains **Mixed / incomplete**. No rows or schema are migrated by the dashboard.
+
+A filename containing `v3.6` is not evidence of a recorded selection. Old timestamp-only stamps remain **Unknown**. Conflicting variants or a mixture of labeled and unlabeled move builds becomes **Mixed / incomplete**. The portal never applies today's selector setting to yesterday's games.
+
+V1.0 uses your Large/top-four policy; V1.1 orders without dropping moves; V1.2 uses a root-only quiet-move cutoff with captures/promotions protected. V2.0 uses Small at the search leaves, with neural ordering from threshold 6; it adds no Large calls or neural hard pruning. V3.0 is the legal/Q baseline; v3.1-v3.4 vary only static scoring percentages; V3.9 is the Small/top-ten experiment above remaining depth two. V3.2 still needs Small for its unchanged quiet-move ordering. A configured variant does not prove that a particular move invoked the network: `stockfish_opening`, `stockfish_endgame`, fallbacks and other paths remain distinct. Inspect the recorded per-move decision path. New controller builds preserve actual worker hello build IDs inside the recorded game/move build labels. There is no separate worker-build column; old rows without that metadata remain unknown.
 
 **Score percentage = `(wins + draws / 2) / (wins + draws + losses) × 100`.** Aborted and unknown-result games are excluded from that denominator and shown separately. With no decided games, score is a dash, not 0%. An observed score difference is not an Elo estimate or proof a version is stronger: opponents, clock settings, openings, sample size and code/build changes can differ.
 

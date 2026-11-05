@@ -1,9 +1,21 @@
 // Offline JSONL diagnostics. Never invoke the renamed worker main or Stockfish.
 #define main mrbits_worker_main_not_called_by_this_test
-#if defined(MRBITS_TEST_V8)
-#include "../Kernels/v8/Kernel-v8.cpp"
+#if defined(MRBITS_TEST_V3_EVAL_PROFILE)
+#if MRBITS_TEST_V3_EVAL_PROFILE == 1
+#include "../Kernels/v3.1/Kernel-v3.1.cpp"
+#elif MRBITS_TEST_V3_EVAL_PROFILE == 2
+#include "../Kernels/v3.2/Kernel-v3.2.cpp"
+#elif MRBITS_TEST_V3_EVAL_PROFILE == 3
+#include "../Kernels/v3.3/Kernel-v3.3.cpp"
+#elif MRBITS_TEST_V3_EVAL_PROFILE == 4
+#include "../Kernels/v3.4/Kernel-v3.4.cpp"
 #else
-#include "../Kernels/v7/Kernel-v7.cpp"
+#error Invalid static evaluation profile
+#endif
+#elif defined(MRBITS_TEST_V8)
+#include "../Kernels/v3.1/Kernel-v3.1.cpp"
+#else
+#include "../Kernels/v3.0/Kernel-v3.0.cpp"
 #endif
 #undef main
 
@@ -11,8 +23,8 @@
 
 namespace {
 namespace position = mrbits::v7_position;
-#if defined(MRBITS_TEST_V8)
-namespace search = mrbits::v8_search;
+#if defined(MRBITS_TEST_V8) || defined(MRBITS_TEST_V3_EVAL_PROFILE)
+namespace search = mrbits::v3_eval_search;
 #else
 namespace search = mrbits::v7_search;
 #endif
@@ -294,6 +306,7 @@ public:
 };
 } // namespace
 
+#ifndef MRBITS_DIAGNOSTIC_NO_MAIN
 int main(int argc, char** argv) {
     if (argc != 2) {
         std::cerr << "Pass the Neural Networks directory\n";
@@ -326,3 +339,4 @@ int main(int argc, char** argv) {
     }
     return 0;
 }
+#endif

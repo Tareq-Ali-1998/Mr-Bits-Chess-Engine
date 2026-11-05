@@ -1,4 +1,4 @@
-"""Repeat the saved v3/v4 policy diagnostics without starting a bot or Stockfish.
+"""Verify family v1.2/v2.0 using the historical v3/v4 diagnostic harnesses.
 
 From engines: python tests/run_kernel_policy_tests.py
 Needs python-chess and a Windows/MinGW C++17 compiler. Executables are temporary;
@@ -21,8 +21,10 @@ import time
 
 import chess
 
+from kernel_family_versions import canonical_version, legacy_version, kernel_source
+
 ENGINES = Path(__file__).resolve().parents[1]
-DEFAULT_REPORT_DIR = ENGINES.parent / "Mr Bits Docs" / "ChatGPT Neural Network Lab" / "diagnostics" / "kernel-versions-20261028"
+DEFAULT_REPORT_DIR = ENGINES.parent / "Mr Bits Docs" / "ChatGPT Neural Network Lab" / "diagnostics" / "kernel-family-policy"
 PIECE_TYPES = {chess.PAWN: 1, chess.KNIGHT: 3, chess.BISHOP: 4,
                chess.ROOK: 5, chess.QUEEN: 6, chess.KING: 7}
 
@@ -163,8 +165,9 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--report-dir", type=Path, default=DEFAULT_REPORT_DIR)
     parser.add_argument("--cxx", default=shutil.which("g++"))
-    parser.add_argument("--only", choices=("v3", "v4", "both"), default="both")
+    parser.add_argument("--only", choices=("v1.2", "v2.0", "v3", "v4", "both"), default="both")
     args = parser.parse_args(argv)
+    args.only = legacy_version(args.only)
     if not args.cxx:
         parser.error("No g++ found; pass --cxx PATH_TO_COMPILER")
     compiler = shutil.which(args.cxx) or args.cxx
@@ -178,14 +181,16 @@ def main(argv=None):
     for variant in (("v3", "v4") if args.only == "both" else (args.only,)):
         started = datetime.now(timezone.utc).isoformat()
         test = ENGINES / "tests" / f"kernel_{variant}_policy_test.cpp"
-        kernel = ENGINES / "Kernels" / variant / f"Kernel-{variant}.cpp"
-        receipt = {"schema": "mrbits.kernel-policy-diagnostic.v1", "variant": variant,
+        family = canonical_version(variant)
+        kernel = kernel_source(ENGINES, variant)
+        receipt = {"schema": "mrbits.kernel-policy-diagnostic.v1", "variant": family, "legacy_variant": variant,
                    "started_utc": started, "status": "failed", "python": platform.python_version(),
                    "python_chess": chess.__version__, "compiler": compiler,
                    "compiler_version": version.stdout.strip(),
                    "provenance": "Persistently reconstructed from the previous temporary harness; this JSON records a fresh measured run, not an imported earlier result.",
                    "scope": "Isolated renamed-main diagnostic only; no worker main, Stockfish, production executable, bot, or online game is started.",
-                   "source_sha256": {str(path.relative_to(ENGINES)): sha256(path) for path in [test, kernel, *shared]},
+                   "source_sha256": {str(path.relative_to(ENGINES)): sha256(path) for path in [test, kernel, *shared,
+                       ENGINES / "tests/kernel_family_versions.py", ENGINES / "Kernels/kernel_tools.py"]},
                    "runner_sha256": sha256(Path(__file__))}
         try:
             with tempfile.TemporaryDirectory(prefix=f"mrbits-{variant}-policy-") as temporary:
@@ -235,9 +240,9 @@ def main(argv=None):
         except Exception as error:
             receipt["error"] = f"{type(error).__name__}: {error}"
         receipt["completed_utc"] = datetime.now(timezone.utc).isoformat()
-        save(args.report_dir / f"kernel_{variant}_policy_test.json", receipt)
+        save(args.report_dir / f"kernel_{family}_policy_test.json", receipt)
         receipts.append(receipt)
-        print(f"{variant}: {receipt['status']} ({receipt.get('diagnostic_cases_passed', 0)} diagnostic cases)")
+        print(f"{family}: {receipt['status']} ({receipt.get('diagnostic_cases_passed', 0)} diagnostic cases)")
     save(args.report_dir / "policy-tests-summary.json",
          {"schema": "mrbits.kernel-policy-summary.v1", "completed_utc": datetime.now(timezone.utc).isoformat(),
           "status": "passed" if all(item["status"] == "passed" for item in receipts) else "failed",

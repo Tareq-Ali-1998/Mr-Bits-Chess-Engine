@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:f3b6416a356b1cd2f62fb7d7138d138eec6dd843b1b961410a2f24530c338551">
+<title>VERSION_FAMILIES.md</title>
+<style>
+
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
+
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+<h1 id="kernel-families-and-scoring-profiles">Kernel families and scoring profiles</h1>
+<div style="border-left:5px solid #16a34a;background:#f0fdf4;color:#14532d;padding:12px 16px"><strong>V7's replacement is v3.0.</strong> The temporary legacy v7 folder and launcher entry have been retired, and <strong>v3.0</strong> is the selected replacement. Its legal/quiescence search and 50/50 static evaluation are unchanged. Stop an existing application before starting another run or selecting a different strategy.</div>
+<h2 id="the-current-scoring-controls">The current scoring controls</h2>
+<p>The first five v3 revisions share <strong>v3.0's legal generation, exact undo, move ordering, candidate retention, quiescence and clock policy</strong>. Their static scoring percentages provide a controlled comparison. The first percentage below always means Small; the second means the main Kernel's handcrafted component.</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th style="text-align:right">Small neural scoring</th>
+<th style="text-align:right">Handcrafted scoring</th>
+<th>What changes from v3.0?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v3.0</strong></td>
+<td style="text-align:right"><strong>50%</strong></td>
+<td style="text-align:right"><strong>50%</strong></td>
+<td>Existing baseline</td>
+</tr>
+<tr>
+<td><strong>v3.1</strong></td>
+<td style="text-align:right"><strong>100%</strong></td>
+<td style="text-align:right"><strong>0%</strong></td>
+<td>Static value only; existing pure-Small profile reused</td>
+</tr>
+<tr>
+<td><strong>v3.2</strong></td>
+<td style="text-align:right"><strong>0%</strong></td>
+<td style="text-align:right"><strong>100%</strong></td>
+<td>Static value only; no Small inference for static evaluation</td>
+</tr>
+<tr>
+<td><strong>v3.3</strong></td>
+<td style="text-align:right"><strong>80%</strong></td>
+<td style="text-align:right"><strong>20%</strong></td>
+<td>Static value only</td>
+</tr>
+<tr>
+<td><strong>v3.4</strong></td>
+<td style="text-align:right"><strong>20%</strong></td>
+<td style="text-align:right"><strong>80%</strong></td>
+<td>Static value only</td>
+</tr>
+</tbody>
+</table>
+<pre><code class="language-text">same legal search and move ordering
+                  |
+        same bounded quiescence
+                  |
+          static score required?
+                  |
+      active scoring components only
+                  |
+       Small% + handcrafted% -&gt; round/clamp
+</code></pre>
+<p>A component with zero weight is skipped by a compile-time branch. This includes skipping Small's state construction, model load and inference in <strong>v3.2's static evaluator</strong>. It does not remove v3.0's separate Small-based quiet-move ordering. Normal v3.2 runs therefore still require Small weights. The make/undo code also keeps maintaining the incremental scores used by the common search and heuristics; a zero handcrafted weight skips that component in static scoring, rather than deleting shared bookkeeping.</p>
+<p>The percentages apply to all static-evaluator calls, including quiescence stand pat and its hard cap. Mate/stalemate recognition retains the same rule-based results. All five profiles keep ordinary legal candidates eligible; none adds a fixed top-K cutoff.</p>
+<p><strong>There is deliberately no v3.5 duplicate.</strong> The previous v3.1 already implemented the requested 100% Small / 0% handcrafted experiment, so it remains v3.1. Moving another copy to v3.5 would add no distinct experiment.</p>
+<h2 id="three-design-families">Three design families</h2>
+<p>The major number identifies a search foundation; the minor number identifies an experiment within it. These are design labels, not Elo rankings.</p>
+<table>
+<thead>
+<tr>
+<th>Family</th>
+<th>Foundation</th>
+<th>Current revisions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>original</code></td>
+<td>Existing baseline at <code>engines/Kernel.cpp</code></td>
+<td>Still named <code>original</code></td>
+</tr>
+<tr>
+<td><strong>v1.x</strong></td>
+<td>Legacy search and handcrafted ordinary leaves</td>
+<td>v1.0 Large/top-four; v1.1 ordering only; v1.2 guarded root cutoff</td>
+</tr>
+<tr>
+<td><strong>v2.x</strong></td>
+<td>Legacy search with neural ordinary leaves</td>
+<td>v2.0 pure Small; v2.1 50/50 blend; v2.2 guarded late reductions</td>
+</tr>
+<tr>
+<td><strong>v3.x</strong></td>
+<td>Legal moves, exact undo, mate/stalemate and Q6</td>
+<td>Scoring controls v3.0-v3.4, plus the experiments below</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Retained experiment</th>
+<th>Static scoring</th>
+<th>Search distinction</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v3.6</strong></td>
+<td>0% Small / 100% handcrafted</td>
+<td>Large sorts expanded lists; keep three, including ordinary/Q check evasions</td>
+</tr>
+<tr>
+<td><strong>v3.7</strong></td>
+<td>50% Small / 50% handcrafted</td>
+<td>Same aggressive Large/top-three policy</td>
+</tr>
+<tr>
+<td><strong>v3.8</strong></td>
+<td>100% Small / 0% handcrafted</td>
+<td>All ordinary candidates eligible; PVS re-search and exact static-value cache</td>
+</tr>
+<tr>
+<td><strong>v3.9</strong></td>
+<td>50% Small / 50% handcrafted</td>
+<td>Small/top-ten at remaining ordinary depth 3+; no sorting at depth 2/1 or in Q</td>
+</tr>
+</tbody>
+</table>
+<p>Only the <strong>first four derivatives after v3.0</strong> isolate static evaluation percentages. The later experiments intentionally change search behavior and should not be treated as scoring-only comparisons. Root cutoffs apply per worker's assigned subset, not as one global shortlist.</p>
+<h2 id="revision-change-on-5-november-2026">Revision change on 5 November 2026</h2>
+<p>The first family-naming release used v3.1-v3.5 for the earlier experiments. The scoring controls now take the first four derivative positions:</p>
+<table>
+<thead>
+<tr>
+<th>Before this scoring reorganization</th>
+<th>Current name</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v3.0</td>
+<td><strong>v3.0</strong></td>
+<td>Baseline unchanged</td>
+</tr>
+<tr>
+<td>v3.1, 100% Small</td>
+<td><strong>v3.1</strong></td>
+<td>Reused; no duplicate v3.5</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>v3.2</strong></td>
+<td>New 0% Small / 100% handcrafted control</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>v3.3</strong></td>
+<td>New 80% Small / 20% handcrafted control</td>
+</tr>
+<tr>
+<td>-</td>
+<td><strong>v3.4</strong></td>
+<td>New 20% Small / 80% handcrafted control</td>
+</tr>
+<tr>
+<td>v3.2, Large/top-three</td>
+<td><strong>v3.6</strong></td>
+<td>Existing experiment shifted</td>
+</tr>
+<tr>
+<td>v3.3, Large/top-three blend</td>
+<td><strong>v3.7</strong></td>
+<td>Existing experiment shifted</td>
+</tr>
+<tr>
+<td>v3.4, PVS/static cache</td>
+<td><strong>v3.8</strong></td>
+<td>Existing experiment shifted</td>
+</tr>
+<tr>
+<td>v3.5, Small/top-ten</td>
+<td><strong>v3.9</strong></td>
+<td>Existing experiment shifted</td>
+</tr>
+</tbody>
+</table>
+<p>The old whole-number names map to the current set as follows:</p>
+<table>
+<thead>
+<tr>
+<th>Historical whole-number name</th>
+<th>Current name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>original</td>
+<td><strong>original</strong></td>
+</tr>
+<tr>
+<td>v1 / v2 / v3</td>
+<td><strong>v1.0 / v1.1 / v1.2</strong></td>
+</tr>
+<tr>
+<td>v4 / v5 / v6</td>
+<td><strong>v2.0 / v2.1 / v2.2</strong></td>
+</tr>
+<tr>
+<td>v7 / v8</td>
+<td><strong>v3.0 / v3.1</strong></td>
+</tr>
+<tr>
+<td>v9 / v10 / v11 / v12</td>
+<td><strong>v3.6 / v3.7 / v3.8 / v3.9</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The temporary plain <strong>v7</strong> folder and launcher entry were retired on 5 November 2026 at your request. Use <strong>v3.0</strong> for the same baseline. Historical records named v7 still keep that recorded identity; v7 is not an additional current strategy.</p>
+<h2 id="choose-the-full-version-string">Choose the full version string</h2>
+<p>After stopping an existing application, open <strong>Launch Server.bat</strong> and enter a full name:</p>
+<pre><code class="language-text">v3.0   50% Small / 50% handcrafted baseline
+v3.1   100% Small / 0% handcrafted
+v3.2   0% Small / 100% handcrafted
+v3.3   80% Small / 20% handcrafted
+v3.4   20% Small / 80% handcrafted
+v3.9   the separate Small/top-ten search experiment
+</code></pre>
+<p>A displayed menu number is just an ordinal. Use the full version when writing commands or recording an experiment. Names are strings, not floating-point numbers: <strong>v3.10 follows v3.9</strong>. Leading zeros are rejected.</p>
+<pre><code class="language-powershell"><span class="c"># From lichess-bot-master: list only, without changing selection</span>
+<span class="p">&amp;</span> <span class="s1">&#39;.\Launch Server.bat&#39;</span> <span class="p">-</span><span class="n">-list</span>
+
+<span class="c"># Build only, without selection or games</span>
+<span class="p">&amp;</span> <span class="s1">&#39;engines/Kernels/Build Version.bat&#39;</span> <span class="n">v3</span><span class="p">.</span><span class="n">3</span>
+
+<span class="c"># After stopping the current application: prepare the next selection only</span>
+<span class="p">&amp;</span> <span class="s1">&#39;.\Launch Server.bat&#39;</span> <span class="p">-</span><span class="n">-version</span> <span class="n">v3</span><span class="p">.</span><span class="n">3</span> <span class="p">-</span><span class="n">-prepare-only</span>
+</code></pre>
+<p>Normal launch checks weights, builds the chosen kernel/controller when needed, probes Kernel startup, then saves selection and starts the bot. <code>--prepare-only</code> skips execution but still changes next-run selection. Building a strategy alone does not select or start it. The retired V7 setup has been replaced by the selected v3.0 baseline.</p>
+<h2 id="historical-records-remain-historical">Historical records remain historical</h2>
+<p><strong>Existing database rows and diagnostic results keep their recorded identities.</strong> An older <code>kernel=v3.2</code> row can mean the previous Large/top-three policy; a newly built v3.2 means 100% handcrafted static scoring. Use the recorded worker/controller build IDs and date together with the revision table above. The dashboard does not silently turn an old v3.2 game into v3.6 or rewrite its history.</p>
+<p>The same caution applies when parameters changed under an older whole-number label. A label mapping is a reading aid, not proof that two builds are byte-identical. Historical verification counts are not fresh native tests of the new profiles.</p>
+<p>Shared implementation headers such as <code>V7 Position.hpp</code>, <code>V7 Search.hpp</code>, <code>V11 Search.hpp</code> and <code>V12 Search.hpp</code> keep their existing filenames/namespaces for traceability and reuse by the current family implementations. The scoring-only derivatives use <a href="V3%20Evaluation%20Search.hpp">V3 Evaluation Search.hpp</a>. Historical test-script names also remain stable; their current source paths and active version arguments follow the current map.</p>
+<h2 id="focused-verification">Focused verification</h2>
+<p>From <code>lichess-bot-master/engines</code>, run <code>python tests/run_kernel_v3_evaluation_tests.py</code> for the four scoring profiles. <code>--syntax-only</code> checks their diagnostic translation units without running a native executable. The eight affected production builds (v3.1-v3.4 and shifted v3.6-v3.9) compiled during this revision; native behavioral results must be reported separately from that compilation.</p>
+<div style="border-left:5px solid #8b5cf6;background:#f5f3ff;color:#312e81;padding:12px 16px"><strong>The proposed search-table engine remains queued.</strong> We previously called it V13. Its family/revision name is unassigned until its design is agreed. Discuss the <a href="../../Mr%20Bits%20Docs/V13_MEMORY_PLAN.html">combined worker memory budget</a> before implementation; these scoring profiles do not implement that proposal.</div>
+<p>Read the <a href="README.html">kernel index</a>, <a href="../../Mr%20Bits%20Docs/START_HERE_KERNELS_AND_DASHBOARD.html">application/dashboard guide</a>, or <a href="v3.0/HOW_V3_0_WORKS.html">v3.0 walkthrough</a> next.</p>
+</body>
+</html>

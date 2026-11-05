@@ -176,31 +176,39 @@ The dashboard reads local data; the explicit sync command contacts Lichess. Empt
 
 For an already configured Python environment, **`Launch Server.bat`** and **`Launch Dashboard.bat`** provide the same entry points. They use plain `python`, so launch them from an activated environment or ensure your default Python has the dependencies above. Stop the existing application before changing versions.
 
-## The Kernel experiments
+## The Kernel families
 
 | Version | Main idea |
 |---|---|
 | `original` | The existing classical search baseline |
-| `v1` | My Large-network ordering and aggressive top-four experiment |
-| `v2` | Large near the root, Small internally; retain every candidate |
-| `v3` | Gentler root filtering: eight quiet moves plus captures/promotions; retain everything while in check |
-| `v4` | Small-network ordinary leaf scoring, initially 0% handcrafted / 100% neural; Small ordering from depth six |
-| `v5` | Small ordering and a 50/50 handcrafted/neural leaf blend; keep all candidates |
-| `v6` | v5's foundation with guarded one-ply reductions of late quiet internal moves and full-depth re-search on improvement |
-| `v7` | Legal continuations, mate/stalemate recognition, bounded quiescence, Small quiet ordering, and estimated iteration timing |
-| `v8` | V7's legal/tactical search with 100% Small neural static evaluation |
-| `v9` | Large-ranked top-three beam with original static evaluation |
-| `v10` | The same top-three beam with a 50/50 original/Small static value |
-| `v11` | Small-only evaluation, PVS re-search, and bounded exact-position value caching; all legal ordinary candidates retained |
+| `v1.0` | My Large-network ordering and aggressive top-four experiment |
+| `v1.1` | Large near the root, Small internally; retain every candidate |
+| `v1.2` | Gentler root filtering: eight quiet moves plus captures/promotions; retain everything while in check |
+| `v2.0` | Small-network ordinary leaf scoring, initially 0% handcrafted / 100% neural; Small ordering from depth six |
+| `v2.1` | Small ordering and a 50/50 handcrafted/neural leaf blend; keep all candidates |
+| `v2.2` | v2.1's foundation with guarded one-ply reductions of late quiet internal moves and full-depth re-search on improvement |
+| `v3.0` | Legal continuations, mate/stalemate recognition, bounded quiescence, Small quiet ordering, and estimated iteration timing |
+| `v3.1` | V3.0's legal/tactical search with 100% Small neural static evaluation |
+| `v3.2` | The same v3.0 search with 0% Small / 100% handcrafted static scoring |
+| `v3.3` | The same v3.0 search with 80% Small / 20% handcrafted static scoring |
+| `v3.4` | The same v3.0 search with 20% Small / 80% handcrafted static scoring |
+| `v3.6` | Large-ranked top-three beam with original static evaluation |
+| `v3.7` | The same top-three beam with a 50/50 original/Small static value |
+| `v3.8` | Small-only evaluation, PVS re-search, and bounded exact-position value caching; all legal ordinary candidates retained |
+| `v3.9` | V3.0's 50/50 evaluation; Small sorts and keeps ten at remaining depth 3+, with generation order and no move sorting at depth 2 or less |
 
-The menu discovers version folders so new ideas can be added without replacing the original source. Root cutoffs apply to each worker's assigned subset. These are experiments to measure, not a ranking of strongest to weakest. [Policies, build commands, and tests](lichess-bot-master/engines/Kernels/README.md).
+The menu now uses three design families: **v1.x** keeps the legacy handcrafted leaf score, **v2.x** experiments with neural leaves on the legacy search, and **v3.x** shares the legal-move/quiescence foundation. Enter the full name, such as **`v3.6`**. These labels describe designs, not playing-strength rankings. Root cutoffs still apply per worker. [Old-to-new mapping](lichess-bot-master/engines/Kernels/VERSION_FAMILIES.md) | [Policies, builds and tests](lichess-bot-master/engines/Kernels/README.md).
 
-The short [v5/v6 guide](lichess-bot-master/engines/Kernels/V5_V6_README.md) explains the ordering/reduction pair in three reading sections.
-The [v7 guide](lichess-bot-master/engines/Kernels/v7/README.md) explains the next experiment: a stronger tactical foundation before more selective pruning.
+The short [v2.1/v2.2 guide](lichess-bot-master/engines/Kernels/V5_V6_README.md) explains the ordering/reduction pair in three reading sections.
+**The scoring controls are v3.0-v3.4:** 50/50, 100/0, 0/100, 80/20 and 20/80 respectively, with **Small first, handcrafted second**. Their legal generation, ordering, candidate retention, quiescence and time policy match v3.0; only static scoring changes. A 0% component is skipped in that evaluator. V3.2 still uses Small for the unchanged quiet-move ordering. V3.5 is intentionally unassigned because the existing pure-Small v3.1 already covers that duplicate.
 
-For a visual walkthrough, read [How V7 works](lichess-bot-master/engines/Kernels/v7/HOW_V7_WORKS.md), then [V8's neural-only evaluation experiment](lichess-bot-master/engines/Kernels/v8/README.md). [Operation counts](lichess-bot-master/engines/Neural%20Networks/OPERATION_COUNTS.md) show the actual arithmetic for both networks and sorting a move list.
+The [v3.0 guide](lichess-bot-master/engines/Kernels/v3.0/README.md) explains the next experiment: a stronger tactical foundation before more selective pruning.
 
-The newer [V9](lichess-bot-master/engines/Kernels/v9/README.md) and [V10](lichess-bot-master/engines/Kernels/v10/README.md) deliberately retain only Large's top three candidates at each expansion. [V11](lichess-bot-master/engines/Kernels/v11/README.md) instead tests narrower search windows with re-search and repeated-position evaluation reuse. Greater nominal depth in a narrow tree is not a strength result.
+For a visual walkthrough, read [How V3.0 works](lichess-bot-master/engines/Kernels/v3.0/HOW_V3_0_WORKS.md), then [V3.1's neural-only evaluation experiment](lichess-bot-master/engines/Kernels/v3.1/README.md). [Operation counts](lichess-bot-master/engines/Neural%20Networks/OPERATION_COUNTS.md) show the actual arithmetic for both networks and sorting a move list.
+
+The newer [V3.6](lichess-bot-master/engines/Kernels/v3.6/README.md) and [V3.7](lichess-bot-master/engines/Kernels/v3.7/README.md) deliberately retain only Large's top three candidates at each expansion. [V3.8](lichess-bot-master/engines/Kernels/v3.8/README.md) instead tests narrower search windows with re-search and repeated-position evaluation reuse. Greater nominal depth in a narrow tree is not a strength result.
+
+[V3.9](lichess-bot-master/engines/Kernels/v3.9/README.md) is a focused V3.0 derivative: Small ranks the complete candidate list and keeps ten only when more than two ordinary plies remain. The last two levels and quiescence preserve generation order. The previous whole-number labels `v1` through `v12` now use these families. The temporary **`v7`** folder has been retired; use **`v3.0`** for that same legal/quiescence baseline. V3.0 is the selected replacement. Stop an existing application before choosing another strategy; the normal launcher prepares matching builds when needed.
 
 ## Where to start reading
 

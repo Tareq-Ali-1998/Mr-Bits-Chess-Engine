@@ -39,6 +39,78 @@ class LauncherTests(unittest.TestCase):
         for value in ("../v1", "v0", "v01", "V2", "v-1"):
             with self.assertRaises(ValueError): tools.paths(value, self.root)
 
+    def test_family_discovery_sorts_major_and_minor_numerically(self):
+        for name in ("v3.10", "v3.2", "v3.0", "v1.10", "v1.2", "v1.0", "v2.0", "v7",
+                     "v0.1", "v03.1", "v3.01", "v3.", "v3.1.2"):
+            self.variant(name)
+        (self.root / "Kernels/v3.1").mkdir() # A folder without its matching source is not a version.
+        self.assertEqual(tools.versions(self.root),
+                         ["original", "v1.0", "v1.2", "v1.10", "v2.0", "v3.0", "v3.2", "v3.10", "v7"])
+        for value in ("../v3.2", "v3.2/../../escape", "v0.1", "v03.1", "v3.01", "v3.", "v3.1.2",
+                      "v3.-1", "v3.2.exe", "V3.2", "v3.2\n"):
+            self.assertFalse(tools.version_name(value), value)
+            with self.assertRaises(ValueError): tools.paths(value, self.root)
+        for value in ("v1.0", "v3.2", "v3.10", "v10.0", "v7"):
+            self.assertTrue(tools.version_name(value), value)
+            source, binary = tools.paths(value, self.root)
+            self.assertEqual(source, self.root / "Kernels" / value / f"Kernel-{value}.cpp")
+            self.assertEqual(binary, source.with_suffix(".exe"))
+
+    def test_family_weight_requirements_match_the_preserved_policy(self):
+        small = self.root / "Neural Networks/Small/weights.bin"
+        large = self.root / "Neural Networks/Large/weights.bin"
+        small.parent.mkdir(parents=True); large.parent.mkdir(parents=True)
+        with patch.dict(os.environ, {"MRBITS_NEURAL_WEIGHTS_DIR": str(small.parents[1])}):
+            small.write_bytes(b"presence fixture")
+            for version in ("v2.0", "v2.1", "v2.2", "v3.0", "v3.1", "v3.2", "v3.3", "v3.4", "v3.8", "v3.9", "v7"):
+                tools.require_weights(version, engines=self.root)
+            for version in ("v1.0", "v1.1", "v1.2", "v3.6", "v3.7"):
+                with self.assertRaises(FileNotFoundError): tools.require_weights(version, engines=self.root)
+            small.unlink(); large.write_bytes(b"presence fixture")
+            tools.require_weights("v3.6", engines=self.root)
+            for version in ("v1.0", "v1.1", "v1.2", "v2.0", "v2.1", "v2.2", "v3.0", "v3.1", "v3.2", "v3.3", "v3.4", "v3.7", "v3.8", "v3.9"):
+                with self.assertRaises(FileNotFoundError): tools.require_weights(version, engines=self.root)
+            small.write_bytes(b"presence fixture")
+            for version in tools.LEGACY_TO_FAMILY.values(): tools.require_weights(version, engines=self.root)
+
+    def test_evaluation_matrix_labels_and_shifted_policy_mapping(self):
+        for version, percentage in (("v3.0", 50), ("v3.1", 100), ("v3.2", 0),
+                                    ("v3.3", 80), ("v3.4", 20)):
+            self.assertIn(f"{percentage}% Small / {100-percentage}% handcrafted", launcher.DESCRIPTIONS[version])
+        self.assertEqual({old: tools.LEGACY_TO_FAMILY[old] for old in ("v8", "v9", "v10", "v11", "v12")},
+                         {"v8": "v3.1", "v9": "v3.6", "v10": "v3.7", "v11": "v3.8", "v12": "v3.9"})
+        self.assertNotIn("v3.5", launcher.DESCRIPTIONS)
+
+    def test_family_selection_is_atomic_and_requires_its_own_executable(self):
+        source = self.variant("v3.2")
+        with self.assertRaises(FileNotFoundError): tools.select("v3.2", engines=self.root)
+        source.with_suffix(".exe").write_bytes(b"not executable; selection fixture only")
+        tools.select("v3.2", engines=self.root)
+        self.assertEqual(json.loads((self.root / "kernel-selection.json").read_text()), {"version": "v3.2"})
+        self.assertFalse(list(self.root.glob("*.tmp")))
+
+    def test_menu_accepts_dotted_family_name_and_preserves_legacy_default(self):
+        available = ["original", "v1.0", "v3.0", "v3.2", "v7"]
+        with patch.object(launcher, "ENGINES", self.root), patch("builtins.input", return_value="v3.2"), \
+             contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(launcher.choose(available), "v3.2")
+        (self.root / "kernel-selection.json").write_text('{"version":"v7"}')
+        with patch.object(launcher, "ENGINES", self.root), patch("builtins.input", return_value=""), \
+             contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(launcher.choose(available), "v7")
+
+    def test_retired_v7_keeps_history_alias_and_uses_canonical_selection(self):
+        source = self.variant("v3.0")
+        source.with_suffix(".exe").write_bytes(b"canonical selection fixture only")
+        tools.select("v3.0", engines=self.root)
+        available = tools.versions(self.root)
+        self.assertEqual(available, ["original", "v3.0"])
+        self.assertNotIn("v7", launcher.DESCRIPTIONS)
+        self.assertEqual(tools.LEGACY_TO_FAMILY["v7"], "v3.0")
+        with patch.object(launcher, "ENGINES", self.root), patch("builtins.input", return_value=""), \
+             contextlib.redirect_stdout(io.StringIO()):
+            self.assertEqual(launcher.choose(available), "v3.0")
+
     def test_selection_is_atomic_and_requires_binary(self):
         self.variant("v2")
         with self.assertRaises(FileNotFoundError): tools.select("v2", engines=self.root)
@@ -52,13 +124,13 @@ class LauncherTests(unittest.TestCase):
         small.parent.mkdir(parents=True)
         small.write_bytes(b"only the presence is checked at startup")
         with patch.dict(os.environ, {"MRBITS_NEURAL_WEIGHTS_DIR": str(small.parents[1])}):
-            for version in ("original", "v4", "v5", "v6", "v7", "v8", "v11"):
+            for version in ("original", "v4", "v5", "v6", "v7", "v8", "v11", "v12"):
                 tools.require_weights(version, engines=self.root)
             for version in ("v1", "v2", "v3", "v9", "v10"):
                 with self.assertRaises(FileNotFoundError):
                     tools.require_weights(version, engines=self.root)
             small.unlink()
-            for version in ("v5", "v6", "v7", "v8", "v11"):
+            for version in ("v5", "v6", "v7", "v8", "v11", "v12"):
                 with self.assertRaises(FileNotFoundError):
                     tools.require_weights(version, engines=self.root)
 
@@ -93,6 +165,30 @@ class LauncherTests(unittest.TestCase):
             binary.write_bytes(b"changed binary")
             tools.build_kernel("v2", engines=self.root); self.assertEqual(len(calls), 3)
 
+    def test_obsolete_saved_build_manifest_cannot_override_current_source(self):
+        source = self.variant("v7")
+        binary = source.with_suffix(".exe")
+        binary.write_bytes(b"old installed fixture")
+        receipt = binary.with_suffix(".build.json")
+        receipt.write_text('{"stamp":"old-build"}')
+        tools.write_json(self.root / "backup-runtime/retained-builds.json", {
+            "schema": "mrbits.retained-builds.v1", "builds": {"Kernels/v7/Kernel-v7.exe": {
+                "stamp": "old-build", "executable_sha256": tools.digest(binary),
+                "receipt_sha256": tools.digest(receipt)
+            }}})
+        source.write_text("int main(){return 100;}\n")
+        calls = []
+        def compile(command, **kwargs):
+            calls.append(command)
+            Path(command[-1]).write_bytes(b"current-source fixture")
+        with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
+             patch.object(tools.subprocess, "run", side_effect=compile), \
+             contextlib.redirect_stdout(io.StringIO()):
+            tools.build_kernel("v7", engines=self.root)
+        self.assertEqual(len(calls), 1)
+        self.assertEqual(binary.read_bytes(), b"current-source fixture")
+        self.assertEqual(json.loads(receipt.read_text())["origin"], "local_compilation")
+
     def test_failed_compile_preserves_previous_executable(self):
         source=self.variant("v3"); binary=source.with_suffix(".exe"); binary.write_bytes(b"old valid executable")
         with patch.object(tools, "compiler_environment", return_value=("fake-g++", dict(os.environ))), \
@@ -103,7 +199,8 @@ class LauncherTests(unittest.TestCase):
         self.assertFalse(binary.with_suffix(".build.json").exists())
 
     def test_shared_search_header_change_invalidates_build_cache(self):
-        self.variant("v5")
+        source = self.variant("v5")
+        source.write_text('#include "Kernels/Neural Search.hpp"\nint main() {return 0;}\n')
         header = self.root / "Kernels/Neural Search.hpp"
         header.write_text("// search policy revision one")
         calls = []

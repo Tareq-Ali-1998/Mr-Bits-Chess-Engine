@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="mrbits-source" content="1:8e88f9241f1f7673afe20e2012297a01c2e1ee270784861368dd63bf957bd3fb">
+<title>README.md</title>
+<style>
+
+body{font-family:Segoe UI,Arial,sans-serif;font-size:15px;line-height:1.65;
+  color:#243247;background:white;max-width:1100px;margin:2rem auto;padding:0 26px;
+  overflow-wrap:break-word}
+h1,h2,h3,h4{line-height:1.3}h1,h2{color:#2354a5}
+a{color:#2563eb}table{border-collapse:collapse;max-width:100%;margin:1em 0}
+th,td{border:1px solid #cbd5e1;padding:.45em .65em;text-align:left;vertical-align:top}
+th{background:#edf3fc}blockquote{border-left:4px solid #60a5fa;margin:1em 0;
+  padding:.2em 1em;background:#eff6ff}pre{padding:1em;overflow:auto;background:#f3f5f8;
+  border-radius:6px;line-height:1.45}code{font-family:Consolas,monospace;font-size:.9em}
+img{max-width:100%}pre code{font-size:inherit}.mermaid{background:transparent}
+@media print{body{max-width:none;margin:0;font-size:10.5pt}h1,h2,h3{break-after:avoid}
+  pre,blockquote{break-inside:avoid}a{color:inherit}}
+
+pre { line-height: 125%; }
+td.linenos .normal { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+span.linenos { color: inherit; background-color: transparent; padding-left: 5px; padding-right: 5px; }
+td.linenos .special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 5px; padding-right: 5px; }
+pre .hll { background-color: #ffffcc }
+pre { background: #f8f8f8; }
+pre .c { color: #3D7B7B; font-style: italic } /* Comment */
+pre .err { border: 1px solid #F00 } /* Error */
+pre .k { color: #008000; font-weight: bold } /* Keyword */
+pre .o { color: #666 } /* Operator */
+pre .ch { color: #3D7B7B; font-style: italic } /* Comment.Hashbang */
+pre .cm { color: #3D7B7B; font-style: italic } /* Comment.Multiline */
+pre .cp { color: #9C6500 } /* Comment.Preproc */
+pre .cpf { color: #3D7B7B; font-style: italic } /* Comment.PreprocFile */
+pre .c1 { color: #3D7B7B; font-style: italic } /* Comment.Single */
+pre .cs { color: #3D7B7B; font-style: italic } /* Comment.Special */
+pre .gd { color: #A00000 } /* Generic.Deleted */
+pre .ge { font-style: italic } /* Generic.Emph */
+pre .ges { font-weight: bold; font-style: italic } /* Generic.EmphStrong */
+pre .gr { color: #E40000 } /* Generic.Error */
+pre .gh { color: #000080; font-weight: bold } /* Generic.Heading */
+pre .gi { color: #008400 } /* Generic.Inserted */
+pre .go { color: #717171 } /* Generic.Output */
+pre .gp { color: #000080; font-weight: bold } /* Generic.Prompt */
+pre .gs { font-weight: bold } /* Generic.Strong */
+pre .gu { color: #800080; font-weight: bold } /* Generic.Subheading */
+pre .gt { color: #04D } /* Generic.Traceback */
+pre .kc { color: #008000; font-weight: bold } /* Keyword.Constant */
+pre .kd { color: #008000; font-weight: bold } /* Keyword.Declaration */
+pre .kn { color: #008000; font-weight: bold } /* Keyword.Namespace */
+pre .kp { color: #008000 } /* Keyword.Pseudo */
+pre .kr { color: #008000; font-weight: bold } /* Keyword.Reserved */
+pre .kt { color: #B00040 } /* Keyword.Type */
+pre .m { color: #666 } /* Literal.Number */
+pre .s { color: #BA2121 } /* Literal.String */
+pre .na { color: #687822 } /* Name.Attribute */
+pre .nb { color: #008000 } /* Name.Builtin */
+pre .nc { color: #00F; font-weight: bold } /* Name.Class */
+pre .no { color: #800 } /* Name.Constant */
+pre .nd { color: #A2F } /* Name.Decorator */
+pre .ni { color: #717171; font-weight: bold } /* Name.Entity */
+pre .ne { color: #CB3F38; font-weight: bold } /* Name.Exception */
+pre .nf { color: #00F } /* Name.Function */
+pre .nl { color: #767600 } /* Name.Label */
+pre .nn { color: #00F; font-weight: bold } /* Name.Namespace */
+pre .nt { color: #008000; font-weight: bold } /* Name.Tag */
+pre .nv { color: #19177C } /* Name.Variable */
+pre .ow { color: #A2F; font-weight: bold } /* Operator.Word */
+pre .w { color: #BBB } /* Text.Whitespace */
+pre .mb { color: #666 } /* Literal.Number.Bin */
+pre .mf { color: #666 } /* Literal.Number.Float */
+pre .mh { color: #666 } /* Literal.Number.Hex */
+pre .mi { color: #666 } /* Literal.Number.Integer */
+pre .mo { color: #666 } /* Literal.Number.Oct */
+pre .sa { color: #BA2121 } /* Literal.String.Affix */
+pre .sb { color: #BA2121 } /* Literal.String.Backtick */
+pre .sc { color: #BA2121 } /* Literal.String.Char */
+pre .dl { color: #BA2121 } /* Literal.String.Delimiter */
+pre .sd { color: #BA2121; font-style: italic } /* Literal.String.Doc */
+pre .s2 { color: #BA2121 } /* Literal.String.Double */
+pre .se { color: #AA5D1F; font-weight: bold } /* Literal.String.Escape */
+pre .sh { color: #BA2121 } /* Literal.String.Heredoc */
+pre .si { color: #A45A77; font-weight: bold } /* Literal.String.Interpol */
+pre .sx { color: #008000 } /* Literal.String.Other */
+pre .sr { color: #A45A77 } /* Literal.String.Regex */
+pre .s1 { color: #BA2121 } /* Literal.String.Single */
+pre .ss { color: #19177C } /* Literal.String.Symbol */
+pre .bp { color: #008000 } /* Name.Builtin.Pseudo */
+pre .fm { color: #00F } /* Name.Function.Magic */
+pre .vc { color: #19177C } /* Name.Variable.Class */
+pre .vg { color: #19177C } /* Name.Variable.Global */
+pre .vi { color: #19177C } /* Name.Variable.Instance */
+pre .vm { color: #19177C } /* Name.Variable.Magic */
+pre .il { color: #666 } /* Literal.Number.Integer.Long */
+</style>
+</head>
+<body>
+<h1 id="kernel-experiments">Kernel experiments</h1>
+<p>Start with <a href="../../Mr%20Bits%20Docs/START_HERE_KERNELS_AND_DASHBOARD.html">the application/dashboard guide</a>. Double-click <code>Launch Server.bat</code> in the application folder to choose a Kernel; double-click <code>Launch Dashboard.bat</code> for the database viewer.</p>
+<p><strong>Use <code>v3.0</code> for the former V7 baseline.</strong> The temporary legacy <code>v7</code> folder and launcher entry have been retired, and <code>v3.0</code> is the selected replacement. Its legal search, quiescence, move ordering and 50/50 static evaluation are unchanged. The v3.1-v3.4 controls vary only static evaluation weights. The controller-owned <strong>100-ply</strong> Stockfish threshold remains unchanged.</p>
+<p>Open <strong>Launch Server.bat</strong> and choose <strong><code>v3.0</code></strong> to run that baseline. Stop an existing application before starting another run or changing strategy. The launcher builds matching components when needed and checks native Kernel startup before starting the bot.</p>
+<p>Read the <a href="VERSION_FAMILIES.html">family map and migration guide</a> first. Shared implementation header names and test-script filenames retain their historical names so the current family implementations and archived evidence remain traceable. Family names are the public selection identities.</p>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Policy</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>original</td>
+<td>Existing search</td>
+<td><code>engines/Kernel.cpp</code></td>
+</tr>
+<tr>
+<td>v1.0</td>
+<td>Your Large/top-four experiment</td>
+<td><a href="v1.0/README.html">README</a></td>
+</tr>
+<tr>
+<td>v1.1</td>
+<td>Large root + Small internal ordering; keep all candidates</td>
+<td><a href="v1.1/README.html">README</a></td>
+</tr>
+<tr>
+<td>v1.2</td>
+<td>Root-only cutoff: eight quiet moves plus captures/EP/promotions; no cutoff in check</td>
+<td><a href="v1.2/README.html">README</a></td>
+</tr>
+<tr>
+<td>v2.0</td>
+<td>Small ordinary leaves, 0/100 blend; Small sorting from depth six; keep all moves</td>
+<td><a href="v2.0/README.html">README</a></td>
+</tr>
+<tr>
+<td>v2.1</td>
+<td>Small ordering + 50/50 handcrafted/Small leaves; no candidate deletion</td>
+<td><a href="v2.1/README.html">README</a></td>
+</tr>
+<tr>
+<td>v2.2</td>
+<td>Same as v2.1 plus guarded one-ply late quiet move reductions and full-depth re-search</td>
+<td><a href="v2.2/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.0</td>
+<td>Independent legal generation + mate/stalemate + bounded quiescence + Small blend and quiet ordering</td>
+<td><a href="v3.0/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.1</td>
+<td>V3.0 legal/tactical search, with 100% Small static evaluation</td>
+<td><a href="v3.1/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.2</td>
+<td>Same v3.0 search; 0% Small / 100% handcrafted static score</td>
+<td><a href="v3.2/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.3</td>
+<td>Same v3.0 search; 80% Small / 20% handcrafted static score</td>
+<td><a href="v3.3/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.4</td>
+<td>Same v3.0 search; 20% Small / 80% handcrafted static score</td>
+<td><a href="v3.4/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.6</td>
+<td>Large ranks every expanded candidate list; keep three; original static score</td>
+<td><a href="v3.6/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.7</td>
+<td>Same Large top-three beam; 50/50 original/Small static score</td>
+<td><a href="v3.7/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.8</td>
+<td>Retain all legal candidates; Small-only value, PVS re-search, bounded exact-position value cache</td>
+<td><a href="v3.8/README.html">README</a></td>
+</tr>
+<tr>
+<td>v3.9</td>
+<td>V3.0's 50/50 value; Small top-ten at remaining depth 3+; generation order at depth 2 or less and in quiescence</td>
+<td><a href="v3.9/README.html">README</a></td>
+</tr>
+</tbody>
+</table>
+<p>Read the <a href="V5_V6_README.html">three-section v2.1/v2.2 explanation</a> for the ordering/reduction pair. The versions live in <code>v1.0/Kernel-v1.0.cpp</code>, etc. The v1.x and v2.x families retain the original move-generation and terminal conventions; v2.0/v2.1/v2.2 deliberately change ordinary leaf evaluation. V2.1/v2.2 use a new shared <a href="Neural%20Search.hpp">search core</a> with incremental undo guards; the earlier versions do not use it. Related disabled ordering experiments were removed from v1.1/v1.2/v2.0 to improve readability.</p>
+<p>V3.0 deliberately changes the move-generation and terminal foundation. Its separate <a href="V7%20Position.hpp">position/undo</a> and <a href="V7%20Search.hpp">search</a> code generate legal moves, recognize mate/stalemate, extend tactical leaves up to six plies, and estimate whether another iteration fits the clock. It retains every supplied legal root candidate and uses no LMR or fixed top-k deletion. The older versions do not include these headers. Start with its <a href="v3.0/README.html">short guide</a>.</p>
+<p>Read <a href="v3.0/HOW_V3_0_WORKS.html">How V3.0 works</a> for the shared foundation. <strong>The scoring controls are v3.0-v3.4:</strong> 50/50, 100/0, 0/100, 80/20 and 20/80 respectively, with <strong>Small first, handcrafted second</strong>. Their legal generation, ordering, candidate retention, quiescence and time policy match v3.0; only static scoring changes. A 0% component is skipped in that evaluator. V3.2 still uses Small for the unchanged quiet-move ordering. V3.5 is intentionally unassigned because the existing pure-Small v3.1 already covers that duplicate. The four derivatives share <a href="V3%20Evaluation%20Search.hpp">V3 Evaluation Search.hpp</a>, based on the unchanged V7 search body with compile-time static-evaluation weights. <a href="../Neural%20Networks/OPERATION_COUNTS.html">Operation counts</a> cover both networks and sorting <code>m</code> moves.</p>
+<p>V3.6/V3.7 deliberately explore aggressive Large-ranked beam search, including a three-move limit in check and in expanded quiescence lists. Root limits apply to each worker's assigned subset. Their scores describe the retained tree, and discarded root moves remain visible in the reply. V3.8 explores PVS and exact static-value reuse while retaining every legal ordinary candidate. Read each version's short guide before comparing displayed depths; the variants search different trees.</p>
+<p>V3.9 is a separate V3.0 copy. At ordinary remaining depth greater than two, Small ranks the complete candidate list and only the first ten continue; checked positions have the same limit. At depth two or less, moves retain generation order with no heuristic or neural sorting. Quiescence keeps its tactical eligibility rules and six-ply cap, but performs no sorting or top-ten filtering. Root limits remain per worker. See the <a href="v3.9/README.html">short V3.9 guide</a>.</p>
+<h2 id="public-neural-functions-in-every-kernel">Public neural functions in every Kernel</h2>
+<pre><code class="language-cpp"><span class="kt">void</span><span class="w"> </span><span class="nf">SortTheMovesWithLargeNeuralNetwork</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int16_t</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">moves</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">SortTheMovesWithSmallNeuralNetwork</span><span class="p">(</span><span class="n">vector</span><span class="o">&lt;</span><span class="kt">int16_t</span><span class="o">&gt;&amp;</span><span class="w"> </span><span class="n">moves</span><span class="p">);</span>
+<span class="kt">float</span><span class="w"> </span><span class="nf">EvaluatePositionWithSmallNeuralNetwork</span><span class="p">(</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int8_t</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">position</span><span class="p">)[</span><span class="mi">8</span><span class="p">][</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">mrbits</span><span class="o">::</span><span class="n">nn</span><span class="o">::</span><span class="n">State</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+<span class="kt">float</span><span class="w"> </span><span class="nf">EvaluatePositionWithLargeNeuralNetwork</span><span class="p">(</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="kt">int8_t</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">position</span><span class="p">)[</span><span class="mi">8</span><span class="p">][</span><span class="mi">8</span><span class="p">],</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">mrbits</span><span class="o">::</span><span class="n">nn</span><span class="o">::</span><span class="n">State</span><span class="o">&amp;</span><span class="w"> </span><span class="n">state</span><span class="p">);</span>
+</code></pre>
+<p>Both value functions return <strong>White-perspective pawn units</strong>. Their state explicitly supplies White-to-move, retained castling mask (WK1/WQ2/BK4/BQ8), and raw EP file (-1 none,0..7 a..h). The neural-leaf families convert Small's result to engine-perspective centipawns at the leaf boundary. The Large value wrapper is available in every Kernel and remains uncalled by search; adding it does not change any version's evaluation policy.</p>
+<p>The sorters infer the moving side from source pieces, score each committed child once, restore all mutated board/counter/bitboard/score state even on exceptions, and rank White high first / Black low first. They retain all moves themselves; version policy decides any later deletion. Empty lists do not load models. Exact ties retain input order. Input must describe moves for one side at the current initialized node; full legality is not checked by the NN helper.</p>
+<p>Weights load once per model per process, with per-thread scratch. The board is still global: do not run mutating sort calls concurrently on the same process's board. Existing worker processes have separate state. <a href="../Neural%20Networks/TIME_COMPLEXITY_README.html">Evaluation/sorting complexity</a>.</p>
+<h2 id="build-and-selection">Build and selection</h2>
+<p><code>Launch Server.bat</code> discovers family folders such as <code>v3.6</code> containing <code>Kernel-v3.6.cpp</code>, with numeric major/minor ordering. It builds/selects the chosen version and updates Engine UCI if necessary before launching the existing application. The menu keeps the currently configured selection; it falls back to original when none is configured. Selection is saved in <code>engines/kernel-selection.json</code> and applies to newly started engine processes.</p>
+<p>Normal startup also performs one offline Kernel <code>hello</code>/<code>quit</code> check before saving the selection or starting the bot. A blocked executable, timeout, bad protocol response, or failed startup stops the launch. <code>--prepare-only</code> still builds/selects without executing the Kernel; <code>--list</code> only lists choices. An earlier V2.2 startup check with App Control enabled returned <code>4551</code>; the <a href="V5_V6_README.html">v2.1/v2.2 status note</a> records that historical result.</p>
+<p>Build only, without selecting or starting games:</p>
+<pre><code class="language-powershell"><span class="c"># From lichess-bot-master; compile current source if needed:</span>
+<span class="p">&amp;</span> <span class="s1">&#39;engines/Kernels/Build Version.bat&#39;</span> <span class="n">v1</span><span class="p">.</span><span class="n">1</span>
+</code></pre>
+<p>All managed builds use C++17 and -O2. A source-hash/UTC build label, dependency hashes, compiler identity/build recipe and executable SHA256 are saved in a generated <code>.build.json</code> receipt. Unchanged builds are reused. Only the source's project include dependencies invalidate it; changing an unrelated version or a launcher description does not force a rebuild. Compatible older receipts can be validated and upgraded without recompiling; their original compilation or recovery provenance is preserved. A failed compile preserves the previous executable and stops startup. The original source is never overwritten with a variant. Existing production processes must stop before their executables can be rebuilt.</p>
+<p>If startup reports <strong>Could not install executable</strong> with Windows <strong>Access is denied</strong>, compilation may have succeeded while replacement of the existing <code>.exe</code> failed. The builder checks replacement access before compiling, waits up to four seconds on a temporary installation lock, and reports applications using the exact target via <a href="https://learn.microsoft.com/en-us/windows/win32/api/restartmanager/nf-restartmanager-rmgetlist">Windows Restart Manager</a>. A listed file user is a diagnostic clue, not proof it denies replacement. Stop any running bot first. A local investigation also found McAfee Framework Host using engine files. If an application keeps a restrictive handle open, save your work and restart Windows before rebuilding. Persistent failures need the named file's permissions and protection history checked. The builder does not stop applications or change security settings. Compiler-start, executable-install, and build-receipt errors report their own operation, path, and underlying OS error.</p>
+<p>For a mapped destination that Windows allows to be renamed but cannot overwrite directly, the installer preserves the old file as a uniquely named <code>.old</code> backup, then places the <strong>same compiled bytes at the original executable path</strong>. If installation fails, it restores the old path; an unsuccessful rollback reports the preserved backup location. This is a conventional <a href="https://www.llvm.org/doxygen/Windows_2Path_8inc_source.html">Windows replacement strategy also used by LLVM</a>. Managed builds of the same target are serialized by an OS file lock. The two renames have a brief missing-target interval; this fallback is not an atomic replacement. Backups are never executed, and no application-trust setting changes.</p>
+<p><code>MRBITS_NEURAL_WEIGHTS_DIR</code> can override the shared <code>engines/Neural Networks</code> installation. Missing required weights stop the launcher before the bot starts. The menu chooses executable/source policy, not which trained weight set was used historically.</p>
+<p>V2.0/v2.1/v2.2/v3.0/v3.1/v3.2/v3.3/v3.4/v3.8/v3.9 require only Small weights. V3.2 needs Small for ordering even though its static score is 100% handcrafted. V3.6 requires only Large. V1.0/v1.1/v1.2/v3.7 require both Small and Large. Project include dependencies are followed recursively and conservatively include inactive branches. Unsupported dynamic includes fail explicitly. The controller additionally tracks SQLite's source/header, and its object cache tracks C compiler/flags, input hashes and object integrity. Helper-script hashes remain audit metadata rather than triggering unrelated rebuilds.</p>
+<p>The deliberate Stockfish endgame handoff is configured in <code>Engine UCI.cpp</code>:</p>
+<pre><code class="language-cpp"><span class="k">constexpr</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">STOCKFISH_ENDGAME_START_PLY</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">;</span>
+</code></pre>
+<p>The controller passes this setting to each <code>ChessState</code>. The class defaults to <code>1000000</code>, which effectively disables this particular handoff. The existing strict <code>&gt;</code> boundary is preserved: 100 completed plies do not trigger it; 101 do. A ply is one player's move, so 100 plies are 50 full White/Black move pairs. Routing, endgame depth choices and database classification use the same predicate. Opening assistance and fallback behavior remain separate from this threshold. This naming migration leaves that threshold unchanged. The normal launcher prepares the controller with family-name support when a build is needed; this threshold is independent of the chosen strategy name.</p>
+<h2 id="what-to-measure">What to measure</h2>
+<p>The <a href="../../database/dashboard/README.html">local dashboard</a> compares recorded configured variants, outcomes, timing, depths/nodes and failures. Root limits are per worker subset. NN ranking does not guarantee safe pruning; v1.2 can still drop important quiet checks or sacrifices. v2.0 neural leaf values are approximate; exact terminal results retain priority. No strength gain is assumed.</p>
+<p>Tests under <code>engines/tests</code> cover shared neural state/restoration, v1.1 retention/time admission, selector mapping and launcher behavior. Run <code>python tests/run_kernel_policy_tests.py</code> from <code>engines</code> to repeat the persisted v1.2/v2.0 checks. Diagnostic proofs are saved in the lab's <code>diagnostics/kernel-versions-20261028</code> and related version diagnostic folders. No online games were launched during implementation.</p>
+<p>For v2.1/v2.2, run <code>python tests/run_kernel_v56_tests.py</code> from <code>engines</code>. Worker replies contain per-iteration neural/LMR counters, but the current SQLite writer does not preserve these extra JSON fields; the dashboard's existing depth/node/timing/version records remain available.</p>
+<p>For the scoring-only v3.1-v3.4 matrix, run <code>python tests/run_kernel_v3_evaluation_tests.py</code> from <code>engines</code>. <code>--syntax-only</code> compiles the four profile diagnostics without executing native code. The matrix checks the configured percentages and zero-weight component behavior while preserving the common search policy. Compilation and native behavioral checks are separate results.</p>
+<p>For v3.0, run <code>python tests/run_kernel_v7_tests.py</code> from <code>engines</code>. It compares legal moves, perft counts, quiescence results, root/history validation, and clock estimates against independent fixtures. Extra Q counters are also available only in worker JSON/diagnostic reports until persistence is extended.</p>
+<p>For v3.1, run <code>python tests/run_kernel_v8_tests.py</code> from <code>engines</code>. It reuses the same independent oracle and also checks the neural-only unit/sign contract and invariance to handcrafted scores.</p>
+<p>For v3.6/v3.7/v3.8, run <code>python tests/run_kernel_v9_v11_tests.py</code> from <code>engines</code>. It checks the strict beam, evaluation contracts, PVS equivalence and cache identity/collisions. The new policy counters remain available in worker JSON and diagnostics until SQLite persistence is extended.</p>
+<p>For v3.9, run <code>python tests/run_kernel_v12_tests.py</code> from <code>engines</code> for offline legal-move/perft, Small-ranking, depth-threshold, undo, quiescence and worker-result checks. <code>--syntax-only</code> compiles the diagnostic translation unit without creating or running an executable; it does not establish runtime correctness. The pre-migration top-ten policy compiled successfully; renamed-artifact native execution checks must be distinguished from those earlier results. No online bot is started by this runner.</p>
+</body>
+</html>

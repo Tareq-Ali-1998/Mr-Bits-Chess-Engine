@@ -1,4 +1,4 @@
-"""Independent offline legality/beam/PVS/cache checks for V9, V10 and V11.
+"""Offline legality/beam/PVS/cache checks for family v3.6/v3.7/v3.8.
 
 Never starts a bot, Stockfish, database writer or cloud job. A Windows policy
 block is recorded and stops that executable; it is never retried or bypassed.
@@ -22,9 +22,10 @@ import time
 import chess
 
 from run_kernel_v7_tests import fixture_boards, perft, write_report
+from kernel_family_versions import canonical_version, legacy_version, kernel_source
 
 ENGINES = Path(__file__).resolve().parents[1]
-REPORTS = ENGINES.parent / "Mr Bits Docs/ChatGPT Neural Network Lab/diagnostics/kernel-v9-v11-20261031"
+REPORTS = ENGINES.parent / "Mr Bits Docs/ChatGPT Neural Network Lab/diagnostics/kernel-family-v3.6-v3.8"
 
 
 def digest(path):
@@ -199,7 +200,7 @@ def check_replays(api, version):
         answer = api.ask(op="replay", id=name, moves=history, engineWhite=color, roots=candidates, maxDepth=2)
         assert answer["ok"], answer
         result = answer["answer"]
-        assert result["searchPolicy"]["name"] == f"v{version}", result
+        assert result["searchPolicy"]["name"] == canonical_version(f"v{version}"), result
         if candidates:
             assert result["status"] == "ok", result
             searched = {r["move"] for r in result["rootScores"]}
@@ -224,15 +225,17 @@ def check_replays(api, version):
 
 def verify_version(version, args):
     started = time.perf_counter()
-    folder = args.report_dir / f"v{version}"
-    report = {"schema": "mrbits.v9-v11-diagnostics.v1", "version": f"v{version}", "status": "failed",
+    family = canonical_version(f"v{version}")
+    folder = args.report_dir / family
+    report = {"schema": "mrbits.v9-v11-diagnostics.v1", "version": family, "legacy_version": f"v{version}", "status": "failed",
         "started_utc": datetime.now(timezone.utc).isoformat(), "python_chess": chess.__version__}
     env = dict(os.environ)
     env["PATH"] = str(Path(args.cxx).parent) + os.pathsep + env.get("PATH", "")
     api = None
     try:
-        sources = [Path(__file__), ENGINES / "tests/kernel_v9_v11_test.cpp",
-            ENGINES / f"Kernels/v{version}/Kernel-v{version}.cpp", ENGINES / "Kernels/V7 Position.hpp",
+        sources = [Path(__file__), ENGINES / "tests/kernel_family_versions.py", ENGINES / "Kernels/kernel_tools.py",
+            ENGINES / "tests/kernel_v9_v11_test.cpp",
+            kernel_source(ENGINES, f"v{version}"), ENGINES / "Kernels/V7 Position.hpp",
             ENGINES / ("Kernels/V11 Search.hpp" if version == 11 else "Kernels/V9 V10 Search.hpp"),
             ENGINES / "Neural Networks/common.hpp", ENGINES / "Neural Networks/Small/Small.hpp",
             ENGINES / "Neural Networks/Large/Large.hpp", ENGINES / "Neural Networks/Move Ordering.hpp"]
@@ -306,19 +309,22 @@ def verify_version(version, args):
             write_report(folder / "transcript.json", {"requests_and_replies": api.transcript})
         report.update(seconds=time.perf_counter() - started, completed_utc=datetime.now(timezone.utc).isoformat())
         write_report(folder / "verification.json", report)
-    print(f"v{version}: {report['status']}; {report.get('checks', 0)} checks; {report['seconds']:.2f}s", flush=True)
+    print(f"{family}: {report['status']}; {report.get('checks', 0)} checks; {report['seconds']:.2f}s", flush=True)
     if report["status"] != "passed": print(report.get("error", "See receipt"), flush=True)
     return report
 
 
-def main():
+def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--versions", nargs="+", choices=(9, 10, 11), type=int, default=[9, 10, 11])
+    parser.add_argument("--versions", nargs="+", choices=("v3.6", "v3.7", "v3.8", "v9", "v10", "v11", "9", "10", "11"),
+                        default=["v3.6", "v3.7", "v3.8"])
     parser.add_argument("--cxx", default=shutil.which("g++"))
     parser.add_argument("--weights-dir", type=Path, default=ENGINES / "Neural Networks")
     parser.add_argument("--report-dir", type=Path, default=REPORTS)
     parser.add_argument("--timeout", type=int, default=180)
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
+    args.versions = [int(legacy_version(value if value.startswith("v") else "v" + value)[1:])
+                     for value in args.versions]
     if not args.cxx or args.timeout <= 0: parser.error("g++ and positive timeout required")
     args.cxx = shutil.which(args.cxx) or str(Path(args.cxx).resolve())
     args.weights_dir = args.weights_dir.resolve()

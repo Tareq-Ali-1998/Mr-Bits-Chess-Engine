@@ -79,6 +79,8 @@ venv/
 *.o
 *.obj
 *.gch
+*.build.lock
+/lichess-bot-master/engines/sqlite/sqlite3.o.build.json
 
 # Reproducible neural deployment weights belong in release assets, not Git history.
 /lichess-bot-master/engines/Neural Networks/*/weights.bin

@@ -17,7 +17,7 @@ int main(int argc,char** argv) {
     pool.shutdown();
     if(answers.size()!=1 || answers[0].status!="answered" ||
        !answers[0].message.contains("engineVersion") ||
-       answers[0].message["engineVersion"].get<std::string>().find("kernel-v2-")!=0) {
+       answers[0].message["engineVersion"].get<std::string>().find("kernel-v1.1-")!=0) {
         std::cerr<<"Actual hello build metadata was not retained\n"; return 1;
     }
     std::cout<<"PASS: actual worker hello build survives the pool response: "

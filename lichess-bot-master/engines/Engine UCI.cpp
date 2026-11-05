@@ -33,15 +33,18 @@ string DATABASE_GAME_ID = "";
 // <computer|human> <name>" right after every "ucinewgame".
 Json OPPONENT = nullptr;
 
-// A label for the log and the database. Changing it (g++ -DMRBITS_BUILD_STAMP=...) also gives the .exe a new
-// hash, which matters on this PC: Windows Smart App Control judges every new .exe on its first launch, and
-// if it blocks one build, a rebuild with a new stamp gets a new verdict.
+// Build provenance for the log and database. A new label is not an application-trust fix;
+// investigate Windows policy events if a genuinely changed build is blocked.
 #ifndef MRBITS_BUILD_STAMP
 #define MRBITS_BUILD_STAMP "dev"
 #endif
 
 // The number of Kernel workers (they were the 28 threads, each with its own brand-new Kernel.exe).
 const int NUMBER_OF_KERNEL_WORKERS = 28;
+
+// Controller policy: hand over after 100 completed plies (50 full moves).
+// Use 1000000 to effectively disable the deliberate endgame handoff.
+constexpr int STOCKFISH_ENDGAME_START_PLY = 100;
 
 // ############################################################ \\
 
@@ -178,6 +181,7 @@ string getBestMoveFromEngine(string position, int wtime, int btime, int winc, in
     // ############################################################ \\
 
     ChessState currentChessState = ChessState();
+    currentChessState.setStockfishEndgameStartPly(STOCKFISH_ENDGAME_START_PLY);
 
 
     // Set the "previousMoves" vector in chess state from the given "position" string
@@ -276,12 +280,8 @@ string getBestMoveFromEngine(string position, int wtime, int btime, int winc, in
         (currentChessState.getTheNumberOfOpeningMovesToGetFromStockfish() * 2)) {
         engineMove = currentChessState.getEngineMoveWithThreading();
     }
-    /*
-     * The following condition is a temporarily experiment to let Stockfish plays
-     * the end game assuming that the end game is after some chosen move number
-     */
-    else if (currentChessState.previousMoves.size() > 80) {
-        currentChessState.setTheNumberOfOpeningMovesToGetFromStockfish(1000000);
+    // The controller sets the handoff policy; ChessState applies that same threshold.
+    else if (currentChessState.isStockfishEndgame()) {
         engineMove = currentChessState.getEngineMoveWithThreading();
     }
     /*
